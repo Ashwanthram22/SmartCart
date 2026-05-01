@@ -1,6 +1,13 @@
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../../hooks/useCart";
+import { CartIcon } from "../../components/CartIcon";
+
 /** Product shape matches API / CDN mapping later: image field should be full Cloudinary URL */
 function ProductCard({ product, showAskAi = false }) {
+  const navigate = useNavigate();
+  const { addItem } = useCart();
   const {
+    id,
     title,
     category,
     price,
@@ -22,16 +29,57 @@ function ProductCard({ product, showAskAi = false }) {
         : String(reviewCount)
       : "0";
 
+  const openDetail = () => {
+    if (id) navigate(`/catalog/laptops/${id}`);
+  };
+
+  const handleCardKeyDown = (event) => {
+    if (!id) return;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openDetail();
+    }
+  };
+
+  const unitPrice = (Number(price) || 0) / 2.8;
+
+  const handleAddToCart = (event) => {
+    event.stopPropagation();
+    if (!id) return;
+    addItem({
+      productId: id,
+      title,
+      image: imgSrc,
+      subtitle: `${category || "Electronics"} • ${rating ?? "—"}★ rated`,
+      unitPrice,
+    });
+  };
+
   return (
-    <article className="home-product-card">
+    <article
+      className="home-product-card"
+      role={id ? "button" : undefined}
+      tabIndex={id ? 0 : undefined}
+      onClick={openDetail}
+      onKeyDown={handleCardKeyDown}
+    >
       <div className="home-product-card-image-wrap">
         <img src={imgSrc} alt="" className="home-product-card-img" loading="lazy" />
         {badge ? <span className="home-product-badge">{badge}</span> : null}
-        <button type="button" className="home-product-fav" aria-label="Add to favorites">
+        <button
+          type="button"
+          className="home-product-fav"
+          aria-label="Add to favorites"
+          onClick={(e) => e.stopPropagation()}
+        >
           ♡
         </button>
         {showAskAi ? (
-          <button type="button" className="home-product-ask-ai">
+          <button
+            type="button"
+            className="home-product-ask-ai"
+            onClick={(e) => e.stopPropagation()}
+          >
             <span aria-hidden="true">✦</span> Ask AI Assistant
           </button>
         ) : null}
@@ -51,15 +99,14 @@ function ProductCard({ product, showAskAi = false }) {
           <span className="home-product-stars">★ {rating ?? "—"}</span>
           <span className="home-product-reviews">({reviewsShort})</span>
         </div>
-        <button type="button" className="home-product-cart-btn" aria-label="Add to cart">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M6 6h15l-1.5 9h-12L6 6zm0 0L5 3H2"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
+        <button
+          type="button"
+          className="home-product-cart-btn"
+          aria-label="Add to cart"
+          onClick={handleAddToCart}
+          disabled={!id}
+        >
+          <CartIcon size={26} className="home-product-cart-icon" />
         </button>
       </div>
     </article>

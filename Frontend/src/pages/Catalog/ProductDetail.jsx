@@ -3,8 +3,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
 import { DEFAULT_PROFILE_AVATAR } from "../../data/profileDisplay";
 import { getProductById } from "../../api/client";
-import { clearToken } from "../../utils/authToken";
 import HomeFooter from "../Home/HomeFooter";
+import { CartIcon } from "../../components/CartIcon";
 import "./ProductDetail.css";
 
 const GALLERY_FALLBACKS = [
@@ -101,11 +101,6 @@ function ProductDetail() {
     });
   };
 
-  const handleLogout = () => {
-    clearToken();
-    navigate("/login", { replace: true });
-  };
-
   if (loading) {
     return (
       <div className="product-page">
@@ -132,14 +127,9 @@ function ProductDetail() {
           <Link to="/home" className="product-logo">
             SmartCart AI
           </Link>
-          <nav className="product-main-links">
-            <a href="#">History</a>
-            <a href="#">Recommendations</a>
-            <a href="#">Compare</a>
-          </nav>
           <div className="product-actions">
             <Link to="/cart" className="product-icon-btn product-icon-btn--cart" aria-label="Cart">
-              🛒
+              <CartIcon size={26} />
               {itemCount > 0 ? (
                 <span className="product-cart-badge">{itemCount > 99 ? "99+" : itemCount}</span>
               ) : null}
@@ -147,9 +137,6 @@ function ProductDetail() {
             <Link to="/profile" className="product-icon-btn product-profile-thumb" aria-label="Profile">
               <img src={DEFAULT_PROFILE_AVATAR} alt="" width={28} height={28} />
             </Link>
-            <button type="button" className="product-logout-btn" onClick={handleLogout}>
-              Log out
-            </button>
           </div>
         </div>
       </header>
@@ -224,8 +211,9 @@ function ProductDetail() {
             </div>
 
             <div className="cta-stack">
-              <button type="button" className="btn-primary" onClick={handleAddToCart}>
-                🛍 Add to Cart
+              <button type="button" className="btn-primary btn-primary--with-cart-icon" onClick={handleAddToCart}>
+                <CartIcon size={26} className="btn-primary-cart-img" />
+                Add to Cart
               </button>
               <button type="button" className="btn-secondary">Buy Now</button>
             </div>

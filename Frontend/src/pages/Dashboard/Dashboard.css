@@ -41,20 +41,6 @@
   background: rgba(107, 56, 212, 0.06);
 }
 
-.dashboard-logout {
-  border: 0;
-  border-radius: 10px;
-  background: #6b38d4;
-  color: #ffffff;
-  padding: 10px 14px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.dashboard-logout:hover {
-  background: #8455ef;
-}
-
 .dashboard-main {
   max-width: 980px;
   margin: 0 auto;

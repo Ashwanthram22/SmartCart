@@ -5,139 +5,12 @@
   font-family: Inter, system-ui, sans-serif;
 }
 
-.profile-topnav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 50;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.profile-topnav-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 24px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.profile-logo {
-  font-size: 1.25rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: #0f172a;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.profile-logo:hover {
-  color: #6b38d4;
-}
-
-.profile-topnav-links {
-  display: none;
-  align-items: center;
-  gap: 32px;
-}
-
-@media (min-width: 768px) {
-  .profile-topnav-links {
-    display: flex;
-    flex: 1;
-    justify-content: center;
-  }
-}
-
-.profile-topnav-links a {
-  font-size: 15px;
-  color: #64748b;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.profile-topnav-links a:hover {
-  color: #0f172a;
-}
-
-.profile-topnav-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.profile-nav-icon {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border: none;
-  border-radius: 999px;
-  background: transparent;
-  color: #64748b;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background 0.15s, transform 0.1s;
-}
-
-.profile-nav-icon:hover {
-  background: #f8fafc;
-}
-
-.profile-nav-icon:active {
-  transform: scale(0.96);
-}
-
-.profile-nav-icon--cart {
-  color: #7c3aed;
-}
-
-.profile-nav-badge {
-  position: absolute;
-  top: 4px;
-  right: 2px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: 999px;
-  background: #6b38d4;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 18px;
-  text-align: center;
-}
-
-.profile-nav-avatar-wrap {
-  display: flex;
-  padding: 0;
-  border: 1px solid #e2e8f0;
-  border-radius: 999px;
-  overflow: hidden;
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
-  box-sizing: border-box;
-}
-
-.profile-nav-avatar {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 .profile-main {
+  /* Must match .profile-sidebar sticky `top` so the sidebar doesn’t drift before sticking */
+  --profile-main-pad-top: 96px;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 96px 16px 48px;
+  padding: var(--profile-main-pad-top) 16px 48px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -166,6 +39,14 @@
 @media (min-width: 768px) {
   .profile-sidebar {
     width: 256px;
+    align-self: flex-start;
+    position: sticky;
+    /* Same as .profile-main padding-top: sidebar already sits here at scroll 0, so no “slide then stick” */
+    top: var(--profile-main-pad-top, 96px);
+    z-index: 10;
+    max-height: calc(100vh - var(--profile-main-pad-top, 96px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
 }
 
@@ -191,7 +72,6 @@
   text-decoration: none;
   border: none;
   background: none;
-  width: 100%;
   text-align: left;
   cursor: pointer;
   font-family: inherit;
@@ -630,6 +510,79 @@
 
 .profile-track-btn:active {
   transform: scale(0.98);
+}
+
+.profile-logout-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.profile-logout-dialog {
+  width: 100%;
+  max-width: 400px;
+  padding: 24px 28px 22px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
+}
+
+.profile-logout-dialog-title {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #141b2b;
+}
+
+.profile-logout-dialog-text {
+  margin: 0 0 22px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #5c5f60;
+}
+
+.profile-logout-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.profile-logout-btn-cancel {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.profile-logout-btn-cancel:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.profile-logout-btn-confirm {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 0;
+  background: #6b38d4;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.profile-logout-btn-confirm:hover {
+  background: #8455ef;
 }
 
 @media (max-width: 640px) {

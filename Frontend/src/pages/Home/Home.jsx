@@ -34,9 +34,16 @@ function Home() {
     };
   }, []);
 
+  const segmentSummary =
+    loading && products.length === 0
+      ? "Loading picks…"
+      : products.length === 0
+        ? "Showing 0 of 0 results"
+        : `Showing 1–${Math.min(4, products.length)} of ${products.length} results`;
+
   return (
     <div className="home-page">
-      <HomeHeader />
+      <HomeHeader segmentResultSummary={segmentSummary} />
       <main>
         <HomeHero />
         <RecommendedSection products={products} loading={loading} error={error} />

@@ -7,6 +7,9 @@ import LaptopsCatalog from "./pages/Catalog/LaptopsCatalog";
 import ProductDetail from "./pages/Catalog/ProductDetail";
 import Cart from "./pages/Cart/Cart";
 import Profile from "./pages/Profile/Profile";
+import OrderHistory from "./pages/Profile/OrderHistory";
+import SavedItems from "./pages/Profile/SavedItems";
+import SettingsSecurity from "./pages/Profile/SettingsSecurity";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
@@ -64,6 +67,30 @@ function App() {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/orders"
+          element={
+            <ProtectedRoute>
+              <OrderHistory />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/settings"
+          element={
+            <ProtectedRoute>
+              <SettingsSecurity />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/saved"
+          element={
+            <ProtectedRoute>
+              <SavedItems />
             </ProtectedRoute>
           }
         />

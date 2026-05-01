@@ -1,7 +1,6 @@
-import { Link, useNavigate } from "react-router-dom";
-import { DEFAULT_PROFILE_AVATAR } from "../../data/profileDisplay";
-import { clearToken } from "../../utils/authToken";
+import { Link } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
+import { ShopTopNav } from "../../components/ShopTopNav";
 import HomeFooter from "../Home/HomeFooter";
 import "./Cart.css";
 
@@ -16,7 +15,6 @@ function formatMoney(n) {
 }
 
 function Cart() {
-  const navigate = useNavigate();
   const { items, setQuantity, removeItem, addItem, itemCount } = useCart();
 
   const subtotal = items.reduce((sum, line) => sum + line.unitPrice * line.quantity, 0);
@@ -24,11 +22,6 @@ function Cart() {
   const total = subtotal + estimatedTax;
   const hasUpsell = items.some((i) => i.productId === UPSLEEVE_ID);
   const firstLaptopTitle = items.find((i) => i.productId !== UPSLEEVE_ID)?.title;
-
-  const handleLogout = () => {
-    clearToken();
-    navigate("/login", { replace: true });
-  };
 
   const addSleeveUpsell = () => {
     if (hasUpsell) return;
@@ -44,38 +37,8 @@ function Cart() {
 
   return (
     <div className="cart-page">
-      <header className="cart-topnav">
-        <div className="cart-topnav-inner">
-          <div className="cart-brand-nav">
-            <Link to="/home" className="cart-logo">
-              SmartCart AI
-            </Link>
-            <nav className="cart-main-links" aria-label="Secondary">
-              <a href="#">History</a>
-              <a href="#">Recommendations</a>
-              <a href="#">Compare</a>
-            </nav>
-          </div>
-          <div className="cart-actions">
-            <Link to="/cart" className="cart-icon-btn cart-icon-btn--cart active" aria-label="Cart" aria-current="page">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M6 6h15l-1.5 9h-12L6 6zm0 0L5 3H2"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <circle cx="9" cy="20" r="1.5" fill="currentColor" />
-                <circle cx="18" cy="20" r="1.5" fill="currentColor" />
-              </svg>
-              {itemCount > 0 ? <span className="cart-nav-badge">{itemCount > 99 ? "99+" : itemCount}</span> : null}
-            </Link>
-            <Link to="/profile" className="cart-icon-btn cart-profile-thumb" aria-label="Profile">
-              <img src={DEFAULT_PROFILE_AVATAR} alt="" width={28} height={28} />
-            </Link>
-          </div>
-        </div>
+      <header className="shop-topnav-shell">
+        <ShopTopNav searchPlaceholder="Search laptops..." cartActive />
       </header>
 
       <main className="cart-main">
@@ -217,10 +180,6 @@ function Cart() {
                   </p>
                 </div>
               </div>
-
-              <button type="button" className="cart-logout-btn" onClick={handleLogout}>
-                Log out
-              </button>
             </aside>
           </div>
         )}

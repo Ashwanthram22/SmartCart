@@ -1,14 +1,20 @@
 import { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
-import { clearToken } from "../../utils/authToken";
+import { ShopTopNav } from "../../components/ShopTopNav";
+import { CartIcon } from "../../components/CartIcon";
+import { ShopSegmentNav } from "../../components/ShopSegmentNav";
 import HomeFooter from "../Home/HomeFooter";
-import { DEFAULT_PROFILE_AVATAR } from "../../data/profileDisplay";
 import { getProducts } from "../../api/client";
 import "./LaptopsCatalog.css";
 import { useEffect } from "react";
+import { isValidSegment, productMatchesSegment } from "../../constants/shopSegments";
 
-const SEGMENTS = ["AI Picks", "Gaming", "Business", "Ultra-portable", "Student", "Workstations"];
+function segmentFromSearchParams(searchParams) {
+  const raw = searchParams.get("segment");
+  return isValidSegment(raw) ? raw : "AI Picks";
+}
+
 const BRAND_OPTIONS = ["Apple", "Dell", "HP", "Lenovo", "Asus"];
 const PROCESSORS = ["M3 Chip", "Core i9", "Ryzen 9"];
 const PRODUCT_INSIGHTS = [
@@ -30,8 +36,9 @@ function getBrand(product) {
 
 function LaptopsCatalog() {
   const navigate = useNavigate();
-  const { addItem, itemCount } = useCart();
-  const [activeSegment, setActiveSegment] = useState("AI Picks");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeSegment = segmentFromSearchParams(searchParams);
+  const { addItem } = useCart();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -61,15 +68,20 @@ function LaptopsCatalog() {
     };
   }, []);
 
+  useEffect(() => {
+    setPage(1);
+  }, [activeSegment]);
+
   const filtered = useMemo(() => {
     return products.filter((item) => {
+      if (!productMatchesSegment(item, activeSegment)) return false;
       const brand = getBrand(item);
       const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(brand);
       const priceMatch = Number(item.price || 0) <= priceRange * 100;
       const ratingMatch = Number(item.rating || 4) >= minRating;
       return brandMatch && priceMatch && ratingMatch;
     });
-  }, [products, selectedBrands, priceRange, minRating]);
+  }, [products, selectedBrands, priceRange, minRating, activeSegment]);
 
   const perPage = 6;
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
@@ -84,69 +96,31 @@ function LaptopsCatalog() {
     );
   };
 
-  const handleLogout = () => {
-    clearToken();
-    navigate("/login", { replace: true });
-  };
-
   const openProduct = (productId) => {
     navigate(`/catalog/laptops/${productId}`);
   };
 
+  const handleSegmentChange = (segment) => {
+    setPage(1);
+    if (segment === "AI Picks") {
+      setSearchParams({}, { replace: true });
+    } else {
+      setSearchParams({ segment }, { replace: false });
+    }
+  };
+
   return (
     <div className="catalog-page">
-      <header className="catalog-topnav">
-        <div className="catalog-topnav-inner">
-          <div className="catalog-brand-nav">
-            <Link to="/home" className="catalog-logo">
-              SmartCart AI
-            </Link>
-            <nav className="catalog-main-links">
-              <a href="#">History</a>
-              <a href="#">Recommendations</a>
-              <a href="#">Compare</a>
-            </nav>
-          </div>
-
-          <div className="catalog-actions">
-            <div className="catalog-search">
-              <span aria-hidden="true">⌕</span>
-              <input type="search" placeholder="Search laptops..." />
-            </div>
-            <Link to="/cart" className="catalog-icon-btn catalog-icon-btn--cart" aria-label="Cart">
-              🛒
-              {itemCount > 0 ? (
-                <span className="catalog-cart-badge">{itemCount > 99 ? "99+" : itemCount}</span>
-              ) : null}
-            </Link>
-            <Link to="/profile" className="catalog-icon-btn catalog-profile-thumb" aria-label="Profile">
-              <img src={DEFAULT_PROFILE_AVATAR} alt="" width={28} height={28} />
-            </Link>
-            <button type="button" className="catalog-logout-btn" onClick={handleLogout}>
-              Log out
-            </button>
-          </div>
-        </div>
+      <header className="shop-topnav-shell">
+        <ShopTopNav searchPlaceholder="Search laptops..." />
       </header>
 
       <div className="catalog-secondary-nav">
-        <div className="catalog-secondary-inner">
-          {SEGMENTS.map((segment) => (
-            <button
-              key={segment}
-              type="button"
-              className={segment === activeSegment ? "segment-chip active" : "segment-chip"}
-              onClick={() => setActiveSegment(segment)}
-            >
-              {segment === "AI Picks" ? "✦ " : ""}
-              {segment}
-            </button>
-          ))}
-          <span className="catalog-result-count">
-            Showing {filtered.length === 0 ? 0 : pageStart + 1}-{Math.min(pageStart + perPage, filtered.length)} of{" "}
-            {filtered.length} results
-          </span>
-        </div>
+        <ShopSegmentNav
+          activeSegment={activeSegment}
+          onSegmentChange={handleSegmentChange}
+          resultSummary={`Showing ${filtered.length === 0 ? 0 : pageStart + 1}-${Math.min(pageStart + perPage, filtered.length)} of ${filtered.length} results`}
+        />
       </div>
 
       <main className="catalog-main">
@@ -204,7 +178,12 @@ function LaptopsCatalog() {
 
         <section className="catalog-content">
           <div className="catalog-content-head">
-            <h1>Premium Laptops</h1>
+            <h1>
+              Premium Laptops
+              {activeSegment !== "AI Picks" ? (
+                <span className="catalog-segment-title"> · {activeSegment}</span>
+              ) : null}
+            </h1>
             <label>
               Sort by:
               <select defaultValue="Most Intelligent">
@@ -272,7 +251,7 @@ function LaptopsCatalog() {
                           });
                         }}
                       >
-                        🛒
+                        <CartIcon size={26} className="catalog-add-cart-icon" />
                       </button>
                     </div>
                   </article>

@@ -1,0 +1,176 @@
+/* Fixed shell — catalog, cart, profile (replaces per-page duplicate headers) */
+.shop-topnav-shell {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  border-bottom: 1px solid #ececf2;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+}
+
+.shop-topnav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  height: 64px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.shop-brand-nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  min-width: 0;
+}
+
+.shop-logo {
+  color: #141b2b;
+  text-decoration: none;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.shop-logo:hover {
+  color: #6b38d4;
+}
+
+.shop-main-links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.shop-main-links a {
+  text-decoration: none;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.shop-main-links a:hover {
+  color: #111827;
+}
+
+.shop-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.shop-search {
+  position: relative;
+}
+
+.shop-search-glyph {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.shop-search input {
+  width: 240px;
+  height: 36px;
+  border-radius: 999px;
+  border: 0;
+  background: #f3f4f6;
+  padding: 0 14px 0 34px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.shop-search input:focus {
+  box-shadow: 0 0 0 2px rgba(107, 56, 212, 0.15);
+}
+
+.shop-icon-btn {
+  border: 0;
+  background: transparent;
+  color: #6b7280;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  position: relative;
+}
+
+.shop-icon-btn:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+/* Line-art cart; purple only on the count badge */
+.shop-icon-btn--cart {
+  color: #6b7280;
+}
+
+.shop-icon-btn--cart-active {
+  background: rgba(107, 56, 212, 0.1);
+  color: #6b38d4;
+}
+
+.shop-icon-btn--cart-active:hover {
+  background: rgba(107, 56, 212, 0.14);
+  color: #5124c7;
+}
+
+.shop-cart-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #6b38d4;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}
+
+.shop-profile-thumb {
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid #e5e7eb;
+}
+
+.shop-profile-thumb:hover {
+  border-color: #d1d5db;
+}
+
+.shop-profile-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 999px;
+  display: block;
+}
+
+@media (max-width: 700px) {
+  .shop-main-links,
+  .shop-search {
+    display: none;
+  }
+
+  .shop-topnav-inner {
+    padding: 0 14px;
+  }
+}
