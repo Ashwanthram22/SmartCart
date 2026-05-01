@@ -1,0 +1,101 @@
+{
+  "users": [
+    {
+      "id": "u1",
+      "name": "Demo User",
+      "email": "demo@aicart.com",
+      "password": "demo123",
+      "role": "customer"
+    },
+    {
+      "id": "u1777546743752",
+      "name": "Ashwanth Ram",
+      "email": "ashwanthram2002@gmail.com",
+      "password": null,
+      "role": "customer",
+      "provider": "google"
+    }
+  ],
+  "products": [
+    {
+      "id": "p1",
+      "title": "OmniWatch Pro 4",
+      "category": "Wearables",
+      "price": 8999,
+      "originalPrice": 11999,
+      "rating": 4.8,
+      "reviewCount": 2840,
+      "badge": "93% MATCH",
+      "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "p2",
+      "title": "AuraPods Max",
+      "category": "Audio",
+      "price": 5499,
+      "originalPrice": 6999,
+      "rating": 4.9,
+      "reviewCount": 5120,
+      "badge": "94% MATCH",
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "p3",
+      "title": "Vision Tab Ultra",
+      "category": "Tablets",
+      "price": 32999,
+      "rating": 4.7,
+      "reviewCount": 920,
+      "badge": "AI CHOICE",
+      "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "p4",
+      "title": "PulseFit Band",
+      "category": "Fitness",
+      "price": 3999,
+      "originalPrice": 4999,
+      "rating": 4.6,
+      "reviewCount": 1675,
+      "badge": "TRENDING",
+      "image": "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "p5",
+      "title": "Lumina Smart Lamp",
+      "category": "Home",
+      "price": 4299,
+      "rating": 4.5,
+      "reviewCount": 834,
+      "image": "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "p6",
+      "title": "QuietAir Purifier",
+      "category": "Wellness",
+      "price": 12999,
+      "rating": 4.4,
+      "reviewCount": 412,
+      "image": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "p7",
+      "title": "EcoTherm Hub",
+      "category": "Smart Home",
+      "price": 7999,
+      "rating": 4.3,
+      "reviewCount": 289,
+      "image": "https://images.unsplash.com/photo-1558002038-bb4237efdf97?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "p8",
+      "title": "Stride Run X",
+      "category": "Sports",
+      "price": 9999,
+      "rating": 4.7,
+      "reviewCount": 756,
+      "image": "https://images.unsplash.com/photo-1575311376447-675d6f139d79?auto=format&fit=crop&w=600&q=80"
+    }
+  ],
+  "orders": []
+}
