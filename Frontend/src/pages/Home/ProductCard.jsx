@@ -30,7 +30,7 @@ function ProductCard({ product, showAskAi = false }) {
       : "0";
 
   const openDetail = () => {
-    if (id) navigate(`/catalog/laptops/${id}`);
+    if (id) navigate(`/catalog/products/${id}`);
   };
 
   const handleCardKeyDown = (event) => {
@@ -42,16 +42,19 @@ function ProductCard({ product, showAskAi = false }) {
   };
 
   const unitPrice = (Number(price) || 0) / 2.8;
+  const stockNum = Number(product.stock);
+  const outOfStock = Number.isFinite(stockNum) && stockNum < 1;
 
   const handleAddToCart = (event) => {
     event.stopPropagation();
-    if (!id) return;
+    if (!id || outOfStock) return;
     addItem({
       productId: id,
       title,
       image: imgSrc,
       subtitle: `${category || "Electronics"} • ${rating ?? "—"}★ rated`,
       unitPrice,
+      stockAvailable: Number.isFinite(stockNum) ? stockNum : undefined,
     });
   };
 
@@ -104,7 +107,7 @@ function ProductCard({ product, showAskAi = false }) {
           className="home-product-cart-btn"
           aria-label="Add to cart"
           onClick={handleAddToCart}
-          disabled={!id}
+          disabled={!id || outOfStock}
         >
           <CartIcon size={26} className="home-product-cart-icon" />
         </button>

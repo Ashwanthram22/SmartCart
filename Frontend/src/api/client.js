@@ -35,8 +35,13 @@ export async function getCurrentUser() {
   return data;
 }
 
-export async function getProducts() {
-  const { data } = await api.get("/products");
+/**
+ * List products. Optional `{ q }` maps to `/products?q=` when you move search server-side.
+ * The catalog currently loads the full list and filters `q` client-side for simplicity.
+ */
+export async function getProducts(params) {
+  const q = params?.q != null ? String(params.q).trim() : "";
+  const { data } = await api.get("/products", q ? { params: { q } } : undefined);
   return data;
 }
 

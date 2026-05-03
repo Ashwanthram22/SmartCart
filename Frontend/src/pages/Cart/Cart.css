@@ -182,8 +182,13 @@
   justify-content: center;
 }
 
-.cart-qty-btn:hover {
+.cart-qty-btn:hover:not(:disabled) {
   color: #6b38d4;
+}
+
+.cart-qty-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 .cart-qty-value {
@@ -196,19 +201,35 @@
 .cart-remove {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   border: none;
   background: none;
+  padding: 0;
   color: #ba1a1a;
   font-size: 14px;
   font-weight: 500;
+  font-family: inherit;
   cursor: pointer;
+  text-decoration: none;
+}
+
+.cart-remove-icon {
+  flex-shrink: 0;
+  display: block;
+  color: inherit;
+}
+
+.cart-remove-label {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
 .cart-remove:hover {
   color: #93000a;
+}
+
+.cart-remove:hover .cart-remove-label {
+  text-decoration-thickness: from-font;
 }
 
 .cart-ai-suggestion {

@@ -244,7 +244,7 @@ export default function SavedItems() {
             Want to save more?
           </h3>
           <p className="saved-empty-text">Continue exploring products to build your perfect collection.</p>
-          <Link to="/catalog/laptops" className="saved-empty-link">
+          <Link to="/catalog/products" className="saved-empty-link">
             Browse Trending Items
           </Link>
         </section>

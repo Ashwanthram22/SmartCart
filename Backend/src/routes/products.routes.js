@@ -6,7 +6,15 @@ const router = express.Router();
 
 router.get("/", authMiddleware, async (req, res) => {
   const db = await readDb();
-  res.json(db.products);
+  let list = db.products;
+  const q = typeof req.query.q === "string" ? req.query.q.trim().toLowerCase() : "";
+  if (q) {
+    list = list.filter((p) => {
+      const hay = `${p.title || ""} ${p.category || ""} ${(p.catalogSegments || []).join(" ")}`.toLowerCase();
+      return hay.includes(q);
+    });
+  }
+  res.json(list);
 });
 
 router.get("/:id", authMiddleware, async (req, res) => {

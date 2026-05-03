@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
 import { ShopTopNav } from "../../components/ShopTopNav";
 import HomeFooter from "../Home/HomeFooter";
@@ -15,13 +15,14 @@ function formatMoney(n) {
 }
 
 function Cart() {
+  const navigate = useNavigate();
   const { items, setQuantity, removeItem, addItem, itemCount } = useCart();
 
   const subtotal = items.reduce((sum, line) => sum + line.unitPrice * line.quantity, 0);
   const estimatedTax = subtotal * TAX_RATE;
   const total = subtotal + estimatedTax;
   const hasUpsell = items.some((i) => i.productId === UPSLEEVE_ID);
-  const firstLaptopTitle = items.find((i) => i.productId !== UPSLEEVE_ID)?.title;
+  const firstCartProductTitle = items.find((i) => i.productId !== UPSLEEVE_ID)?.title;
 
   const addSleeveUpsell = () => {
     if (hasUpsell) return;
@@ -38,7 +39,7 @@ function Cart() {
   return (
     <div className="cart-page">
       <header className="shop-topnav-shell">
-        <ShopTopNav searchPlaceholder="Search laptops..." cartActive />
+        <ShopTopNav searchPlaceholder="Search products..." cartActive />
       </header>
 
       <main className="cart-main">
@@ -58,14 +59,19 @@ function Cart() {
 
         {items.length === 0 ? (
           <div className="cart-empty">
-            <Link to="/catalog/laptops" className="cart-empty-cta">
-              Browse laptops
+            <Link to="/catalog/products" className="cart-empty-cta">
+              Browse Products
             </Link>
           </div>
         ) : (
           <div className="cart-layout">
             <div className="cart-col cart-col--items">
-              {items.map((line) => (
+              {items.map((line) => {
+                const maxQty =
+                  typeof line.stockAvailable === "number" && Number.isFinite(line.stockAvailable)
+                    ? line.stockAvailable
+                    : Infinity;
+                return (
                 <article key={line.productId} className="cart-item-card">
                   <div className="cart-item-media">
                     <img src={line.image} alt={line.title} />
@@ -98,21 +104,36 @@ function Cart() {
                           type="button"
                           className="cart-qty-btn"
                           aria-label="Increase quantity"
+                          disabled={line.quantity >= maxQty}
                           onClick={() => setQuantity(line.productId, line.quantity + 1)}
                         >
                           +
                         </button>
                       </div>
                       <button type="button" className="cart-remove" onClick={() => removeItem(line.productId)}>
-                        <span className="cart-remove-icon" aria-hidden="true">
-                          🗑
-                        </span>
-                        Remove
+                        <svg
+                          className="cart-remove-icon"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M4 7h16M10 11v6m4-6v6M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M7 7l1 12a2 2 0 0 0 2 1.9h4a2 2 0 0 0 2-1.9l1-12"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        <span className="cart-remove-label">Remove</span>
                       </button>
                     </div>
                   </div>
                 </article>
-              ))}
+              );
+              })}
 
               {!hasUpsell ? (
                 <div className="cart-ai-suggestion">
@@ -129,7 +150,7 @@ function Cart() {
                       <h3>Add this to complete your setup</h3>
                       <p>
                         The SmartSleeve 13 is specifically designed
-                        {firstLaptopTitle ? ` for your ${firstLaptopTitle}` : " for 13\" laptops"}.
+                        {firstCartProductTitle ? ` for your ${firstCartProductTitle}` : " for your setup"}.
                         Get it now for 20% off with your current order.
                       </p>
                     </div>
@@ -162,7 +183,7 @@ function Cart() {
                   <span>Total</span>
                   <strong>{formatMoney(total)}</strong>
                 </div>
-                <button type="button" className="cart-checkout-btn">
+                <button type="button" className="cart-checkout-btn" onClick={() => navigate("/checkout")}>
                   Proceed to Checkout
                   <span aria-hidden="true">→</span>
                 </button>

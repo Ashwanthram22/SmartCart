@@ -4,7 +4,7 @@ function RecommendedSection({ products, loading, error }) {
   const list = Array.isArray(products) ? products.slice(0, 4) : [];
 
   return (
-    <section className="home-section home-recommended">
+    <section id="home-ai-recommendations" className="home-section home-recommended">
       <div className="home-section-inner">
         <div className="home-section-head">
           <div>

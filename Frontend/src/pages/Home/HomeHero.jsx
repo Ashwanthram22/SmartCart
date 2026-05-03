@@ -1,3 +1,12 @@
+import { Link } from "react-router-dom";
+
+function scrollToAiRecommendations() {
+  document.getElementById("home-ai-recommendations")?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+}
+
 function HomeHero() {
   return (
     <section className="home-hero">
@@ -15,10 +24,10 @@ function HomeHero() {
           Save up to 40% on AI-curated electronics that match your lifestyle perfectly.
         </p>
         <div className="home-hero-actions">
-          <button type="button" className="home-btn home-btn--primary">
+          <Link to="/catalog/products" className="home-btn home-btn--primary">
             Explore Deals
-          </button>
-          <button type="button" className="home-btn home-btn--outline">
+          </Link>
+          <button type="button" className="home-btn home-btn--outline" onClick={scrollToAiRecommendations}>
             Learn More
           </button>
         </div>

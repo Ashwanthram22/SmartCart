@@ -5,8 +5,8 @@ import "./ShopSegmentNav.css";
 export { SHOP_SEGMENTS };
 
 /**
- * Laptop-style segment chips + optional results line (catalog uses controlled active).
- * Pass `onSegmentNavigate` on Home to jump to `/catalog/laptops?segment=…`.
+ * Category segment chips + optional results line (catalog uses controlled active).
+ * Pass `onSegmentNavigate` on Home to jump to `/catalog/products?segment=…`.
  */
 export function ShopSegmentNav({
   segments = SHOP_SEGMENTS,

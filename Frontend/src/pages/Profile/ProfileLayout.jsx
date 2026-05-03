@@ -45,7 +45,7 @@ export function ProfileLayout({ children }) {
   return (
     <div className="profile-page">
       <header className="shop-topnav-shell">
-        <ShopTopNav searchPlaceholder="Search laptops..." />
+        <ShopTopNav searchPlaceholder="Search products..." />
       </header>
 
       <main className="profile-main">
@@ -174,7 +174,7 @@ export function ProfileLayout({ children }) {
           <span aria-hidden="true">⌂</span>
           Home
         </Link>
-        <Link to="/catalog/laptops" className="profile-bottom-link">
+        <Link to="/catalog/products" className="profile-bottom-link">
           <span aria-hidden="true">▣</span>
           Shop
         </Link>

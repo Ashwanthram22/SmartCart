@@ -1,11 +1,12 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
 import "./App.css";
 import ScrollToTop from "./components/ScrollToTop";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AuthCallback from "./pages/AuthCallback/AuthCallback";
-import LaptopsCatalog from "./pages/Catalog/LaptopsCatalog";
+import ProductsCatalog from "./pages/Catalog/ProductsCatalog";
 import ProductDetail from "./pages/Catalog/ProductDetail";
 import Cart from "./pages/Cart/Cart";
+import Checkout from "./pages/Cart/Checkout";
 import Profile from "./pages/Profile/Profile";
 import OrderHistory from "./pages/Profile/OrderHistory";
 import SavedItems from "./pages/Profile/SavedItems";
@@ -18,6 +19,18 @@ import { isAuthenticated } from "./utils/authToken";
 
 function RootRedirect() {
   return <Navigate to={isAuthenticated() ? "/home" : "/login"} replace />;
+}
+
+/** Old bookmarks: /catalog/laptops?segment=… → /catalog/products?segment=… */
+function RedirectLegacyCatalogList() {
+  const { search } = useLocation();
+  return <Navigate to={`/catalog/products${search}`} replace />;
+}
+
+function RedirectLegacyCatalogDetail() {
+  const { id } = useParams();
+  const { search } = useLocation();
+  return <Navigate to={`/catalog/products/${id}${search}`} replace />;
 }
 
 function App() {
@@ -39,10 +52,26 @@ function App() {
           }
         />
         <Route
+          path="/catalog/products"
+          element={
+            <ProtectedRoute>
+              <ProductsCatalog />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/catalog/products/:id"
+          element={
+            <ProtectedRoute>
+              <ProductDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/catalog/laptops"
           element={
             <ProtectedRoute>
-              <LaptopsCatalog />
+              <RedirectLegacyCatalogList />
             </ProtectedRoute>
           }
         />
@@ -50,7 +79,7 @@ function App() {
           path="/catalog/laptops/:id"
           element={
             <ProtectedRoute>
-              <ProductDetail />
+              <RedirectLegacyCatalogDetail />
             </ProtectedRoute>
           }
         />
@@ -59,6 +88,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Cart />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Checkout />
             </ProtectedRoute>
           }
         />

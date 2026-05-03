@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
+import { isValidSegment } from "../../constants/shopSegments";
 import { DEFAULT_PROFILE_AVATAR } from "../../data/profileDisplay";
 import { getProductById } from "../../api/client";
 import HomeFooter from "../Home/HomeFooter";
@@ -41,7 +42,30 @@ const SPECS = [
 
 function ProductDetail() {
   const { id } = useParams();
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const segmentRaw = searchParams.get("segment");
+  const qRaw = searchParams.get("q");
+
+  const catalogListHref = useMemo(() => {
+    const p = new URLSearchParams();
+    if (segmentRaw && isValidSegment(segmentRaw) && segmentRaw !== "AI Picks") {
+      p.set("segment", segmentRaw);
+    }
+    if (qRaw && qRaw.trim()) p.set("q", qRaw.trim());
+    const s = p.toString();
+    return s ? `/catalog/products?${s}` : "/catalog/products";
+  }, [segmentRaw, qRaw]);
+
+  const detailQuerySuffix = useMemo(() => {
+    const p = new URLSearchParams();
+    if (segmentRaw && isValidSegment(segmentRaw) && segmentRaw !== "AI Picks") {
+      p.set("segment", segmentRaw);
+    }
+    if (qRaw && qRaw.trim()) p.set("q", qRaw.trim());
+    const s = p.toString();
+    return s ? `?${s}` : "";
+  }, [segmentRaw, qRaw]);
+
   const { addItem, itemCount } = useCart();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -90,14 +114,24 @@ function ProductDetail() {
   const configSubtitle =
     selectedConfig === "pro" ? "64GB RAM / 2TB SSD • Performance tier" : "32GB RAM / 1TB SSD • Standard tier";
 
+  const stockCap =
+    product && typeof product.stock === "number" && Number.isFinite(product.stock)
+      ? product.stock
+      : Infinity;
+  const outOfStock = Boolean(product && stockCap < 1);
+
   const handleAddToCart = () => {
     if (!product) return;
+    const cap =
+      typeof product.stock === "number" && Number.isFinite(product.stock) ? product.stock : Infinity;
+    if (cap < 1) return;
     addItem({
       productId: `${product.id}-${selectedConfig}`,
       title: product.title,
       image: product.image,
-      subtitle: `${product.category || "Laptop"} • ${configSubtitle}`,
+      subtitle: `${product.category || "Product"} • ${configSubtitle}`,
       unitPrice,
+      stockAvailable: Number.isFinite(cap) ? cap : undefined,
     });
   };
 
@@ -114,7 +148,7 @@ function ProductDetail() {
       <div className="product-page">
         <div className="product-error">
           <p>{error || "Product not found."}</p>
-          <Link to="/catalog/laptops">Back to catalog</Link>
+          <Link to={catalogListHref}>Back to catalog</Link>
         </div>
       </div>
     );
@@ -129,7 +163,7 @@ function ProductDetail() {
           </Link>
           <div className="product-actions">
             <Link to="/cart" className="product-icon-btn product-icon-btn--cart" aria-label="Cart">
-              <CartIcon size={26} />
+              <CartIcon size={22} />
               {itemCount > 0 ? (
                 <span className="product-cart-badge">{itemCount > 99 ? "99+" : itemCount}</span>
               ) : null}
@@ -167,8 +201,11 @@ function ProductDetail() {
           </div>
 
           <div className="product-buy">
-            <nav className="product-breadcrumb">
-              <span>Laptops</span> <span>›</span> <span>Professional</span> <span>›</span>{" "}
+            <nav className="product-breadcrumb" aria-label="Breadcrumb">
+              <Link to={catalogListHref}>Products</Link>
+              <span aria-hidden="true">›</span>
+              <Link to={catalogListHref}>{product.category || "Catalog"}</Link>
+              <span aria-hidden="true">›</span>
               <span>{product.title}</span>
             </nav>
 
@@ -178,6 +215,12 @@ function ProductDetail() {
               <span className="stars">★★★★☆</span>
               <span>({product.reviewCount ?? 1248} reviews)</span>
             </div>
+
+            {Number.isFinite(stockCap) ? (
+              <p className={`product-stock-line${stockCap < 1 ? " product-stock-line--out" : ""}`}>
+                {stockCap < 1 ? "Out of stock" : `${stockCap} in stock`}
+              </p>
+            ) : null}
 
             <div className="price-wrap">
               <div className="price-row">
@@ -211,7 +254,12 @@ function ProductDetail() {
             </div>
 
             <div className="cta-stack">
-              <button type="button" className="btn-primary btn-primary--with-cart-icon" onClick={handleAddToCart}>
+              <button
+                type="button"
+                className="btn-primary btn-primary--with-cart-icon"
+                onClick={handleAddToCart}
+                disabled={outOfStock}
+              >
                 <CartIcon size={26} className="btn-primary-cart-img" />
                 Add to Cart
               </button>
@@ -294,7 +342,7 @@ function ProductDetail() {
               <div className="quick-compare">
                 <h4>Compare Quick-View</h4>
                 {similar.map((item) => (
-                  <Link to={`/catalog/laptops/${item.id}`} key={item.id} className="quick-link">
+                  <Link to={`/catalog/products/${item.id}${detailQuerySuffix}`} key={item.id} className="quick-link">
                     <img src={item.image} alt="" />
                     <div>
                       <p>{item.title}</p>
@@ -321,7 +369,7 @@ function ProductDetail() {
 
       <button type="button" className="product-floating-ai" aria-label="Ask AI">
         <span>🤖</span>
-        <div>Ask AI Assistant about this laptop</div>
+        <div>Ask AI Assistant about this product</div>
       </button>
     </div>
   );

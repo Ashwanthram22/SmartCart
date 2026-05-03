@@ -64,35 +64,59 @@
   flex-shrink: 0;
 }
 
+/* Matches profile Saved Items search: pill, lavender border, magnifier SVG */
 .shop-search {
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid rgba(107, 56, 212, 0.28);
+  width: min(320px, 36vw);
+  min-width: 220px;
+  max-width: 320px;
+  box-sizing: border-box;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
-.shop-search-glyph {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #94a3b8;
-  font-size: 14px;
-  pointer-events: none;
+.shop-search:focus-within {
+  border-color: rgba(107, 56, 212, 0.55);
+  box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.08);
+}
+
+.shop-search svg {
+  flex-shrink: 0;
+  color: #475569;
 }
 
 .shop-search input {
-  width: 240px;
-  height: 36px;
-  border-radius: 999px;
-  border: 0;
-  background: #f3f4f6;
-  padding: 0 14px 0 34px;
-  font-size: 13px;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  height: auto;
+  min-height: 22px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 14px;
   font-family: inherit;
+  color: #141b2b;
   outline: none;
   box-sizing: border-box;
 }
 
+.shop-search input::placeholder {
+  color: #94a3b8;
+}
+
 .shop-search input:focus {
-  box-shadow: 0 0 0 2px rgba(107, 56, 212, 0.15);
+  outline: none;
+  box-shadow: none;
 }
 
 .shop-icon-btn {

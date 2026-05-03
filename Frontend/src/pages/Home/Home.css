@@ -5,7 +5,7 @@
   color: #141b2b;
 }
 
-/* ----- Header (matches laptop catalog navbar + segment row) ----- */
+/* ----- Header (matches catalog navbar + segment row) ----- */
 .home-header {
   position: sticky;
   top: 0;
@@ -93,6 +93,14 @@
   border: 2px solid transparent;
 }
 
+a.home-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
 .home-btn--primary {
   background: #6b38d4;
   color: #ffffff;
@@ -115,6 +123,10 @@
 }
 
 /* ----- Sections ----- */
+#home-ai-recommendations {
+  scroll-margin-top: 88px;
+}
+
 .home-section {
   padding: 48px 24px 56px;
 }
@@ -356,8 +368,11 @@
   background: rgba(107, 56, 212, 0.1);
   color: #6b38d4;
   cursor: pointer;
-  display: grid;
-  place-items: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 0;
 }
 
 .home-product-cart-btn:hover:not(:disabled) {
