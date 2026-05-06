@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
+import { useSaved } from "../../hooks/useSaved";
+import { HeartIcon } from "../../components/HeartIcon";
 import { ShopTopNav } from "../../components/ShopTopNav";
 import { CartIcon } from "../../components/CartIcon";
 import { ShopSegmentNav } from "../../components/ShopSegmentNav";
@@ -54,6 +56,7 @@ function ProductsCatalog() {
   const activeSegment = segmentFromSearchParams(searchParams);
   const searchQ = (searchParams.get("q") || "").trim().toLowerCase();
   const { addItem } = useCart();
+  const { isSaved, toggleSaved } = useSaved();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -237,6 +240,7 @@ function ProductsCatalog() {
               : pageItems.map((product, index) => {
                   const cap = stockCap(product);
                   const out = cap < 1;
+                  const saved = product.id != null && isSaved(product.id);
                   return (
                     <article
                       key={product.id ?? index}
@@ -250,14 +254,16 @@ function ProductsCatalog() {
                     >
                       <div className="catalog-card-media">
                         <img src={product.image} alt={product.title} />
-                        <span className="card-badge">{product.badge || "AI CHOICE"}</span>
                         <button
                           type="button"
-                          className="wishlist-btn"
-                          aria-label="Wishlist"
-                          onClick={(e) => e.stopPropagation()}
+                          className={`wishlist-btn${saved ? " wishlist-btn--saved" : ""}`}
+                          aria-label={saved ? "Remove from saved items" : "Save to profile"}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleSaved(product);
+                          }}
                         >
-                          ♡
+                          <HeartIcon filled={saved} size={16} />
                         </button>
                       </div>
                       <div className="catalog-card-body">

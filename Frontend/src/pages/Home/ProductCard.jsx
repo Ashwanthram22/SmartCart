@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
+import { useSaved } from "../../hooks/useSaved";
 import { CartIcon } from "../../components/CartIcon";
+import { HeartIcon } from "../../components/HeartIcon";
 
 /** Product shape matches API / CDN mapping later: image field should be full Cloudinary URL */
 function ProductCard({ product, showAskAi = false }) {
   const navigate = useNavigate();
   const { addItem } = useCart();
+  const { isSaved, toggleSaved } = useSaved();
   const {
     id,
     title,
@@ -14,9 +17,9 @@ function ProductCard({ product, showAskAi = false }) {
     originalPrice,
     rating,
     reviewCount,
-    badge,
     image,
   } = product;
+  const saved = id ? isSaved(id) : false;
 
   const imgSrc =
     image ||
@@ -68,14 +71,16 @@ function ProductCard({ product, showAskAi = false }) {
     >
       <div className="home-product-card-image-wrap">
         <img src={imgSrc} alt="" className="home-product-card-img" loading="lazy" />
-        {badge ? <span className="home-product-badge">{badge}</span> : null}
         <button
           type="button"
-          className="home-product-fav"
-          aria-label="Add to favorites"
-          onClick={(e) => e.stopPropagation()}
+          className={`home-product-fav${saved ? " home-product-fav--saved" : ""}`}
+          aria-label={saved ? "Remove from saved items" : "Save to profile"}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (id) toggleSaved(product);
+          }}
         >
-          ♡
+          <HeartIcon filled={saved} size={18} />
         </button>
         {showAskAi ? (
           <button

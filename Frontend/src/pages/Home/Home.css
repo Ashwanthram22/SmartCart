@@ -247,20 +247,6 @@ a.home-btn {
   object-fit: cover;
 }
 
-.home-product-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  color: #6b38d4;
-  background: #ffffff;
-  padding: 5px 8px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
 .home-product-fav {
   position: absolute;
   top: 10px;
@@ -280,6 +266,14 @@ a.home-btn {
 
 .home-product-fav:hover {
   color: #6b38d4;
+}
+
+.home-product-fav--saved {
+  color: #e11d48;
+}
+
+.home-product-fav--saved:hover {
+  color: #be123c;
 }
 
 .home-product-ask-ai {

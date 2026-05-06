@@ -135,16 +135,32 @@
   object-fit: cover;
 }
 
-.product-ai-chip {
+.product-main-fav {
   position: absolute;
   top: 12px;
-  left: 12px;
-  background: #6b38d4;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  border-radius: 999px;
-  padding: 6px 10px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 0;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  color: #64748b;
+  display: grid;
+  place-items: center;
+}
+
+.product-main-fav:hover {
+  color: #6b38d4;
+}
+
+.product-main-fav--saved {
+  color: #e11d48;
+}
+
+.product-main-fav--saved:hover {
+  color: #be123c;
 }
 
 .product-thumbs {

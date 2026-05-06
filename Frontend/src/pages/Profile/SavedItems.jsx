@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ProfileLayout } from "./ProfileLayout";
 import { useCart } from "../../hooks/useCart";
+import { useSaved } from "../../hooks/useSaved";
 import { CartIcon } from "../../components/CartIcon";
 import "./SavedItems.css";
 
@@ -10,49 +11,6 @@ const CATEGORIES = [
   { id: "electronics", label: "Electronics" },
   { id: "home", label: "Home Decor" },
   { id: "apparel", label: "Apparel" },
-];
-
-const INITIAL_SAVED = [
-  {
-    id: "sv1",
-    category: "electronics",
-    title: "Pro Sound Wireless Headphones",
-    subtitle: "Audio Labs • Elite Series",
-    price: 299,
-    rating: 4.9,
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCH-r2usX_Pc9JgqAPRQFjXt9tch2L2PXPG1h0RzxEWLnSGu87g0rfSETItevWJFi-1nfk96RH9Ep8lFl6nPM2Oop9SSQqu5irnFyl1On2OG1xfXji72COoWeLt3PswGSsHLU9SKobhQ8D7z_ic_7-jkijAPdZbf1FU_-z-Mtq9NDW3bSZuuskzWYUHMogIUujtJWiH5CwifGdXJd7C8BwD79flawIJ2vWoS1-J2LhuCLMBakhk_0CNUvZim6ZRldW94JxZnH9w5yUN",
-  },
-  {
-    id: "sv2",
-    category: "apparel",
-    title: "Luna Minimalist Watch",
-    subtitle: "Tempo Design • White Ceramic",
-    price: 145,
-    rating: 4.7,
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuD6pTtwX-YCstghXrOPHaA83p2xpD4GN9e5c9odKTmJGubTOmtq1Pyora1rZ_m_abjtyzPVgU5kgMpc6lWjE-ghJFue2TD-HvGW36x5dHzOJZ6ZI_yUV3PywBAFJd_SpXOsV85lkZpoS-LrhadX1t2XnJvxqQbEz1-06fjU20Ekk1vhoG7XPdLaLk2wK9Yf6xrhdmGEMluUZajAAMbBKWbRJZDfqzRO6MWtEKXv2adHUVcu_FYbPQxUEW1_eNur1CIdhF-q7GTWCYT2",
-  },
-  {
-    id: "sv3",
-    category: "apparel",
-    title: "Aero-V Velocity Trainers",
-    subtitle: "Swift Performance • Crimson Red",
-    price: 120,
-    rating: 4.8,
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDBv6KF_MmY4y5aoBBCMN-GXDwKEc35sL-V_WLvgRF7mXv7SyinMHa9VU0SgO7Pzaqsz4_R7LnFzKGMm2CO_9tM-YLI-uEkONgVkeJdDqj97zt3hHZe6IfZgQVXuEVN_9wquQtK9gbYVS441-c8xZtRl2LGtB-gPtF07wRs-SOPgw8KQ5dQN4k-O1mOKGXKjRWOaXeGDSNxJ9JdaJLMO72AmK0U1hT5CSw6kyg2oBcYc8Id7opHCCR0qLMnzNYAuMz-qw3BvvQHSnj6",
-  },
-  {
-    id: "sv4",
-    category: "electronics",
-    title: "PixelSnap Instant Camera",
-    subtitle: "RetroTech • Sunlight Yellow",
-    price: 89,
-    rating: 4.6,
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDlXNXuUz8E5Xj1sEzPFd-ndwfqlHHLkqGERrdgpvbDadYfTT6uamFK43WVTU_oGGRusP0BxAp3bhUZvQYYpfwx6Spgajjip7yRPd1qdZZFUYB1dCWNc7P99PX7MVk0GFg1u5dPaLHGnc-jxv_rIMeE_db-GhPxJSAWYR4ZCmCDuAXPCZogkhAErYqpY-H2yum1x0_WU5o1k9mfc3kBPmyKxv9KVHcbaWg4f6Eb5-PYhpcVnN9iVGHYzAUuvfzyMAB3fzBVVdGIBomu",
-  },
 ];
 
 function IconSearch() {
@@ -108,7 +66,7 @@ function formatUsd(n) {
 
 export default function SavedItems() {
   const { addItem } = useCart();
-  const [items, setItems] = useState(INITIAL_SAVED);
+  const { items, removeSaved } = useSaved();
   const [activeCategory, setActiveCategory] = useState("all");
   const [query, setQuery] = useState("");
 
@@ -124,17 +82,14 @@ export default function SavedItems() {
     });
   }, [items, activeCategory, query]);
 
-  const removeSaved = (id) => {
-    setItems((prev) => prev.filter((p) => p.id !== id));
-  };
-
   const handleAddToCart = (p) => {
     addItem({
-      productId: `saved-${p.id}`,
+      productId: p.id,
       title: p.title,
       image: p.image,
       subtitle: p.subtitle,
       unitPrice: p.price,
+      ...(typeof p.stock === "number" && Number.isFinite(p.stock) ? { stockAvailable: p.stock } : {}),
     });
   };
 
@@ -192,7 +147,7 @@ export default function SavedItems() {
                 <img src={p.image} alt="" loading="lazy" />
                 <div className="saved-card-rating">
                   <IconStar />
-                  <span>{p.rating.toFixed(1)}</span>
+                  <span>{Number(p.rating || 0).toFixed(1)}</span>
                 </div>
                 <button
                   type="button"

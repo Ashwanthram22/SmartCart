@@ -1,12 +1,25 @@
-.shop-segment-inner {
+.shop-segment-nav {
   max-width: 1280px;
   margin: 0 auto;
-  min-height: 48px;
   padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shop-segment-inner {
+  flex: 1;
+  min-height: 48px;
   display: flex;
   align-items: center;
   gap: 10px;
   overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.shop-segment-inner::-webkit-scrollbar {
+  display: none;
 }
 
 .segment-chip {
@@ -38,8 +51,37 @@
   white-space: nowrap;
 }
 
+.shop-segment-arrow {
+  display: none;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  background: #fff;
+  color: #374151;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.shop-segment-arrow:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.shop-segment-arrow.is-hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 @media (max-width: 700px) {
-  .shop-segment-inner {
+  .shop-segment-nav {
     padding: 0 14px;
+  }
+
+  .shop-segment-arrow {
+    display: inline-grid;
+    place-items: center;
   }
 }

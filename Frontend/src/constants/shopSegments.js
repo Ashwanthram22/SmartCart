@@ -7,7 +7,7 @@ export const SHOP_SEGMENTS = [
   "Accessories",
   "Fashion",
   "Home & Kitchen",
-  "Appliances",
+  "Sports",
   "Books",
   "Groceries",
 ];
@@ -26,9 +26,9 @@ const CATEGORY_TO_TABS = {
   Tablets: ["Electronics", "Mobiles", "Laptops"],
   Fitness: ["Electronics", "Accessories"],
   Home: ["Home & Kitchen"],
-  Wellness: ["Appliances", "Home & Kitchen"],
-  "Smart Home": ["Electronics", "Appliances", "Home & Kitchen"],
-  Sports: ["Fashion", "Accessories"],
+  Wellness: ["Sports", "Home & Kitchen"],
+  "Smart Home": ["Electronics", "Home & Kitchen"],
+  Sports: ["Sports", "Fashion", "Accessories"],
   Books: ["Books"],
   Groceries: ["Groceries"],
   Mobiles: ["Mobiles", "Electronics"],
@@ -36,6 +36,10 @@ const CATEGORY_TO_TABS = {
 
 export function productMatchesSegment(product, segment) {
   if (!product || segment === "AI Picks") return true;
+
+  if (segment === "Sports" && product.category === "Sports") {
+    return true;
+  }
 
   const explicit = Array.isArray(product.catalogSegments) ? product.catalogSegments : [];
   if (explicit.length > 0) {

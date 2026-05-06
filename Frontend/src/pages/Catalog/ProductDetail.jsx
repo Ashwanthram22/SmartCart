@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
+import { useSaved } from "../../hooks/useSaved";
+import { HeartIcon } from "../../components/HeartIcon";
 import { isValidSegment } from "../../constants/shopSegments";
 import { DEFAULT_PROFILE_AVATAR } from "../../data/profileDisplay";
 import { getProductById } from "../../api/client";
@@ -67,6 +69,7 @@ function ProductDetail() {
   }, [segmentRaw, qRaw]);
 
   const { addItem, itemCount } = useCart();
+  const { isSaved, toggleSaved } = useSaved();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -119,6 +122,7 @@ function ProductDetail() {
       ? product.stock
       : Infinity;
   const outOfStock = Boolean(product && stockCap < 1);
+  const saved = product?.id != null && isSaved(product.id);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -180,7 +184,14 @@ function ProductDetail() {
           <div className="product-gallery">
             <div className="product-main-image-wrap">
               <img src={activeImage} alt={product.title} className="product-main-image" />
-              <span className="product-ai-chip">✦ AI RECOMMENDED</span>
+              <button
+                type="button"
+                className={`product-main-fav${saved ? " product-main-fav--saved" : ""}`}
+                aria-label={saved ? "Remove from saved items" : "Save to profile"}
+                onClick={() => toggleSaved(product)}
+              >
+                <HeartIcon filled={saved} size={20} />
+              </button>
             </div>
 
             <div className="product-thumbs">
