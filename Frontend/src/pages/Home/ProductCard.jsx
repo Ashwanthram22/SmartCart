@@ -5,7 +5,7 @@ import { CartIcon } from "../../components/CartIcon";
 import { HeartIcon } from "../../components/HeartIcon";
 
 /** Product shape matches API / CDN mapping later: image field should be full Cloudinary URL */
-function ProductCard({ product, showAskAi = false }) {
+function ProductCard({ product, showAskAi = false, badgeOverride }) {
   const navigate = useNavigate();
   const { addItem } = useCart();
   const { isSaved, toggleSaved } = useSaved();
@@ -18,8 +18,13 @@ function ProductCard({ product, showAskAi = false }) {
     rating,
     reviewCount,
     image,
+    badge,
   } = product;
   const saved = id ? isSaved(id) : false;
+
+  const displayBadge = badgeOverride ?? badge ?? null;
+  const isTrendingBadge =
+    !!displayBadge && String(displayBadge).toUpperCase().includes("TRENDING");
 
   const imgSrc =
     image ||
@@ -71,6 +76,16 @@ function ProductCard({ product, showAskAi = false }) {
     >
       <div className="home-product-card-image-wrap">
         <img src={imgSrc} alt="" className="home-product-card-img" loading="lazy" />
+        {displayBadge ? (
+          <span
+            className={`home-product-badge${
+              isTrendingBadge ? " home-product-badge--trending" : ""
+            }`}
+          >
+            {isTrendingBadge ? <span aria-hidden="true">↗</span> : null}
+            {String(displayBadge).replace(/^[↗↑]\s*/, "")}
+          </span>
+        ) : null}
         <button
           type="button"
           className={`home-product-fav${saved ? " home-product-fav--saved" : ""}`}

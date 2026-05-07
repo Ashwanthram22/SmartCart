@@ -1,5 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getProducts } from "../../api/client";
+import {
+  pickRecommendedProducts,
+  pickTrendingProducts,
+} from "../../utils/productSelection";
 import HomeFooter from "./HomeFooter";
 import HomeHeader from "./HomeHeader";
 import HomeHero from "./HomeHero";
@@ -34,13 +38,19 @@ function Home() {
     };
   }, []);
 
+  const recommended = useMemo(() => pickRecommendedProducts(products, 4), [products]);
+  const trending = useMemo(
+    () => pickTrendingProducts(products, 4, recommended),
+    [products, recommended]
+  );
+
   return (
     <div className="home-page">
       <HomeHeader />
       <main>
         <HomeHero />
-        <RecommendedSection products={products} loading={loading} error={error} />
-        <TrendingSection />
+        <RecommendedSection products={recommended} loading={loading} error={error} />
+        <TrendingSection products={trending} loading={loading} error={error} />
       </main>
       <HomeFooter />
     </div>

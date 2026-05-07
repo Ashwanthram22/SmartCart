@@ -50,4 +50,14 @@ export async function getProductById(id) {
   return data;
 }
 
+export async function getProductReviews(id) {
+  const { data } = await api.get(`/products/${id}/reviews`);
+  return data;
+}
+
+export async function createProductReview(id, payload) {
+  const { data } = await api.post(`/products/${id}/reviews`, payload);
+  return data;
+}
+
 export default api;

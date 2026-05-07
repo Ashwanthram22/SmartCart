@@ -73,17 +73,21 @@ export function ShopSegmentNav({
         ‹
       </button>
       <div className="shop-segment-inner" ref={scrollRef} onScroll={refreshScrollButtons}>
-        {segments.map((segment) => (
-          <button
-            key={segment}
-            type="button"
-            className={segment === active ? "segment-chip active" : "segment-chip"}
-            onClick={() => select(segment)}
-          >
-            {segment === "AI Picks" ? "✦ " : ""}
-            {segment}
-          </button>
-        ))}
+        {segments.map((segment) => {
+          const prefix =
+            segment === "AI Picks" ? "✦ " : segment === "Trending" ? "↗ " : "";
+          return (
+            <button
+              key={segment}
+              type="button"
+              className={segment === active ? "segment-chip active" : "segment-chip"}
+              onClick={() => select(segment)}
+            >
+              {prefix}
+              {segment}
+            </button>
+          );
+        })}
         {resultSummary ? <span className="catalog-result-count">{resultSummary}</span> : null}
       </div>
       <button

@@ -21,7 +21,10 @@
       "id": "p1",
       "title": "OmniWatch Pro 4",
       "category": "Wearables",
-      "catalogSegments": ["Electronics", "Mobiles"],
+      "catalogSegments": [
+        "Electronics",
+        "Mobiles"
+      ],
       "stock": 42,
       "price": 8999,
       "originalPrice": 11999,
@@ -34,7 +37,10 @@
       "id": "p2",
       "title": "AuraPods Max",
       "category": "Audio",
-      "catalogSegments": ["Electronics", "Accessories"],
+      "catalogSegments": [
+        "Electronics",
+        "Accessories"
+      ],
       "stock": 128,
       "price": 5499,
       "originalPrice": 6999,
@@ -47,7 +53,11 @@
       "id": "p3",
       "title": "Vision Tab Ultra",
       "category": "Tablets",
-      "catalogSegments": ["Electronics", "Mobiles", "Laptops"],
+      "catalogSegments": [
+        "Electronics",
+        "Mobiles",
+        "Laptops"
+      ],
       "stock": 36,
       "price": 32999,
       "rating": 4.7,
@@ -59,7 +69,10 @@
       "id": "p4",
       "title": "PulseFit Band",
       "category": "Fitness",
-      "catalogSegments": ["Electronics", "Accessories"],
+      "catalogSegments": [
+        "Electronics",
+        "Accessories"
+      ],
       "stock": 0,
       "price": 3999,
       "originalPrice": 4999,
@@ -72,7 +85,9 @@
       "id": "p5",
       "title": "Lumina Smart Lamp",
       "category": "Home",
-      "catalogSegments": ["Home & Kitchen"],
+      "catalogSegments": [
+        "Home & Kitchen"
+      ],
       "stock": 88,
       "price": 4299,
       "rating": 4.5,
@@ -83,7 +98,10 @@
       "id": "p6",
       "title": "QuietAir Purifier",
       "category": "Wellness",
-      "catalogSegments": ["Appliances", "Home & Kitchen"],
+      "catalogSegments": [
+        "Appliances",
+        "Home & Kitchen"
+      ],
       "stock": 24,
       "price": 12999,
       "rating": 4.4,
@@ -94,7 +112,11 @@
       "id": "p7",
       "title": "EcoTherm Hub",
       "category": "Smart Home",
-      "catalogSegments": ["Electronics", "Appliances", "Home & Kitchen"],
+      "catalogSegments": [
+        "Electronics",
+        "Appliances",
+        "Home & Kitchen"
+      ],
       "stock": 61,
       "price": 7999,
       "rating": 4.3,
@@ -105,7 +127,10 @@
       "id": "p8",
       "title": "Stride Run X",
       "category": "Sports",
-      "catalogSegments": ["Fashion", "Accessories"],
+      "catalogSegments": [
+        "Fashion",
+        "Accessories"
+      ],
       "stock": 15,
       "price": 9999,
       "rating": 4.7,
@@ -116,7 +141,9 @@
       "id": "p9",
       "title": "The AI Commerce Handbook",
       "category": "Books",
-      "catalogSegments": ["Books"],
+      "catalogSegments": [
+        "Books"
+      ],
       "stock": 200,
       "price": 899,
       "rating": 4.6,
@@ -128,7 +155,9 @@
       "id": "p10",
       "title": "Organic Breakfast Bundle",
       "category": "Groceries",
-      "catalogSegments": ["Groceries"],
+      "catalogSegments": [
+        "Groceries"
+      ],
       "stock": 55,
       "price": 1299,
       "rating": 4.5,
@@ -140,7 +169,10 @@
       "id": "p11",
       "title": "Nexus Phone 15",
       "category": "Mobiles",
-      "catalogSegments": ["Mobiles", "Electronics"],
+      "catalogSegments": [
+        "Mobiles",
+        "Electronics"
+      ],
       "stock": 73,
       "price": 45999,
       "originalPrice": 49999,
@@ -148,7 +180,97 @@
       "reviewCount": 2104,
       "badge": "NEW",
       "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "p12",
+      "title": "SkyMaster 4K Drone",
+      "category": "Drones",
+      "catalogSegments": [
+        "Electronics"
+      ],
+      "stock": 18,
+      "price": 39999,
+      "rating": 4.9,
+      "reviewCount": 3210,
+      "badge": "TRENDING",
+      "image": "https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "p13",
+      "title": "ZenBuds Pro Earbuds",
+      "category": "Audio",
+      "catalogSegments": [
+        "Electronics",
+        "Accessories"
+      ],
+      "stock": 96,
+      "price": 10999,
+      "originalPrice": 13999,
+      "rating": 4.7,
+      "reviewCount": 2410,
+      "badge": "TRENDING",
+      "image": "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "p14",
+      "title": "AeroGarden Harvest",
+      "category": "Home & Garden",
+      "catalogSegments": [
+        "Home & Kitchen",
+        "Appliances"
+      ],
+      "stock": 47,
+      "price": 7299,
+      "rating": 4.8,
+      "reviewCount": 850,
+      "badge": "TRENDING",
+      "image": "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "p15",
+      "title": "UltraTab 12\" Tablet",
+      "category": "Computing",
+      "catalogSegments": [
+        "Electronics",
+        "Laptops"
+      ],
+      "stock": 31,
+      "price": 53999,
+      "originalPrice": 58999,
+      "rating": 4.9,
+      "reviewCount": 3105,
+      "badge": "TRENDING",
+      "image": "https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=600&q=80"
     }
   ],
-  "orders": []
+  "orders": [],
+  "reviews": [
+    {
+      "id": "r1778159539558",
+      "productId": "p2",
+      "userId": "u1",
+      "userName": "Demo User",
+      "rating": 4,
+      "text": "very good product",
+      "createdAt": "2026-05-07T13:12:19.558Z"
+    },
+    {
+      "id": "r1778160133985",
+      "productId": "p1",
+      "userId": "u1",
+      "userName": "Demo User",
+      "rating": 5,
+      "text": "good",
+      "createdAt": "2026-05-07T13:22:13.985Z"
+    },
+    {
+      "id": "r1778160156255",
+      "productId": "p1",
+      "userId": "u1",
+      "userName": "Demo User",
+      "rating": 4,
+      "text": "great",
+      "createdAt": "2026-05-07T13:22:36.255Z"
+    }
+  ]
 }

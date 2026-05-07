@@ -10,6 +10,9 @@ import HomeFooter from "../Home/HomeFooter";
 import { getProducts } from "../../api/client";
 import "./ProductsCatalog.css";
 import { isValidSegment, productMatchesSegment } from "../../constants/shopSegments";
+import { pickTrendingProducts } from "../../utils/productSelection";
+
+const TRENDING_TAB_LIMIT = 12;
 
 function segmentFromSearchParams(searchParams) {
   const raw = searchParams.get("segment");
@@ -90,9 +93,25 @@ function ProductsCatalog() {
     setPage(1);
   }, [activeSegment, searchQ]);
 
+  /**
+   * For the "Trending" tab we pre-compute the top N products by popularity
+   * (same logic the home page Trending row uses) and only allow those IDs
+   * through the rest of the filters. Memoized so brand/price/rating tweaks
+   * don't recompute the trending set unnecessarily.
+   */
+  const trendingIdSet = useMemo(() => {
+    if (activeSegment !== "Trending") return null;
+    const top = pickTrendingProducts(products, TRENDING_TAB_LIMIT);
+    return new Set(top.map((item) => item.id));
+  }, [activeSegment, products]);
+
   const filtered = useMemo(() => {
     return products.filter((item) => {
-      if (!productMatchesSegment(item, activeSegment)) return false;
+      if (activeSegment === "Trending") {
+        if (!trendingIdSet || !trendingIdSet.has(item.id)) return false;
+      } else if (!productMatchesSegment(item, activeSegment)) {
+        return false;
+      }
       if (!matchesSearchQuery(item, searchQ)) return false;
       const brand = getBrand(item);
       const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(brand);
@@ -100,7 +119,7 @@ function ProductsCatalog() {
       const ratingMatch = Number(item.rating || 4) >= minRating;
       return brandMatch && priceMatch && ratingMatch;
     });
-  }, [products, selectedBrands, priceRange, minRating, activeSegment, searchQ]);
+  }, [products, selectedBrands, priceRange, minRating, activeSegment, searchQ, trendingIdSet]);
 
   const perPage = 6;
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));

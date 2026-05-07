@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
 
 function RecommendedSection({ products, loading, error }) {
@@ -11,9 +12,9 @@ function RecommendedSection({ products, loading, error }) {
             <span className="home-section-kicker">PERSONALIZED INTELLIGENCE</span>
             <h2 className="home-section-title">Recommended for You</h2>
           </div>
-          <a href="#" className="home-section-link">
+          <Link to="/catalog/products" className="home-section-link">
             View all picks →
-          </a>
+          </Link>
         </div>
 
         {error ? <p className="home-section-error">{error}</p> : null}

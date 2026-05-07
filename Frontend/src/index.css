@@ -4,3 +4,63 @@ body {
   background: #f9fafb;
   color: #111827;
 }
+
+/* ----- Focus rings -----
+   Drop the browser's default dark outline (visible after any click), but keep
+   a soft purple ring for keyboard users via :focus-visible so a11y stays
+   intact. Component-level :focus-visible rules override this when defined. */
+button:focus,
+[role="button"]:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus,
+summary:focus {
+  outline: none;
+}
+
+button:focus-visible,
+[role="button"]:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid #c4b5fd;
+  outline-offset: 2px;
+}
+
+/* ----- Custom scrollbar -----
+   Firefox uses scrollbar-color/width; Chromium/Safari/Edge use the
+   ::-webkit-scrollbar pseudo-elements. Both styled to a thin pill that
+   matches the dark navy / lavender accent palette. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #475569 #e9ecf2;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e9ecf2;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 999px;
+  border: 2px solid #e9ecf2;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1f2937;
+  background-clip: padding-box;
+  border: 2px solid #e9ecf2;
+}
+
+::-webkit-scrollbar-corner {
+  background: #e9ecf2;
+}

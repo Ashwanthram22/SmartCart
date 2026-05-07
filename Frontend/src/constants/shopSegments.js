@@ -1,6 +1,7 @@
 /** Catalog category tabs — shared by ShopSegmentNav and filtering */
 export const SHOP_SEGMENTS = [
   "AI Picks",
+  "Trending",
   "Electronics",
   "Mobiles",
   "Laptops",
@@ -36,6 +37,14 @@ const CATEGORY_TO_TABS = {
 
 export function productMatchesSegment(product, segment) {
   if (!product || segment === "AI Picks") return true;
+
+  /**
+   * "Trending" is a virtual segment computed across the whole catalog
+   * (top items by popularity score). We let it pass here so the consumer
+   * can apply a separate trending-set filter alongside other facets
+   * like price / rating / brand.
+   */
+  if (segment === "Trending") return true;
 
   if (segment === "Sports" && product.category === "Sports") {
     return true;

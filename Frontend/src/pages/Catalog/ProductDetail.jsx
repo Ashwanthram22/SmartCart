@@ -5,9 +5,10 @@ import { useSaved } from "../../hooks/useSaved";
 import { HeartIcon } from "../../components/HeartIcon";
 import { isValidSegment } from "../../constants/shopSegments";
 import { DEFAULT_PROFILE_AVATAR } from "../../data/profileDisplay";
-import { getProductById } from "../../api/client";
+import { createProductReview, getProductById } from "../../api/client";
 import HomeFooter from "../Home/HomeFooter";
 import { CartIcon } from "../../components/CartIcon";
+import ReviewModal from "./ReviewModal";
 import "./ProductDetail.css";
 
 const GALLERY_FALLBACKS = [
@@ -16,22 +17,49 @@ const GALLERY_FALLBACKS = [
   "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&q=80",
 ];
 
-const REVIEWS = [
+/**
+ * Static "seed" reviews shown on products that don't yet have any user-submitted
+ * reviews so the panel never looks empty. As soon as a real review lands, the
+ * API list takes over.
+ */
+const FALLBACK_REVIEWS = [
   {
-    initials: "MS",
-    name: "Marcus Sterling",
+    id: "seed-ms",
+    userName: "Marcus Sterling",
     rating: 5,
     text:
       "Thermal management is incredible. I rendered 4K footage for hours and fan noise stayed very low.",
   },
   {
-    initials: "AL",
-    name: "Anna Liang",
+    id: "seed-al",
+    userName: "Anna Liang",
     rating: 4,
     text:
       "Excellent keyboard and screen quality. Great for development and long productivity sessions.",
   },
 ];
+
+function getInitials(name) {
+  if (!name) return "?";
+  const parts = String(name).trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function formatRelativeDate(iso) {
+  if (!iso) return "";
+  const ts = Date.parse(iso);
+  if (Number.isNaN(ts)) return "";
+  const diffSec = Math.max(1, Math.floor((Date.now() - ts) / 1000));
+  if (diffSec < 60) return "just now";
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return `${diffMin} min ago`;
+  const diffHr = Math.floor(diffMin / 60);
+  if (diffHr < 24) return `${diffHr} hr ago`;
+  const diffDay = Math.floor(diffHr / 24);
+  if (diffDay < 30) return `${diffDay} day${diffDay > 1 ? "s" : ""} ago`;
+  return new Date(ts).toLocaleDateString();
+}
 
 const SPECS = [
   ["Processor", "Intel Core i9-14900HK"],
@@ -75,6 +103,8 @@ function ProductDetail() {
   const [error, setError] = useState("");
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [selectedConfig, setSelectedConfig] = useState("base");
+  const [reviews, setReviews] = useState([]);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -83,7 +113,10 @@ function ProductDetail() {
       setError("");
       try {
         const response = await getProductById(id);
-        if (!cancelled) setData(response);
+        if (!cancelled) {
+          setData(response);
+          setReviews(Array.isArray(response?.reviews) ? response.reviews : []);
+        }
       } catch (err) {
         if (!cancelled) {
           setError(err.response?.data?.message || "Unable to load product details.");
@@ -100,6 +133,17 @@ function ProductDetail() {
 
   const product = data?.product;
   const similar = data?.similar || [];
+
+  const visibleReviews = reviews.length > 0 ? reviews : FALLBACK_REVIEWS;
+
+  const handleReviewSubmit = async ({ rating, text }) => {
+    if (!product?.id) return;
+    const response = await createProductReview(product.id, { rating, text });
+    if (response?.review) {
+      setReviews((prev) => [response.review, ...prev]);
+    }
+    setReviewModalOpen(false);
+  };
 
   const gallery = useMemo(() => {
     const list = [product?.image, ...GALLERY_FALLBACKS].filter(Boolean);
@@ -311,21 +355,32 @@ function ProductDetail() {
             <article className="panel">
               <div className="panel-head">
                 <h2>Community Feedback</h2>
-                <button type="button">Write a review</button>
+                <button type="button" onClick={() => setReviewModalOpen(true)}>
+                  Write a review
+                </button>
               </div>
               <div className="review-list">
-                {REVIEWS.map((review) => (
-                  <div key={review.name} className="review-item">
-                    <div className="review-meta">
-                      <span className="avatar">{review.initials}</span>
-                      <div>
-                        <p className="name">{review.name}</p>
-                        <p className="stars">{Array.from({ length: review.rating }).map(() => "★").join("")}</p>
+                {visibleReviews.map((review) => {
+                  const initials = getInitials(review.userName);
+                  const ratingValue = Math.max(0, Math.min(5, Number(review.rating) || 0));
+                  const stars = "★".repeat(ratingValue);
+                  const when = formatRelativeDate(review.createdAt);
+                  return (
+                    <div key={review.id} className="review-item">
+                      <div className="review-meta">
+                        <span className="avatar">{initials}</span>
+                        <div>
+                          <p className="name">{review.userName}</p>
+                          <p className="stars">
+                            {stars}
+                            {when ? <span className="review-time"> · {when}</span> : null}
+                          </p>
+                        </div>
                       </div>
+                      <p className="review-text">{review.text}</p>
                     </div>
-                    <p className="review-text">{review.text}</p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </article>
           </div>
@@ -382,6 +437,13 @@ function ProductDetail() {
         <span>🤖</span>
         <div>Ask AI Assistant about this product</div>
       </button>
+
+      <ReviewModal
+        open={reviewModalOpen}
+        productTitle={product.title}
+        onClose={() => setReviewModalOpen(false)}
+        onSubmit={handleReviewSubmit}
+      />
     </div>
   );
 }
