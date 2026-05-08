@@ -1,5 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
+import { Trash2 } from "lucide-react";
 import { useCart } from "../../hooks/useCart";
+import { useToast } from "../../hooks/useToast";
 import { ShopTopNav } from "../../components/ShopTopNav";
 import HomeFooter from "../Home/HomeFooter";
 import "./Cart.css";
@@ -17,6 +19,7 @@ function formatMoney(n) {
 function Cart() {
   const navigate = useNavigate();
   const { items, setQuantity, removeItem, addItem, itemCount } = useCart();
+  const toast = useToast();
 
   const subtotal = items.reduce((sum, line) => sum + line.unitPrice * line.quantity, 0);
   const estimatedTax = subtotal * TAX_RATE;
@@ -33,6 +36,28 @@ function Cart() {
       subtitle: "Premium felt sleeve • Charcoal gray",
       unitPrice: UPSLEEVE_PRICE,
       quantity: 1,
+    });
+    toast.success("SmartSleeve 13 added to your cart.");
+  };
+
+  const handleRemove = (line) => {
+    removeItem(line.productId);
+    toast.show({
+      message: `Removed ${line.title}`,
+      variant: "info",
+      action: {
+        label: "Undo",
+        onClick: () =>
+          addItem({
+            productId: line.productId,
+            title: line.title,
+            image: line.image,
+            subtitle: line.subtitle,
+            unitPrice: line.unitPrice,
+            quantity: line.quantity,
+            stockAvailable: line.stockAvailable,
+          }),
+      },
     });
   };
 
@@ -110,23 +135,12 @@ function Cart() {
                           +
                         </button>
                       </div>
-                      <button type="button" className="cart-remove" onClick={() => removeItem(line.productId)}>
-                        <svg
-                          className="cart-remove-icon"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          aria-hidden="true"
-                        >
-                          <path
-                            d="M4 7h16M10 11v6m4-6v6M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M7 7l1 12a2 2 0 0 0 2 1.9h4a2 2 0 0 0 2-1.9l1-12"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
+                      <button
+                        type="button"
+                        className="cart-remove"
+                        onClick={() => handleRemove(line)}
+                      >
+                        <Trash2 size={16} className="cart-remove-icon" aria-hidden="true" />
                         <span className="cart-remove-label">Remove</span>
                       </button>
                     </div>

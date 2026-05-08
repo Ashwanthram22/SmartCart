@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
-
-const JWT_SECRET = process.env.JWT_SECRET || "aicart-dev-secret-change-me";
+const { JWT_SECRET } = require("../config/env");
 
 function authMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;

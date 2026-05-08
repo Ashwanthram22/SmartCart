@@ -1,6 +1,18 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import {
+  ArrowRight,
+  Laptop,
+  Lock,
+  Shield,
+  ShieldCheck,
+  Smartphone,
+  Sparkles,
+  Tablet,
+  UserCheck,
+} from "lucide-react";
 import { ProfileLayout } from "./ProfileLayout";
+import { changePassword } from "../../api/client";
+import { useToast } from "../../hooks/useToast";
 import "./SettingsSecurity.css";
 
 const LOGIN_SESSIONS = [
@@ -30,146 +42,73 @@ const LOGIN_SESSIONS = [
   },
 ];
 
-function IconVerifiedUser() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      <path d="m9 12 2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function IconPassword() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" strokeWidth="2" />
-      <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <circle cx="12" cy="16" r="1" fill="currentColor" />
-    </svg>
-  );
-}
-
-function Icon2FA() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      <path d="M8 12h8M12 8v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function IconDevices() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" strokeWidth="2" />
-      <path d="M8 21h8M12 17v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function IconDesktop() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="3" y="4" width="18" height="12" rx="2" stroke="currentColor" strokeWidth="2" />
-      <path d="M8 20h8M12 16v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function IconPhone() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="7" y="3" width="10" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
-      <path d="M10 18h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function IconTablet() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
-      <path d="M12 17h.01" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function IconArrowForward() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function IconSparkleWatermark() {
-  return (
-    <svg width="160" height="160" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 2l1.2 4.2L17 7l-4.2 1.2L12 12l-1.2-4.8L7 7l4.2-1.2L12 2zm0 12l1.2 4.2L17 19l-4.2 1.2L12 24l-1.2-4.8L7 19l4.2-1.2L12 14z" />
-    </svg>
-  );
-}
-
-function IconShieldSpark() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M12 8v4l2 2M9 7l1.5 1M15 7l-1.5 1"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 function SessionIcon({ kind }) {
-  if (kind === "phone") return <IconPhone />;
-  if (kind === "tablet") return <IconTablet />;
-  return <IconDesktop />;
+  if (kind === "phone") return <Smartphone size={22} aria-hidden="true" />;
+  if (kind === "tablet") return <Tablet size={22} aria-hidden="true" />;
+  return <Laptop size={22} aria-hidden="true" />;
 }
+
+const INITIAL_FORM = {
+  currentPassword: "",
+  newPassword: "",
+  confirmPassword: "",
+};
 
 export default function SettingsSecurity() {
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(true);
+  const [pwForm, setPwForm] = useState(INITIAL_FORM);
+  const [pwError, setPwError] = useState("");
+  const [pwSubmitting, setPwSubmitting] = useState(false);
 
-  const handlePasswordSubmit = (e) => {
+  const toast = useToast();
+
+  const handlePwChange = (field) => (e) => {
+    setPwForm((prev) => ({ ...prev, [field]: e.target.value }));
+    if (pwError) setPwError("");
+  };
+
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
+    if (pwSubmitting) return;
+
+    const { currentPassword, newPassword, confirmPassword } = pwForm;
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setPwError("All fields are required.");
+      return;
+    }
+    if (newPassword.length < 6) {
+      setPwError("New password must be at least 6 characters.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPwError("New password and confirmation don't match.");
+      return;
+    }
+    if (currentPassword === newPassword) {
+      setPwError("New password must be different from your current password.");
+      return;
+    }
+
+    setPwSubmitting(true);
+    setPwError("");
+    try {
+      await changePassword({ currentPassword, newPassword });
+      toast.success("Password updated.");
+      setPwForm(INITIAL_FORM);
+    } catch (err) {
+      const msg = err.response?.data?.message || "Could not update your password.";
+      setPwError(msg);
+    } finally {
+      setPwSubmitting(false);
+    }
   };
 
   return (
     <ProfileLayout>
       <div className="settings-security">
-        {/* <nav className="settings-subnav" aria-label="Workspace">
-          <Link to="/profile/orders" className="settings-subnav-link">
-            History
-          </Link>
-          <a href="#" className="settings-subnav-link">
-            Recommendations
-          </a>
-          <a href="#" className="settings-subnav-link">
-            Compare
-          </a>
-        </nav> */}
-
         <header className="settings-security-header">
           <div className="settings-kicker">
-            <IconVerifiedUser />
+            <UserCheck size={16} aria-hidden="true" />
             <span>Account Settings</span>
           </div>
           <h1 className="settings-security-title">Security</h1>
@@ -182,13 +121,13 @@ export default function SettingsSecurity() {
           <section className="settings-card" aria-labelledby="settings-password-heading">
             <div className="settings-card-head">
               <div className="settings-card-icon" aria-hidden="true">
-                <IconPassword />
+                <Lock size={22} />
               </div>
               <h2 id="settings-password-heading" className="settings-card-title">
                 Change Password
               </h2>
             </div>
-            <form className="settings-password-form" onSubmit={handlePasswordSubmit}>
+            <form className="settings-password-form" onSubmit={handlePasswordSubmit} noValidate>
               <div className="settings-field settings-field--full">
                 <label htmlFor="settings-current-password">Current Password</label>
                 <input
@@ -197,6 +136,8 @@ export default function SettingsSecurity() {
                   type="password"
                   autoComplete="current-password"
                   placeholder="••••••••"
+                  value={pwForm.currentPassword}
+                  onChange={handlePwChange("currentPassword")}
                 />
               </div>
               <div className="settings-field">
@@ -207,6 +148,8 @@ export default function SettingsSecurity() {
                   type="password"
                   autoComplete="new-password"
                   placeholder="••••••••"
+                  value={pwForm.newPassword}
+                  onChange={handlePwChange("newPassword")}
                 />
               </div>
               <div className="settings-field">
@@ -217,11 +160,22 @@ export default function SettingsSecurity() {
                   type="password"
                   autoComplete="new-password"
                   placeholder="••••••••"
+                  value={pwForm.confirmPassword}
+                  onChange={handlePwChange("confirmPassword")}
                 />
               </div>
+              {pwError ? (
+                <p className="settings-form-error" role="alert">
+                  {pwError}
+                </p>
+              ) : null}
               <div className="settings-form-actions">
-                <button type="submit" className="settings-btn-primary">
-                  Update Password
+                <button
+                  type="submit"
+                  className="settings-btn-primary"
+                  disabled={pwSubmitting}
+                >
+                  {pwSubmitting ? "Updating…" : "Update Password"}
                 </button>
               </div>
             </form>
@@ -231,7 +185,7 @@ export default function SettingsSecurity() {
             <div className="settings-2fa-row">
               <div className="settings-card-head settings-card-head--inline">
                 <div className="settings-card-icon" aria-hidden="true">
-                  <Icon2FA />
+                  <ShieldCheck size={22} />
                 </div>
                 <div>
                   <h2 id="settings-2fa-heading" className="settings-card-title">
@@ -256,7 +210,7 @@ export default function SettingsSecurity() {
           <section className="settings-card" aria-labelledby="settings-activity-heading">
             <div className="settings-card-head">
               <div className="settings-card-icon" aria-hidden="true">
-                <IconDevices />
+                <Laptop size={22} />
               </div>
               <h2 id="settings-activity-heading" className="settings-card-title">
                 Login Activity
@@ -283,19 +237,23 @@ export default function SettingsSecurity() {
                 </li>
               ))}
             </ul>
-            <button type="button" className="settings-activity-view-all">
+            <button
+              type="button"
+              className="settings-activity-view-all"
+              onClick={() => toast.info("Detailed activity log coming soon.")}
+            >
               View All Activity
-              <IconArrowForward />
+              <ArrowRight size={16} aria-hidden="true" />
             </button>
           </section>
 
           <section className="settings-ai-banner" aria-labelledby="settings-ai-heading">
             <div className="settings-ai-banner-watermark" aria-hidden="true">
-              <IconSparkleWatermark />
+              <Sparkles size={160} />
             </div>
             <div className="settings-ai-banner-inner">
               <div className="settings-ai-banner-icon" aria-hidden="true">
-                <IconShieldSpark />
+                <Shield size={28} />
               </div>
               <div className="settings-ai-banner-copy">
                 <h3 id="settings-ai-heading" className="settings-ai-banner-title">
@@ -306,7 +264,11 @@ export default function SettingsSecurity() {
                   suspicious login attempts. Your data is encrypted with enterprise-grade standards.
                 </p>
               </div>
-              <button type="button" className="settings-ai-banner-btn">
+              <button
+                type="button"
+                className="settings-ai-banner-btn"
+                onClick={() => toast.info("AI Shield management opens soon.")}
+              >
                 Manage AI Shield
               </button>
             </div>
@@ -320,10 +282,10 @@ export default function SettingsSecurity() {
               <p className="settings-footer-copy">© 2024 SmartCart AI. Intelligent shopping for the future.</p>
             </div>
             <div className="settings-footer-links">
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Service</a>
-              <a href="#">Help Center</a>
-              <a href="#">Contact</a>
+              <a href="/profile">Privacy Policy</a>
+              <a href="/profile">Terms of Service</a>
+              <a href="/profile">Help Center</a>
+              <a href="/profile">Contact</a>
             </div>
           </div>
         </footer>

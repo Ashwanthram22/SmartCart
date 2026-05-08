@@ -4,7 +4,7 @@
       "id": "u1",
       "name": "Demo User",
       "email": "demo@aicart.com",
-      "password": "demo123",
+      "password": "$2b$10$Q28utLp1ofyJ5JmWY/7GKecXEYjJMssgYMw7ZWn5U8JucDWDGTOQ2",
       "role": "customer"
     },
     {
@@ -21,6 +21,7 @@
       "id": "p1",
       "title": "OmniWatch Pro 4",
       "category": "Wearables",
+      "brand": "AuraTech",
       "catalogSegments": [
         "Electronics",
         "Mobiles"
@@ -31,12 +32,16 @@
       "rating": 4.8,
       "reviewCount": 2840,
       "badge": "93% MATCH",
-      "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80",
+      "specs": {
+        "display": "1.4-inch AMOLED"
+      }
     },
     {
       "id": "p2",
       "title": "AuraPods Max",
       "category": "Audio",
+      "brand": "AuraTech",
       "catalogSegments": [
         "Electronics",
         "Accessories"
@@ -53,6 +58,7 @@
       "id": "p3",
       "title": "Vision Tab Ultra",
       "category": "Tablets",
+      "brand": "Nexus",
       "catalogSegments": [
         "Electronics",
         "Mobiles",
@@ -63,12 +69,17 @@
       "rating": 4.7,
       "reviewCount": 920,
       "badge": "AI CHOICE",
-      "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=600&q=80",
+      "specs": {
+        "processor": "Apple M3",
+        "display": "12.9-inch OLED"
+      }
     },
     {
       "id": "p4",
       "title": "PulseFit Band",
       "category": "Fitness",
+      "brand": "Stride",
       "catalogSegments": [
         "Electronics",
         "Accessories"
@@ -85,6 +96,7 @@
       "id": "p5",
       "title": "Lumina Smart Lamp",
       "category": "Home",
+      "brand": "Lumina",
       "catalogSegments": [
         "Home & Kitchen"
       ],
@@ -98,6 +110,7 @@
       "id": "p6",
       "title": "QuietAir Purifier",
       "category": "Wellness",
+      "brand": "Lumina",
       "catalogSegments": [
         "Appliances",
         "Home & Kitchen"
@@ -112,6 +125,7 @@
       "id": "p7",
       "title": "EcoTherm Hub",
       "category": "Smart Home",
+      "brand": "Lumina",
       "catalogSegments": [
         "Electronics",
         "Appliances",
@@ -127,6 +141,7 @@
       "id": "p8",
       "title": "Stride Run X",
       "category": "Sports",
+      "brand": "Stride",
       "catalogSegments": [
         "Fashion",
         "Accessories"
@@ -141,6 +156,7 @@
       "id": "p9",
       "title": "The AI Commerce Handbook",
       "category": "Books",
+      "brand": "Forge Press",
       "catalogSegments": [
         "Books"
       ],
@@ -155,6 +171,7 @@
       "id": "p10",
       "title": "Organic Breakfast Bundle",
       "category": "Groceries",
+      "brand": "FreshKitchen",
       "catalogSegments": [
         "Groceries"
       ],
@@ -169,6 +186,7 @@
       "id": "p11",
       "title": "Nexus Phone 15",
       "category": "Mobiles",
+      "brand": "Nexus",
       "catalogSegments": [
         "Mobiles",
         "Electronics"
@@ -179,12 +197,17 @@
       "rating": 4.8,
       "reviewCount": 2104,
       "badge": "NEW",
-      "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80",
+      "specs": {
+        "processor": "Snapdragon X",
+        "display": "6.7-inch AMOLED"
+      }
     },
     {
       "id": "p12",
       "title": "SkyMaster 4K Drone",
       "category": "Drones",
+      "brand": "SkyTech",
       "catalogSegments": [
         "Electronics"
       ],
@@ -199,6 +222,7 @@
       "id": "p13",
       "title": "ZenBuds Pro Earbuds",
       "category": "Audio",
+      "brand": "AuraTech",
       "catalogSegments": [
         "Electronics",
         "Accessories"
@@ -215,6 +239,7 @@
       "id": "p14",
       "title": "AeroGarden Harvest",
       "category": "Home & Garden",
+      "brand": "AeroGarden",
       "catalogSegments": [
         "Home & Kitchen",
         "Appliances"
@@ -230,6 +255,7 @@
       "id": "p15",
       "title": "UltraTab 12\" Tablet",
       "category": "Computing",
+      "brand": "Nexus",
       "catalogSegments": [
         "Electronics",
         "Laptops"
@@ -240,7 +266,11 @@
       "rating": 4.9,
       "reviewCount": 3105,
       "badge": "TRENDING",
-      "image": "https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=600&q=80",
+      "specs": {
+        "processor": "Apple M3",
+        "display": "12-inch Liquid Retina"
+      }
     }
   ],
   "orders": [],
@@ -271,6 +301,13 @@
       "rating": 4,
       "text": "great",
       "createdAt": "2026-05-07T13:22:36.255Z"
+    }
+  ],
+  "carts": [
+    {
+      "userId": "u1",
+      "items": [],
+      "updatedAt": "2026-05-08T13:10:56.304Z"
     }
   ]
 }

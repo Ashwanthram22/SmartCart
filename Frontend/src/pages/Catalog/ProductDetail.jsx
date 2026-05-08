@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
 import { useSaved } from "../../hooks/useSaved";
+import { useToast } from "../../hooks/useToast";
 import { HeartIcon } from "../../components/HeartIcon";
 import { isValidSegment } from "../../constants/shopSegments";
 import { DEFAULT_PROFILE_AVATAR } from "../../data/profileDisplay";
+import { productSpecsFor } from "../../data/productSpecs";
 import { createProductReview, getProductById } from "../../api/client";
 import HomeFooter from "../Home/HomeFooter";
 import { CartIcon } from "../../components/CartIcon";
@@ -61,17 +63,9 @@ function formatRelativeDate(iso) {
   return new Date(ts).toLocaleDateString();
 }
 
-const SPECS = [
-  ["Processor", "Intel Core i9-14900HK"],
-  ["Graphics", "RTX 4090 Mobile 16GB"],
-  ["Display", "16\" 4K OLED, 120Hz"],
-  ["Battery", "99.9 Whr (12 hours)"],
-  ["Weight", "1.8 kg (3.9 lbs)"],
-  ["Ports", "3x TB4, HDMI 2.1"],
-];
-
 function ProductDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const segmentRaw = searchParams.get("segment");
   const qRaw = searchParams.get("q");
@@ -98,6 +92,7 @@ function ProductDetail() {
 
   const { addItem, itemCount } = useCart();
   const { isSaved, toggleSaved } = useSaved();
+  const toast = useToast();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -135,14 +130,21 @@ function ProductDetail() {
   const similar = data?.similar || [];
 
   const visibleReviews = reviews.length > 0 ? reviews : FALLBACK_REVIEWS;
+  const specRows = useMemo(() => productSpecsFor(product), [product]);
 
   const handleReviewSubmit = async ({ rating, text }) => {
     if (!product?.id) return;
-    const response = await createProductReview(product.id, { rating, text });
-    if (response?.review) {
-      setReviews((prev) => [response.review, ...prev]);
+    try {
+      const response = await createProductReview(product.id, { rating, text });
+      if (response?.review) {
+        setReviews((prev) => [response.review, ...prev]);
+      }
+      toast.success("Thanks for the review!");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Could not submit your review");
+    } finally {
+      setReviewModalOpen(false);
     }
-    setReviewModalOpen(false);
   };
 
   const gallery = useMemo(() => {
@@ -181,6 +183,7 @@ function ProductDetail() {
       unitPrice,
       stockAvailable: Number.isFinite(cap) ? cap : undefined,
     });
+    toast.success(`Added ${product.title} to cart`);
   };
 
   if (loading) {
@@ -318,7 +321,17 @@ function ProductDetail() {
                 <CartIcon size={26} className="btn-primary-cart-img" />
                 Add to Cart
               </button>
-              <button type="button" className="btn-secondary">Buy Now</button>
+              <button
+                type="button"
+                className="btn-secondary"
+                disabled={outOfStock}
+                onClick={() => {
+                  handleAddToCart();
+                  navigate("/cart");
+                }}
+              >
+                Buy Now
+              </button>
             </div>
 
             <div className="benefits">
@@ -343,12 +356,18 @@ function ProductDetail() {
             <article className="panel">
               <h2>Technical Specifications</h2>
               <div className="spec-grid">
-                {SPECS.map(([key, value]) => (
-                  <div key={key} className="spec-row">
-                    <span>{key}</span>
-                    <strong>{value}</strong>
-                  </div>
-                ))}
+                {specRows.length > 0 ? (
+                  specRows.map(([key, value]) => (
+                    <div key={key} className="spec-row">
+                      <span>{key}</span>
+                      <strong>{value}</strong>
+                    </div>
+                  ))
+                ) : (
+                  <p className="spec-empty">
+                    Detailed specifications for this product are coming soon.
+                  </p>
+                )}
               </div>
             </article>
 
@@ -432,11 +451,6 @@ function ProductDetail() {
       </main>
 
       <HomeFooter />
-
-      <button type="button" className="product-floating-ai" aria-label="Ask AI">
-        <span>🤖</span>
-        <div>Ask AI Assistant about this product</div>
-      </button>
 
       <ReviewModal
         open={reviewModalOpen}

@@ -61,13 +61,43 @@
   accent-color: #6b38d4;
 }
 
+.rating-filter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .rating-filter-btn {
-  border: 0;
+  border: 1px solid transparent;
   background: transparent;
   color: #374151;
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  padding: 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  text-align: left;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.rating-filter-btn:hover:not(:disabled) {
+  background: #f5f3ff;
+  color: #6b38d4;
+}
+
+.rating-filter-btn.is-active {
+  background: #f5f3ff;
+  border-color: #c4b5fd;
+  color: #6b38d4;
+}
+
+.rating-filter-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.spec-group + .spec-group {
+  margin-top: 12px;
 }
 
 .sub-label {

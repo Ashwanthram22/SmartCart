@@ -207,6 +207,18 @@
   color: #494454;
 }
 
+.oh-badge--cancelled {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.oh-tool-btn:disabled,
+.oh-insight-cta:disabled,
+.oh-action-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .oh-status-icon {
   flex-shrink: 0;
 }
@@ -510,4 +522,34 @@
 
 .oh-footer-links a:hover {
   color: #141b2b;
+}
+
+.oh-error {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fee2e2;
+  color: #991b1b;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.oh-order-card--skeleton,
+.oh-empty-card {
+  text-align: center;
+  color: #6b7280;
+  padding: 32px 28px;
+}
+
+.oh-empty-card .oh-product-title {
+  margin-bottom: 8px;
+}
+
+.oh-empty-card .oh-order-actions {
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.oh-action-btn.oh-action-btn--primary {
+  text-decoration: none;
 }

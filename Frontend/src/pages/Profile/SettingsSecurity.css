@@ -203,6 +203,23 @@
   transform: scale(0.98);
 }
 
+.settings-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.settings-form-error {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 10px 14px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  border-radius: 10px;
+  font-size: 0.88rem;
+}
+
 /* 2FA row */
 .settings-2fa-row {
   display: flex;

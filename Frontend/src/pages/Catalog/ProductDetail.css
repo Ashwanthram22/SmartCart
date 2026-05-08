@@ -445,6 +445,15 @@
   text-align: right;
 }
 
+.spec-empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 24px 0;
+  color: #6b7280;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
 .panel-head {
   display: flex;
   align-items: center;

@@ -203,6 +203,24 @@
   line-height: 1.55;
 }
 
+.checkout-success-text strong {
+  color: #141b2b;
+}
+
+.checkout-error {
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #fee2e2;
+  color: #991b1b;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.checkout-success .checkout-actions {
+  justify-content: center;
+}
+
 @media (max-width: 520px) {
   .checkout-field-row {
     grid-template-columns: 1fr;

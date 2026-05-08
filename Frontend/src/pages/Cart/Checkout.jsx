@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
+import { createOrder } from "../../api/client";
 import HomeFooter from "../Home/HomeFooter";
 import "./Checkout.css";
 
@@ -13,8 +14,12 @@ export default function Checkout() {
     city: "",
     postal: "",
   });
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [confirmedOrder, setConfirmedOrder] = useState(null);
 
-  const updateAddr = (field) => (e) => setAddress((a) => ({ ...a, [field]: e.target.value }));
+  const updateAddr = (field) => (e) =>
+    setAddress((a) => ({ ...a, [field]: e.target.value }));
 
   const canContinueAddr =
     address.fullName.trim() &&
@@ -22,9 +27,23 @@ export default function Checkout() {
     address.city.trim() &&
     address.postal.trim();
 
-  const placeOrder = () => {
-    clearCart();
-    setStep(3);
+  const placeOrder = async () => {
+    setSubmitting(true);
+    setError("");
+    try {
+      const response = await createOrder({ address });
+      setConfirmedOrder(response?.order || null);
+      // server already cleared the cart; mirror locally so the badge updates
+      clearCart();
+      setStep(3);
+    } catch (err) {
+      setError(
+        err.response?.data?.message ||
+          "Could not place your order. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (items.length === 0 && step < 3) {
@@ -89,11 +108,19 @@ export default function Checkout() {
               <div className="checkout-field-row">
                 <label className="checkout-field">
                   City
-                  <input value={address.city} onChange={updateAddr("city")} autoComplete="address-level2" />
+                  <input
+                    value={address.city}
+                    onChange={updateAddr("city")}
+                    autoComplete="address-level2"
+                  />
                 </label>
                 <label className="checkout-field">
                   Postal code
-                  <input value={address.postal} onChange={updateAddr("postal")} autoComplete="postal-code" />
+                  <input
+                    value={address.postal}
+                    onChange={updateAddr("postal")}
+                    autoComplete="postal-code"
+                  />
                 </label>
               </div>
             </div>
@@ -111,17 +138,34 @@ export default function Checkout() {
         {step === 2 ? (
           <section className="checkout-card">
             <h1 className="checkout-title">Payment</h1>
-            <p className="checkout-mock-note">Demo checkout — no real card is charged.</p>
+            <p className="checkout-mock-note">
+              Demo checkout — no real card is charged.
+            </p>
             <div className="checkout-mock-card">
-              <span className="checkout-mock-card-title">Visa ending in 4242</span>
-              <small className="checkout-mock-card-sub">Mock payment method · expires 12/30</small>
+              <span className="checkout-mock-card-title">
+                Visa ending in 4242
+              </span>
+              <small className="checkout-mock-card-sub">
+                Mock payment method · expires 12/30
+              </small>
             </div>
+            {error ? <p className="checkout-error">{error}</p> : null}
             <div className="checkout-actions">
-              <button type="button" className="checkout-btn-secondary" onClick={() => setStep(1)}>
+              <button
+                type="button"
+                className="checkout-btn-secondary"
+                onClick={() => setStep(1)}
+                disabled={submitting}
+              >
                 Back
               </button>
-              <button type="button" className="checkout-btn-primary" onClick={placeOrder}>
-                Place order
+              <button
+                type="button"
+                className="checkout-btn-primary"
+                onClick={placeOrder}
+                disabled={submitting}
+              >
+                {submitting ? "Placing order…" : "Place order"}
               </button>
             </div>
           </section>
@@ -131,11 +175,28 @@ export default function Checkout() {
           <section className="checkout-card checkout-success">
             <h1 className="checkout-title">Thank you!</h1>
             <p className="checkout-success-text">
-              Your order is confirmed. You&apos;ll receive a confirmation email shortly (demo — no email is sent).
+              Your order is confirmed.
+              {confirmedOrder?.id ? (
+                <>
+                  {" "}
+                  Reference <strong>#{confirmedOrder.id}</strong>.
+                </>
+              ) : null}{" "}
+              You can track its progress from your profile.
             </p>
-            <Link to="/home" className="checkout-btn-primary">
-              Continue shopping
-            </Link>
+            {confirmedOrder?.total != null ? (
+              <p className="checkout-success-text">
+                Total charged: <strong>${confirmedOrder.total.toFixed(2)}</strong>
+              </p>
+            ) : null}
+            <div className="checkout-actions">
+              <Link to="/profile/orders" className="checkout-btn-secondary">
+                View orders
+              </Link>
+              <Link to="/home" className="checkout-btn-primary">
+                Continue shopping
+              </Link>
+            </div>
           </section>
         ) : null}
       </main>

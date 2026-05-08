@@ -7,26 +7,32 @@ import { ShopTopNav } from "../../components/ShopTopNav";
 import { CartIcon } from "../../components/CartIcon";
 import { ShopSegmentNav } from "../../components/ShopSegmentNav";
 import HomeFooter from "../Home/HomeFooter";
-import { getProducts } from "../../api/client";
+import { getProductFilters, getProducts } from "../../api/client";
 import "./ProductsCatalog.css";
-import { isValidSegment, productMatchesSegment } from "../../constants/shopSegments";
-import { pickTrendingProducts } from "../../utils/productSelection";
+import { isValidSegment } from "../../constants/shopSegments";
 
-const TRENDING_TAB_LIMIT = 12;
+/** Debounce window for refetching products as the user drags the price slider. */
+const PRODUCT_REFETCH_DEBOUNCE_MS = 200;
+
+/** Mock USD conversion used for display only — backend stores INR. */
+const INR_TO_USD = 2.8;
+const toUsd = (inr) => Math.round((Number(inr) || 0) / INR_TO_USD);
+
+/**
+ * Filter facets are loaded from `GET /api/products/filters?segment=...&q=...`.
+ * This is the empty shape we render before the first response lands so the
+ * sidebar can keep its layout instead of jumping when data arrives.
+ */
+const EMPTY_FILTER_OPTIONS = {
+  price: { min: 0, max: 0 },
+  brands: [],
+  ratings: [],
+  specifications: {},
+};
 
 function segmentFromSearchParams(searchParams) {
   const raw = searchParams.get("segment");
   return isValidSegment(raw) ? raw : "AI Picks";
-}
-
-/**
- * Client-side catalog search by title/category/catalogSegments.
- * Swap `getProducts()` for `getProducts({ q })` when the list outgrows JSON.
- */
-function matchesSearchQuery(item, qNorm) {
-  if (!qNorm) return true;
-  const hay = `${item.title || ""} ${item.category || ""} ${(item.catalogSegments || []).join(" ")}`.toLowerCase();
-  return hay.includes(qNorm);
 }
 
 function stockCap(product) {
@@ -34,8 +40,6 @@ function stockCap(product) {
   return Number.isFinite(n) ? n : Infinity;
 }
 
-const BRAND_OPTIONS = ["Apple", "Dell", "HP", "Lenovo", "Asus"];
-const PROCESSORS = ["M3 Chip", "Core i9", "Ryzen 9"];
 const PRODUCT_INSIGHTS = [
   "Top-tier performance for creative workloads. Price matches historical lows.",
   "Best battery-to-weight ratio in its class. Perfect for executive travel.",
@@ -43,14 +47,11 @@ const PRODUCT_INSIGHTS = [
   "Highest-rated model for students. Great for notes and media.",
 ];
 
-function getBrand(product) {
-  const source = (product.title || "").toLowerCase();
-  if (source.includes("macbook")) return "Apple";
-  if (source.includes("dell")) return "Dell";
-  if (source.includes("hp")) return "HP";
-  if (source.includes("lenovo")) return "Lenovo";
-  if (source.includes("asus")) return "Asus";
-  return "Dell";
+function ratingTierLabel(tier) {
+  const filled = Math.floor(tier);
+  const half = tier - filled >= 0.5;
+  const empty = 5 - filled - (half ? 1 : 0);
+  return "★".repeat(filled) + (half ? "½" : "") + "☆".repeat(Math.max(0, empty));
 }
 
 function ProductsCatalog() {
@@ -64,62 +65,150 @@ function ProductsCatalog() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [priceRange, setPriceRange] = useState(5000);
+  const [filterOptions, setFilterOptions] = useState(EMPTY_FILTER_OPTIONS);
+  const [filtersLoading, setFiltersLoading] = useState(true);
+  const [filtersError, setFiltersError] = useState("");
+  const [filtersReady, setFiltersReady] = useState(false);
+
+  const [priceRange, setPriceRange] = useState(0);
   const [selectedBrands, setSelectedBrands] = useState([]);
-  const [minRating, setMinRating] = useState(4);
+  const [minRating, setMinRating] = useState(0);
   const [page, setPage] = useState(1);
 
+  /**
+   * Step 1 of the per-tab flow: fetch the facet options for the current
+   * segment + search context. While this is in flight we treat the page as
+   * "not ready" so the products effect doesn't fire with stale state.
+   *
+   * When the response lands we reset all user filter selections to permissive
+   * defaults derived from the API:
+   *   - selectedBrands → []  (no brand restriction; "filters empty = all
+   *     products in this category", per the product spec)
+   *   - priceRange → API max (slider sits fully open)
+   *   - minRating  → lowest tier the API offers, falling back to 0
+   *
+   * Resetting on every tab/search change is what guarantees that switching
+   * from "Electronics" (with a brand checked) to "Groceries" doesn't lock
+   * the new tab to zero results.
+   */
   useEffect(() => {
     let cancelled = false;
-    async function load() {
-      setLoading(true);
-      setError("");
+    async function loadFilters() {
+      setFiltersLoading(true);
+      setFiltersError("");
+      setFiltersReady(false);
+      setProducts([]);
       try {
-        const data = await getProducts();
-        if (!cancelled) setProducts(Array.isArray(data) ? data : []);
+        const data = await getProductFilters({
+          segment: activeSegment,
+          q: searchQ || undefined,
+        });
+        if (cancelled) return;
+        const options = {
+          price: {
+            min: Number(data?.price?.min) || 0,
+            max: Number(data?.price?.max) || 0,
+          },
+          brands: Array.isArray(data?.brands) ? data.brands : [],
+          ratings: Array.isArray(data?.ratings) ? data.ratings : [],
+          specifications:
+            data?.specifications && typeof data.specifications === "object"
+              ? data.specifications
+              : {},
+        };
+        setFilterOptions(options);
+        setSelectedBrands([]);
+        setPriceRange(options.price.max || 0);
+        setMinRating(options.ratings.length ? options.ratings[0] : 0);
+        setPage(1);
+        setFiltersReady(true);
+      } catch {
+        if (!cancelled) {
+          setFilterOptions(EMPTY_FILTER_OPTIONS);
+          setFiltersError("Unable to load filter options right now.");
+          setFiltersReady(true);
+        }
+      } finally {
+        if (!cancelled) setFiltersLoading(false);
+      }
+    }
+    loadFilters();
+    return () => {
+      cancelled = true;
+    };
+  }, [activeSegment, searchQ]);
+
+  /**
+   * Step 2 of the per-tab flow: once filter options are ready (and any time
+   * the user adjusts a filter) we re-fetch the product list from the
+   * filter-aware `/api/products` endpoint. Brand whitelist is sent only when
+   * something is actually checked, and the price cap is omitted when the
+   * slider is sitting at the catalog max — both keep the URL clean and let
+   * the backend short-circuit to "every product in this category".
+   *
+   * A short debounce smooths out price-slider drags so we don't fire one
+   * request per pixel.
+   */
+  useEffect(() => {
+    if (!filtersReady) return undefined;
+    let cancelled = false;
+    setLoading(true);
+    setError("");
+
+    const handle = window.setTimeout(async () => {
+      try {
+        const data = await getProducts({
+          segment: activeSegment,
+          q: searchQ || undefined,
+          brand: selectedBrands.length ? selectedBrands : undefined,
+          priceMax:
+            priceRange > 0 && priceRange < (filterOptions.price.max || Infinity)
+              ? priceRange
+              : undefined,
+          minRating: minRating > 0 ? minRating : undefined,
+        });
+        if (!cancelled) {
+          setProducts(Array.isArray(data) ? data : []);
+          setPage(1);
+        }
       } catch {
         if (!cancelled) setError("Unable to load products right now.");
       } finally {
         if (!cancelled) setLoading(false);
       }
-    }
-    load();
+    }, PRODUCT_REFETCH_DEBOUNCE_MS);
+
     return () => {
       cancelled = true;
+      window.clearTimeout(handle);
     };
-  }, []);
+  }, [
+    filtersReady,
+    activeSegment,
+    searchQ,
+    selectedBrands,
+    priceRange,
+    minRating,
+    filterOptions.price.max,
+  ]);
 
-  useEffect(() => {
-    setPage(1);
-  }, [activeSegment, searchQ]);
+  const filtered = products;
+
+  const priceMin = filterOptions.price.min || 0;
+  const priceMax = filterOptions.price.max || 0;
+  const priceStep = useMemo(() => {
+    const span = Math.max(0, priceMax - priceMin);
+    if (span === 0) return 1;
+    return Math.max(1, Math.round(span / 100));
+  }, [priceMin, priceMax]);
 
   /**
-   * For the "Trending" tab we pre-compute the top N products by popularity
-   * (same logic the home page Trending row uses) and only allow those IDs
-   * through the rest of the filters. Memoized so brand/price/rating tweaks
-   * don't recompute the trending set unnecessarily.
+   * Show the full skeleton only while the very first list for this tab is
+   * loading. Subsequent filter tweaks keep the previous results visible so
+   * the grid doesn't flash on every checkbox click.
    */
-  const trendingIdSet = useMemo(() => {
-    if (activeSegment !== "Trending") return null;
-    const top = pickTrendingProducts(products, TRENDING_TAB_LIMIT);
-    return new Set(top.map((item) => item.id));
-  }, [activeSegment, products]);
-
-  const filtered = useMemo(() => {
-    return products.filter((item) => {
-      if (activeSegment === "Trending") {
-        if (!trendingIdSet || !trendingIdSet.has(item.id)) return false;
-      } else if (!productMatchesSegment(item, activeSegment)) {
-        return false;
-      }
-      if (!matchesSearchQuery(item, searchQ)) return false;
-      const brand = getBrand(item);
-      const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(brand);
-      const priceMatch = Number(item.price || 0) <= priceRange * 100;
-      const ratingMatch = Number(item.rating || 4) >= minRating;
-      return brandMatch && priceMatch && ratingMatch;
-    });
-  }, [products, selectedBrands, priceRange, minRating, activeSegment, searchQ, trendingIdSet]);
+  const showProductLoading =
+    (loading && products.length === 0) || (filtersLoading && !filtersReady);
 
   const perPage = 6;
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
@@ -168,7 +257,7 @@ function ProductsCatalog() {
       ? `Showing 0-0 of 0 results`
       : `Showing ${pageStart + 1}-${Math.min(pageStart + perPage, filtered.length)} of ${filtered.length} results`;
 
-  const showEmptyState = !loading && !error && filtered.length === 0;
+  const showEmptyState = !showProductLoading && !error && filtered.length === 0;
 
   return (
     <div className="catalog-page">
@@ -185,56 +274,95 @@ function ProductsCatalog() {
       </div>
 
       <main className="catalog-main">
-        <aside className="catalog-sidebar">
-          <section>
-            <h3>Price</h3>
-            <input
-              type="range"
-              min="500"
-              max="5000"
-              step="100"
-              value={priceRange}
-              onChange={(e) => {
-                setPriceRange(Number(e.target.value));
-                setPage(1);
-              }}
-            />
-            <div className="range-labels">
-              <span>$500</span>
-              <span>${priceRange}+</span>
-            </div>
-          </section>
+        <aside className="catalog-sidebar" aria-busy={filtersLoading}>
+          {filtersError ? (
+            <p className="catalog-error">{filtersError}</p>
+          ) : null}
 
-          <section>
-            <h3>Brands</h3>
-            {BRAND_OPTIONS.map((brand) => (
-              <label key={brand} className="filter-check">
-                <input
-                  type="checkbox"
-                  checked={selectedBrands.includes(brand)}
-                  onChange={() => toggleBrand(brand)}
-                />
-                <span>{brand}</span>
-              </label>
-            ))}
-          </section>
+          {priceMax > 0 ? (
+            <section>
+              <h3>Price</h3>
+              <input
+                type="range"
+                min={priceMin}
+                max={priceMax}
+                step={priceStep}
+                value={priceRange}
+                disabled={filtersLoading}
+                onChange={(e) => {
+                  setPriceRange(Number(e.target.value));
+                  setPage(1);
+                }}
+              />
+              <div className="range-labels">
+                <span>${toUsd(priceMin)}</span>
+                <span>${toUsd(priceRange)}{priceRange < priceMax ? "" : "+"}</span>
+              </div>
+            </section>
+          ) : null}
 
-          <section>
-            <h3>Customer Rating</h3>
-            <button type="button" className="rating-filter-btn" onClick={() => setMinRating(4)}>
-              ★★★★☆ &amp; Up
-            </button>
-          </section>
-
-          <section>
-            <h3>Specifications</h3>
-            <p className="sub-label">Processor</p>
-            <div className="spec-chips">
-              {PROCESSORS.map((processor) => (
-                <span key={processor}>{processor}</span>
+          {filterOptions.brands.length > 0 ? (
+            <section>
+              <h3>Brands</h3>
+              {filterOptions.brands.map((brand) => (
+                <label key={brand} className="filter-check">
+                  <input
+                    type="checkbox"
+                    checked={selectedBrands.includes(brand)}
+                    onChange={() => toggleBrand(brand)}
+                    disabled={filtersLoading}
+                  />
+                  <span>{brand}</span>
+                </label>
               ))}
-            </div>
-          </section>
+            </section>
+          ) : null}
+
+          {filterOptions.ratings.length > 0 ? (
+            <section>
+              <h3>Customer Rating</h3>
+              <div className="rating-filter-list">
+                {filterOptions.ratings.map((tier) => (
+                  <button
+                    key={tier}
+                    type="button"
+                    className={`rating-filter-btn${minRating === tier ? " is-active" : ""}`}
+                    onClick={() => {
+                      setMinRating(tier);
+                      setPage(1);
+                    }}
+                    disabled={filtersLoading}
+                  >
+                    {ratingTierLabel(tier)} &amp; Up
+                  </button>
+                ))}
+              </div>
+            </section>
+          ) : null}
+
+          {Object.keys(filterOptions.specifications).length > 0 ? (
+            <section>
+              <h3>Specifications</h3>
+              {Object.entries(filterOptions.specifications).map(([group, values]) => (
+                <div key={group} className="spec-group">
+                  <p className="sub-label">{group}</p>
+                  <div className="spec-chips">
+                    {values.map((value) => (
+                      <span key={value}>{value}</span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </section>
+          ) : null}
+
+          {!filtersLoading &&
+          priceMax === 0 &&
+          filterOptions.brands.length === 0 &&
+          filterOptions.ratings.length === 0 &&
+          Object.keys(filterOptions.specifications).length === 0 ? (
+            <p className="catalog-empty-text">No filters available for this tab.</p>
+          ) : null}
         </aside>
 
         <section className="catalog-content">
@@ -254,7 +382,7 @@ function ProductsCatalog() {
           {error ? <p className="catalog-error">{error}</p> : null}
 
           <div className="catalog-grid">
-            {loading
+            {showProductLoading
               ? Array.from({ length: 6 }).map((_, i) => <div key={i} className="catalog-card skeleton" />)
               : pageItems.map((product, index) => {
                   const cap = stockCap(product);
@@ -380,10 +508,6 @@ function ProductsCatalog() {
       </main>
 
       <HomeFooter />
-
-      <button type="button" className="catalog-floating-ai" aria-label="AI Assistant">
-        ✦
-      </button>
     </div>
   );
 }
