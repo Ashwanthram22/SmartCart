@@ -1,0 +1,135 @@
+.sp-loading {
+  margin: 24px 0 0;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.sp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.sp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sp-field-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #141b2b;
+}
+
+.sp-select {
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 23, 42, 0.18);
+  background: #fff;
+  color: #141b2b;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sp-select:focus,
+.sp-select:focus-visible {
+  border-color: #6b38d4;
+  box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.18);
+}
+
+.sp-field-help {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.sp-toggle-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.sp-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.sp-toggle-row:last-child {
+  border-bottom: 0;
+}
+
+.sp-toggle-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.sp-toggle-title {
+  margin: 0 0 2px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #141b2b;
+}
+
+.sp-toggle-desc {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+.sp-action-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sp-secondary {
+  appearance: none;
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(15, 23, 42, 0.18);
+  background: #fff;
+  color: #141b2b;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.sp-secondary:hover:not(:disabled) {
+  background: #f5f4fb;
+  border-color: rgba(107, 56, 212, 0.45);
+}
+
+.sp-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sp-dirty-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b38d4;
+}
+
+.sp-secondary:focus-visible {
+  outline: 2px solid #6b38d4;
+  outline-offset: 2px;
+}

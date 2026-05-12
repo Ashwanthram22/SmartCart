@@ -11,8 +11,10 @@ import {
   UserCheck,
 } from "lucide-react";
 import { ProfileLayout } from "./ProfileLayout";
+import SettingsTabs from "./SettingsTabs";
 import { changePassword } from "../../api/client";
 import { useToast } from "../../hooks/useToast";
+import usePageMeta from "../../hooks/usePageMeta";
 import "./SettingsSecurity.css";
 
 const LOGIN_SESSIONS = [
@@ -55,6 +57,11 @@ const INITIAL_FORM = {
 };
 
 export default function SettingsSecurity() {
+  usePageMeta({
+    title: "Security settings",
+    description: "Manage your password, two-factor authentication and active sessions.",
+  });
+
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(true);
   const [pwForm, setPwForm] = useState(INITIAL_FORM);
   const [pwError, setPwError] = useState("");
@@ -106,6 +113,7 @@ export default function SettingsSecurity() {
   return (
     <ProfileLayout>
       <div className="settings-security">
+        <SettingsTabs />
         <header className="settings-security-header">
           <div className="settings-kicker">
             <UserCheck size={16} aria-hidden="true" />

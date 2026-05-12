@@ -6,6 +6,7 @@ import {
   MOCK_PROFILE_EXTRA,
 } from "../../data/profileDisplay";
 import { useToast } from "../../hooks/useToast";
+import usePageMeta from "../../hooks/usePageMeta";
 import EditProfileDialog from "./EditProfileDialog";
 import { ProfileLayout } from "./ProfileLayout";
 import "./Profile.css";
@@ -36,6 +37,11 @@ const STATUS_LABEL = {
 };
 
 function Profile() {
+  usePageMeta({
+    title: "My profile",
+    description: "Your SmartCart AI account at a glance — orders, loyalty and personal details.",
+  });
+
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const [orders, setOrders] = useState([]);

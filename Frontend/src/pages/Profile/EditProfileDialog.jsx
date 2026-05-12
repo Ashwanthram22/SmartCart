@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useFocusTrap } from "../../hooks/useFocusTrap";
 import "./EditProfileDialog.css";
 
 /**
@@ -23,6 +24,8 @@ function DialogBody({ user, onClose, onSubmit }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef(null);
+  const dialogRef = useRef(null);
+  useFocusTrap(dialogRef, true);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -60,6 +63,7 @@ function DialogBody({ user, onClose, onSubmit }) {
   return (
     <div className="epd-overlay" role="presentation" onClick={onClose}>
       <div
+        ref={dialogRef}
         className="epd-dialog"
         role="dialog"
         aria-modal="true"

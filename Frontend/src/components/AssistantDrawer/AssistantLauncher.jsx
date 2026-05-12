@@ -36,7 +36,7 @@ function clampToViewport({ left, top }) {
   };
 }
 
-export default function AssistantLauncher({ onOpen, position, onPositionChange }) {
+export default function AssistantLauncher({ onOpen, position, onPositionChange, expanded = false }) {
   const buttonRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -150,6 +150,8 @@ export default function AssistantLauncher({ onOpen, position, onPositionChange }
       onPointerCancel={finishDrag}
       onClick={handleClick}
       aria-label="Open AI shopping assistant (drag to move)"
+      aria-haspopup="dialog"
+      aria-expanded={expanded}
       title="Ask SmartCart AI"
     >
       <span className="assist-launcher-glyph" aria-hidden="true">

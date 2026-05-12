@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ProfileLayout } from "./ProfileLayout";
 import { useCart } from "../../hooks/useCart";
 import { useSaved } from "../../hooks/useSaved";
+import usePageMeta from "../../hooks/usePageMeta";
 import { CartIcon } from "../../components/CartIcon";
 import "./SavedItems.css";
 
@@ -65,6 +66,11 @@ function formatUsd(n) {
 }
 
 export default function SavedItems() {
+  usePageMeta({
+    title: "Saved items",
+    description: "All the products you've saved for later on SmartCart AI.",
+  });
+
   const { addItem } = useCart();
   const { items, removeSaved } = useSaved();
   const [activeCategory, setActiveCategory] = useState("all");

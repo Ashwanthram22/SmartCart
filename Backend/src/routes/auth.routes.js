@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const { readDb, withDb } = require("../lib/data-store");
@@ -11,6 +12,7 @@ const {
   GOOGLE_CLIENT_SECRET,
   GOOGLE_REDIRECT_URI,
   FRONTEND_URL,
+  IS_PROD,
 } = require("../config/env");
 
 const router = express.Router();
@@ -24,7 +26,13 @@ function signToken(user) {
 }
 
 function publicUser(user) {
-  return { id: user.id, name: user.name, email: user.email, role: user.role };
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    isAdmin: user.role === "admin" || Boolean(user.isAdmin),
+  };
 }
 
 router.post("/login", authLimiter, async (req, res) => {
@@ -91,17 +99,138 @@ router.post("/register", authLimiter, async (req, res) => {
   });
 });
 
+const RESET_TOKEN_TTL_MS = 60 * 60 * 1000; // 1 hour
+const GENERIC_RESET_REPLY =
+  "If an account exists for this email, a reset link is on its way.";
+
+function hashToken(rawToken) {
+  return crypto.createHash("sha256").update(rawToken).digest("hex");
+}
+
+/**
+ * Issue a password reset token. Always returns the same generic message so
+ * the endpoint can't be used to enumerate registered emails. In dev we
+ * additionally include the reset URL in the response so you can complete
+ * the flow without an email provider configured.
+ *
+ * The token itself is random, single-use, hashed at rest, and expires in
+ * an hour. OAuth-only accounts (no password) silently get the generic
+ * reply too — they should keep using their IDP.
+ */
 router.post("/forgot-password", authLimiter, async (req, res) => {
   const { email } = req.body || {};
 
   if (!email || typeof email !== "string") {
     return res.status(400).json({ message: "Email is required" });
   }
+  const cleanEmail = email.trim().toLowerCase();
 
-  return res.json({
-    message:
-      "If an account exists for this email, you will receive reset instructions shortly.",
+  const result = await withDb(async (db) => {
+    if (!Array.isArray(db.passwordResets)) db.passwordResets = [];
+
+    // Drop expired entries opportunistically so the array doesn't grow forever.
+    const now = Date.now();
+    db.passwordResets = db.passwordResets.filter(
+      (r) => Number(r.expiresAt) > now && !r.usedAt
+    );
+
+    const user = (db.users || []).find(
+      (u) => String(u.email).toLowerCase() === cleanEmail
+    );
+    if (!user || !user.password) {
+      // Email doesn't exist OR account has no password (OAuth only).
+      // Return the same message either way.
+      return { masked: true };
+    }
+
+    // Invalidate any prior pending tokens for this user (one active at a time).
+    db.passwordResets = db.passwordResets.filter((r) => r.userId !== user.id);
+
+    const rawToken = crypto.randomBytes(32).toString("hex");
+    const record = {
+      id: `pr${Date.now()}`,
+      userId: user.id,
+      tokenHash: hashToken(rawToken),
+      createdAt: new Date().toISOString(),
+      expiresAt: now + RESET_TOKEN_TTL_MS,
+      usedAt: null,
+    };
+    db.passwordResets.push(record);
+
+    return { rawToken };
   });
+
+  const payload = { message: GENERIC_RESET_REPLY };
+  if (!IS_PROD && result.rawToken) {
+    // Dev convenience: hand back the link so the page can show it.
+    const url = `${FRONTEND_URL}/reset-password?token=${encodeURIComponent(result.rawToken)}`;
+    payload.devResetUrl = url;
+  }
+  return res.json(payload);
+});
+
+/**
+ * Consume a reset token and set a new password. Single-use: marks the
+ * token used on success so the same link can't be replayed.
+ */
+router.post("/reset-password", authLimiter, async (req, res) => {
+  const { token, newPassword } = req.body || {};
+
+  if (typeof token !== "string" || token.length < 32) {
+    return res.status(400).json({ message: "Reset token is invalid" });
+  }
+  if (typeof newPassword !== "string" || newPassword.length < 6) {
+    return res
+      .status(400)
+      .json({ message: "Password must be at least 6 characters" });
+  }
+
+  const tokenHash = hashToken(token);
+
+  const outcome = await withDb(async (db) => {
+    if (!Array.isArray(db.passwordResets)) db.passwordResets = [];
+    const now = Date.now();
+
+    const record = db.passwordResets.find((r) => r.tokenHash === tokenHash);
+    if (!record) return { error: "Reset link is invalid or already used" };
+    if (record.usedAt) return { error: "Reset link has already been used" };
+    if (Number(record.expiresAt) < now) {
+      return { error: "Reset link has expired — request a new one" };
+    }
+
+    const user = (db.users || []).find((u) => u.id === record.userId);
+    if (!user) return { error: "Account no longer exists" };
+
+    user.password = await hashPassword(newPassword);
+    record.usedAt = new Date().toISOString();
+
+    return { user };
+  });
+
+  if (outcome.error) {
+    return res.status(400).json({ message: outcome.error });
+  }
+  return res.json({ message: "Password reset — you can sign in now." });
+});
+
+/**
+ * Light validation endpoint so the reset page can show "this link expired"
+ * before the user types out a new password. Always returns 200 with a
+ * boolean rather than 4xx so it can't be used for enumeration timing.
+ */
+router.get("/reset-password/validate", async (req, res) => {
+  const token = String(req.query.token || "");
+  if (token.length < 32) return res.json({ valid: false });
+
+  const db = await readDb();
+  const tokenHash = hashToken(token);
+  const record = (db.passwordResets || []).find((r) => r.tokenHash === tokenHash);
+  if (!record) return res.json({ valid: false });
+  if (record.usedAt) return res.json({ valid: false, reason: "used" });
+  if (Number(record.expiresAt) < Date.now()) {
+    return res.json({ valid: false, reason: "expired" });
+  }
+  return res.json({ valid: true });
 });
 
 async function findOrCreateGoogleUser({ email, name }) {

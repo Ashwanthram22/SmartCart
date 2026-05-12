@@ -259,10 +259,94 @@ function buildOrderStatusReply(db, userId) {
   };
 }
 
+/**
+ * When the chat is opened from a specific product page, generic queries like
+ * "is it waterproof?" or "is it worth it?" should be grounded in *that*
+ * product. We detect that the user is referring to "it" / "this" rather
+ * than asking about something else, and short-circuit into a dedicated
+ * page-context reply.
+ */
+const PRONOUN_REFS = /\b(it|this|that|the product|this one|this product|it's)\b/i;
+const PAGE_QUESTION = /\b(worth|good|reliable|durable|fast|waterproof|water resistant|battery|warranty|return|refund|specs?|spec sheet|compare|alternative)\b/i;
+
+function buildPageContextReply(_db, message, pageContext) {
+  const productSummary = {
+    id: pageContext.productId,
+    title: pageContext.title,
+    image: undefined, // we don't have it here; FE shows the page already
+    price: pageContext.priceUsd ?? null,
+    rating: pageContext.rating ?? null,
+    category: pageContext.category || "",
+    brand: pageContext.brand || null,
+  };
+
+  const stockLine =
+    typeof pageContext.stock === "number"
+      ? pageContext.stock < 1
+        ? "It's currently out of stock."
+        : `${pageContext.stock} are in stock.`
+      : "";
+  const ratingLine = pageContext.rating
+    ? `It's currently rated ${pageContext.rating}★.`
+    : "";
+  const priceLine = pageContext.priceUsd
+    ? `Listed at $${pageContext.priceUsd}.`
+    : "";
+  const specsLine =
+    pageContext.specs && Object.keys(pageContext.specs).length
+      ? `Key spec: ${Object.entries(pageContext.specs)
+          .slice(0, 1)
+          .map(([k, v]) => `${k} ${v}`)
+          .join(", ")}.`
+      : "";
+
+  const intro = `You're asking about the ${pageContext.title}.`;
+  const body = [priceLine, ratingLine, stockLine, specsLine].filter(Boolean).join(" ");
+  const reply = body
+    ? `${intro} ${body} What would you like to know — specs, comparisons or alternatives?`
+    : `${intro} I can compare it with similar products, walk through specs, or check if it's worth it for what you do.`;
+
+  const actions = [];
+  if (pageContext.stock !== 0) {
+    actions.push({
+      type: "addToCart",
+      productId: pageContext.productId,
+      label: `Add ${pageContext.title} to cart`,
+    });
+  }
+
+  return {
+    reply,
+    products: [productSummary],
+    actions,
+    suggestions: [
+      "Compare with similar products",
+      "Show cheaper alternatives",
+      `Is the ${pageContext.title} worth it?`,
+    ],
+  };
+}
+
 function buildReply(db, payload) {
   const message = String(payload.message || "").trim();
   const userId = payload.userId;
+  const pageContext = payload.pageContext || null;
   const intent = intentOf(message);
+
+  // If the chat is anchored to a product page and the user is referring to
+  // it, bias the reply to be about that product (instead of running the
+  // generic search/fallback path).
+  if (
+    pageContext?.productId &&
+    intent !== "order-status" &&
+    intent !== "add-to-cart" &&
+    (PRONOUN_REFS.test(message) ||
+      PAGE_QUESTION.test(message) ||
+      intent === "fallback" ||
+      intent === "greeting")
+  ) {
+    return buildPageContextReply(db, message, pageContext);
+  }
 
   switch (intent) {
     case "greeting":

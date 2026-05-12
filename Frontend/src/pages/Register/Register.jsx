@@ -6,10 +6,16 @@ import AuthInput from "../../components/auth/AuthInput";
 import { EyeIcon } from "../../components/auth/EyeIcon";
 import AuthPrimaryButton from "../../components/auth/AuthPrimaryButton";
 import { isAuthenticated, setToken } from "../../utils/authToken";
+import usePageMeta from "../../hooks/usePageMeta";
 import "../../components/auth/AuthShared.css";
 import "./Register.css";
 
 function Register() {
+  usePageMeta({
+    title: "Create account",
+    description: "Join SmartCart AI in seconds and start getting AI-curated picks made for you.",
+  });
+
   const navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
@@ -78,7 +84,7 @@ function Register() {
         </div>
       </header>
 
-      <main className="register-main">
+      <main id="main-content" className="register-main">
         <div className="register-left-panel">
           <div className="register-left-glow register-left-glow--one" aria-hidden="true" />
           <div className="register-left-glow register-left-glow--two" aria-hidden="true" />

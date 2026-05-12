@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useFocusTrap } from "../../hooks/useFocusTrap";
 import "./ReviewModal.css";
 
 const MAX_LENGTH = 1500;
@@ -11,6 +12,7 @@ function ReviewModal({ open, productTitle, onClose, onSubmit }) {
   const [error, setError] = useState("");
   const dialogRef = useRef(null);
   const firstFieldRef = useRef(null);
+  useFocusTrap(dialogRef, open);
 
   useEffect(() => {
     if (!open) {
@@ -30,7 +32,6 @@ function ReviewModal({ open, productTitle, onClose, onSubmit }) {
     }
 
     document.addEventListener("keydown", handleKeyDown);
-    const previouslyFocused = document.activeElement;
     firstFieldRef.current?.focus();
 
     const previousOverflow = document.body.style.overflow;
@@ -39,9 +40,6 @@ function ReviewModal({ open, productTitle, onClose, onSubmit }) {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = previousOverflow;
-      if (previouslyFocused && typeof previouslyFocused.focus === "function") {
-        previouslyFocused.focus();
-      }
     };
   }, [open, onClose]);
 

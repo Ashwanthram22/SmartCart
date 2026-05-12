@@ -7,11 +7,17 @@ import AuthInput from "../../components/auth/AuthInput";
 import AuthPrimaryButton from "../../components/auth/AuthPrimaryButton";
 import AuthSocialButtons from "../../components/auth/AuthSocialButtons";
 import AuthTip from "../../components/auth/AuthTip";
-import { isAuthenticated, setToken } from "../../utils/authToken";
+import { isAdmin, isAuthenticated, setToken } from "../../utils/authToken";
+import usePageMeta from "../../hooks/usePageMeta";
 import "../../components/auth/AuthShared.css";
 import "./Login.css";
 
 function Login() {
+  usePageMeta({
+    title: "Sign in",
+    description: "Sign in to SmartCart AI to access your cart, orders, and personalized picks.",
+  });
+
   const navigate = useNavigate();
   const location = useLocation();
   const [form, setForm] = useState({
@@ -37,7 +43,10 @@ function Login() {
       const data = await login(form);
       setToken(data.jwt_token);
       setMessage(`Welcome back, ${data.user.name}`);
-      const redirectTo = location.state?.from?.pathname || "/home";
+      const isAdminUser =
+        data.user?.role === "admin" || Boolean(data.user?.isAdmin);
+      const intended = location.state?.from?.pathname;
+      const redirectTo = intended || (isAdminUser ? "/admin" : "/home");
       navigate(redirectTo, { replace: true });
     } catch (error) {
       setMessage(error.response?.data?.message || "Invalid credentials");
@@ -60,12 +69,12 @@ function Login() {
   const displayMessage = message || (googleError ? googleErrorMap[googleError] || "Google login failed." : "");
 
   if (isAuthenticated()) {
-    return <Navigate to="/home" replace />;
+    return <Navigate to={isAdmin() ? "/admin" : "/home"} replace />;
   }
 
   return (
     <section className="login-page">
-      <main className="login-main">
+      <main id="main-content" className="login-main">
         <AuthBrand />
 
         <div className="login-card">

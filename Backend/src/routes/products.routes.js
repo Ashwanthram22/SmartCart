@@ -9,6 +9,79 @@ const router = express.Router();
 const TRENDING_TAB_LIMIT = 12;
 const RATING_TIERS = [3, 3.5, 4, 4.5];
 
+const SORT_KEYS = new Set([
+  "recommended",
+  "price-asc",
+  "price-desc",
+  "rating",
+  "newest",
+]);
+
+const DEFAULT_LIMIT = 12;
+const MAX_LIMIT = 60;
+
+/**
+ * Parse + clamp pagination/sort params with defaults that keep the
+ * endpoint backward-compatible: when neither `page` nor `limit` is sent
+ * the response is still a bare array. Only requests that opt in via
+ * `?page=` or `?limit=` get the new `{ items, total, ... }` envelope.
+ */
+function parsePagination(query) {
+  const opted = "page" in query || "limit" in query;
+  const limitRaw = Number(query.limit);
+  const pageRaw = Number(query.page);
+  const limit = Number.isFinite(limitRaw) && limitRaw > 0
+    ? Math.min(MAX_LIMIT, Math.floor(limitRaw))
+    : DEFAULT_LIMIT;
+  const page = Number.isFinite(pageRaw) && pageRaw > 0
+    ? Math.floor(pageRaw)
+    : 1;
+  return { opted, page, limit };
+}
+
+function parseSort(value) {
+  if (typeof value !== "string") return "recommended";
+  const v = value.trim().toLowerCase();
+  return SORT_KEYS.has(v) ? v : "recommended";
+}
+
+/**
+ * `recommended` is the implicit catalog order (preserves the rule-based
+ * ranking the segment filter already produced — Trending uses popularity
+ * scores, others fall back to insertion order). All other sorts re-order
+ * a *copy* so we never mutate the cached `db.products` array.
+ */
+function applySort(list, sort) {
+  if (sort === "recommended") return list;
+  const copy = list.slice();
+  switch (sort) {
+    case "price-asc":
+      copy.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
+      break;
+    case "price-desc":
+      copy.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
+      break;
+    case "rating":
+      copy.sort((a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0));
+      break;
+    case "newest":
+      copy.sort((a, b) => {
+        const ta = Date.parse(a.createdAt) || 0;
+        const tb = Date.parse(b.createdAt) || 0;
+        if (tb !== ta) return tb - ta;
+        // Stable secondary key when no timestamps exist (most seed data has
+        // none): use the numeric tail of the id, e.g. "p15" > "p2".
+        const na = Number(String(a.id).replace(/\D/g, "")) || 0;
+        const nb = Number(String(b.id).replace(/\D/g, "")) || 0;
+        return nb - na;
+      });
+      break;
+    default:
+      break;
+  }
+  return copy;
+}
+
 function reviewsForProduct(db, productId) {
   const list = Array.isArray(db.reviews) ? db.reviews : [];
   return list
@@ -63,10 +136,12 @@ function capitalizeKey(key) {
  *   3. brand whitelist (empty = no brand restriction)
  *   4. price range
  *   5. rating floor
+ * Then the sort key (`sort=`) is applied, then pagination if requested.
  *
- * All filter params are optional. Calling `GET /api/products?segment=Books`
- * with no other params returns every Books product, which is the behaviour
- * the catalog page relies on when the sidebar selection is empty.
+ * Backward compatibility: when neither `page` nor `limit` is in the query
+ * the response is the historical bare array. Adding either one switches
+ * to the `{ items, total, page, limit, totalPages }` envelope so the
+ * frontend can render a Load-More button without an extra round trip.
  */
 router.get("/", authMiddleware, async (req, res) => {
   const db = await readDb();
@@ -79,6 +154,8 @@ router.get("/", authMiddleware, async (req, res) => {
   const priceMin = parseNumber(req.query.priceMin);
   const priceMax = parseNumber(req.query.priceMax);
   const minRating = parseNumber(req.query.minRating);
+  const sort = parseSort(req.query.sort);
+  const { opted: paginate, page, limit } = parsePagination(req.query);
 
   let list = db.products.filter((p) => productMatchesSegment(p, segment));
   if (segment === "Trending") {
@@ -103,7 +180,27 @@ router.get("/", authMiddleware, async (req, res) => {
     list = list.filter((p) => Number(p.rating || 0) >= minRating);
   }
 
-  res.json(list);
+  list = applySort(list, sort);
+
+  if (!paginate) {
+    return res.json(list);
+  }
+
+  const total = list.length;
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+  const safePage = Math.min(page, totalPages);
+  const start = (safePage - 1) * limit;
+  const items = list.slice(start, start + limit);
+
+  return res.json({
+    items,
+    total,
+    page: safePage,
+    limit,
+    totalPages,
+    hasMore: safePage < totalPages,
+    sort,
+  });
 });
 
 /**

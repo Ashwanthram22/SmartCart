@@ -4,22 +4,34 @@ import { requestPasswordReset } from "../../api/client";
 import AuthInput from "../../components/auth/AuthInput";
 import AuthPrimaryButton from "../../components/auth/AuthPrimaryButton";
 import { isAuthenticated } from "../../utils/authToken";
+import usePageMeta from "../../hooks/usePageMeta";
 import "../../components/auth/AuthShared.css";
 import "./ForgotPassword.css";
 
 function ForgotPassword() {
+  usePageMeta({
+    title: "Forgot password",
+    description: "Reset your SmartCart AI account password.",
+  });
+
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [devResetUrl, setDevResetUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
     setMessage("");
+    setDevResetUrl("");
 
     try {
       const data = await requestPasswordReset({ email });
       setMessage(data.message);
+      // Dev-only convenience: backend returns the live reset URL when
+      // NODE_ENV !== "production" so the flow works without an email
+      // provider configured.
+      if (data.devResetUrl) setDevResetUrl(data.devResetUrl);
     } catch (error) {
       setMessage(error.response?.data?.message || "Something went wrong. Try again.");
     } finally {
@@ -43,7 +55,7 @@ function ForgotPassword() {
       </header>
 
       <div className="forgot-body">
-        <main className="forgot-main">
+        <main id="main-content" className="forgot-main">
           <div className="forgot-card">
             <div className="forgot-card-icon" aria-hidden="true">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -92,6 +104,16 @@ function ForgotPassword() {
             </form>
 
             {message ? <p className="forgot-feedback">{message}</p> : null}
+
+            {devResetUrl ? (
+              <div className="forgot-dev-link" role="note">
+                <strong>Dev mode:</strong> a real email isn&apos;t configured, so
+                here&apos;s the reset link directly.
+                <Link to={devResetUrl.replace(/^https?:\/\/[^/]+/, "")} className="forgot-dev-link-anchor">
+                  Open reset page →
+                </Link>
+              </div>
+            ) : null}
 
             <div className="forgot-divider" />
 

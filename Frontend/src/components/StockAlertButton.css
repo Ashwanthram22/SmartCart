@@ -1,0 +1,43 @@
+.stock-alert-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 10px;
+  border: 1px solid rgba(107, 56, 212, 0.45);
+  background: #fff;
+  color: #5527b6;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.stock-alert-btn:hover:not(:disabled) {
+  background: rgba(107, 56, 212, 0.06);
+}
+
+.stock-alert-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.stock-alert-btn--inline {
+  padding: 6px 12px;
+  font-size: 0.78rem;
+}
+
+.stock-alert-btn--block {
+  padding: 12px 18px;
+  font-size: 0.9rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.stock-alert-btn--on {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.45);
+  color: #047857;
+}
+
+.stock-alert-btn--on:hover:not(:disabled) {
+  background: rgba(16, 185, 129, 0.16);
+}

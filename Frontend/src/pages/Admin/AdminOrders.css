@@ -1,0 +1,232 @@
+/* =============================================================================
+ * Admin Orders
+ * ===========================================================================*/
+
+.ao-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin: 0 0 16px;
+}
+
+.ao-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+}
+
+.ao-search {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid #e6e6ee;
+  background: #fff;
+  color: #64748b;
+  max-width: 540px;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.ao-search input {
+  border: 0;
+  outline: none;
+  flex: 1;
+  background: transparent;
+  font-size: 14px;
+  font-family: inherit;
+  color: #141b2b;
+}
+
+.ao-search:focus-within {
+  border-color: #6b38d4;
+  box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.15);
+}
+
+.ao-filter {
+  position: relative;
+}
+
+.ao-filter-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 5;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  background: #fff;
+  border: 1px solid #e6e6ee;
+  border-radius: 10px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
+  min-width: 200px;
+}
+
+.ao-filter-option {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  width: 100%;
+  text-align: left;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #475569;
+  cursor: pointer;
+}
+
+.ao-filter-option:hover {
+  background: #f1f0fa;
+  color: #141b2b;
+}
+
+.ao-filter-option--active {
+  color: #6b38d4;
+  font-weight: 700;
+}
+
+/* ----- Table ---------------------------------------------------------------*/
+
+.ao-table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.ao-table-scroll {
+  overflow-x: auto;
+}
+
+.ao-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.ao-table th,
+.ao-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #f1f0fa;
+}
+
+.ao-table thead th {
+  background: #faf7ff;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 700;
+  border-bottom: 1px solid #e6e6ee;
+}
+
+.ao-table tbody tr:hover {
+  background: #faf7ff;
+}
+
+.ao-th-actions {
+  width: 1px;
+  white-space: nowrap;
+}
+
+.ao-loading,
+.ao-empty {
+  text-align: center;
+  padding: 28px 16px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.ao-customer {
+  font-size: 13px;
+  color: #475569;
+}
+
+.ao-items {
+  max-width: 280px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ao-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.ao-badge--ok {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.ao-badge--info {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.ao-badge--warn {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.ao-badge--danger {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.ao-badge--muted {
+  background: #f1f0fa;
+  color: #64748b;
+}
+
+.ao-select {
+  appearance: none;
+  border: 1px solid #e6e6ee;
+  background: #fff;
+  border-radius: 8px;
+  padding: 6px 28px 6px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #141b2b;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.ao-select:focus-visible {
+  outline: 2px solid #6b38d4;
+  outline-offset: 2px;
+  border-color: #6b38d4;
+}
+
+.ao-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ----- Responsive ----------------------------------------------------------*/
+
+@media (max-width: 720px) {
+  .ao-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .ao-search {
+    max-width: none;
+  }
+}

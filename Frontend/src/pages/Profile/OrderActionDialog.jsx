@@ -1,10 +1,25 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { Printer } from "lucide-react";
+import { useFocusTrap } from "../../hooks/useFocusTrap";
 import "./OrderActionDialog.css";
 
 function formatMoney(n) {
   return Number(n || 0).toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
+  });
+}
+
+function formatDate(iso) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "—";
+  return d.toLocaleString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
   });
 }
 
@@ -38,6 +53,9 @@ const STATUS_LABEL = {
  * component only renders.
  */
 export default function OrderActionDialog({ order, mode, onClose }) {
+  const dialogRef = useRef(null);
+  useFocusTrap(dialogRef, Boolean(order));
+
   useEffect(() => {
     if (!order) return undefined;
     const onKey = (e) => {
@@ -55,32 +73,47 @@ export default function OrderActionDialog({ order, mode, onClose }) {
 
   const title = mode === "track" ? "Track Package" : "Order Details";
   const subtitle = `Order #${order.id} • ${STATUS_LABEL[order.status] || "Processing"}`;
+  const isDetails = mode !== "track";
 
   return (
     <div className="oad-overlay" role="presentation" onClick={onClose}>
       <div
+        ref={dialogRef}
         className="oad-dialog"
         role="dialog"
         aria-modal="true"
         aria-labelledby="oad-title"
         onClick={(e) => e.stopPropagation()}
       >
-        <header className="oad-head">
+        <header className="oad-head no-print">
           <div>
             <h2 id="oad-title" className="oad-title">{title}</h2>
             <p className="oad-subtitle">{subtitle}</p>
           </div>
-          <button
-            type="button"
-            className="oad-close"
-            onClick={onClose}
-            aria-label="Close dialog"
-          >
-            ×
-          </button>
+          <div className="oad-head-actions">
+            {isDetails ? (
+              <button
+                type="button"
+                className="oad-print"
+                onClick={() => window.print()}
+                aria-label="Print this receipt"
+              >
+                <Printer size={16} aria-hidden="true" />
+                <span>Print</span>
+              </button>
+            ) : null}
+            <button
+              type="button"
+              className="oad-close"
+              onClick={onClose}
+              aria-label="Close dialog"
+            >
+              ×
+            </button>
+          </div>
         </header>
 
-        <div className="oad-body">
+        <div className={`oad-body${isDetails ? " print-receipt" : ""}`}>
           {mode === "track" ? (
             <ol className="oad-timeline">
               {(order.timeline || []).map((stage, idx) => (
@@ -104,6 +137,17 @@ export default function OrderActionDialog({ order, mode, onClose }) {
             </ol>
           ) : (
             <>
+              <section className="oad-receipt-head print-only">
+                <p className="oad-receipt-brand">SmartCart AI</p>
+                <p className="oad-receipt-meta">
+                  Receipt for order <strong>#{order.id}</strong>
+                </p>
+                <p className="oad-receipt-meta">Placed {formatDate(order.createdAt)}</p>
+                <p className="oad-receipt-meta">
+                  Status: {STATUS_LABEL[order.status] || "Processing"}
+                </p>
+              </section>
+
               <section className="oad-section">
                 <h3 className="oad-section-head">Items ({order.items?.length || 0})</h3>
                 <ul className="oad-item-list">
@@ -132,6 +176,17 @@ export default function OrderActionDialog({ order, mode, onClose }) {
                   <span>Subtotal</span>
                   <span>{formatMoney(order.subtotal)}</span>
                 </div>
+                {order.discount && order.discount > 0 ? (
+                  <div className="oad-total-row oad-total-row--discount">
+                    <span>
+                      Coupon
+                      {order.coupon?.code ? (
+                        <small className="oad-coupon-tag">{order.coupon.code}</small>
+                      ) : null}
+                    </span>
+                    <span>−{formatMoney(order.discount)}</span>
+                  </div>
+                ) : null}
                 <div className="oad-total-row">
                   <span>Tax</span>
                   <span>{formatMoney(order.tax)}</span>
@@ -152,6 +207,11 @@ export default function OrderActionDialog({ order, mode, onClose }) {
                   </address>
                 </section>
               ) : null}
+
+              <p className="oad-receipt-foot print-only">
+                Thank you for shopping with SmartCart AI. For support, reach us at
+                support@smartcart.ai.
+              </p>
             </>
           )}
         </div>

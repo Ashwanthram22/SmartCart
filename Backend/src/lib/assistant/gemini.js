@@ -64,12 +64,18 @@ function buildContents(history, message, draftFollowUp) {
   }));
 }
 
-async function rewriteReply({ message, history, draft, catalogContext }) {
+async function rewriteReply({ message, history, draft, catalogContext, pageContext }) {
   if (!GEMINI_API_KEY) {
     throw new Error("GEMINI_API_KEY is not set");
   }
 
+  const pageContextLine = pageContext
+    ? `Current product the user is looking at (JSON): ${JSON.stringify(pageContext)}\n` +
+      `Treat references like "it"/"this" as that product. Cite real specs from this object only.\n`
+    : "";
+
   const draftFollowUp =
+    pageContextLine +
     `Catalog excerpt (JSON): ${JSON.stringify(catalogContext)}\n` +
     `My initial draft reply was: "${draft}". Refine it (same meaning, friendlier).`;
 

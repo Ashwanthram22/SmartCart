@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { clearToken } from "../../utils/authToken";
 import { ShopTopNav } from "../../components/ShopTopNav";
+import { useFocusTrap } from "../../hooks/useFocusTrap";
 import "./Profile.css";
 
 function sidebarClass(active, key) {
@@ -12,6 +13,8 @@ export function ProfileLayout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
+  const logoutDialogRef = useRef(null);
+  useFocusTrap(logoutDialogRef, logoutConfirmOpen);
 
   const path = location.pathname;
   const sidebarActive = path.startsWith("/profile/orders")
@@ -20,13 +23,17 @@ export function ProfileLayout({ children }) {
       ? "settings"
       : path.startsWith("/profile/saved")
         ? "saved"
-        : "profile";
+        : path.startsWith("/profile/addresses")
+          ? "addresses"
+          : "profile";
 
-  const isProfileHome = path === "/profile";
   const isOrdersRoute = path.startsWith("/profile/orders");
   const profileTabActive =
     !isOrdersRoute &&
-    (path === "/profile" || path.startsWith("/profile/settings") || path.startsWith("/profile/saved"));
+    (path === "/profile" ||
+      path.startsWith("/profile/settings") ||
+      path.startsWith("/profile/saved") ||
+      path.startsWith("/profile/addresses"));
 
   const confirmLogout = () => {
     clearToken();
@@ -48,7 +55,7 @@ export function ProfileLayout({ children }) {
         <ShopTopNav searchPlaceholder="Search products..." />
       </header>
 
-      <main className="profile-main">
+      <main id="main-content" className="profile-main">
         <aside className="profile-sidebar">
           <nav className="profile-side-card" aria-label="Account">
             <Link to="/profile" className={sidebarClass(sidebarActive, "profile")}>
@@ -102,6 +109,20 @@ export function ProfileLayout({ children }) {
               </span>
               Saved Items
             </Link>
+            <Link to="/profile/addresses" className={sidebarClass(sidebarActive, "addresses")}>
+              <span className="profile-side-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 21s-7-6.4-7-12a7 7 0 1 1 14 0c0 5.6-7 12-7 12Z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinejoin="round"
+                  />
+                  <circle cx="12" cy="9" r="2.5" stroke="currentColor" strokeWidth="2" />
+                </svg>
+              </span>
+              Addresses
+            </Link>
             <hr className="profile-side-rule" />
             <button type="button" className="profile-side-link profile-side-link--logout" onClick={() => setLogoutConfirmOpen(true)}>
               <span className="profile-side-icon" aria-hidden="true">
@@ -140,6 +161,7 @@ export function ProfileLayout({ children }) {
           onClick={() => setLogoutConfirmOpen(false)}
         >
           <div
+            ref={logoutDialogRef}
             className="profile-logout-dialog"
             role="dialog"
             aria-modal="true"

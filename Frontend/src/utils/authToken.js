@@ -47,6 +47,37 @@ export function isAuthenticated() {
 }
 
 /**
+ * Decode the JWT body (no signature verification — that's the server's
+ * job). Returns null if there is no token, the token is malformed, or
+ * the body isn't valid base64-url JSON.
+ */
+export function getTokenClaims() {
+  const token = getToken();
+  if (!token) return null;
+  const parts = token.split(".");
+  if (parts.length !== 3) return null;
+  try {
+    const padded = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const base64 =
+      padded + "=".repeat((4 - (padded.length % 4)) % 4);
+    const json = atob(base64);
+    return JSON.parse(json);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Convenience: is the current token issued to an admin user?
+ * Treats both `role === "admin"` and `isAdmin === true` claims as admin.
+ */
+export function isAdmin() {
+  const claims = getTokenClaims();
+  if (!claims) return false;
+  return claims.role === "admin" || Boolean(claims.isAdmin);
+}
+
+/**
  * Subscribe to login/logout transitions. Returns an unsubscribe function so
  * the call site can be used directly in `useEffect`. Other tabs in the same
  * browser are also covered via the cookie's storage event proxy.

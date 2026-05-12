@@ -9,9 +9,18 @@ import HomeHeader from "./HomeHeader";
 import HomeHero from "./HomeHero";
 import RecommendedSection from "./RecommendedSection";
 import TrendingSection from "./TrendingSection";
+import RecentlyViewedStrip from "../../components/RecentlyViewedStrip";
+import usePageMeta from "../../hooks/usePageMeta";
 import "./Home.css";
 
 function Home() {
+  usePageMeta({
+    title: "SmartCart AI — your AI-powered shopping assistant",
+    description:
+      "Discover trending tech and AI-curated picks tailored to how you actually shop.",
+    appendBrand: false,
+  });
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -47,10 +56,11 @@ function Home() {
   return (
     <div className="home-page">
       <HomeHeader />
-      <main>
+      <main id="main-content">
         <HomeHero />
         <RecommendedSection products={recommended} loading={loading} error={error} />
         <TrendingSection products={trending} loading={loading} error={error} />
+        <RecentlyViewedStrip title="Pick up where you left off" />
       </main>
       <HomeFooter />
     </div>

@@ -50,8 +50,42 @@ function topProductsForContext(db, max = 12) {
   }));
 }
 
-async function generate({ db, message, history, userId }) {
-  const base = ruleBased.buildReply(db, { message, userId });
+/**
+ * Look up the full product record for the page the user is on so the LLM
+ * gets real specs, brand, rating, etc. — not just the title we received
+ * from the client. Falls back to the client-supplied context if the
+ * product can't be found (e.g. user came from a deleted product).
+ */
+function buildPageContext(db, context) {
+  if (!context?.productId) return null;
+  const product = (db.products || []).find(
+    (p) => String(p.id) === String(context.productId)
+  );
+  if (!product) {
+    return {
+      productId: context.productId,
+      title: context.productTitle || context.productId,
+      category: context.productCategory || "",
+      priceUsd: context.productPrice
+        ? Math.round(Number(context.productPrice) / 2.8)
+        : null,
+    };
+  }
+  return {
+    productId: product.id,
+    title: product.title,
+    category: product.category,
+    brand: product.brand,
+    priceUsd: Math.round((Number(product.price) || 0) / 2.8),
+    rating: product.rating,
+    stock: product.stock,
+    specs: product.specs && typeof product.specs === "object" ? product.specs : null,
+  };
+}
+
+async function generate({ db, message, history, userId, context }) {
+  const pageContext = buildPageContext(db, context);
+  const base = ruleBased.buildReply(db, { message, userId, pageContext });
   if (!ACTIVE_ADAPTER) return base;
 
   try {
@@ -60,6 +94,7 @@ async function generate({ db, message, history, userId }) {
       history,
       draft: base.reply,
       catalogContext: topProductsForContext(db),
+      pageContext,
     });
     if (rewritten && rewritten.trim()) {
       return { ...base, reply: rewritten.trim() };

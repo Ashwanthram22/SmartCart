@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
 import { useSaved } from "../../hooks/useSaved";
@@ -6,6 +6,10 @@ import { HeartIcon } from "../../components/HeartIcon";
 import { ShopTopNav } from "../../components/ShopTopNav";
 import { CartIcon } from "../../components/CartIcon";
 import { ShopSegmentNav } from "../../components/ShopSegmentNav";
+import usePageMeta from "../../hooks/usePageMeta";
+import StockBadge from "../../components/StockBadge";
+import StockAlertButton from "../../components/StockAlertButton";
+import Breadcrumbs from "../../components/Breadcrumbs";
 import HomeFooter from "../Home/HomeFooter";
 import { getProductFilters, getProducts } from "../../api/client";
 import "./ProductsCatalog.css";
@@ -13,6 +17,17 @@ import { isValidSegment } from "../../constants/shopSegments";
 
 /** Debounce window for refetching products as the user drags the price slider. */
 const PRODUCT_REFETCH_DEBOUNCE_MS = 200;
+
+/** Number of products fetched per page from the server. */
+const PAGE_SIZE = 12;
+
+const SORT_OPTIONS = [
+  { value: "recommended", label: "Recommended" },
+  { value: "price-asc", label: "Price: Low to High" },
+  { value: "price-desc", label: "Price: High to Low" },
+  { value: "rating", label: "Highest Rated" },
+  { value: "newest", label: "Newest Arrivals" },
+];
 
 /** Mock USD conversion used for display only — backend stores INR. */
 const INR_TO_USD = 2.8;
@@ -60,6 +75,13 @@ function ProductsCatalog() {
   const activeSegment = segmentFromSearchParams(searchParams);
   const searchQ = (searchParams.get("q") || "").trim().toLowerCase();
   const { addItem } = useCart();
+
+  usePageMeta({
+    title: searchQ
+      ? `Search: ${searchQ}`
+      : `${activeSegment} catalog`,
+    description: `Browse ${activeSegment.toLowerCase()} on SmartCart AI with smart filters, ratings and AI-curated insights.`,
+  });
   const { isSaved, toggleSaved } = useSaved();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -73,7 +95,11 @@ function ProductsCatalog() {
   const [priceRange, setPriceRange] = useState(0);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [minRating, setMinRating] = useState(0);
+  const [sort, setSort] = useState("recommended");
   const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   /**
    * Step 1 of the per-tab flow: fetch the facet options for the current
@@ -120,7 +146,10 @@ function ProductsCatalog() {
         setSelectedBrands([]);
         setPriceRange(options.price.max || 0);
         setMinRating(options.ratings.length ? options.ratings[0] : 0);
+        setSort("recommended");
         setPage(1);
+        setHasMore(false);
+        setTotalCount(0);
         setFiltersReady(true);
       } catch {
         if (!cancelled) {
@@ -140,14 +169,16 @@ function ProductsCatalog() {
 
   /**
    * Step 2 of the per-tab flow: once filter options are ready (and any time
-   * the user adjusts a filter) we re-fetch the product list from the
-   * filter-aware `/api/products` endpoint. Brand whitelist is sent only when
-   * something is actually checked, and the price cap is omitted when the
-   * slider is sitting at the catalog max — both keep the URL clean and let
-   * the backend short-circuit to "every product in this category".
+   * the user adjusts a filter or sort) we re-fetch the product list from
+   * the filter-aware `/api/products` endpoint. Brand whitelist is sent
+   * only when something is actually checked, and the price cap is omitted
+   * when the slider is sitting at the catalog max — both keep the URL
+   * clean and let the backend short-circuit to "every product in this
+   * category".
    *
    * A short debounce smooths out price-slider drags so we don't fire one
-   * request per pixel.
+   * request per pixel. The first page is always replaced; "Load more"
+   * appends below via the separate handler.
    */
   useEffect(() => {
     if (!filtersReady) return undefined;
@@ -166,11 +197,16 @@ function ProductsCatalog() {
               ? priceRange
               : undefined,
           minRating: minRating > 0 ? minRating : undefined,
+          sort,
+          page: 1,
+          limit: PAGE_SIZE,
         });
-        if (!cancelled) {
-          setProducts(Array.isArray(data) ? data : []);
-          setPage(1);
-        }
+        if (cancelled) return;
+        const items = Array.isArray(data?.items) ? data.items : [];
+        setProducts(items);
+        setTotalCount(Number(data?.total) || items.length);
+        setHasMore(Boolean(data?.hasMore));
+        setPage(1);
       } catch {
         if (!cancelled) setError("Unable to load products right now.");
       } finally {
@@ -189,10 +225,58 @@ function ProductsCatalog() {
     selectedBrands,
     priceRange,
     minRating,
+    sort,
     filterOptions.price.max,
   ]);
 
-  const filtered = products;
+  const loadMore = useCallback(async () => {
+    if (loadingMore || loading || !hasMore) return;
+    setLoadingMore(true);
+    setError("");
+    try {
+      const next = page + 1;
+      const data = await getProducts({
+        segment: activeSegment,
+        q: searchQ || undefined,
+        brand: selectedBrands.length ? selectedBrands : undefined,
+        priceMax:
+          priceRange > 0 && priceRange < (filterOptions.price.max || Infinity)
+            ? priceRange
+            : undefined,
+        minRating: minRating > 0 ? minRating : undefined,
+        sort,
+        page: next,
+        limit: PAGE_SIZE,
+      });
+      const items = Array.isArray(data?.items) ? data.items : [];
+      setProducts((prev) => {
+        // De-dupe defensively in case the user pages quickly while a
+        // filter change is also in flight.
+        const seen = new Set(prev.map((p) => String(p.id)));
+        const additions = items.filter((p) => !seen.has(String(p.id)));
+        return [...prev, ...additions];
+      });
+      setTotalCount(Number(data?.total) || 0);
+      setHasMore(Boolean(data?.hasMore));
+      setPage(next);
+    } catch {
+      setError("Couldn't load more products.");
+    } finally {
+      setLoadingMore(false);
+    }
+  }, [
+    activeSegment,
+    filterOptions.price.max,
+    hasMore,
+    loading,
+    loadingMore,
+    minRating,
+    page,
+    priceRange,
+    searchQ,
+    selectedBrands,
+    sort,
+  ]);
 
   const priceMin = filterOptions.price.min || 0;
   const priceMax = filterOptions.price.max || 0;
@@ -210,14 +294,7 @@ function ProductsCatalog() {
   const showProductLoading =
     (loading && products.length === 0) || (filtersLoading && !filtersReady);
 
-  const perPage = 6;
-  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
-  const clampedPage = Math.min(page, totalPages);
-  const pageStart = (clampedPage - 1) * perPage;
-  const pageItems = filtered.slice(pageStart, pageStart + perPage);
-
   const toggleBrand = (brand) => {
-    setPage(1);
     setSelectedBrands((prev) =>
       prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand]
     );
@@ -233,7 +310,6 @@ function ProductsCatalog() {
   };
 
   const handleSegmentChange = (segment) => {
-    setPage(1);
     const next = new URLSearchParams(searchParams);
     if (segment === "AI Picks") {
       next.delete("segment");
@@ -244,7 +320,6 @@ function ProductsCatalog() {
   };
 
   const applySearch = (qRaw) => {
-    setPage(1);
     const next = new URLSearchParams(searchParams);
     const trimmed = qRaw.trim();
     if (trimmed) next.set("q", trimmed);
@@ -253,11 +328,11 @@ function ProductsCatalog() {
   };
 
   const resultsSummary =
-    filtered.length === 0
-      ? `Showing 0-0 of 0 results`
-      : `Showing ${pageStart + 1}-${Math.min(pageStart + perPage, filtered.length)} of ${filtered.length} results`;
+    products.length === 0
+      ? `Showing 0 of 0 results`
+      : `Showing ${products.length} of ${totalCount} results`;
 
-  const showEmptyState = !showProductLoading && !error && filtered.length === 0;
+  const showEmptyState = !showProductLoading && !error && products.length === 0;
 
   return (
     <div className="catalog-page">
@@ -273,7 +348,17 @@ function ProductsCatalog() {
         <ShopSegmentNav activeSegment={activeSegment} onSegmentChange={handleSegmentChange} />
       </div>
 
-      <main className="catalog-main">
+      <div className="catalog-breadcrumbs-bar">
+        <Breadcrumbs
+          items={[
+            { label: "Home", to: "/home" },
+            { label: "Catalog", to: "/catalog/products" },
+            { label: activeSegment },
+          ]}
+        />
+      </div>
+
+      <main id="main-content" className="catalog-main">
         <aside className="catalog-sidebar" aria-busy={filtersLoading}>
           {filtersError ? (
             <p className="catalog-error">{filtersError}</p>
@@ -368,13 +453,18 @@ function ProductsCatalog() {
         <section className="catalog-content">
           <div className="catalog-content-head">
             <p className="catalog-results-summary">{resultsSummary}</p>
-            <label>
+            <label className="catalog-sort-label">
               Sort by:
-              <select defaultValue="Most Intelligent">
-                <option>Most Intelligent</option>
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
-                <option>Newest Arrivals</option>
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+                disabled={showProductLoading}
+              >
+                {SORT_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
               </select>
             </label>
           </div>
@@ -383,8 +473,8 @@ function ProductsCatalog() {
 
           <div className="catalog-grid">
             {showProductLoading
-              ? Array.from({ length: 6 }).map((_, i) => <div key={i} className="catalog-card skeleton" />)
-              : pageItems.map((product, index) => {
+              ? Array.from({ length: PAGE_SIZE }).map((_, i) => <div key={i} className="catalog-card skeleton" />)
+              : products.map((product, index) => {
                   const cap = stockCap(product);
                   const out = cap < 1;
                   const saved = product.id != null && isSaved(product.id);
@@ -419,6 +509,7 @@ function ProductsCatalog() {
                           <span className="star">★</span> {product.rating ?? 4.7} (
                           {product.reviewCount ?? 128} reviews)
                         </p>
+                        <StockBadge stock={product.stock} compact />
                         <div className="insight-box">
                           <p className="insight-head">✦ AI Insight</p>
                           <p className="insight-text">{PRODUCT_INSIGHTS[index % PRODUCT_INSIGHTS.length]}</p>
@@ -426,26 +517,30 @@ function ProductsCatalog() {
                       </div>
                       <div className="catalog-card-foot">
                         <strong>${((product.price || 0) / 2.8).toFixed(2)}</strong>
-                        <button
-                          type="button"
-                          className="add-cart-btn"
-                          aria-label={out ? "Out of stock" : "Add to cart"}
-                          disabled={out}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (out) return;
-                            addItem({
-                              productId: product.id,
-                              title: product.title,
-                              image: product.image,
-                              subtitle: `${product.category || "Product"} • ${product.rating ?? 4.7}★ rated`,
-                              unitPrice: (product.price || 0) / 2.8,
-                              stockAvailable: Number.isFinite(cap) ? cap : undefined,
-                            });
-                          }}
-                        >
-                          <CartIcon size={26} className="catalog-add-cart-icon" />
-                        </button>
+                        {out ? (
+                          <span onClick={(e) => e.stopPropagation()}>
+                            <StockAlertButton productId={product.id} />
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            className="add-cart-btn"
+                            aria-label="Add to cart"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              addItem({
+                                productId: product.id,
+                                title: product.title,
+                                image: product.image,
+                                subtitle: `${product.category || "Product"} • ${product.rating ?? 4.7}★ rated`,
+                                unitPrice: (product.price || 0) / 2.8,
+                                stockAvailable: Number.isFinite(cap) ? cap : undefined,
+                              });
+                            }}
+                          >
+                            <CartIcon size={26} className="catalog-add-cart-icon" />
+                          </button>
+                        )}
                       </div>
                     </article>
                   );
@@ -463,46 +558,19 @@ function ProductsCatalog() {
             ) : null}
           </div>
 
-          {!showEmptyState ? (
-            <div className="pagination">
+          {!showEmptyState && hasMore ? (
+            <div className="catalog-loadmore">
               <button
                 type="button"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={clampedPage === 1}
+                className="catalog-loadmore-btn"
+                onClick={loadMore}
+                disabled={loadingMore}
               >
-                ‹
-              </button>
-              {Array.from({ length: Math.min(totalPages, 3) }).map((_, i) => {
-                const pageNum = i + 1;
-                return (
-                  <button
-                    key={pageNum}
-                    type="button"
-                    className={pageNum === clampedPage ? "active" : ""}
-                    onClick={() => setPage(pageNum)}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              })}
-              {totalPages > 3 ? <span>...</span> : null}
-              {totalPages > 3 ? (
-                <button
-                  type="button"
-                  className={clampedPage === totalPages ? "active" : ""}
-                  onClick={() => setPage(totalPages)}
-                >
-                  {totalPages}
-                </button>
-              ) : null}
-              <button
-                type="button"
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={clampedPage === totalPages}
-              >
-                ›
+                {loadingMore ? "Loading…" : `Load more (${totalCount - products.length} more)`}
               </button>
             </div>
+          ) : !showEmptyState && products.length > 0 && totalCount > 0 ? (
+            <p className="catalog-loadmore-end">You&apos;ve reached the end of the list.</p>
           ) : null}
         </section>
       </main>

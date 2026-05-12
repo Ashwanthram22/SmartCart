@@ -223,6 +223,138 @@
   font-size: 1.05rem;
 }
 
+.oad-total-row--discount span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.oad-coupon-tag {
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+}
+
+.oad-total-row--discount span:last-child {
+  color: #047857;
+  font-weight: 700;
+}
+
+.oad-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.oad-print {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.oad-print:hover {
+  background: #f9fafb;
+}
+
+.oad-receipt-head {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.oad-receipt-brand {
+  margin: 0 0 4px;
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+}
+
+.oad-receipt-meta {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.oad-receipt-foot {
+  margin: 24px 0 0;
+  font-size: 0.78rem;
+  color: #64748b;
+  text-align: center;
+}
+
+.print-only {
+  display: none;
+}
+
+@media print {
+  /* Strip everything except the receipt itself. We rely on CSS rather
+     than a hidden print frame so the user's full browser styles
+     (paper size, margins) still apply. */
+  body * {
+    visibility: hidden !important;
+  }
+
+  .print-receipt,
+  .print-receipt * {
+    visibility: visible !important;
+  }
+
+  .no-print,
+  .no-print * {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .oad-overlay {
+    position: static !important;
+    background: #fff !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  .oad-dialog {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-height: none !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+
+  .oad-body {
+    overflow: visible !important;
+    max-height: none !important;
+    padding: 24px 32px !important;
+  }
+
+  .oad-section--totals {
+    background: transparent !important;
+    border: 0 !important;
+    border-top: 1px solid #cbd5e1 !important;
+    border-bottom: 1px solid #cbd5e1 !important;
+    border-radius: 0 !important;
+    padding: 12px 0 !important;
+  }
+
+  .oad-item-thumb {
+    display: none !important;
+  }
+}
+
 .oad-address {
   margin: 0;
   font-style: normal;

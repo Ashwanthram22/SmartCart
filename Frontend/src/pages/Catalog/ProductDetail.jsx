@@ -8,9 +8,19 @@ import { isValidSegment } from "../../constants/shopSegments";
 import { DEFAULT_PROFILE_AVATAR } from "../../data/profileDisplay";
 import { productSpecsFor } from "../../data/productSpecs";
 import { createProductReview, getProductById } from "../../api/client";
+import { trackViewedProduct } from "../../utils/recentlyViewed";
 import HomeFooter from "../Home/HomeFooter";
 import { CartIcon } from "../../components/CartIcon";
+import RecentlyViewedStrip from "../../components/RecentlyViewedStrip";
+import Breadcrumbs from "../../components/Breadcrumbs";
+import StockBadge from "../../components/StockBadge";
+import StockAlertButton from "../../components/StockAlertButton";
+import PriceDropAlertButton from "../../components/PriceDropAlertButton";
+import usePageMeta from "../../hooks/usePageMeta";
+import useStructuredData from "../../hooks/useStructuredData";
 import ReviewModal from "./ReviewModal";
+import ProductDetailSkeleton from "./ProductDetailSkeleton";
+import { estimateDelivery, formatDeliveryWindow } from "../../utils/delivery";
 import "./ProductDetail.css";
 
 const GALLERY_FALLBACKS = [
@@ -132,6 +142,81 @@ function ProductDetail() {
   const visibleReviews = reviews.length > 0 ? reviews : FALLBACK_REVIEWS;
   const specRows = useMemo(() => productSpecsFor(product), [product]);
 
+  usePageMeta({
+    title: product?.title || "Product",
+    description: product
+      ? `${product.title} — $${((product.price || 0) / 2.8).toFixed(2)}. ${
+          product.description || `Buy ${product.title} on SmartCart AI.`
+        }`.slice(0, 200)
+      : "Product details on SmartCart AI.",
+  });
+
+  /**
+   * Build a schema.org Product JSON-LD object for the page so search
+   * engines can render rich product snippets. Computed off the live
+   * product + the user-submitted review list so price, stock and
+   * ratings stay in sync.
+   */
+  const structuredData = useMemo(() => {
+    if (!product) return null;
+    const usdPrice = ((product.price || 0) / 2.8).toFixed(2);
+    const ratings = visibleReviews
+      .map((r) => Number(r.rating))
+      .filter((n) => Number.isFinite(n) && n > 0);
+    const aggregateRating =
+      ratings.length > 0
+        ? {
+            "@type": "AggregateRating",
+            ratingValue: (
+              ratings.reduce((s, n) => s + n, 0) / ratings.length
+            ).toFixed(2),
+            reviewCount: ratings.length,
+          }
+        : product.rating
+        ? {
+            "@type": "AggregateRating",
+            ratingValue: Number(product.rating).toFixed(2),
+            reviewCount: product.reviewCount || 1,
+          }
+        : null;
+
+    const json = {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: product.title,
+      description: product.description || `Buy ${product.title} on SmartCart AI.`,
+      sku: product.id,
+      brand: product.brand
+        ? { "@type": "Brand", name: product.brand }
+        : undefined,
+      category: product.category || undefined,
+      image: Array.isArray(product.images) && product.images.length > 0
+        ? product.images
+        : product.image
+        ? [product.image]
+        : undefined,
+      offers: {
+        "@type": "Offer",
+        priceCurrency: "USD",
+        price: usdPrice,
+        availability:
+          product.stock > 0
+            ? "https://schema.org/InStock"
+            : "https://schema.org/OutOfStock",
+        url: typeof window !== "undefined" ? window.location.href : undefined,
+      },
+    };
+    if (aggregateRating) json.aggregateRating = aggregateRating;
+    return json;
+  }, [product, visibleReviews]);
+
+  useStructuredData(structuredData);
+
+  /** Track this product as recently viewed once we've actually loaded it. */
+  useEffect(() => {
+    if (product?.id) trackViewedProduct(product);
+  }, [product]);
+
   const handleReviewSubmit = async ({ rating, text }) => {
     if (!product?.id) return;
     try {
@@ -187,11 +272,7 @@ function ProductDetail() {
   };
 
   if (loading) {
-    return (
-      <div className="product-page">
-        <div className="product-loading">Loading product details...</div>
-      </div>
-    );
+    return <ProductDetailSkeleton />;
   }
 
   if (error || !product) {
@@ -226,7 +307,7 @@ function ProductDetail() {
         </div>
       </header>
 
-      <main className="product-main">
+      <main id="main-content" className="product-main">
         <section className="product-hero-grid">
           <div className="product-gallery">
             <div className="product-main-image-wrap">
@@ -259,13 +340,15 @@ function ProductDetail() {
           </div>
 
           <div className="product-buy">
-            <nav className="product-breadcrumb" aria-label="Breadcrumb">
-              <Link to={catalogListHref}>Products</Link>
-              <span aria-hidden="true">›</span>
-              <Link to={catalogListHref}>{product.category || "Catalog"}</Link>
-              <span aria-hidden="true">›</span>
-              <span>{product.title}</span>
-            </nav>
+            <Breadcrumbs
+              className="product-breadcrumbs"
+              items={[
+                { label: "Home", to: "/home" },
+                { label: "Catalog", to: "/catalog/products" },
+                { label: product.category || "Products", to: catalogListHref },
+                { label: product.title },
+              ]}
+            />
 
             <h1>{product.title}</h1>
 
@@ -274,9 +357,18 @@ function ProductDetail() {
               <span>({product.reviewCount ?? 1248} reviews)</span>
             </div>
 
-            {Number.isFinite(stockCap) ? (
-              <p className={`product-stock-line${stockCap < 1 ? " product-stock-line--out" : ""}`}>
-                {stockCap < 1 ? "Out of stock" : `${stockCap} in stock`}
+            {product && product.stock != null ? (
+              <div className="product-stock-row">
+                <StockBadge stock={product.stock} variant="block" />
+              </div>
+            ) : null}
+
+            {product && product.stock != null && product.stock > 0 ? (
+              <p className="product-delivery-line">
+                <span aria-hidden="true">🚚</span>{" "}
+                Get it by{" "}
+                <strong>{formatDeliveryWindow(estimateDelivery(product.stock))}</strong>
+                {" "}with SmartCart Express
               </p>
             ) : null}
 
@@ -319,19 +411,30 @@ function ProductDetail() {
                 disabled={outOfStock}
               >
                 <CartIcon size={26} className="btn-primary-cart-img" />
-                Add to Cart
+                {outOfStock ? "Out of Stock" : "Add to Cart"}
               </button>
-              <button
-                type="button"
-                className="btn-secondary"
-                disabled={outOfStock}
-                onClick={() => {
-                  handleAddToCart();
-                  navigate("/cart");
-                }}
-              >
-                Buy Now
-              </button>
+              {outOfStock ? (
+                <StockAlertButton productId={product.id} variant="block" />
+              ) : (
+                <button
+                  type="button"
+                  className="btn-secondary"
+                  onClick={() => {
+                    handleAddToCart();
+                    navigate("/cart");
+                  }}
+                >
+                  Buy Now
+                </button>
+              )}
+              {!outOfStock ? (
+                <PriceDropAlertButton
+                  productId={product.id}
+                  productTitle={product.title}
+                  currentPrice={product.price}
+                  variant="block"
+                />
+              ) : null}
             </div>
 
             <div className="benefits">
@@ -448,6 +551,7 @@ function ProductDetail() {
             </article>
           </div>
         </section>
+        <RecentlyViewedStrip excludeId={product.id} title="Recently viewed" />
       </main>
 
       <HomeFooter />

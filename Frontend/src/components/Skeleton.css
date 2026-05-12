@@ -1,0 +1,60 @@
+/* Reusable shimmering skeleton block. Two background layers stack: a flat
+   neutral fill, plus a moving highlight that produces the shimmer. */
+.sc-skeleton {
+  background-color: #eef0f4;
+  background-image: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  background-repeat: no-repeat;
+  background-size: 200% 100%;
+  background-position: 200% 0;
+  animation: sc-skeleton-shimmer 1.4s ease-in-out infinite;
+  /* Avoid layout shift when used as inline-block. */
+  vertical-align: middle;
+  /* Disable text selection on the placeholder. */
+  user-select: none;
+  pointer-events: none;
+  color: transparent;
+}
+
+@keyframes sc-skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sc-skeleton {
+    animation: none;
+    background-image: none;
+  }
+}
+
+/* Make existing pre-built skeleton hooks (e.g. .home-product-card--skeleton,
+   .catalog-card.skeleton) match the same shimmer treatment so the whole app
+   feels consistent. */
+.home-product-card--skeleton,
+.catalog-card.skeleton {
+  background-color: #eef0f4 !important;
+  background-image: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 70%
+  ) !important;
+  background-repeat: no-repeat !important;
+  background-size: 200% 100% !important;
+  background-position: 200% 0 !important;
+  animation: sc-skeleton-shimmer 1.4s ease-in-out infinite !important;
+  border-color: transparent !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-product-card--skeleton,
+  .catalog-card.skeleton {
+    animation: none !important;
+    background-image: none !important;
+  }
+}

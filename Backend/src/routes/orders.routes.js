@@ -3,6 +3,7 @@ const { withDb } = require("../lib/data-store");
 const authMiddleware = require("../middleware/auth");
 const { writeLimiter } = require("../middleware/rateLimits");
 const { decorateOrder, effectiveStatus } = require("../lib/order-lifecycle");
+const { resolveCoupon } = require("./coupons.routes");
 
 const router = express.Router();
 
@@ -41,11 +42,18 @@ function priceLine(line, productMap) {
   };
 }
 
-function summarise(items) {
+function summarise(items, discountUsd = 0) {
   const subtotal = items.reduce((s, l) => s + l.lineTotal, 0);
-  const tax = Number((subtotal * TAX_RATE).toFixed(2));
-  const total = Number((subtotal + tax).toFixed(2));
-  return { subtotal: Number(subtotal.toFixed(2)), tax, total };
+  const discount = Math.max(0, Math.min(subtotal, Number(discountUsd) || 0));
+  const taxable = Math.max(0, subtotal - discount);
+  const tax = Number((taxable * TAX_RATE).toFixed(2));
+  const total = Number((taxable + tax).toFixed(2));
+  return {
+    subtotal: Number(subtotal.toFixed(2)),
+    discount: Number(discount.toFixed(2)),
+    tax,
+    total,
+  };
 }
 
 function validateAddress(addr) {
@@ -63,6 +71,41 @@ router.post("/", writeLimiter, async (req, res) => {
   const addressErr = validateAddress(req.body?.address);
   if (addressErr) return res.status(400).json({ message: addressErr });
 
+  const couponCodeRaw = typeof req.body?.couponCode === "string"
+    ? req.body.couponCode.trim()
+    : "";
+
+  // Pre-compute pricing outside the write queue. We need the subtotal to
+  // re-validate the coupon before we touch the cart/orders collections.
+  const previewSubtotalResult = await withDb(async (db) => {
+    if (!Array.isArray(db.carts)) db.carts = [];
+    const cart = db.carts.find((c) => c.userId === req.user.sub);
+    const sourceItems = Array.isArray(cart?.items) ? cart.items : [];
+    if (sourceItems.length === 0) return { error: "Cart is empty" };
+    if (sourceItems.length > MAX_ORDER_LINES) {
+      return { error: `Order cannot exceed ${MAX_ORDER_LINES} items` };
+    }
+    const productMap = new Map(db.products.map((p) => [String(p.id), p]));
+    const items = sourceItems.map((line) => priceLine(line, productMap));
+    const subtotal = items.reduce((s, l) => s + l.lineTotal, 0);
+    return { items, subtotal: Number(subtotal.toFixed(2)) };
+  });
+
+  if (previewSubtotalResult.error) {
+    return res.status(400).json({ message: previewSubtotalResult.error });
+  }
+
+  let resolvedCoupon = null;
+  let discountUsd = 0;
+  if (couponCodeRaw) {
+    const couponResult = await resolveCoupon(couponCodeRaw, previewSubtotalResult.subtotal);
+    if (couponResult.error) {
+      return res.status(400).json({ message: couponResult.error });
+    }
+    resolvedCoupon = couponResult.coupon;
+    discountUsd = couponResult.discount;
+  }
+
   const result = await withDb(async (db) => {
     if (!Array.isArray(db.carts)) db.carts = [];
     if (!Array.isArray(db.orders)) db.orders = [];
@@ -72,15 +115,12 @@ router.post("/", writeLimiter, async (req, res) => {
     if (sourceItems.length === 0) {
       return { error: "Cart is empty" };
     }
-    if (sourceItems.length > MAX_ORDER_LINES) {
-      return { error: `Order cannot exceed ${MAX_ORDER_LINES} items` };
-    }
 
     const productMap = new Map(
       db.products.map((p) => [String(p.id), p])
     );
     const items = sourceItems.map((line) => priceLine(line, productMap));
-    const totals = summarise(items);
+    const totals = summarise(items, discountUsd);
 
     const now = new Date().toISOString();
     const order = {
@@ -88,6 +128,7 @@ router.post("/", writeLimiter, async (req, res) => {
       userId: req.user.sub,
       items,
       ...totals,
+      ...(resolvedCoupon ? { coupon: resolvedCoupon } : {}),
       address: {
         fullName: String(req.body.address.fullName).trim(),
         line1: String(req.body.address.line1).trim(),

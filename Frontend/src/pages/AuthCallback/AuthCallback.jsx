@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { setToken } from "../../utils/authToken";
+import { isAdmin, setToken } from "../../utils/authToken";
 import "../Login/Login.css";
 
 function AuthCallback() {
@@ -16,12 +16,12 @@ function AuthCallback() {
     }
 
     setToken(token);
-    navigate("/home", { replace: true });
+    navigate(isAdmin() ? "/admin" : "/home", { replace: true });
   }, [navigate, searchParams]);
 
   return (
     <section className="login-page">
-      <main className="login-main">
+      <main id="main-content" className="login-main">
         <div className="login-card">
           <h2>Signing you in...</h2>
           <p>Please wait while we complete Google authentication.</p>

@@ -132,6 +132,10 @@
   line-height: 1.45;
 }
 
+.cart-item-stock {
+  margin-top: 6px;
+}
+
 .cart-item-price {
   margin: 0;
   font-size: 1.25rem;
@@ -403,6 +407,135 @@
 
 .cart-summary-free {
   color: #6b38d4 !important;
+}
+
+.cart-summary-discount span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cart-summary-coupon-tag {
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+}
+
+.cart-summary-discount strong {
+  color: #047857 !important;
+}
+
+.cart-coupon {
+  margin: 0 0 18px;
+}
+
+.cart-coupon-row {
+  display: flex;
+  gap: 8px;
+}
+
+.cart-coupon-input {
+  flex: 1;
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid #d4d2d8;
+  background: #fff;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cart-coupon-input:focus {
+  outline: none;
+  border-color: #6b38d4;
+  box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.18);
+}
+
+.cart-coupon-apply {
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(107, 56, 212, 0.5);
+  background: #fff;
+  color: #6b38d4;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cart-coupon-apply:hover:not(:disabled) {
+  background: rgba(107, 56, 212, 0.08);
+}
+
+.cart-coupon-apply:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cart-coupon-error {
+  margin: 8px 0 0;
+  color: #b91c1c;
+  font-size: 0.82rem;
+}
+
+.cart-coupon-hint {
+  margin: 8px 0 0;
+  color: #6b7280;
+  font-size: 0.78rem;
+}
+
+.cart-coupon-hint code {
+  background: rgba(107, 56, 212, 0.1);
+  color: #5527b6;
+  padding: 1px 6px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-family: inherit;
+  font-weight: 600;
+  margin: 0 2px;
+}
+
+.cart-coupon-applied {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.cart-coupon-label {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #047857;
+}
+
+.cart-coupon-saved {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  color: #065f46;
+}
+
+.cart-coupon-remove {
+  background: transparent;
+  border: none;
+  color: #b91c1c;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.cart-coupon-remove:hover {
+  background: rgba(220, 38, 38, 0.08);
 }
 
 .cart-summary-total {

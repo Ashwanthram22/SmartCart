@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   AlertCircle,
@@ -11,9 +11,12 @@ import {
 } from "lucide-react";
 import { ProfileLayout } from "./ProfileLayout";
 import OrderActionDialog from "./OrderActionDialog";
+import OrderInsightsDialog from "./OrderInsightsDialog";
 import { cancelOrder, getOrders } from "../../api/client";
 import { useCart } from "../../hooks/useCart";
 import { useToast } from "../../hooks/useToast";
+import usePageMeta from "../../hooks/usePageMeta";
+import Skeleton from "../../components/Skeleton";
 import "./OrderHistory.css";
 
 function StatusBadge({ status }) {
@@ -67,6 +70,78 @@ function formatMoney(n) {
   });
 }
 
+const FILTER_OPTIONS = [
+  { value: "all", label: "All statuses" },
+  { value: "processing", label: "Processing" },
+  { value: "transit", label: "In transit" },
+  { value: "delivered", label: "Delivered" },
+  { value: "cancelled", label: "Cancelled" },
+];
+
+/** RFC 4180-ish CSV escape: wrap in quotes and double up internal quotes. */
+function csvCell(value) {
+  if (value == null) return "";
+  const s = String(value).replace(/"/g, '""');
+  if (/[",\n\r]/.test(s)) return `"${s}"`;
+  return s;
+}
+
+/**
+ * Build a CSV blob of the user's orders (one row per line item, so the
+ * download is useful for spreadsheets / accounting). Triggers the browser
+ * download via an anchor click — purely client-side, no backend needed.
+ */
+function downloadOrdersCsv(orders) {
+  const header = [
+    "Order ID",
+    "Order Date",
+    "Status",
+    "Product",
+    "Quantity",
+    "Unit Price (USD)",
+    "Line Total (USD)",
+    "Order Subtotal",
+    "Order Tax",
+    "Order Total",
+    "Ship To",
+    "City",
+    "Postal",
+  ];
+
+  const rows = [header];
+  for (const order of orders) {
+    const items = order.items?.length ? order.items : [{}];
+    for (const item of items) {
+      rows.push([
+        order.id,
+        order.createdAt,
+        order.status,
+        item.title || "",
+        item.quantity ?? "",
+        item.unitPrice ?? "",
+        item.lineTotal ?? "",
+        order.subtotal,
+        order.tax,
+        order.total,
+        order.address?.fullName || "",
+        order.address?.city || "",
+        order.address?.postal || "",
+      ]);
+    }
+  }
+
+  const csv = rows.map((r) => r.map(csvCell).join(",")).join("\r\n");
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `smartcart-orders-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 function actionsFor(status) {
   if (status === "cancelled") {
     return [{ id: "details", label: "View Details", variant: "outline" }];
@@ -91,16 +166,43 @@ function actionsFor(status) {
 }
 
 export default function OrderHistory() {
+  usePageMeta({
+    title: "Order history",
+    description: "Track every SmartCart AI order, download invoices and re-buy in one tap.",
+  });
+
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [dialogOrder, setDialogOrder] = useState(null);
   const [dialogMode, setDialogMode] = useState(null); // "track" | "details"
   const [busyOrderId, setBusyOrderId] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [filterMenuOpen, setFilterMenuOpen] = useState(false);
+  const [insightsOpen, setInsightsOpen] = useState(false);
+  const filterMenuRef = useRef(null);
 
   const { addItem } = useCart();
   const toast = useToast();
   const navigate = useNavigate();
+
+  // Close the filter menu on outside click + Escape.
+  useEffect(() => {
+    if (!filterMenuOpen) return undefined;
+    const onDown = (e) => {
+      if (!filterMenuRef.current) return;
+      if (!filterMenuRef.current.contains(e.target)) setFilterMenuOpen(false);
+    };
+    const onKey = (e) => {
+      if (e.key === "Escape") setFilterMenuOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [filterMenuOpen]);
 
   useEffect(() => {
     let cancelled = false;
@@ -122,11 +224,19 @@ export default function OrderHistory() {
     };
   }, []);
 
-  const isEmpty = !loading && orders.length === 0;
+  const filteredOrders = useMemo(
+    () =>
+      statusFilter === "all"
+        ? orders
+        : orders.filter((o) => o.status === statusFilter),
+    [orders, statusFilter]
+  );
+
+  const isEmpty = !loading && filteredOrders.length === 0;
 
   const cards = useMemo(
     () =>
-      orders.map((order) => {
+      filteredOrders.map((order) => {
         const headline = order.items?.[0];
         const restCount = Math.max(0, (order.items?.length || 0) - 1);
         return {
@@ -139,8 +249,20 @@ export default function OrderHistory() {
           actions: actionsFor(order.status),
         };
       }),
-    [orders]
+    [filteredOrders]
   );
+
+  const activeFilterLabel =
+    FILTER_OPTIONS.find((o) => o.value === statusFilter)?.label || "All statuses";
+
+  const handleExport = () => {
+    if (orders.length === 0) {
+      toast.info("No orders to export yet.");
+      return;
+    }
+    downloadOrdersCsv(orders);
+    toast.success(`Exported ${orders.length} order${orders.length === 1 ? "" : "s"} to CSV.`);
+  };
 
   /**
    * Re-queue every line of a previous order into the live cart. Reuses the
@@ -233,11 +355,53 @@ export default function OrderHistory() {
             </p>
           </div>
           <div className="oh-toolbar">
-            <button type="button" className="oh-tool-btn" disabled title="Coming soon">
-              <Filter size={18} aria-hidden="true" className="oh-btn-icon" />
-              Filter
-            </button>
-            <button type="button" className="oh-tool-btn" disabled title="Coming soon">
+            <div className="oh-filter" ref={filterMenuRef}>
+              <button
+                type="button"
+                className={
+                  statusFilter === "all"
+                    ? "oh-tool-btn"
+                    : "oh-tool-btn oh-tool-btn--active"
+                }
+                aria-haspopup="listbox"
+                aria-expanded={filterMenuOpen}
+                onClick={() => setFilterMenuOpen((v) => !v)}
+              >
+                <Filter size={18} aria-hidden="true" className="oh-btn-icon" />
+                {activeFilterLabel}
+              </button>
+              {filterMenuOpen ? (
+                <ul className="oh-filter-menu" role="listbox">
+                  {FILTER_OPTIONS.map((opt) => (
+                    <li key={opt.value}>
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={statusFilter === opt.value}
+                        className={
+                          statusFilter === opt.value
+                            ? "oh-filter-option oh-filter-option--active"
+                            : "oh-filter-option"
+                        }
+                        onClick={() => {
+                          setStatusFilter(opt.value);
+                          setFilterMenuOpen(false);
+                        }}
+                      >
+                        {opt.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+            <button
+              type="button"
+              className="oh-tool-btn"
+              onClick={handleExport}
+              disabled={orders.length === 0}
+              title={orders.length === 0 ? "No orders to export yet" : "Download as CSV"}
+            >
               <Download size={18} aria-hidden="true" className="oh-btn-icon" />
               Export
             </button>
@@ -248,25 +412,68 @@ export default function OrderHistory() {
 
         <div className="oh-card-list">
           {loading ? (
-            <article className="oh-order-card oh-order-card--skeleton" aria-busy="true">
-              Loading your orders…
-            </article>
-          ) : isEmpty ? (
-            <article className="oh-order-card oh-empty-card">
-              <h2 className="oh-product-title">No orders yet</h2>
-              <p className="oh-product-sub">
-                Once you place your first order it will show up here with
-                tracking and reorder options.
-              </p>
-              <div className="oh-order-actions">
-                <Link
-                  to="/catalog/products"
-                  className="oh-action-btn oh-action-btn--primary"
+            <>
+              {Array.from({ length: 3 }).map((_, i) => (
+                <article
+                  key={i}
+                  className="oh-order-card oh-order-card--skeleton"
+                  aria-busy="true"
+                  aria-label="Loading order"
                 >
-                  Browse products
-                </Link>
-              </div>
-            </article>
+                  <div className="oh-skel-row">
+                    <Skeleton height={20} width={150} radius={6} />
+                    <Skeleton height={20} width={90} radius={999} />
+                  </div>
+                  <div className="oh-skel-body">
+                    <Skeleton height={88} width={88} radius={12} />
+                    <div className="oh-skel-text">
+                      <Skeleton height={18} width="60%" radius={4} />
+                      <Skeleton height={14} width="40%" radius={4} className="oh-skel-mt-8" />
+                      <Skeleton height={14} width="30%" radius={4} className="oh-skel-mt-8" />
+                    </div>
+                    <Skeleton height={28} width={90} radius={6} />
+                  </div>
+                  <div className="oh-skel-actions">
+                    <Skeleton height={36} width={120} radius={8} />
+                    <Skeleton height={36} width={120} radius={8} />
+                  </div>
+                </article>
+              ))}
+            </>
+          ) : isEmpty ? (
+            statusFilter !== "all" ? (
+              <article className="oh-order-card oh-empty-card">
+                <h2 className="oh-product-title">No {activeFilterLabel.toLowerCase()} orders</h2>
+                <p className="oh-product-sub">
+                  Try a different filter to see more of your history.
+                </p>
+                <div className="oh-order-actions">
+                  <button
+                    type="button"
+                    className="oh-action-btn oh-action-btn--primary"
+                    onClick={() => setStatusFilter("all")}
+                  >
+                    Show all orders
+                  </button>
+                </div>
+              </article>
+            ) : (
+              <article className="oh-order-card oh-empty-card">
+                <h2 className="oh-product-title">No orders yet</h2>
+                <p className="oh-product-sub">
+                  Once you place your first order it will show up here with
+                  tracking and reorder options.
+                </p>
+                <div className="oh-order-actions">
+                  <Link
+                    to="/catalog/products"
+                    className="oh-action-btn oh-action-btn--primary"
+                  >
+                    Browse products
+                  </Link>
+                </div>
+              </article>
+            )
           ) : (
             cards.map((order) => (
               <article key={order.id} className="oh-order-card">
@@ -360,7 +567,13 @@ export default function OrderHistory() {
                 using AI-negotiated deals.
               </p>
             </div>
-            <button type="button" className="oh-insight-cta" disabled title="Coming soon">
+            <button
+              type="button"
+              className="oh-insight-cta"
+              onClick={() => setInsightsOpen(true)}
+              disabled={orders.length === 0}
+              title={orders.length === 0 ? "Place an order to unlock the report" : ""}
+            >
               View Full Report
             </button>
           </div>
@@ -389,6 +602,13 @@ export default function OrderHistory() {
           order={dialogOrder}
           mode={dialogMode}
           onClose={() => setDialogOrder(null)}
+        />
+      ) : null}
+
+      {insightsOpen ? (
+        <OrderInsightsDialog
+          orders={orders}
+          onClose={() => setInsightsOpen(false)}
         />
       ) : null}
     </ProfileLayout>

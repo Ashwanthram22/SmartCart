@@ -1,8 +1,15 @@
 import { Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
 import "./App.css";
 import ScrollToTop from "./components/ScrollToTop";
+import ErrorBoundary from "./components/ErrorBoundary";
+import KeyboardShortcuts from "./components/KeyboardShortcuts";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import AdminRoute from "./components/auth/AdminRoute";
 import AuthCallback from "./pages/AuthCallback/AuthCallback";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
+import AdminInventory from "./pages/Admin/AdminInventory";
+import AdminOrders from "./pages/Admin/AdminOrders";
+import AdminAnalytics from "./pages/Admin/AdminAnalytics";
 import ProductsCatalog from "./pages/Catalog/ProductsCatalog";
 import ProductDetail from "./pages/Catalog/ProductDetail";
 import Cart from "./pages/Cart/Cart";
@@ -10,15 +17,20 @@ import Checkout from "./pages/Cart/Checkout";
 import Profile from "./pages/Profile/Profile";
 import OrderHistory from "./pages/Profile/OrderHistory";
 import SavedItems from "./pages/Profile/SavedItems";
+import AddressBook from "./pages/Profile/AddressBook";
 import SettingsSecurity from "./pages/Profile/SettingsSecurity";
+import SettingsPreferences from "./pages/Profile/SettingsPreferences";
 import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
-import { isAuthenticated } from "./utils/authToken";
+import NotFound from "./pages/NotFound/NotFound";
+import { isAdmin, isAuthenticated } from "./utils/authToken";
 
 function RootRedirect() {
-  return <Navigate to={isAuthenticated() ? "/home" : "/login"} replace />;
+  if (!isAuthenticated()) return <Navigate to="/login" replace />;
+  return <Navigate to={isAdmin() ? "/admin" : "/home"} replace />;
 }
 
 /** Old bookmarks: /catalog/laptops?segment=… → /catalog/products?segment=… */
@@ -33,14 +45,25 @@ function RedirectLegacyCatalogDetail() {
   return <Navigate to={`/catalog/products/${id}${search}`} replace />;
 }
 
+function RouteBoundary({ children }) {
+  const { pathname } = useLocation();
+  return <ErrorBoundary resetKey={pathname}>{children}</ErrorBoundary>;
+}
+
 function App() {
   return (
     <>
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
       <ScrollToTop />
+      <KeyboardShortcuts />
+      <RouteBoundary>
       <Routes>
         <Route path="/" element={<RootRedirect />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/register" element={<Register />} />
         <Route path="/auth/callback" element={<AuthCallback />} />
         <Route
@@ -124,6 +147,14 @@ function App() {
           }
         />
         <Route
+          path="/profile/settings/preferences"
+          element={
+            <ProtectedRoute>
+              <SettingsPreferences />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/profile/saved"
           element={
             <ProtectedRoute>
@@ -131,9 +162,53 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/profile/addresses"
+          element={
+            <ProtectedRoute>
+              <AddressBook />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/dashboard" element={<Navigate to="/home" replace />} />
-        <Route path="*" element={<RootRedirect />} />
+
+        {/* ----- Admin console ----- */}
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/inventory"
+          element={
+            <AdminRoute>
+              <AdminInventory />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/orders"
+          element={
+            <AdminRoute>
+              <AdminOrders />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/analytics"
+          element={
+            <AdminRoute>
+              <AdminAnalytics />
+            </AdminRoute>
+          }
+        />
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
+      </RouteBoundary>
     </>
   );
 }

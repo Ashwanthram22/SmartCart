@@ -50,6 +50,39 @@ const USE_MONGO =
   String(process.env.USE_MONGO || "").toLowerCase() === "true";
 const MONGODB_URI = process.env.MONGODB_URI || null;
 
+/**
+ * Cloudinary credentials. All three are required for signed uploads
+ * to work; if any are missing the admin upload endpoint short-circuits
+ * with a friendly 503 telling the operator what to set.
+ *
+ * `CLOUDINARY_URL` (the format `cloudinary://<key>:<secret>@<cloud>`)
+ * is also recognised as a single-string fallback so anyone copying
+ * the value straight out of the Cloudinary dashboard can paste it in
+ * without splitting.
+ */
+function parseCloudinaryUrl(raw) {
+  if (!raw) return null;
+  try {
+    // cloudinary://<api_key>:<api_secret>@<cloud_name>
+    const m = String(raw).match(/^cloudinary:\/\/([^:]+):([^@]+)@(.+)$/);
+    if (!m) return null;
+    return { apiKey: m[1], apiSecret: m[2], cloudName: m[3] };
+  } catch {
+    return null;
+  }
+}
+
+const cloudinaryFromUrl = parseCloudinaryUrl(process.env.CLOUDINARY_URL);
+
+const CLOUDINARY_CLOUD_NAME =
+  process.env.CLOUDINARY_CLOUD_NAME || cloudinaryFromUrl?.cloudName || null;
+const CLOUDINARY_API_KEY =
+  process.env.CLOUDINARY_API_KEY || cloudinaryFromUrl?.apiKey || null;
+const CLOUDINARY_API_SECRET =
+  process.env.CLOUDINARY_API_SECRET || cloudinaryFromUrl?.apiSecret || null;
+const CLOUDINARY_UPLOAD_FOLDER =
+  process.env.CLOUDINARY_UPLOAD_FOLDER || "smartcart/products";
+
 module.exports = {
   NODE_ENV,
   IS_PROD,
@@ -65,4 +98,8 @@ module.exports = {
     "http://localhost:5000/api/auth/google/callback",
   USE_MONGO,
   MONGODB_URI,
+  CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET,
+  CLOUDINARY_UPLOAD_FOLDER,
 };

@@ -87,6 +87,15 @@
   background: rgba(255, 255, 255, 0.12);
 }
 
+.assist-close:focus-visible,
+.assist-product-card:focus-visible,
+.assist-action-btn:focus-visible,
+.assist-suggestion-chip:focus-visible,
+.assist-send:focus-visible {
+  outline: 2px solid #b39bff;
+  outline-offset: 2px;
+}
+
 .assist-body {
   flex: 1;
   overflow-y: auto;

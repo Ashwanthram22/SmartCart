@@ -4,7 +4,7 @@
       "id": "u1",
       "name": "Demo User",
       "email": "demo@aicart.com",
-      "password": "$2b$10$Q28utLp1ofyJ5JmWY/7GKecXEYjJMssgYMw7ZWn5U8JucDWDGTOQ2",
+      "password": "$2b$10$h87QqWigVVczs9FJIqb0Vu0H7iqpU2Ak//ZXhYCids6LEbNCCEdky",
       "role": "customer"
     },
     {
@@ -14,6 +14,28 @@
       "password": null,
       "role": "customer",
       "provider": "google"
+    },
+    {
+      "id": "u1778574592688",
+      "name": "Pack D Tester",
+      "email": "packd-test@aicart.com",
+      "password": "$2b$10$4o.Pltd63dIBfbhEGlYluuwA28soBpf3Qak93KQGINXK9TYYr3YQK",
+      "role": "customer"
+    },
+    {
+      "id": "u1778580697379",
+      "name": "Pack F Tester",
+      "email": "packf-test@aicart.com",
+      "password": "$2b$10$o7GP3kF2oTD0Jd5G7VypA.zcDxB10XegAxQgyfNI3JfaUIs5p0/h.",
+      "role": "customer"
+    },
+    {
+      "id": "u-admin",
+      "name": "Admin",
+      "email": "admin@aicart.com",
+      "password": "$2b$10$oUvrGPkX45yTmddnthmacewcBidRdm9wNFWk.C2vgqqcT7bPTq1Dm",
+      "role": "admin",
+      "isAdmin": true
     }
   ],
   "products": [
@@ -273,7 +295,82 @@
       }
     }
   ],
-  "orders": [],
+  "orders": [
+    {
+      "id": "o1778574632318",
+      "userId": "u1778574592688",
+      "items": [
+        {
+          "productId": "p1",
+          "title": "OmniWatch Pro 4",
+          "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80",
+          "subtitle": "smartwatch",
+          "unitPrice": 3213.93,
+          "quantity": 2,
+          "lineTotal": 6427.86
+        }
+      ],
+      "subtotal": 6427.86,
+      "discount": 642.79,
+      "tax": 462.81,
+      "total": 6247.88,
+      "coupon": {
+        "code": "WELCOME10",
+        "type": "percent",
+        "value": 10,
+        "label": "10% off your first order",
+        "description": "Save 10% on any order — no minimum.",
+        "minOrder": 0
+      },
+      "address": {
+        "fullName": "Pack D Tester",
+        "line1": "42 Maple St",
+        "city": "Springfield",
+        "postal": "00042"
+      },
+      "status": "cancelled",
+      "createdAt": "2026-05-12T08:30:32.318Z",
+      "updatedAt": "2026-05-12T12:56:25.783Z",
+      "cancelledAt": "2026-05-12T12:56:25.783Z"
+    },
+    {
+      "id": "o1778574642482",
+      "userId": "u1778574592688",
+      "items": [
+        {
+          "productId": "p2",
+          "title": "AuraPods Max",
+          "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80",
+          "subtitle": "x",
+          "unitPrice": 1963.93,
+          "quantity": 1,
+          "lineTotal": 1963.93
+        }
+      ],
+      "subtotal": 1963.93,
+      "discount": 25,
+      "tax": 155.11,
+      "total": 2094.04,
+      "coupon": {
+        "code": "SAVE25",
+        "type": "flat",
+        "value": 25,
+        "label": "$25 off orders over $200",
+        "description": "Take $25 off when your subtotal is at least $200.",
+        "minOrder": 200
+      },
+      "address": {
+        "fullName": "Pack D Tester",
+        "line1": "42 Maple St",
+        "city": "Springfield",
+        "postal": "00042"
+      },
+      "status": "delivered",
+      "createdAt": "2026-05-12T08:30:42.482Z",
+      "updatedAt": "2026-05-12T12:56:21.649Z",
+      "deliveredAt": "2026-05-12T12:56:21.649Z"
+    }
+  ],
   "reviews": [
     {
       "id": "r1778159539558",
@@ -307,7 +404,103 @@
     {
       "userId": "u1",
       "items": [],
-      "updatedAt": "2026-05-08T13:10:56.304Z"
+      "updatedAt": "2026-05-12T09:57:24.818Z"
+    },
+    {
+      "userId": "u1778574592688",
+      "items": [],
+      "updatedAt": "2026-05-12T08:30:42.445Z"
+    },
+    {
+      "userId": "u-admin",
+      "items": [],
+      "updatedAt": "2026-05-12T11:14:44.898Z"
     }
-  ]
+  ],
+  "passwordResets": [
+    {
+      "id": "pr1778570373221",
+      "userId": "u1",
+      "tokenHash": "b286ebe42e0c8731646ae03449bce0c2f3a7c8c878aec6854f256716e8f4589a",
+      "createdAt": "2026-05-12T07:19:33.221Z",
+      "expiresAt": 1778573973221,
+      "usedAt": "2026-05-12T07:19:34.559Z"
+    }
+  ],
+  "savedItems": [
+    {
+      "userId": "u1",
+      "items": [],
+      "updatedAt": "2026-05-12T08:09:47.117Z"
+    },
+    {
+      "userId": "u-admin",
+      "items": [],
+      "updatedAt": "2026-05-12T11:14:44.895Z"
+    }
+  ],
+  "coupons": [
+    {
+      "code": "WELCOME10",
+      "type": "percent",
+      "value": 10,
+      "label": "10% off your first order",
+      "description": "Save 10% on any order — no minimum.",
+      "minOrder": 0,
+      "active": true
+    },
+    {
+      "code": "SAVE25",
+      "type": "flat",
+      "value": 25,
+      "label": "$25 off orders over $200",
+      "description": "Take $25 off when your subtotal is at least $200.",
+      "minOrder": 200,
+      "active": true
+    },
+    {
+      "code": "AICART",
+      "type": "percent",
+      "value": 15,
+      "label": "15% off — AI-curated picks",
+      "description": "Use code AICART for 15% off any order over $50.",
+      "minOrder": 50,
+      "active": true
+    }
+  ],
+  "addresses": [
+    {
+      "id": "a1778574611334",
+      "userId": "u1778574592688",
+      "fullName": "Pack D Tester",
+      "line1": "42 Maple St",
+      "city": "Springfield",
+      "postal": "00042",
+      "label": "Home",
+      "line2": "",
+      "phone": "555-0100",
+      "isDefault": true,
+      "createdAt": "2026-05-12T08:30:11.334Z",
+      "updatedAt": "2026-05-12T08:30:22.783Z"
+    }
+  ],
+  "stockAlerts": [],
+  "preferences": [
+    {
+      "id": "pref1778580709642",
+      "userId": "u1778580697379",
+      "currency": "INR",
+      "theme": "dark",
+      "notifications": {
+        "orderUpdates": true,
+        "dealAlerts": true,
+        "backInStock": true,
+        "priceDrops": false,
+        "weeklyDigest": true
+      },
+      "marketingEmails": true,
+      "updatedAt": "2026-05-12T10:11:49.642Z"
+    }
+  ],
+  "priceAlerts": []
 }

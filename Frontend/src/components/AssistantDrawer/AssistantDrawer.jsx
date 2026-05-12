@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { chatWithAssistant } from "../../api/client";
 import { useCart } from "../../hooks/useCart";
+import { useToast } from "../../hooks/useToast";
+import { useFocusTrap } from "../../hooks/useFocusTrap";
 import "./AssistantDrawer.css";
 
 /**
@@ -19,7 +21,7 @@ import "./AssistantDrawer.css";
  * }} ChatTurn
  */
 
-const GREETING = {
+const GENERIC_GREETING = {
   id: "greeting",
   role: "assistant",
   content:
@@ -31,6 +33,20 @@ const GREETING = {
     "Where is my order?",
   ],
 };
+
+function productGreeting(ctx) {
+  if (!ctx?.productTitle) return GENERIC_GREETING;
+  return {
+    id: "greeting-product",
+    role: "assistant",
+    content: `Hi! Ask me anything about the ${ctx.productTitle}\u2014comparisons, specs, fit for what you do, or whether to buy.`,
+    suggestions: [
+      `Is the ${ctx.productTitle} worth it?`,
+      "How does it compare to similar products?",
+      "Show me cheaper alternatives",
+    ],
+  };
+}
 
 function ProductMiniCard({ product, onOpen }) {
   return (
@@ -87,17 +103,37 @@ function ActionButton({ action, onAddToCart, onNavigate }) {
 export default function AssistantDrawer({ open, onClose, initialContext }) {
   const navigate = useNavigate();
   const { addItem } = useCart();
+  const toastApi = useToast();
 
-  const [turns, setTurns] = useState(() => [GREETING]);
+  const [turns, setTurns] = useState(() => [productGreeting(initialContext)]);
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [toast, setToast] = useState("");
   const listRef = useRef(null);
   const inputRef = useRef(null);
+  const drawerRef = useRef(null);
+  useFocusTrap(drawerRef, open);
+
+  /**
+   * Reset the chat when the drawer transitions from closed → open so a new
+   * session always starts with the *current* page context (and so a context
+   * from a previous product page doesn't leak into the next conversation).
+   * The contextKey-driven `useState` initialiser would only run on mount.
+   */
+  const contextKey = initialContext?.productId || "_global";
+  const lastContextKeyRef = useRef(contextKey);
+  useEffect(() => {
+    if (!open) return;
+    if (lastContextKeyRef.current !== contextKey) {
+      setTurns([productGreeting(initialContext)]);
+      lastContextKeyRef.current = contextKey;
+    }
+  }, [open, contextKey, initialContext]);
 
   /** Quick-context line shown at the top when the drawer was opened from a
-   *  product page; the model also receives it implicitly via history. */
+   *  product page; the model also receives it explicitly via the request
+   *  payload so the LLM can ground its answers in this product. */
   const contextLabel = initialContext?.productTitle
     ? `Context: ${initialContext.productTitle}`
     : null;
@@ -188,6 +224,7 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
         const reply = await chatWithAssistant({
           message: text,
           history: historyForApi,
+          context: initialContext || undefined,
         });
         const assistantTurn = {
           id: `a${Date.now()}`,
@@ -199,13 +236,22 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
         };
         setTurns((prev) => [...prev, assistantTurn]);
       } catch (err) {
-        setError(err.response?.data?.message || "Assistant didn't respond. Try again?");
+        const status = err.response?.status;
+        const message =
+          status === 429
+            ? "Slow down — too many messages in a row. Try again in a moment."
+            : err.response?.data?.message ||
+              "Assistant didn't respond. Try again?";
+        setError(message);
+        // Also surface a toast so the failure is noticed even if the user
+        // has scrolled away from the input row inside the drawer.
+        toastApi.error(message);
       } finally {
         setSending(false);
         window.setTimeout(() => inputRef.current?.focus(), 30);
       }
     },
-    [draft, sending, turns]
+    [draft, sending, turns, initialContext]
   );
 
   const handleSubmit = useCallback(
@@ -234,11 +280,13 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
         aria-hidden={!open}
       />
       <aside
+        ref={drawerRef}
         className={`assist-drawer${open ? " assist-drawer--open" : ""}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="assist-drawer-title"
         aria-hidden={!open}
+        inert={!open || undefined}
       >
         <header className="assist-header">
           <div className="assist-header-text">
@@ -256,7 +304,14 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
           </button>
         </header>
 
-        <div className="assist-body" ref={listRef}>
+        <div
+          className="assist-body"
+          ref={listRef}
+          role="log"
+          aria-live="polite"
+          aria-atomic="false"
+          aria-relevant="additions"
+        >
           {turns.map((turn) => (
             <div
               key={turn.id}
@@ -318,7 +373,11 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
           </div>
         ) : null}
 
-        {error ? <p className="assist-error">{error}</p> : null}
+        {error ? (
+          <p className="assist-error" role="alert">
+            {error}
+          </p>
+        ) : null}
 
         <form className="assist-input-row" onSubmit={handleSubmit}>
           <input

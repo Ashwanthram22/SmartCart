@@ -233,6 +233,28 @@
   color: #b91c1c;
 }
 
+.product-stock-row {
+  margin: 0 0 10px;
+}
+
+.product-delivery-line {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: #1f2937;
+  background: rgba(99, 102, 241, 0.07);
+  border: 1px solid rgba(99, 102, 241, 0.18);
+  padding: 8px 12px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.product-delivery-line strong {
+  color: #4338ca;
+  font-weight: 700;
+}
+
 .product-buy h1 {
   margin: 6px 0 10px;
   font-size: 52px;
