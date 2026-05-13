@@ -145,7 +145,7 @@ export function ProfileLayout({ children }) {
               <span>Smart Insight</span>
             </div>
             <p>
-              Based on your recent browsing, you might save $40 this month by using SmartCart&apos;s personalized
+              Based on your recent browsing, you might save ₹3,200 this month by using SmartCart&apos;s personalized
               deals.
             </p>
           </div>

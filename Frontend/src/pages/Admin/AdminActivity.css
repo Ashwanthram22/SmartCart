@@ -1,0 +1,297 @@
+/* ============================================================================
+ * AdminActivity — audit log feed styles. Shares cards / pagination chrome
+ * with the rest of the admin console via the `.adm-*` helpers in
+ * AdminLayout.css; only the per-entry list visuals live here.
+ * ==========================================================================*/
+
+.aa-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ----- Toolbar -------------------------------------------------------------*/
+
+.aa-toolbar {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  flex-direction: row;
+  align-items: center;
+}
+
+.aa-search,
+.aa-actor-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  /* Match `.adm-btn` (10px) — the activity toolbar's two search inputs sit
+   * next to a dropdown so they should share its rounded-rectangle silhouette. */
+  border-radius: 10px;
+  border: 1px solid var(--adm-border);
+  background: #fff;
+  color: var(--adm-muted);
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+  min-width: 0;
+}
+
+.aa-search input,
+.aa-actor-search input {
+  border: 0;
+  outline: none;
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  color: var(--adm-text);
+  font-family: inherit;
+  font-size: 13.5px;
+}
+
+.aa-search:focus-within,
+.aa-actor-search:focus-within {
+  border-color: var(--adm-accent);
+  box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.12);
+}
+
+.aa-error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  font-size: 13px;
+}
+
+/* ----- List ----------------------------------------------------------------*/
+
+.aa-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aa-row {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border: 1px solid var(--adm-border);
+  border-radius: 12px;
+  background: #fff;
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.aa-row:hover {
+  border-color: rgba(107, 56, 212, 0.35);
+  box-shadow: 0 6px 18px -12px rgba(107, 56, 212, 0.3);
+}
+
+/* Tone hints — coloured left edge so admins can scan by category. */
+.aa-row--create {
+  box-shadow: inset 3px 0 0 0 #16a34a;
+}
+
+.aa-row--update {
+  box-shadow: inset 3px 0 0 0 var(--adm-accent);
+}
+
+.aa-row--danger {
+  box-shadow: inset 3px 0 0 0 #dc2626;
+}
+
+.aa-row--skel {
+  cursor: default;
+  align-items: center;
+  grid-template-columns: 36px 1fr;
+}
+
+.aa-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(107, 56, 212, 0.1);
+  color: var(--adm-accent);
+}
+
+.aa-row--create .aa-icon {
+  background: rgba(22, 163, 74, 0.12);
+  color: #16a34a;
+}
+
+.aa-row--danger .aa-icon {
+  background: rgba(220, 38, 38, 0.12);
+  color: #dc2626;
+}
+
+.aa-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.aa-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--adm-text);
+}
+
+.aa-summary strong {
+  font-weight: 600;
+}
+
+.aa-action-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #f4f5fb;
+  border: 1px solid var(--adm-border);
+  color: var(--adm-muted);
+}
+
+.aa-meta {
+  margin: 0;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--adm-muted);
+}
+
+.aa-meta span[title] {
+  cursor: help;
+  border-bottom: 1px dotted transparent;
+  transition: border-color 120ms ease;
+}
+
+.aa-meta span[title]:hover {
+  border-bottom-color: var(--adm-muted);
+}
+
+.aa-target {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11.5px;
+  background: #f7f7fb;
+  padding: 1px 6px;
+  border-radius: 6px;
+  border: 1px solid var(--adm-border);
+  color: var(--adm-text);
+}
+
+/* ----- Inline change diff --------------------------------------------------*/
+
+.aa-changes {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.aa-changes li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #f7f7fb;
+  border: 1px solid var(--adm-border);
+  font-size: 11.5px;
+}
+
+.aa-changes strong {
+  font-weight: 700;
+  color: var(--adm-text);
+  margin-right: 4px;
+}
+
+.aa-changes .aa-from {
+  color: #b91c1c;
+  text-decoration: line-through;
+  text-decoration-color: rgba(185, 28, 28, 0.5);
+  text-decoration-thickness: 1px;
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aa-changes .aa-to {
+  color: #16a34a;
+  font-weight: 600;
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aa-changes svg {
+  color: var(--adm-muted);
+}
+
+/* ----- Jump button ---------------------------------------------------------*/
+
+.aa-jump {
+  align-self: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4f5fb;
+  color: var(--adm-muted);
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 140ms ease, color 140ms ease, transform 140ms ease, border-color 140ms ease;
+  flex-shrink: 0;
+}
+
+.aa-jump:hover {
+  background: var(--adm-accent);
+  color: #fff;
+  transform: translateX(2px);
+}
+
+.aa-jump:focus-visible {
+  outline: 2px solid var(--adm-accent);
+  outline-offset: 2px;
+}
+
+/* ----- Pagination ----------------------------------------------------------*/
+
+.aa-pagination {
+  margin-top: 4px;
+}
+
+/* ----- Responsive ---------------------------------------------------------*/
+
+@media (max-width: 720px) {
+  .aa-toolbar {
+    grid-template-columns: 1fr;
+  }
+  .aa-row {
+    grid-template-columns: 32px 1fr;
+  }
+  .aa-jump {
+    grid-column: 2;
+    justify-self: flex-end;
+  }
+}

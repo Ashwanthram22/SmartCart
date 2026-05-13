@@ -1,14 +1,8 @@
 import { useEffect, useRef } from "react";
 import { Printer } from "lucide-react";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
+import { formatMoney } from "../../utils/money";
 import "./OrderActionDialog.css";
-
-function formatMoney(n) {
-  return Number(n || 0).toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
-}
 
 function formatDate(iso) {
   if (!iso) return "—";

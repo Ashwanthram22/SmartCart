@@ -12,6 +12,7 @@ import StockAlertButton from "../../components/StockAlertButton";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import HomeFooter from "../Home/HomeFooter";
 import { getProductFilters, getProducts } from "../../api/client";
+import { formatMoney, formatMoneyShort } from "../../utils/money";
 import "./ProductsCatalog.css";
 import { isValidSegment } from "../../constants/shopSegments";
 
@@ -28,10 +29,6 @@ const SORT_OPTIONS = [
   { value: "rating", label: "Highest Rated" },
   { value: "newest", label: "Newest Arrivals" },
 ];
-
-/** Mock USD conversion used for display only — backend stores INR. */
-const INR_TO_USD = 2.8;
-const toUsd = (inr) => Math.round((Number(inr) || 0) / INR_TO_USD);
 
 /**
  * Filter facets are loaded from `GET /api/products/filters?segment=...&q=...`.
@@ -380,8 +377,8 @@ function ProductsCatalog() {
                 }}
               />
               <div className="range-labels">
-                <span>${toUsd(priceMin)}</span>
-                <span>${toUsd(priceRange)}{priceRange < priceMax ? "" : "+"}</span>
+                <span>{formatMoneyShort(priceMin)}</span>
+                <span>{formatMoneyShort(priceRange)}{priceRange < priceMax ? "" : "+"}</span>
               </div>
             </section>
           ) : null}
@@ -516,7 +513,7 @@ function ProductsCatalog() {
                         </div>
                       </div>
                       <div className="catalog-card-foot">
-                        <strong>${((product.price || 0) / 2.8).toFixed(2)}</strong>
+                        <strong>{formatMoney(product.price || 0)}</strong>
                         {out ? (
                           <span onClick={(e) => e.stopPropagation()}>
                             <StockAlertButton productId={product.id} />
@@ -533,7 +530,7 @@ function ProductsCatalog() {
                                 title: product.title,
                                 image: product.image,
                                 subtitle: `${product.category || "Product"} • ${product.rating ?? 4.7}★ rated`,
-                                unitPrice: (product.price || 0) / 2.8,
+                                unitPrice: Number(product.price) || 0,
                                 stockAvailable: Number.isFinite(cap) ? cap : undefined,
                               });
                             }}

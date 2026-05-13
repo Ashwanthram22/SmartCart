@@ -9,23 +9,21 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
-/** Mock USD rate used to convert backend INR prices into the FE display unit. */
-const INR_TO_USD = 2.8;
+// Prices are stored and persisted in INR end-to-end (no currency conversion).
 const TAX_RATE = 0.08;
 const MAX_ORDER_LINES = 50;
 
 /**
  * Re-price a cart line at order time. Where the product still exists in the
- * catalog we use the live `price` (in INR) converted to USD so the snapshot
- * baked into the order is server-authoritative; for synthetic items (e.g.
- * the cart upsell that isn't in the products table) we honour the unitPrice
- * the FE attached.
+ * catalog we use the live `price` (in INR) so the snapshot baked into the
+ * order is server-authoritative; for synthetic items (e.g. the cart upsell
+ * that isn't in the products table) we honour the unitPrice the FE attached.
  */
 function priceLine(line, productMap) {
   const product = productMap.get(String(line.productId));
   let unitPrice = Number(line.unitPrice);
   if (product && Number.isFinite(Number(product.price))) {
-    unitPrice = Number(product.price) / INR_TO_USD;
+    unitPrice = Number(product.price);
   }
   if (!Number.isFinite(unitPrice) || unitPrice < 0) unitPrice = 0;
 
@@ -42,9 +40,9 @@ function priceLine(line, productMap) {
   };
 }
 
-function summarise(items, discountUsd = 0) {
+function summarise(items, discountAmount = 0) {
   const subtotal = items.reduce((s, l) => s + l.lineTotal, 0);
-  const discount = Math.max(0, Math.min(subtotal, Number(discountUsd) || 0));
+  const discount = Math.max(0, Math.min(subtotal, Number(discountAmount) || 0));
   const taxable = Math.max(0, subtotal - discount);
   const tax = Number((taxable * TAX_RATE).toFixed(2));
   const total = Number((taxable + tax).toFixed(2));

@@ -165,7 +165,11 @@ function intentOf(message) {
 function suggestionChips(intent) {
   switch (intent) {
     case "search":
-      return ["Show me trending picks", "Anything under $200?", "Best rated audio"];
+      return [
+        "Show me trending picks",
+        "Anything under \u20b916,000?",
+        "Best rated audio",
+      ];
     case "add-to-cart":
       return ["What's in my cart?", "Continue to checkout", "Find more like this"];
     case "order-status":
@@ -174,7 +178,11 @@ function suggestionChips(intent) {
     case "info-returns":
     case "info-warranty":
     case "info-contact":
-      return ["Recommend a gift under $100", "Show me trending picks", "Help me find a laptop"];
+      return [
+        "Recommend a gift under \u20b98,000",
+        "Show me trending picks",
+        "Help me find a laptop",
+      ];
     default:
       return ["Recommend trending picks", "Find me wireless headphones", "Show orders"];
   }
@@ -188,7 +196,7 @@ function buildSearchReply(db, message) {
     return {
       reply:
         "I couldn't find anything matching that. Try a category like 'audio', 'laptops', or " +
-        "'wearables', or set a budget like 'under $300'.",
+        "'wearables', or set a budget like 'under \u20b924,000'.",
       suggestions: suggestionChips("search"),
     };
   }
@@ -197,7 +205,7 @@ function buildSearchReply(db, message) {
   return {
     reply:
       summarised.length === 1
-        ? `Here's a strong match — the ${lead.title} for $${lead.price}.`
+        ? `Here's a strong match — the ${lead.title} for \u20b9${lead.price}.`
         : `I found ${summarised.length} picks that look like a fit. Tap a card to open it.`,
     products: summarised,
     actions: summarised.slice(0, 1).map((p) => ({
@@ -216,12 +224,15 @@ function buildAddToCartReply(db, message) {
       reply:
         "Sure — which product? Tell me the name (e.g. 'add the OmniWatch Pro 4') or describe " +
         "what you're after and I'll surface options.",
-      suggestions: ["Show me trending picks", "Recommend a gift under $100"],
+      suggestions: [
+        "Show me trending picks",
+        "Recommend a gift under \u20b98,000",
+      ],
     };
   }
   const summary = summariseProduct(product);
   return {
-    reply: `Tap the button to add the ${summary.title} ($${summary.price}) to your cart.`,
+    reply: `Tap the button to add the ${summary.title} (\u20b9${summary.price}) to your cart.`,
     products: [summary],
     actions: [
       {
@@ -385,7 +396,7 @@ function buildReply(db, payload) {
       return {
         reply:
           "I can help you find products, check on an order, or answer policy questions. " +
-          "Try 'recommend a wireless headset under $200' or 'where is my order?'.",
+          "Try 'recommend a wireless headset under \u20b916,000' or 'where is my order?'.",
         suggestions: suggestionChips("fallback"),
       };
   }

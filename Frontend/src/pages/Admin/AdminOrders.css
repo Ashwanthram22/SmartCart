@@ -13,7 +13,10 @@
 }
 
 .ao-toolbar {
+  /* `.adm-card` defaults to `flex-direction: column` so we explicitly switch
+   * back to a horizontal row for the search + filter layout. */
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 14px;
   padding: 14px 18px;
@@ -26,7 +29,9 @@
   align-items: center;
   gap: 8px;
   padding: 8px 14px;
-  border-radius: 999px;
+  /* Match `.adm-btn` (10px) so the toolbar reads as one row of consistent
+   * rounded-rectangle controls (search + date dropdown + status filter). */
+  border-radius: 10px;
   border: 1px solid #e6e6ee;
   background: #fff;
   color: #64748b;
@@ -51,6 +56,28 @@
 
 .ao-filter {
   position: relative;
+}
+
+/* Status filter trigger — single keyboard ring (no outline + box-shadow stack). */
+.adm-btn.ao-filter-trigger:focus,
+.adm-btn-primary.ao-filter-trigger:focus {
+  outline: none;
+}
+
+.adm-btn.ao-filter-trigger:focus-visible,
+.adm-btn-primary.ao-filter-trigger:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(107, 56, 212, 0.55);
+}
+
+.adm-btn-primary.ao-filter-trigger:focus-visible {
+  box-shadow: 0 6px 16px rgba(107, 56, 212, 0.28), 0 0 0 2px #fff,
+    0 0 0 4px rgba(107, 56, 212, 0.55);
+}
+
+.adm-btn-primary.ao-filter-trigger:hover:focus-visible {
+  box-shadow: 0 12px 26px rgba(107, 56, 212, 0.36), 0 0 0 2px #fff,
+    0 0 0 4px rgba(107, 56, 212, 0.55);
 }
 
 .ao-filter-menu {
@@ -82,16 +109,37 @@
   font-size: 13px;
   color: #475569;
   cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
 }
 
-.ao-filter-option:hover {
-  background: #f1f0fa;
-  color: #141b2b;
+.ao-filter-option:focus {
+  outline: none;
+}
+
+.ao-filter-option:focus-visible {
+  outline: 2px solid rgba(107, 56, 212, 0.55);
+  outline-offset: 2px;
 }
 
 .ao-filter-option--active {
-  color: #6b38d4;
+  color: #5527b6;
   font-weight: 700;
+}
+
+.ao-filter-option:hover {
+  background: #ede9fe;
+  color: #0f172a;
+}
+
+/* Selected row + hover: keep text/icon clearly visible (purple-on-lavender
+ * was washing out when `.ao-filter-option--active` alone fought hover). */
+.ao-filter-option--active:hover {
+  background: #ddd6fe;
+  color: #1e1b4b;
+}
+
+.ao-filter-option--active:hover :is(svg) {
+  color: #5527b6;
 }
 
 /* ----- Table ---------------------------------------------------------------*/
@@ -193,31 +241,116 @@
   color: #64748b;
 }
 
-.ao-select {
+/* Per-row status updater. Uses the shared `<AdmDropdown />` component
+ * (`.adm-dd` styles in AdminLayout.css). The trigger sits inside a table cell
+ * so we let it shrink with the column and right-align its menu via the
+ * `menuAlign="right"` prop. */
+.ao-status-dd .adm-dd-trigger {
+  min-width: 130px;
+  font-size: 12px;
+  padding: 6px 12px;
+}
+
+/* Clickable order id (opens the detail drawer) -------------------------*/
+.ao-id-btn {
   appearance: none;
-  border: 1px solid #e6e6ee;
-  background: #fff;
-  border-radius: 8px;
-  padding: 6px 28px 6px 10px;
-  font-size: 13px;
-  font-family: inherit;
-  color: #141b2b;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  color: var(--adm-accent);
   cursor: pointer;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
+  text-decoration: none;
+  border-bottom: 1px dashed transparent;
+  transition: border-color 140ms ease, color 140ms ease;
+}
+.ao-id-btn:hover { color: #5527b6; border-bottom-color: rgba(107, 56, 212, 0.6); }
+.ao-id-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(107, 56, 212, 0.55);
+  border-radius: 4px;
 }
 
-.ao-select:focus-visible {
-  outline: 2px solid #6b38d4;
-  outline-offset: 2px;
-  border-color: #6b38d4;
+.ao-row--selected td { background: #f5f3ff; }
+
+/* Drawer line items + timeline ----------------------------------------*/
+
+.ao-drawer-statusrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.ao-select:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.ao-line-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
+
+.ao-line {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid #f1f0fa;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.ao-line-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: #f1f0fa;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: #94a3b8;
+  font-weight: 700;
+}
+.ao-line-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.ao-line-meta { display: flex; flex-direction: column; gap: 2px; }
+.ao-line-meta strong { font-size: 13px; }
+.ao-line-meta small { color: #64748b; font-size: 12px; }
+
+.ao-line-total { font-size: 13px; }
+
+.ao-line-empty {
+  font-size: 13px;
+  color: #64748b;
+  padding: 10px 0;
+}
+
+.ao-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  color: #475569;
+}
+
+.ao-tl-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  margin-right: 8px;
+  background: #94a3b8;
+}
+.ao-tl-dot--info   { background: #3b82f6; }
+.ao-tl-dot--ok     { background: #16a34a; }
+.ao-tl-dot--danger { background: #dc2626; }
 
 /* ----- Responsive ----------------------------------------------------------*/
 
@@ -228,5 +361,118 @@
   }
   .ao-search {
     max-width: none;
+  }
+}
+
+/* ----- Print stylesheet ---------------------------------------------------- 
+ *
+ * When an admin hits "Print" from the orders page we want a clean black-on-
+ * white list of every visible order — sidebar, topbar, toolbars, bulk bar,
+ * pagination chrome and the per-row action buttons are noise on paper and
+ * waste tray space.
+ *
+ * Strategy:
+ *  - Hide every "shell" element (sidebar, topbar, action bar, bulk bar,
+ *    filter toolbar, pagination) so only the page surface + table prints.
+ *  - Reset the main column's `margin-left` so the table starts at the
+ *    actual paper edge instead of the 240px sidebar inset.
+ *  - Force the table to a borderless monochrome look that survives both
+ *    laser and inkjet print drivers.
+ *  - Page-break-inside: avoid on each row so an order never gets split
+ *    across two pages.
+ *  - The drawer/modals already have their own print rules in the existing
+ *    `.ao-invoice-print` block; this rule is for the table view.
+ * --------------------------------------------------------------------------*/
+@media print {
+  .adm-sidebar,
+  .adm-topbar,
+  .adm-page-actions,
+  .adm-bulkbar,
+  .adm-pagination,
+  .ao-toolbar,
+  .ao-th-actions,
+  .ao-row-actions,
+  .ao-drawer,
+  .ao-drawer-overlay,
+  .toast-stack,
+  .adm-icon-btn {
+    display: none !important;
+  }
+
+  /* Drop the desktop offsets so the table reaches the paper edge. */
+  .adm-main-wrap {
+    margin-left: 0 !important;
+  }
+  .adm-main,
+  .adm-page-body,
+  .adm-page-head {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  body,
+  .adm-shell,
+  .adm-main,
+  .ao-table-card {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .ao-table-card {
+    box-shadow: none !important;
+    border: 0 !important;
+  }
+
+  .ao-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  .ao-table thead {
+    background: #fff !important;
+    border-bottom: 2px solid #000 !important;
+  }
+
+  .ao-table th,
+  .ao-table td {
+    padding: 6px 8px !important;
+    border-bottom: 1px solid #d1d5db !important;
+    color: #000 !important;
+    font-size: 11pt !important;
+  }
+
+  .ao-table tr {
+    page-break-inside: avoid !important;
+  }
+
+  /* Hide checkbox column on paper — selection has no meaning printed. */
+  .ao-table .adm-th-check,
+  .ao-table .adm-td-check {
+    display: none !important;
+  }
+
+  /* Status badge: print as plain text rather than a pill. */
+  .ao-status-pill {
+    background: transparent !important;
+    border: 0 !important;
+    padding: 0 !important;
+    font-weight: 600 !important;
+  }
+
+  /* Show the page heading (already part of the layout) on paper but
+   * promote it to a thicker, document-style banner. */
+  .adm-page-head {
+    display: block !important;
+    border-bottom: 2px solid #000 !important;
+    padding: 0 0 6px !important;
+    margin: 0 0 10px !important;
+  }
+  .adm-page-title {
+    font-size: 16pt !important;
+    color: #000 !important;
+  }
+  .adm-page-subtitle {
+    font-size: 10pt !important;
+    color: #000 !important;
   }
 }

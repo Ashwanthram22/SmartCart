@@ -29,7 +29,7 @@ export function savedItemFromProduct(product) {
     category: getSavedCategory(product),
     title: String(product.title || ""),
     subtitle: `${product.category || "Product"} • ${product.rating ?? "—"}★ rated`,
-    price: (Number(product.price) || 0) / 2.8,
+    price: Number(product.price) || 0,
     rating: Number(product.rating) || 0,
     image: String(product.image || ""),
     ...(Number.isFinite(stockNum) ? { stock: stockNum } : {}),

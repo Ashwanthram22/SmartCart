@@ -24,7 +24,7 @@ const NOTIFICATION_KEYS = [
 ];
 
 const DEFAULT_PREFERENCES = {
-  currency: "USD",
+  currency: "INR",
   theme: "system",
   notifications: {
     orderUpdates: true,

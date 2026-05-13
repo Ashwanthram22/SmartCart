@@ -10,6 +10,7 @@ import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminInventory from "./pages/Admin/AdminInventory";
 import AdminOrders from "./pages/Admin/AdminOrders";
 import AdminAnalytics from "./pages/Admin/AdminAnalytics";
+import AdminActivity from "./pages/Admin/AdminActivity";
 import ProductsCatalog from "./pages/Catalog/ProductsCatalog";
 import ProductDetail from "./pages/Catalog/ProductDetail";
 import Cart from "./pages/Cart/Cart";
@@ -202,6 +203,14 @@ function App() {
           element={
             <AdminRoute>
               <AdminAnalytics />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/activity"
+          element={
+            <AdminRoute>
+              <AdminActivity />
             </AdminRoute>
           }
         />

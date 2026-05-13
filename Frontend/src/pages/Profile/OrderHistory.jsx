@@ -17,6 +17,7 @@ import { useCart } from "../../hooks/useCart";
 import { useToast } from "../../hooks/useToast";
 import usePageMeta from "../../hooks/usePageMeta";
 import Skeleton from "../../components/Skeleton";
+import { formatMoney } from "../../utils/money";
 import "./OrderHistory.css";
 
 function StatusBadge({ status }) {
@@ -63,13 +64,6 @@ function formatDate(iso) {
   });
 }
 
-function formatMoney(n) {
-  return Number(n || 0).toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
-}
-
 const FILTER_OPTIONS = [
   { value: "all", label: "All statuses" },
   { value: "processing", label: "Processing" },
@@ -98,8 +92,8 @@ function downloadOrdersCsv(orders) {
     "Status",
     "Product",
     "Quantity",
-    "Unit Price (USD)",
-    "Line Total (USD)",
+    "Unit Price (INR)",
+    "Line Total (INR)",
     "Order Subtotal",
     "Order Tax",
     "Order Total",
@@ -563,7 +557,7 @@ export default function OrderHistory() {
                 Based on your history, your shopping efficiency has improved by{" "}
                 <strong className="oh-insight-highlight">14%</strong> this
                 month. You&apos;ve saved an average of{" "}
-                <strong className="oh-insight-highlight">$42</strong> per order
+                <strong className="oh-insight-highlight">₹2,499</strong> per order
                 using AI-negotiated deals.
               </p>
             </div>

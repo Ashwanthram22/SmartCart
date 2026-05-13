@@ -16,8 +16,8 @@ import "./SettingsSecurity.css";
 import "./SettingsPreferences.css";
 
 const CURRENCIES = [
-  { code: "USD", label: "US Dollar ($)" },
   { code: "INR", label: "Indian Rupee (₹)" },
+  { code: "USD", label: "US Dollar ($)" },
   { code: "EUR", label: "Euro (€)" },
   { code: "GBP", label: "British Pound (£)" },
 ];
@@ -57,7 +57,7 @@ const NOTIFICATION_OPTIONS = [
 ];
 
 const DEFAULTS = {
-  currency: "USD",
+  currency: "INR",
   theme: "system",
   notifications: {
     orderUpdates: true,

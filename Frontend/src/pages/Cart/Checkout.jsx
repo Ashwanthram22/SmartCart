@@ -9,16 +9,10 @@ import {
 } from "../../api/client";
 import HomeFooter from "../Home/HomeFooter";
 import usePageMeta from "../../hooks/usePageMeta";
+import { formatMoney } from "../../utils/money";
 import "./Checkout.css";
 
 const TAX_RATE = 0.08;
-
-function formatMoney(n) {
-  return Number(n || 0).toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
-}
 
 const EMPTY_FORM = {
   label: "Home",

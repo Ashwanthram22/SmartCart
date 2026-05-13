@@ -20,6 +20,27 @@ const SEED_ADMIN = {
 };
 
 /**
+ * A small set of "always available" sample customer accounts. We use these
+ * to recover from a known historical bug where the bcrypt-hash for the
+ * demo user got corrupted in db.json (the stored hash no longer decodes
+ * to its known plaintext), which made the documented `demo@aicart.com /
+ * demo123` login useless.
+ *
+ * The migration only re-seeds these accounts when they are MISSING from
+ * the users table, so a real customer who registered the same email is
+ * never overwritten. To force a reset, delete the user row and reboot.
+ */
+const SEED_CUSTOMERS = [
+  {
+    id: "u1",
+    name: "Demo User",
+    email: "demo@aicart.com",
+    password: "demo123",
+    role: "customer",
+  },
+];
+
+/**
  * Idempotent boot-time migrations against the file db.
  *   1. Bcrypt-hash any users whose `password` is still a plaintext string
  *      (legacy seed data and pre-bcrypt registrations).
@@ -50,10 +71,11 @@ const SEED_COUPONS = [
   {
     code: "SAVE25",
     type: "flat",
-    value: 25,
-    label: "$25 off orders over $200",
-    description: "Take $25 off when your subtotal is at least $200.",
-    minOrder: 200,
+    value: 2000,
+    label: "\u20b92,000 off orders over \u20b916,000",
+    description:
+      "Take \u20b92,000 off when your subtotal is at least \u20b916,000.",
+    minOrder: 16000,
     active: true,
   },
   {
@@ -61,8 +83,9 @@ const SEED_COUPONS = [
     type: "percent",
     value: 15,
     label: "15% off — AI-curated picks",
-    description: "Use code AICART for 15% off any order over $50.",
-    minOrder: 50,
+    description:
+      "Use code AICART for 15% off any order over \u20b94,000.",
+    minOrder: 4000,
     active: true,
   },
 ];
@@ -81,6 +104,7 @@ async function runStartupMigrations() {
   if (!Array.isArray(snapshot.stockAlerts)) collectionsToAdd.push("stockAlerts");
   if (!Array.isArray(snapshot.preferences)) collectionsToAdd.push("preferences");
   if (!Array.isArray(snapshot.priceAlerts)) collectionsToAdd.push("priceAlerts");
+  if (!Array.isArray(snapshot.auditLogs)) collectionsToAdd.push("auditLogs");
 
   const usersNeedingHash = (snapshot.users || []).filter(
     (u) => typeof u.password === "string" && u.password.length > 0 && !isHashed(u.password)
@@ -90,16 +114,29 @@ async function runStartupMigrations() {
     (u) => u.role === "admin" || u.isAdmin === true
   );
 
+  const seedCustomersMissing = SEED_CUSTOMERS.filter(
+    (seed) =>
+      !(snapshot.users || []).some(
+        (u) => String(u.email || "").toLowerCase() === seed.email.toLowerCase()
+      )
+  );
+
   if (
     collectionsToAdd.length === 0 &&
     usersNeedingHash.length === 0 &&
-    !adminMissing
+    !adminMissing &&
+    seedCustomersMissing.length === 0
   ) {
     return;
   }
 
   const summary = await withDb(async (db) => {
-    const stats = { hashedUsers: 0, addedCollections: [], seededAdmin: false };
+    const stats = {
+      hashedUsers: 0,
+      addedCollections: [],
+      seededAdmin: false,
+      seededCustomers: [],
+    };
 
     if (!Array.isArray(db.users)) db.users = [];
     if (!Array.isArray(db.products)) db.products = [];
@@ -112,6 +149,27 @@ async function runStartupMigrations() {
       }
       db.users.push(seed);
       stats.seededAdmin = true;
+    }
+
+    for (const seed of SEED_CUSTOMERS) {
+      const exists = db.users.some(
+        (u) => String(u.email || "").toLowerCase() === seed.email.toLowerCase()
+      );
+      if (exists) continue;
+      // Ensure the id is unique inside this snapshot, falling back to a
+      // timestamped one if the canonical seed id is taken (e.g. a real
+      // user took u1).
+      let id = seed.id;
+      if (db.users.some((u) => u.id === id)) {
+        id = `u-${seed.email.split("@")[0]}-${Date.now()}`;
+      }
+      db.users.push({
+        ...seed,
+        id,
+        // eslint-disable-next-line no-await-in-loop
+        password: await hashPassword(seed.password),
+      });
+      stats.seededCustomers.push(seed.email);
     }
 
     if (!Array.isArray(db.reviews)) {
@@ -154,6 +212,10 @@ async function runStartupMigrations() {
       db.priceAlerts = [];
       stats.addedCollections.push("priceAlerts");
     }
+    if (!Array.isArray(db.auditLogs)) {
+      db.auditLogs = [];
+      stats.addedCollections.push("auditLogs");
+    }
 
     for (const user of db.users) {
       if (
@@ -179,6 +241,11 @@ async function runStartupMigrations() {
   if (summary.seededAdmin) {
     console.log(
       "[migrations] seeded default admin account → admin@aicart.com / admin123 (change this!)"
+    );
+  }
+  if (summary.seededCustomers.length > 0) {
+    console.log(
+      `[migrations] seeded sample customer account(s): ${summary.seededCustomers.join(", ")}`
     );
   }
 }

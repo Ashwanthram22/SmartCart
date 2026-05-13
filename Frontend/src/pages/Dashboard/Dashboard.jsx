@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getCurrentUser, getProducts } from "../../api/client";
 import { CartIcon } from "../../components/CartIcon";
+import { formatMoney } from "../../utils/money";
 import "./Dashboard.css";
 
 function Dashboard() {
@@ -60,7 +61,7 @@ function Dashboard() {
             <article key={product.id}>
               <img src={product.image} alt={product.title} />
               <h3>{product.title}</h3>
-              <p>Rs. {product.price}</p>
+              <p>{formatMoney(product.price)}</p>
             </article>
           ))}
         </div>

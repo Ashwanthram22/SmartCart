@@ -9,14 +9,8 @@ import { useToast } from "../../hooks/useToast";
 import usePageMeta from "../../hooks/usePageMeta";
 import EditProfileDialog from "./EditProfileDialog";
 import { ProfileLayout } from "./ProfileLayout";
+import { formatMoney } from "../../utils/money";
 import "./Profile.css";
-
-function formatMoney(n) {
-  return Number(n || 0).toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
-}
 
 function formatDate(iso) {
   if (!iso) return "—";

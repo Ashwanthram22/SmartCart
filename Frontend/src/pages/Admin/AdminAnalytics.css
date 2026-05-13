@@ -20,10 +20,10 @@
   margin-bottom: 18px;
 }
 
+/* `.adm-card` is already `display: flex; flex-direction: column; gap: 14px`,
+ * so this class only needs scenario-specific tweaks (none right now). */
 .aa-summary {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  /* inherits column layout + gap from .adm-card */
 }
 
 .aa-spark {
@@ -38,9 +38,7 @@
 }
 
 .aa-stock-card {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  /* inherits column layout + gap from .adm-card */
 }
 
 .aa-health {
@@ -116,6 +114,37 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Drill-down bar label — turns the row label into a button so clicking
+ * a category navigates into the inventory pre-filtered to that term. */
+.aa-bar-label--btn {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: #475569;
+  font-weight: 600;
+  border-bottom: 1px dashed transparent;
+  transition: color 140ms ease, border-color 140ms ease;
+}
+
+.aa-bar-label--btn:hover {
+  color: #5527b6;
+  border-bottom-color: rgba(107, 56, 212, 0.55);
+}
+
+.aa-bar-label--btn:focus {
+  outline: none;
+}
+
+.aa-bar-label--btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(107, 56, 212, 0.55);
+  border-radius: 4px;
 }
 
 .aa-bar-track {

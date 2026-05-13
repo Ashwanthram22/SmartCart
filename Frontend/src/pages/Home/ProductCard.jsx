@@ -3,6 +3,7 @@ import { useCart } from "../../hooks/useCart";
 import { useSaved } from "../../hooks/useSaved";
 import { CartIcon } from "../../components/CartIcon";
 import { HeartIcon } from "../../components/HeartIcon";
+import { formatMoney } from "../../utils/money";
 
 /** Product shape matches API / CDN mapping later: image field should be full Cloudinary URL */
 function ProductCard({ product, showAskAi = false, badgeOverride }) {
@@ -49,7 +50,7 @@ function ProductCard({ product, showAskAi = false, badgeOverride }) {
     }
   };
 
-  const unitPrice = (Number(price) || 0) / 2.8;
+  const unitPrice = Number(price) || 0;
   const stockNum = Number(product.stock);
   const outOfStock = Number.isFinite(stockNum) && stockNum < 1;
 
@@ -111,10 +112,10 @@ function ProductCard({ product, showAskAi = false, badgeOverride }) {
         <p className="home-product-category">{category || "Electronics"}</p>
         <h3 className="home-product-title">{title}</h3>
         <div className="home-product-price-row">
-          <span className="home-product-price">Rs. {price?.toLocaleString?.("en-IN") ?? price}</span>
+          <span className="home-product-price">{formatMoney(price)}</span>
           {originalPrice ? (
             <span className="home-product-price-old">
-              Rs. {originalPrice.toLocaleString("en-IN")}
+              {formatMoney(originalPrice)}
             </span>
           ) : null}
         </div>

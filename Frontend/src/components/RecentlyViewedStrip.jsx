@@ -3,14 +3,10 @@ import { Link } from "react-router-dom";
 import { Clock } from "lucide-react";
 import { getRecentlyViewed } from "../utils/recentlyViewed";
 import { onAuthChange } from "../utils/authToken";
+import { formatMoney } from "../utils/money";
 import "./RecentlyViewedStrip.css";
 
-const INR_TO_USD = 2.8;
 const MAX_DISPLAY = 8;
-
-function formatUsd(inrPrice) {
-  return Number(inrPrice || 0) / INR_TO_USD;
-}
 
 /**
  * Horizontal strip of recently-viewed products, used on the home page and
@@ -61,7 +57,7 @@ export default function RecentlyViewedStrip({ excludeId, title = "Recently viewe
             <div className="rv-strip-body">
               <p className="rv-strip-product-title">{product.title}</p>
               <p className="rv-strip-product-meta">
-                <strong>${formatUsd(product.price).toFixed(2)}</strong>
+                <strong>{formatMoney(product.price)}</strong>
                 {product.rating ? (
                   <span className="rv-strip-rating">★ {product.rating}</span>
                 ) : null}

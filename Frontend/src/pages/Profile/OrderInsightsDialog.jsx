@@ -1,13 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
+import { formatMoney } from "../../utils/money";
 import "./OrderInsightsDialog.css";
-
-function formatMoney(n) {
-  return Number(n || 0).toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-  });
-}
 
 function formatDate(iso) {
   if (!iso) return "—";

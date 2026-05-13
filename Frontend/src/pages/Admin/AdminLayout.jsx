@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
+  Activity as ActivityIcon,
   AlertTriangle,
   Bell,
+  BookOpen,
   HelpCircle,
   LayoutGrid,
   LogOut,
@@ -10,15 +12,17 @@ import {
   PackageX,
   PieChart,
   Plus,
-  Search,
   Settings as SettingsIcon,
+  ShieldCheck,
   ShoppingCart,
+  Sparkles,
   UserRound,
   X,
 } from "lucide-react";
 import { clearToken, getTokenClaims } from "../../utils/authToken";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
 import { adminGetStats, adminListProducts } from "../../api/client";
+import GlobalAdminSearch from "./GlobalAdminSearch";
 import "./AdminLayout.css";
 
 /**
@@ -30,6 +34,7 @@ const ROUTE_LABELS = [
   { match: /^\/admin\/inventory/, label: "Inventory" },
   { match: /^\/admin\/orders/, label: "Orders" },
   { match: /^\/admin\/analytics/, label: "Analytics" },
+  { match: /^\/admin\/activity/, label: "Activity" },
   { match: /^\/admin/, label: "Dashboard" },
 ];
 
@@ -38,6 +43,7 @@ const NAV_ITEMS = [
   { to: "/admin/inventory", label: "Inventory", icon: Package, end: false },
   { to: "/admin/orders", label: "Orders", icon: ShoppingCart, end: false },
   { to: "/admin/analytics", label: "Analytics", icon: PieChart, end: false },
+  { to: "/admin/activity", label: "Activity", icon: ActivityIcon, end: false },
 ];
 
 function pageLabelForPath(pathname) {
@@ -350,6 +356,165 @@ function InventoryAlertsModal({ open, onClose }) {
 }
 
 /* ============================================================================
+ * AboutAdminModal — opened by the topbar "?" icon. Gives a new admin a
+ * quick tour of what SmartCart AI is, what each console area is for, and
+ * what their role boils down to in one screen.
+ * ==========================================================================*/
+
+function AboutAdminModal({ open, onClose }) {
+  const ref = useRef(null);
+  useFocusTrap(ref, open);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div className="adm-about-overlay" role="presentation" onClick={onClose}>
+      <div
+        ref={ref}
+        className="adm-about-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="adm-about-title"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <header className="adm-about-head">
+          <div className="adm-about-head-text">
+            <span className="adm-about-eyebrow" aria-hidden="true">
+              <BookOpen size={13} />
+              SmartCart AI Console
+            </span>
+            <h2 id="adm-about-title">Welcome to the admin console</h2>
+            <p>
+              The control room behind the SmartCart AI storefront — manage
+              products, orders, and growth from one place.
+            </p>
+          </div>
+          <button
+            type="button"
+            className="adm-settings-close"
+            onClick={onClose}
+            aria-label="Close about"
+          >
+            <X size={18} aria-hidden="true" />
+          </button>
+        </header>
+
+        <section className="adm-about-body">
+          <div className="adm-about-callout">
+            <span className="adm-about-callout-icon" aria-hidden="true">
+              <ShieldCheck size={18} />
+            </span>
+            <div>
+              <strong>Your role: System Administrator</strong>
+              <p>
+                You're the only role that can add, edit or remove catalog
+                products, change order statuses, and view sensitive sales
+                analytics. Regular customers never see this console.
+              </p>
+            </div>
+          </div>
+
+          <div className="adm-about-grid">
+            <article className="adm-about-card">
+              <span className="adm-about-card-icon" aria-hidden="true">
+                <LayoutGrid size={16} />
+              </span>
+              <strong>Dashboard</strong>
+              <p>
+                Real-time revenue, orders, AOV and low-stock counts with
+                period comparisons and a sales sparkline.
+              </p>
+            </article>
+
+            <article className="adm-about-card">
+              <span className="adm-about-card-icon" aria-hidden="true">
+                <Package size={16} />
+              </span>
+              <strong>Inventory</strong>
+              <p>
+                Create, edit, duplicate and delete products. Upload images
+                straight to Cloudinary, manage stock, and bulk-export to CSV.
+              </p>
+            </article>
+
+            <article className="adm-about-card">
+              <span className="adm-about-card-icon" aria-hidden="true">
+                <ShoppingCart size={16} />
+              </span>
+              <strong>Orders</strong>
+              <p>
+                Track every customer order, drill into line items, update
+                fulfilment status individually or in bulk, and print invoices.
+              </p>
+            </article>
+
+            <article className="adm-about-card">
+              <span className="adm-about-card-icon" aria-hidden="true">
+                <PieChart size={16} />
+              </span>
+              <strong>Analytics</strong>
+              <p>
+                Revenue trends, inventory health, top categories and best
+                sellers — click a category to drill into matching products.
+              </p>
+            </article>
+
+            <article className="adm-about-card">
+              <span className="adm-about-card-icon" aria-hidden="true">
+                <ActivityIcon size={16} />
+              </span>
+              <strong>Activity</strong>
+              <p>
+                Audit trail of every product change, order status update and
+                bulk action — see who did what, when, with a before/after diff.
+              </p>
+            </article>
+          </div>
+
+          <div className="adm-about-tips">
+            <span className="adm-about-tips-icon" aria-hidden="true">
+              <Sparkles size={14} />
+            </span>
+            <div>
+              <strong>Pro tips</strong>
+              <ul>
+                <li>
+                  Use the topbar search to jump to any product, order or page
+                  instantly.
+                </li>
+                <li>
+                  Press <kbd>/</kbd> from anywhere to focus the global search,
+                  or <kbd>n</kbd> on Inventory to add a new product.
+                </li>
+                <li>
+                  The bell icon lights up when products run low — open it for
+                  a one-click jump to inventory.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <footer className="adm-about-foot">
+          <button type="button" className="adm-btn-primary" onClick={onClose}>
+            Got it
+          </button>
+        </footer>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================================
  * AdminLayout
  * ==========================================================================*/
 
@@ -360,8 +525,6 @@ export default function AdminLayout({
   actions,
   onAddProduct,
   searchPlaceholder = "Search orders, stock, or metrics...",
-  searchValue,
-  onSearchChange,
 }) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -369,32 +532,60 @@ export default function AdminLayout({
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [alertsOpen, setAlertsOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const [alertCount, setAlertCount] = useState(null);
 
   const resolvedTitle = title || pageLabelForPath(location.pathname);
 
-  // Pull the lightweight stats payload once so the bell can show how many
-  // products need attention without forcing the full alerts modal open.
-  // If the call fails we silently leave the badge off — the modal can still
-  // be opened manually.
+  /**
+   * Pull the lightweight stats payload so the bell can show how many
+   * products need attention without forcing the full alerts modal open.
+   * If the call fails we silently leave the badge off — the modal can still
+   * be opened manually.
+   *
+   * Wrapped in `useCallback` so it can be reused as both the initial fetch
+   * and the listener for the `admin:inventory-changed` event below. Each
+   * call uses its own AbortController so a quick burst of mutations only
+   * leaves the latest result applied.
+   */
+  const refreshAlertCount = useCallback(async () => {
+    try {
+      const data = await adminGetStats();
+      const totals = data.totals || {};
+      setAlertCount(
+        (Number(totals.lowStock) || 0) + (Number(totals.outOfStock) || 0)
+      );
+    } catch {
+      setAlertCount(null);
+    }
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
+
+    // Initial load — fire immediately so the badge appears as soon as the
+    // layout mounts, not after the first inventory mutation.
     (async () => {
-      try {
-        const data = await adminGetStats();
-        if (cancelled) return;
-        const totals = data.totals || {};
-        setAlertCount(
-          (Number(totals.lowStock) || 0) + (Number(totals.outOfStock) || 0)
-        );
-      } catch {
-        if (!cancelled) setAlertCount(null);
-      }
+      if (!cancelled) await refreshAlertCount();
     })();
+
+    /*
+     * Live refresh: API client emits `admin:inventory-changed` after every
+     * create / update / delete / bulk-import call. We refetch the stats so
+     * the bell badge reflects the new low/out-of-stock totals without the
+     * user having to navigate away and back. Stays mounted for the whole
+     * admin session so events from any page are picked up.
+     */
+    const onChanged = () => {
+      if (!cancelled) refreshAlertCount();
+    };
+    window.addEventListener("admin:inventory-changed", onChanged);
+
     return () => {
       cancelled = true;
+      window.removeEventListener("admin:inventory-changed", onChanged);
     };
-  }, []);
+  }, [refreshAlertCount]);
 
   const handleLogout = () => {
     clearToken();
@@ -432,40 +623,31 @@ export default function AdminLayout({
           ))}
         </nav>
 
-        <div className="adm-sidebar-foot">
-          <div className="adm-userpill">
-            <span className="adm-userpill-avatar" aria-hidden="true">
-              <UserRound size={20} />
-            </span>
-            <span className="adm-userpill-text">
-              <strong>{claims?.email?.split("@")[0] || "Admin"}</strong>
-              <small>System Administrator</small>
-            </span>
-          </div>
-        </div>
+        {/*
+         * Sidebar user pill is intentionally commented out for now — the
+         * signed-in admin is already visible (and signs out) from the
+         * Settings modal in the top bar. Restore by uncommenting the block
+         * below if we want the pill back at the bottom of the sidebar.
+         *
+         * <div className="adm-sidebar-foot">
+         *   <div className="adm-userpill">
+         *     <span className="adm-userpill-avatar" aria-hidden="true">
+         *       <UserRound size={20} />
+         *     </span>
+         *     <span className="adm-userpill-text">
+         *       <strong>{claims?.email?.split("@")[0] || "Admin"}</strong>
+         *       <small>System Administrator</small>
+         *     </span>
+         *   </div>
+         * </div>
+         */}
       </aside>
 
       <div className="adm-main-wrap">
         <header className="adm-topbar">
           <div className="adm-topbar-left">
             <h1 className="adm-topbar-title">Admin Console</h1>
-            {onSearchChange ? (
-              <label className="adm-search">
-                <Search size={16} aria-hidden="true" />
-                <input
-                  type="search"
-                  placeholder={searchPlaceholder}
-                  value={searchValue || ""}
-                  onChange={(e) => onSearchChange(e.target.value)}
-                  aria-label="Search the admin console"
-                />
-              </label>
-            ) : (
-              <div className="adm-search adm-search--static" aria-hidden="true">
-                <Search size={16} />
-                <span>{searchPlaceholder}</span>
-              </div>
-            )}
+            <GlobalAdminSearch placeholder={searchPlaceholder} />
           </div>
           <div className="adm-topbar-right">
             <button
@@ -489,8 +671,9 @@ export default function AdminLayout({
             <button
               type="button"
               className="adm-icon-btn"
-              aria-label="Help"
-              title="Help"
+              aria-label="About SmartCart admin console"
+              title="About the admin console"
+              onClick={() => setAboutOpen(true)}
             >
               <HelpCircle size={18} aria-hidden="true" />
             </button>
@@ -542,8 +725,17 @@ export default function AdminLayout({
 
       <InventoryAlertsModal
         open={alertsOpen}
-        onClose={() => setAlertsOpen(false)}
+        onClose={() => {
+          setAlertsOpen(false);
+          // Extra refresh on dismiss: covers the case where the admin opens
+          // the modal, restocks something elsewhere (e.g. via the catalog
+          // inline), then closes — without it the bell would lag until the
+          // next mutation event.
+          refreshAlertCount();
+        }}
       />
+
+      <AboutAdminModal open={aboutOpen} onClose={() => setAboutOpen(false)} />
 
       <LogoutDialog
         open={logoutOpen}

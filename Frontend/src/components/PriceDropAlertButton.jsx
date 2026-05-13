@@ -8,6 +8,7 @@ import {
 import { useToast } from "../hooks/useToast";
 import { useFocusTrap } from "../hooks/useFocusTrap";
 import { isAuthenticated, onAuthChange } from "../utils/authToken";
+import { formatMoney, CURRENCY_SYMBOL } from "../utils/money";
 import "./PriceDropAlertButton.css";
 
 /**
@@ -60,7 +61,7 @@ function PriceTargetDialog({ open, productTitle, currentPrice, onClose, onSubmit
     e.preventDefault();
     const num = Number(value);
     if (!Number.isFinite(num) || num <= 0) {
-      setErr("Enter a target price greater than $0.");
+      setErr(`Enter a target price greater than ${CURRENCY_SYMBOL}0.`);
       return;
     }
     if (Number.isFinite(currentPrice) && num >= currentPrice) {
@@ -95,15 +96,15 @@ function PriceTargetDialog({ open, productTitle, currentPrice, onClose, onSubmit
             <>
               <br />
               Current price:{" "}
-              <strong>${(currentPrice / 2.8).toFixed(2)}</strong>
+              <strong>{formatMoney(currentPrice)}</strong>
             </>
           ) : null}
         </p>
         <form className="pda-form" onSubmit={submit} noValidate>
           <label className="pda-field">
-            <span>Target price (USD)</span>
+            <span>Target price (INR)</span>
             <div className="pda-input-wrap">
-              <span className="pda-input-prefix" aria-hidden="true">$</span>
+              <span className="pda-input-prefix" aria-hidden="true">{CURRENCY_SYMBOL}</span>
               <input
                 type="number"
                 step="0.01"
@@ -212,9 +213,9 @@ export default function PriceDropAlertButton({
       setActiveTarget(alert?.targetPrice ?? target);
       setDialogOpen(false);
       toast.success(
-        `We'll alert you when this drops to $${(
-          (alert?.targetPrice ?? target) / 2.8
-        ).toFixed(2)}.`
+        `We'll alert you when this drops to ${formatMoney(
+          alert?.targetPrice ?? target
+        )}.`
       );
     } catch (err) {
       toast.error(err.response?.data?.message || "Couldn't set the alert.");
@@ -232,13 +233,13 @@ export default function PriceDropAlertButton({
           onClick={openDialog}
           disabled={busy || loading}
           aria-label={`Price alert active${
-            activeTarget != null ? ` at $${(activeTarget / 2.8).toFixed(2)}` : ""
+            activeTarget != null ? ` at ${formatMoney(activeTarget)}` : ""
           }, click to update`}
         >
           <Check size={variant === "block" ? 16 : 14} aria-hidden="true" />
           <span>
             {activeTarget != null
-              ? `Alert set at $${(activeTarget / 2.8).toFixed(2)}`
+              ? `Alert set at ${formatMoney(activeTarget)}`
               : "Price alert on"}
           </span>
           <span

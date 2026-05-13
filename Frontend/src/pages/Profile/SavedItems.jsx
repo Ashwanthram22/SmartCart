@@ -5,6 +5,7 @@ import { useCart } from "../../hooks/useCart";
 import { useSaved } from "../../hooks/useSaved";
 import usePageMeta from "../../hooks/usePageMeta";
 import { CartIcon } from "../../components/CartIcon";
+import { formatMoney as formatUsd } from "../../utils/money";
 import "./SavedItems.css";
 
 const CATEGORIES = [
@@ -59,10 +60,6 @@ function IconPlusCircle() {
       <path d="M12 8v8M8 12h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
-}
-
-function formatUsd(n) {
-  return n.toLocaleString("en-US", { style: "currency", currency: "USD" });
 }
 
 export default function SavedItems() {

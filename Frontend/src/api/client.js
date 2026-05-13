@@ -322,8 +322,36 @@ export async function adminListProducts(params = {}) {
   return data;
 }
 
+/**
+ * Notify any listeners (currently the AdminLayout topbar bell) that the
+ * inventory has changed so they can refresh derived counts (low / out of
+ * stock badges, etc.) without waiting for a route change.
+ *
+ * Centralising this here means EVERY caller — inventory page, bulk import
+ * modal, future bulk price edit, etc. — automatically triggers the badge
+ * refresh; pages don't have to remember to dispatch it themselves.
+ */
+function emitInventoryChanged(detail = {}) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(
+    new CustomEvent("admin:inventory-changed", { detail })
+  );
+}
+
 export async function adminCreateProduct(payload) {
   const { data } = await api.post("/admin/products", payload);
+  emitInventoryChanged({ kind: "create", id: data?.product?.id });
+  return data;
+}
+
+export async function adminBulkImportProducts(products, { dryRun = false } = {}) {
+  const { data } = await api.post("/admin/products/bulk-import", {
+    products,
+    dryRun,
+  });
+  // Dry-run requests don't mutate state — only fire the event for real
+  // commits so we don't churn the badge during preview validation.
+  if (!dryRun) emitInventoryChanged({ kind: "bulk-import" });
   return data;
 }
 
@@ -332,11 +360,13 @@ export async function adminUpdateProduct(id, payload) {
     `/admin/products/${encodeURIComponent(id)}`,
     payload
   );
+  emitInventoryChanged({ kind: "update", id });
   return data;
 }
 
 export async function adminDeleteProduct(id) {
   const { data } = await api.delete(`/admin/products/${encodeURIComponent(id)}`);
+  emitInventoryChanged({ kind: "delete", id });
   return data;
 }
 
@@ -350,6 +380,16 @@ export async function adminUpdateOrderStatus(id, status) {
     `/admin/orders/${encodeURIComponent(id)}/status`,
     { status }
   );
+  return data;
+}
+
+export async function adminBulkUpdateOrderStatus(ids, status) {
+  const { data } = await api.post("/admin/orders/bulk-status", { ids, status });
+  return data;
+}
+
+export async function adminListAuditLogs(params = {}) {
+  const { data } = await api.get("/admin/audit", { params });
   return data;
 }
 

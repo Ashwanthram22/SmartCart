@@ -7,7 +7,7 @@ const router = express.Router();
 router.use(authMiddleware);
 
 /**
- * Look up + validate a coupon, returning the resolved discount in USD
+ * Look up + validate a coupon, returning the resolved discount in INR
  * for the given subtotal. Logic intentionally lives here so the cart UI
  * can preview the savings and the orders route can re-run the same
  * function at order time (server-authoritative discount).
@@ -16,7 +16,7 @@ router.use(authMiddleware);
  *   { coupon, discount }   on success (subtotal already passes minOrder)
  *   { error: string }      on any validation failure
  */
-async function resolveCoupon(rawCode, subtotalUsd) {
+async function resolveCoupon(rawCode, subtotal) {
   const code = String(rawCode || "").trim().toUpperCase();
   if (!code) return { error: "Enter a coupon code" };
 
@@ -33,21 +33,20 @@ async function resolveCoupon(rawCode, subtotalUsd) {
   }
 
   const minOrder = Number(coupon.minOrder) || 0;
-  if (subtotalUsd < minOrder) {
+  if (subtotal < minOrder) {
     return {
-      error: `Add ${(minOrder - subtotalUsd).toFixed(2)} more to use ${code} (min order $${minOrder})`,
+      error: `Add \u20b9${(minOrder - subtotal).toFixed(2)} more to use ${code} (min order \u20b9${minOrder})`,
     };
   }
 
   let discount = 0;
   if (coupon.type === "percent") {
     const pct = Math.max(0, Math.min(100, Number(coupon.value) || 0));
-    discount = (subtotalUsd * pct) / 100;
+    discount = (subtotal * pct) / 100;
   } else if (coupon.type === "flat") {
     discount = Math.max(0, Number(coupon.value) || 0);
   }
-  // Never discount more than the subtotal.
-  discount = Math.min(discount, subtotalUsd);
+  discount = Math.min(discount, subtotal);
   discount = Number(discount.toFixed(2));
 
   return {

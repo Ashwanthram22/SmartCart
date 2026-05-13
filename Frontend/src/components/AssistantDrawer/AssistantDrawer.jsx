@@ -4,6 +4,7 @@ import { chatWithAssistant } from "../../api/client";
 import { useCart } from "../../hooks/useCart";
 import { useToast } from "../../hooks/useToast";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
+import { formatMoney } from "../../utils/money";
 import "./AssistantDrawer.css";
 
 /**
@@ -29,7 +30,7 @@ const GENERIC_GREETING = {
     "answer policy questions like 'what's your return window?'",
   suggestions: [
     "Recommend trending picks",
-    "Show me audio under $200",
+    "Show me audio under \u20b9 16,000",
     "Where is my order?",
   ],
 };
@@ -63,7 +64,7 @@ function ProductMiniCard({ product, onOpen }) {
       <div className="assist-product-meta">
         <p className="assist-product-title">{product.title}</p>
         <p className="assist-product-row">
-          <span className="assist-product-price">${product.price}</span>
+          <span className="assist-product-price">{formatMoney(product.price)}</span>
           {product.rating ? (
             <span className="assist-product-rating">★ {product.rating}</span>
           ) : null}

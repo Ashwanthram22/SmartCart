@@ -8,17 +8,16 @@ import StockBadge from "../../components/StockBadge";
 import HomeFooter from "../Home/HomeFooter";
 import { validateCoupon } from "../../api/client";
 import usePageMeta from "../../hooks/usePageMeta";
+import { formatMoney } from "../../utils/money";
 import "./Cart.css";
 
 const TAX_RATE = 0.08;
 const UPSLEEVE_ID = "ai-upsell-sleeve-13";
-const UPSLEEVE_PRICE = 39.2;
+// Roughly the INR equivalent of the original placeholder ($39.20 ≈ ₹3,259) so
+// the upsell tile still demonstrates a believable accessory price range.
+const UPSLEEVE_PRICE = 3259;
 const UPSLEEVE_IMAGE =
   "https://images.unsplash.com/photo-1544816155-12df96455549?auto=format&fit=crop&w=400&q=80";
-
-function formatMoney(n) {
-  return n.toLocaleString("en-US", { style: "currency", currency: "USD" });
-}
 
 function Cart() {
   const navigate = useNavigate();
@@ -58,7 +57,7 @@ function Cart() {
         discount: res.discount,
       });
       setCouponInput("");
-      toast.success(`${res.coupon.label} applied — you saved $${res.discount.toFixed(2)}.`);
+      toast.success(`${res.coupon.label} applied — you saved ${formatMoney(res.discount)}.`);
     } catch (err) {
       setCouponError(err.response?.data?.message || "Could not apply that coupon");
     } finally {

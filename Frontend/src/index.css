@@ -64,3 +64,24 @@ summary:focus-visible {
 ::-webkit-scrollbar-corner {
   background: #e9ecf2;
 }
+
+/* ----- Reduced motion ------------------------------------------------------
+ * Honour the OS-level "Reduce motion" preference for everyone who's enabled
+ * it (motion sickness, vestibular disorders, attention-load reduction). We
+ * snap every animation/transition to near-zero rather than disabling
+ * outright, because plenty of CSS uses transitions for state hand-off and
+ * removing them entirely would leave elements stuck in an intermediate
+ * state. Individual components (the assistant launcher, certain skeletons)
+ * already define narrower overrides; this is the global safety net so the
+ * admin console's drawers/modals/dropdowns also stop sliding/popping.
+ * ------------------------------------------------------------------------*/
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

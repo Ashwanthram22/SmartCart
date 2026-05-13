@@ -1,13 +1,6 @@
 {
   "users": [
     {
-      "id": "u1",
-      "name": "Demo User",
-      "email": "demo@aicart.com",
-      "password": "$2b$10$h87QqWigVVczs9FJIqb0Vu0H7iqpU2Ak//ZXhYCids6LEbNCCEdky",
-      "role": "customer"
-    },
-    {
       "id": "u1777546743752",
       "name": "Ashwanth Ram",
       "email": "ashwanthram2002@gmail.com",
@@ -36,6 +29,13 @@
       "password": "$2b$10$oUvrGPkX45yTmddnthmacewcBidRdm9wNFWk.C2vgqqcT7bPTq1Dm",
       "role": "admin",
       "isAdmin": true
+    },
+    {
+      "id": "u1",
+      "name": "Demo User",
+      "email": "demo@aicart.com",
+      "password": "$2b$10$kMtD4XNPaXSj0Piy28X2Cu8/Aw1B5UqiUMYKFU5fpr8fnYKxE6RWa",
+      "role": "customer"
     }
   ],
   "products": [
@@ -106,13 +106,19 @@
         "Electronics",
         "Accessories"
       ],
-      "stock": 0,
+      "stock": 99,
       "price": 3999,
       "originalPrice": 4999,
       "rating": 4.6,
       "reviewCount": 1675,
       "badge": "TRENDING",
-      "image": "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?auto=format&fit=crop&w=600&q=80",
+      "description": "",
+      "images": [
+        "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?auto=format&fit=crop&w=600&q=80"
+      ],
+      "specs": {},
+      "updatedAt": "2026-05-13T07:40:04.946Z"
     },
     {
       "id": "p5",
@@ -282,7 +288,7 @@
         "Electronics",
         "Laptops"
       ],
-      "stock": 31,
+      "stock": 11,
       "price": 53999,
       "originalPrice": 58999,
       "rating": 4.9,
@@ -292,7 +298,13 @@
       "specs": {
         "processor": "Apple M3",
         "display": "12-inch Liquid Retina"
-      }
+      },
+      "updatedAt": "2026-05-13T13:53:11.295Z",
+      "description": "",
+      "images": [
+        "https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=600&q=80"
+      ],
+      "updatedBy": "admin@aicart.com"
     }
   ],
   "orders": [
@@ -330,8 +342,8 @@
       },
       "status": "cancelled",
       "createdAt": "2026-05-12T08:30:32.318Z",
-      "updatedAt": "2026-05-12T12:56:25.783Z",
-      "cancelledAt": "2026-05-12T12:56:25.783Z"
+      "updatedAt": "2026-05-13T08:54:00.780Z",
+      "cancelledAt": "2026-05-13T08:54:00.780Z"
     },
     {
       "id": "o1778574642482",
@@ -354,10 +366,10 @@
       "coupon": {
         "code": "SAVE25",
         "type": "flat",
-        "value": 25,
-        "label": "$25 off orders over $200",
-        "description": "Take $25 off when your subtotal is at least $200.",
-        "minOrder": 200
+        "value": 2000,
+        "label": "₹2,000 off orders over ₹16,000",
+        "description": "Take ₹2,000 off when your subtotal is at least ₹16,000.",
+        "minOrder": 16000
       },
       "address": {
         "fullName": "Pack D Tester",
@@ -367,8 +379,8 @@
       },
       "status": "delivered",
       "createdAt": "2026-05-12T08:30:42.482Z",
-      "updatedAt": "2026-05-12T12:56:21.649Z",
-      "deliveredAt": "2026-05-12T12:56:21.649Z"
+      "updatedAt": "2026-05-13T08:54:00.766Z",
+      "deliveredAt": "2026-05-13T08:54:00.766Z"
     }
   ],
   "reviews": [
@@ -452,10 +464,10 @@
     {
       "code": "SAVE25",
       "type": "flat",
-      "value": 25,
-      "label": "$25 off orders over $200",
-      "description": "Take $25 off when your subtotal is at least $200.",
-      "minOrder": 200,
+      "value": 2000,
+      "label": "₹2,000 off orders over ₹16,000",
+      "description": "Take ₹2,000 off when your subtotal is at least ₹16,000.",
+      "minOrder": 16000,
       "active": true
     },
     {
@@ -463,8 +475,8 @@
       "type": "percent",
       "value": 15,
       "label": "15% off — AI-curated picks",
-      "description": "Use code AICART for 15% off any order over $50.",
-      "minOrder": 50,
+      "description": "Use code AICART for 15% off any order over ₹4,000.",
+      "minOrder": 4000,
       "active": true
     }
   ],
@@ -502,5 +514,79 @@
       "updatedAt": "2026-05-12T10:11:49.642Z"
     }
   ],
-  "priceAlerts": []
+  "priceAlerts": [],
+  "auditLogs": [
+    {
+      "id": "log-1778680036177-rwlpzs",
+      "ts": "2026-05-13T13:47:16.177Z",
+      "actorId": "u-admin",
+      "actorEmail": "admin@aicart.com",
+      "action": "product.update",
+      "target": {
+        "type": "product",
+        "id": "p15"
+      },
+      "summary": "Updated UltraTab 12\" Tablet (stock)",
+      "changes": {
+        "stock": {
+          "from": 31,
+          "to": 1
+        }
+      }
+    },
+    {
+      "id": "log-1778680295558-xmjvcq",
+      "ts": "2026-05-13T13:51:35.558Z",
+      "actorId": "u-admin",
+      "actorEmail": "admin@aicart.com",
+      "action": "product.update",
+      "target": {
+        "type": "product",
+        "id": "p15"
+      },
+      "summary": "Updated UltraTab 12\" Tablet (stock)",
+      "changes": {
+        "stock": {
+          "from": 1,
+          "to": 21
+        }
+      }
+    },
+    {
+      "id": "log-1778680371828-4dtujn",
+      "ts": "2026-05-13T13:52:51.828Z",
+      "actorId": "u-admin",
+      "actorEmail": "admin@aicart.com",
+      "action": "product.update",
+      "target": {
+        "type": "product",
+        "id": "p15"
+      },
+      "summary": "Updated UltraTab 12\" Tablet (stock)",
+      "changes": {
+        "stock": {
+          "from": 21,
+          "to": 1
+        }
+      }
+    },
+    {
+      "id": "log-1778680391295-74hrh4",
+      "ts": "2026-05-13T13:53:11.295Z",
+      "actorId": "u-admin",
+      "actorEmail": "admin@aicart.com",
+      "action": "product.update",
+      "target": {
+        "type": "product",
+        "id": "p15"
+      },
+      "summary": "Updated UltraTab 12\" Tablet (stock)",
+      "changes": {
+        "stock": {
+          "from": 1,
+          "to": 11
+        }
+      }
+    }
+  ]
 }

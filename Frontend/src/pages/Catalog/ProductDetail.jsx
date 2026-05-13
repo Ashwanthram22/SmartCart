@@ -21,6 +21,7 @@ import useStructuredData from "../../hooks/useStructuredData";
 import ReviewModal from "./ReviewModal";
 import ProductDetailSkeleton from "./ProductDetailSkeleton";
 import { estimateDelivery, formatDeliveryWindow } from "../../utils/delivery";
+import { formatMoney } from "../../utils/money";
 import "./ProductDetail.css";
 
 const GALLERY_FALLBACKS = [
@@ -145,7 +146,7 @@ function ProductDetail() {
   usePageMeta({
     title: product?.title || "Product",
     description: product
-      ? `${product.title} — $${((product.price || 0) / 2.8).toFixed(2)}. ${
+      ? `${product.title} — ${formatMoney(product.price || 0)}. ${
           product.description || `Buy ${product.title} on SmartCart AI.`
         }`.slice(0, 200)
       : "Product details on SmartCart AI.",
@@ -159,7 +160,7 @@ function ProductDetail() {
    */
   const structuredData = useMemo(() => {
     if (!product) return null;
-    const usdPrice = ((product.price || 0) / 2.8).toFixed(2);
+    const inrPrice = Number(product.price || 0).toFixed(2);
     const ratings = visibleReviews
       .map((r) => Number(r.rating))
       .filter((n) => Number.isFinite(n) && n > 0);
@@ -197,8 +198,8 @@ function ProductDetail() {
         : undefined,
       offers: {
         "@type": "Offer",
-        priceCurrency: "USD",
-        price: usdPrice,
+        priceCurrency: "INR",
+        price: inrPrice,
         availability:
           product.stock > 0
             ? "https://schema.org/InStock"
@@ -241,8 +242,10 @@ function ProductDetail() {
 
   const unitPrice = useMemo(() => {
     if (!product) return 0;
-    const base = (product.price || 0) / 2.8;
-    return selectedConfig === "pro" ? base + 400 : base;
+    const base = Number(product.price || 0);
+    // Pro tier upcharge — kept proportional to the previous USD upcharge
+    // ($400 ≈ ₹33,000) so the demo price tier still feels meaningful.
+    return selectedConfig === "pro" ? base + 33000 : base;
   }, [product, selectedConfig]);
 
   const configSubtitle =
@@ -374,11 +377,11 @@ function ProductDetail() {
 
             <div className="price-wrap">
               <div className="price-row">
-                <strong>${((product.price || 0) / 2.8).toFixed(2)}</strong>
-                <span className="old">${(((product.originalPrice || product.price * 1.15) || 0) / 2.8).toFixed(2)}</span>
+                <strong>{formatMoney(product.price || 0)}</strong>
+                <span className="old">{formatMoney(product.originalPrice || (product.price || 0) * 1.15)}</span>
                 <span className="discount">-14%</span>
               </div>
-              <p>Or ${(product.price / 2.8 / 12).toFixed(2)}/mo for 12 months with SmartPay</p>
+              <p>Or {formatMoney((Number(product.price) || 0) / 12)}/mo for 12 months with SmartPay</p>
             </div>
 
             <div className="config-box">
@@ -398,7 +401,7 @@ function ProductDetail() {
                   onClick={() => setSelectedConfig("pro")}
                 >
                   <span>64GB RAM / 2TB SSD</span>
-                  <small>+$400.00</small>
+                  <small>+{formatMoney(33000)}</small>
                 </button>
               </div>
             </div>
@@ -534,7 +537,7 @@ function ProductDetail() {
                     <img src={item.image} alt="" />
                     <div>
                       <p>{item.title}</p>
-                      <small>${((item.price || 0) / 2.8).toFixed(2)}</small>
+                      <small>{formatMoney(item.price || 0)}</small>
                     </div>
                     <span>→</span>
                   </Link>

@@ -11,10 +11,23 @@ const {
   CLOUDINARY_UPLOAD_FOLDER,
 } = require("../config/env");
 const { effectiveStatus } = require("../lib/order-lifecycle");
+const { appendAudit, diffShallow, PRODUCT_TRACK_FIELDS } = require("../lib/audit");
 
 const router = express.Router();
 
 router.use(authMiddleware, adminMiddleware);
+
+/**
+ * Helper — build the actor descriptor from `req.user` for audit logging.
+ * JWT payload uses { sub, email, role } so we map `sub → id` here in one
+ * place; all audit call sites can just pass `actor(req)`.
+ */
+function actor(req) {
+  return {
+    id: req.user?.sub || req.user?.id || null,
+    email: req.user?.email || null,
+  };
+}
 
 /* ------------------------------------------------------------------
  * Helpers
@@ -165,7 +178,9 @@ router.get("/stats", async (req, res) => {
  * ----------------------------------------------------------------*/
 
 router.get("/sales-chart", async (req, res) => {
-  const days = Math.min(90, Math.max(7, safeInt(req.query.days, 30)));
+  // Bumped upper bound so the dashboard time-range switcher can ask for up
+  // to a full year of data. Lower bound stays at 7 days for stable trend.
+  const days = Math.min(365, Math.max(7, safeInt(req.query.days, 30)));
   const db = await readDb();
   const orders = db.orders || [];
 
@@ -285,26 +300,174 @@ router.post("/products", writeLimiter, async (req, res) => {
     return res.status(400).json({ message: errors.join("; "), errors });
   }
 
+  const who = actor(req);
   const result = await withDb(async (db) => {
     if (!Array.isArray(db.products)) db.products = [];
     const created = {
       id: nextProductId(db.products),
       ...payload,
       createdAt: nowIso(),
+      // Denormalised "who created/last touched this" so the inventory list
+      // can show a "Last edited by" column without scanning auditLogs on
+      // every render. Both timestamps and author stay in lock-step with the
+      // audit entry we append below.
+      createdBy: who.email || who.id || null,
+      updatedAt: nowIso(),
+      updatedBy: who.email || who.id || null,
     };
     db.products.push(created);
+    appendAudit(db, {
+      actor: who,
+      action: "product.create",
+      target: { type: "product", id: created.id },
+      summary: `Created product ${created.title}`,
+      meta: {
+        title: created.title,
+        brand: created.brand,
+        category: created.category,
+        price: created.price,
+        stock: created.stock,
+      },
+    });
     return created;
   });
 
   return res.status(201).json({ product: result });
 });
 
+/* ------------------------------------------------------------------
+ * Bulk product import — accepts { products: [...], dryRun?: bool }.
+ *
+ * Each row is validated independently; the response always returns the
+ * per-row results so the frontend wizard can display them in a table:
+ *   {
+ *     results: [
+ *       { ok: true, product: <created>, rowIndex },
+ *       { ok: false, errors: [...], rowIndex, input },
+ *     ],
+ *     summary: { totalRows, created, failed, dryRun },
+ *   }
+ *
+ * When `dryRun === true` no writes occur; the response contains the
+ * validation outcome only so admins can preview before committing.
+ *
+ * Audit logging emits a single rollup `product.bulk-import` entry plus
+ * one entry per row (so individual creations remain queryable by id).
+ * ----------------------------------------------------------------*/
+router.post("/products/bulk-import", writeLimiter, async (req, res) => {
+  const rows = Array.isArray(req.body?.products) ? req.body.products : [];
+  const dryRun = Boolean(req.body?.dryRun);
+  const MAX_ROWS = 500;
+  if (rows.length === 0) {
+    return res.status(400).json({ message: "products[] is required" });
+  }
+  if (rows.length > MAX_ROWS) {
+    return res.status(413).json({
+      message: `Too many rows — maximum ${MAX_ROWS} per import. Split the CSV and retry.`,
+    });
+  }
+
+  // Validation pass — runs for both dry-run and commit so the response
+  // shape is identical and the frontend wizard reuses the same renderer.
+  const prepared = rows.map((raw, rowIndex) => {
+    const payload = buildProductPayload(raw || {});
+    if (!payload.images || payload.images.length === 0) {
+      payload.images = payload.image ? [payload.image] : [];
+    }
+    if (!payload.image && payload.images.length > 0) payload.image = payload.images[0];
+    if (payload.rating == null) payload.rating = 4.5;
+    if (payload.reviewCount == null) payload.reviewCount = 0;
+    if (!payload.catalogSegments || payload.catalogSegments.length === 0) {
+      payload.catalogSegments = ["AI Picks"];
+    }
+    const errors = validateProduct(payload);
+    return { rowIndex, payload, errors };
+  });
+
+  if (dryRun) {
+    return res.json({
+      results: prepared.map((p) => ({
+        rowIndex: p.rowIndex,
+        ok: p.errors.length === 0,
+        errors: p.errors,
+        product: p.errors.length === 0 ? p.payload : undefined,
+      })),
+      summary: {
+        totalRows: prepared.length,
+        created: 0,
+        failed: prepared.filter((p) => p.errors.length > 0).length,
+        valid: prepared.filter((p) => p.errors.length === 0).length,
+        dryRun: true,
+      },
+    });
+  }
+
+  const who = actor(req);
+  const outcome = await withDb(async (db) => {
+    if (!Array.isArray(db.products)) db.products = [];
+    const out = [];
+    for (const { rowIndex, payload, errors } of prepared) {
+      if (errors.length > 0) {
+        out.push({ rowIndex, ok: false, errors });
+        continue;
+      }
+      const created = {
+        id: nextProductId(db.products),
+        ...payload,
+        createdAt: nowIso(),
+        createdBy: who.email || who.id || null,
+        updatedAt: nowIso(),
+        updatedBy: who.email || who.id || null,
+      };
+      db.products.push(created);
+      out.push({ rowIndex, ok: true, product: created });
+      appendAudit(db, {
+        actor: who,
+        action: "product.create",
+        target: { type: "product", id: created.id },
+        summary: `Imported product ${created.title}`,
+        meta: { source: "bulk-import" },
+      });
+    }
+    const createdCount = out.filter((x) => x.ok).length;
+    if (createdCount > 0) {
+      appendAudit(db, {
+        actor: who,
+        action: "product.bulk-import",
+        target: { type: "product", id: null },
+        summary: `Imported ${createdCount} product${createdCount === 1 ? "" : "s"} via CSV`,
+        meta: {
+          totalRows: prepared.length,
+          created: createdCount,
+          failed: prepared.length - createdCount,
+        },
+      });
+    }
+    return out;
+  });
+
+  return res.json({
+    results: outcome,
+    summary: {
+      totalRows: prepared.length,
+      created: outcome.filter((x) => x.ok).length,
+      failed: outcome.filter((x) => !x.ok).length,
+      dryRun: false,
+    },
+  });
+});
+
 router.patch("/products/:id", writeLimiter, async (req, res) => {
   const id = String(req.params.id || "");
+  const who = actor(req);
 
   const result = await withDb(async (db) => {
     const product = (db.products || []).find((p) => String(p.id) === id);
     if (!product) return { notFound: true };
+
+    // Snapshot the product before mutation so the audit log can record a
+    // proper { from → to } diff for every tracked field.
+    const before = { ...product };
 
     const payload = buildProductPayload(req.body || {}, product);
     const errors = validateProduct(payload, { partial: false });
@@ -312,6 +475,20 @@ router.patch("/products/:id", writeLimiter, async (req, res) => {
 
     Object.assign(product, payload);
     product.updatedAt = nowIso();
+    product.updatedBy = who.email || who.id || null;
+
+    const changes = diffShallow(before, product, PRODUCT_TRACK_FIELDS);
+    if (Object.keys(changes).length > 0) {
+      const fieldList = Object.keys(changes).join(", ");
+      appendAudit(db, {
+        actor: who,
+        action: "product.update",
+        target: { type: "product", id: product.id },
+        summary: `Updated ${product.title} (${fieldList})`,
+        changes,
+      });
+    }
+
     return { product };
   });
 
@@ -327,6 +504,17 @@ router.delete("/products/:id", writeLimiter, async (req, res) => {
     const idx = db.products.findIndex((p) => String(p.id) === id);
     if (idx < 0) return { notFound: true };
     const [removed] = db.products.splice(idx, 1);
+    appendAudit(db, {
+      actor: actor(req),
+      action: "product.delete",
+      target: { type: "product", id: removed.id },
+      summary: `Deleted product ${removed.title || removed.id}`,
+      meta: {
+        title: removed.title,
+        brand: removed.brand,
+        category: removed.category,
+      },
+    });
     return { removed };
   });
 
@@ -377,15 +565,139 @@ router.patch("/orders/:id/status", writeLimiter, async (req, res) => {
   const result = await withDb(async (db) => {
     const order = (db.orders || []).find((o) => String(o.id) === id);
     if (!order) return { notFound: true };
+    const previous = order.status || "processing";
     order.status = status;
     if (status === "delivered") order.deliveredAt = nowIso();
     if (status === "cancelled") order.cancelledAt = nowIso();
     order.updatedAt = nowIso();
+    if (previous !== status) {
+      appendAudit(db, {
+        actor: actor(req),
+        action: "order.status",
+        target: { type: "order", id: order.id },
+        summary: `Order ${order.id} marked ${status}`,
+        changes: { status: { from: previous, to: status } },
+      });
+    }
     return { order };
   });
 
   if (result.notFound) return res.status(404).json({ message: "Order not found" });
   return res.json({ order: result.order });
+});
+
+/* Bulk status update — accepts { ids: [...], status } and updates each
+ * matching order in a single DB write. Returns counts so the UI can show
+ * a meaningful toast if some ids weren't found. */
+router.post("/orders/bulk-status", writeLimiter, async (req, res) => {
+  const status = String(req.body?.status || "").toLowerCase();
+  const ids = Array.isArray(req.body?.ids) ? req.body.ids.map((x) => String(x)) : [];
+  if (!ALLOWED_STATUS.has(status)) {
+    return res.status(400).json({
+      message: `status must be one of: ${[...ALLOWED_STATUS].join(", ")}`,
+    });
+  }
+  if (ids.length === 0) {
+    return res.status(400).json({ message: "ids[] is required" });
+  }
+
+  const result = await withDb(async (db) => {
+    const orders = db.orders || [];
+    const now = nowIso();
+    const updated = [];
+    const missing = [];
+    const idSet = new Set(ids);
+    for (const order of orders) {
+      if (!idSet.has(String(order.id))) continue;
+      order.status = status;
+      if (status === "delivered") order.deliveredAt = now;
+      if (status === "cancelled") order.cancelledAt = now;
+      order.updatedAt = now;
+      updated.push(order);
+    }
+    for (const id of ids) {
+      if (!updated.find((o) => String(o.id) === id)) missing.push(id);
+    }
+    if (updated.length > 0) {
+      // One rollup entry per bulk operation keeps the activity feed readable
+      // — exploding into N entries when an admin moves a hundred orders in
+      // one go would drown out the single-order changes that came before.
+      appendAudit(db, {
+        actor: actor(req),
+        action: "order.bulk-status",
+        target: { type: "order", id: null },
+        summary: `Bulk-updated ${updated.length} order${updated.length === 1 ? "" : "s"} → ${status}`,
+        meta: {
+          status,
+          ids: updated.map((o) => o.id),
+          missing,
+        },
+      });
+    }
+    return { updated, missing };
+  });
+
+  return res.json({
+    updatedCount: result.updated.length,
+    missing: result.missing,
+    orders: result.updated,
+  });
+});
+
+/* ------------------------------------------------------------------
+ * Audit log (admin activity feed)
+ * Supports filters:
+ *   - action: substring match against `action` (e.g. "product" matches all)
+ *   - actor:  substring match against actor email / id
+ *   - q:      free-text search across summary, action and target id
+ *   - since:  ISO timestamp lower bound
+ *   - until:  ISO timestamp upper bound
+ *   - limit:  page size (default 100, max 500)
+ *   - offset: pagination offset (default 0)
+ * ----------------------------------------------------------------*/
+
+router.get("/audit", async (req, res) => {
+  const db = await readDb();
+  const all = Array.isArray(db.auditLogs) ? db.auditLogs.slice() : [];
+
+  const action = String(req.query.action || "").trim().toLowerCase();
+  const actorQ = String(req.query.actor || "").trim().toLowerCase();
+  const q = String(req.query.q || "").trim().toLowerCase();
+  const sinceTs = req.query.since ? Date.parse(String(req.query.since)) : null;
+  const untilTs = req.query.until ? Date.parse(String(req.query.until)) : null;
+  const limit = Math.min(500, Math.max(1, safeInt(req.query.limit, 100)));
+  const offset = Math.max(0, safeInt(req.query.offset, 0));
+
+  let filtered = all;
+  if (action) {
+    filtered = filtered.filter((e) => String(e.action).toLowerCase().includes(action));
+  }
+  if (actorQ) {
+    filtered = filtered.filter((e) => {
+      const hay = `${e.actorEmail || ""} ${e.actorId || ""}`.toLowerCase();
+      return hay.includes(actorQ);
+    });
+  }
+  if (q) {
+    filtered = filtered.filter((e) => {
+      const hay = `${e.summary || ""} ${e.action || ""} ${e.target?.id || ""}`.toLowerCase();
+      return hay.includes(q);
+    });
+  }
+  if (sinceTs) {
+    filtered = filtered.filter((e) => Date.parse(e.ts) >= sinceTs);
+  }
+  if (untilTs) {
+    filtered = filtered.filter((e) => Date.parse(e.ts) <= untilTs);
+  }
+
+  // Newest first; the storage order is insertion (oldest first) so reverse.
+  filtered.sort((a, b) => Date.parse(b.ts) - Date.parse(a.ts));
+
+  const total = filtered.length;
+  const page = filtered.slice(offset, offset + limit);
+
+  return res.json({ entries: page, total, limit, offset });
 });
 
 /* ------------------------------------------------------------------

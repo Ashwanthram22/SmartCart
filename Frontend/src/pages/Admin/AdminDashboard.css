@@ -82,6 +82,41 @@
   color: #64748b;
 }
 
+/* Row that holds the optional delta pill + helper text under each value. */
+.ad-stat-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ad-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.ad-delta--up {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.ad-delta--down {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Tiny sparkline anchored at the bottom of each StatCard. */
+.adm-spark--empty {
+  background: linear-gradient(90deg, transparent, rgba(107, 56, 212, 0.06), transparent);
+  border-radius: 6px;
+}
+
 .ad-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
@@ -90,8 +125,8 @@
 }
 
 .ad-chart-card {
-  display: flex;
-  flex-direction: column;
+  /* `.adm-card` already provides `display: flex; flex-direction: column;
+   * gap: 14px` — bump the gap a touch for the larger SVG chart underneath. */
   gap: 16px;
 }
 
@@ -130,9 +165,7 @@
 /* ----- Activity feed -------------------------------------------------------*/
 
 .ad-activity-card {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  /* inherits column layout + gap from .adm-card */
 }
 
 .ad-activity-list {

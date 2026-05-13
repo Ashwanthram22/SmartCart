@@ -15,8 +15,10 @@
   --adm-warning: #f59e0b;
   --adm-sidebar: 240px;
 
-  display: grid;
-  grid-template-columns: var(--adm-sidebar) 1fr;
+  /* The sidebar is `position: fixed` (it never scrolls with the page).
+   * Reserving the column happens via `margin-left: var(--adm-sidebar)` on
+   * the next-door `.adm-main-wrap` so neither the topbar nor the page
+   * surface can ever slide behind it. */
   min-height: 100vh;
   background: var(--adm-bg);
   color: var(--adm-text);
@@ -26,15 +28,27 @@
 /* ----- Sidebar -------------------------------------------------------------*/
 
 .adm-sidebar {
-  position: sticky;
+  /* Fixed to the viewport. `top: 0; bottom: 0` keeps it full-height across
+   * any viewport size (taller than 100vh on iPads, shorter on laptops in
+   * fullscreen) without depending on a hardcoded `height: 100vh`. */
+  position: fixed;
   top: 0;
-  height: 100vh;
+  left: 0;
+  bottom: 0;
+  width: var(--adm-sidebar);
+  /* Without this the 16px L/R padding adds on top of the 240px width, making
+   * the rendered footprint 272px and pushing the right edge of the sidebar
+   * behind the main column. `border-box` keeps the rendered width equal to
+   * `--adm-sidebar`, so the same variable drives both the sidebar size and
+   * the main column's offset. */
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   padding: 22px 16px 18px;
   background: var(--adm-surface);
   border-right: 1px solid var(--adm-border);
-  z-index: 5;
+  z-index: 10;
+  overflow-y: auto;
 }
 
 .adm-brand {
@@ -99,14 +113,20 @@
   transition: background 120ms ease, color 120ms ease;
 }
 
-.adm-nav-link:hover {
+/* Hover only applies to non-active rows. Without the `:not(...)` guard the
+ * grey hover background would overwrite the purple "you are here" state
+ * whenever the cursor crossed the current page's row, which made it look
+ * like the selection had jumped. */
+.adm-nav-link:not(.adm-nav-link--active):hover {
   background: #f1f0fa;
   color: var(--adm-text);
 }
 
-.adm-nav-link--active {
+.adm-nav-link--active,
+.adm-nav-link--active:hover {
   background: rgba(107, 56, 212, 0.12);
   color: var(--adm-accent);
+  cursor: default;
 }
 
 .adm-nav-link:focus-visible {
@@ -119,6 +139,9 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  /* Stay anchored at the bottom of the sidebar even on very short viewports
+   * — never lets the user pill be squished or pushed off-screen. */
+  flex-shrink: 0;
 }
 
 .adm-userpill {
@@ -166,6 +189,11 @@
 /* ----- Main / Topbar -------------------------------------------------------*/
 
 .adm-main-wrap {
+  /* Push the entire main column (topbar + page surface) clear of the fixed
+   * sidebar. The sidebar uses `box-sizing: border-box`, so its rendered
+   * width is exactly `--adm-sidebar` (padding included) and we can offset
+   * the main column by the same variable — one source of truth. */
+  margin-left: var(--adm-sidebar);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -206,7 +234,9 @@
   align-items: center;
   gap: 8px;
   padding: 9px 14px;
-  border-radius: 999px;
+  /* Matches `.adm-btn` (10px) so the topbar search lines up visually with the
+   * rest of the rounded-rectangle controls (filters, action buttons). */
+  border-radius: 10px;
   border: 1px solid var(--adm-border);
   background: #fff;
   flex: 1;
@@ -238,6 +268,229 @@
   font-size: 14px;
 }
 
+/* ----- Global omnisearch (topbar) -----------------------------------------*/
+
+.adm-globalsearch {
+  position: relative;
+}
+
+.adm-globalsearch-menu {
+  z-index: 1000;
+  max-width: min(560px, 92vw);
+  max-height: calc(100vh - 140px);
+  overflow: hidden auto;
+  background: #fff;
+  border: 1px solid var(--adm-border);
+  border-radius: 14px;
+  box-shadow:
+    0 18px 38px -22px rgba(15, 23, 42, 0.45),
+    0 6px 18px -12px rgba(107, 56, 212, 0.18);
+  padding: 6px;
+  animation: adm-globalsearch-pop 120ms ease-out;
+}
+
+@keyframes adm-globalsearch-pop {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.adm-globalsearch-empty {
+  padding: 18px 14px;
+  color: var(--adm-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.adm-globalsearch-group + .adm-globalsearch-group {
+  border-top: 1px solid var(--adm-border);
+  margin-top: 4px;
+  padding-top: 4px;
+}
+
+.adm-globalsearch-group-label {
+  padding: 8px 12px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--adm-muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* "Clear" button rendered next to the "Recent" group label. The very small
+ * inline action shouldn't compete with the row icons so we strip every
+ * default control affordance and lean on hover-only colour to surface
+ * intent. */
+.adm-globalsearch-clear-recents {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 2px 6px;
+  font: inherit;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--adm-muted);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: color 120ms ease, background 120ms ease;
+}
+
+.adm-globalsearch-clear-recents:hover,
+.adm-globalsearch-clear-recents:focus-visible {
+  color: var(--adm-accent);
+  background: rgba(107, 56, 212, 0.08);
+  outline: none;
+}
+
+.adm-globalsearch-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.adm-globalsearch-row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 100ms ease;
+}
+
+.adm-globalsearch-row + .adm-globalsearch-row {
+  margin-top: 1px;
+}
+
+.adm-globalsearch-row--active,
+.adm-globalsearch-row:hover {
+  background: linear-gradient(180deg, rgba(107, 56, 212, 0.08) 0%, rgba(107, 56, 212, 0.04) 100%);
+}
+
+.adm-globalsearch-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(107, 56, 212, 0.1);
+  color: var(--adm-accent);
+}
+
+.adm-globalsearch-thumb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #f4f5fb;
+  color: var(--adm-muted);
+  overflow: hidden;
+}
+
+.adm-globalsearch-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.adm-globalsearch-status {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 0 9px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.06);
+}
+
+.adm-globalsearch-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.adm-globalsearch-text strong {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--adm-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adm-globalsearch-text small {
+  font-size: 12px;
+  color: var(--adm-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adm-globalsearch-arrow {
+  color: var(--adm-muted);
+  opacity: 0;
+  transition: opacity 100ms ease, transform 100ms ease;
+}
+
+.adm-globalsearch-row--active .adm-globalsearch-arrow,
+.adm-globalsearch-row:hover .adm-globalsearch-arrow {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+.adm-globalsearch-foot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px 6px;
+  border-top: 1px solid var(--adm-border);
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--adm-muted);
+}
+
+.adm-globalsearch-foot kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 5px;
+  border: 1px solid var(--adm-border);
+  background: #f4f5fb;
+  color: var(--adm-muted);
+  font-family: inherit;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.adm-globalsearch-foot kbd + kbd {
+  margin-left: -2px;
+}
+
+/* Flexible spacer used between the navigation hints and the right-aligned
+ * "Cmd/Ctrl-K anywhere" reminder so the two groups float to opposite ends
+ * of the footer regardless of how much copy is on either side. */
+.adm-globalsearch-foot-spacer {
+  flex: 1 1 auto;
+}
+
 .adm-topbar-right {
   display: flex;
   align-items: center;
@@ -257,12 +510,18 @@
   justify-content: center;
   cursor: pointer;
   text-decoration: none;
+  transition: background 140ms ease, color 140ms ease, transform 140ms ease;
   transition: background 120ms ease, color 120ms ease;
 }
 
 .adm-icon-btn:hover {
   background: #ece5fd;
   color: var(--adm-accent);
+  transform: translateY(-1px);
+}
+
+.adm-icon-btn:active {
+  transform: translateY(0);
 }
 
 .adm-icon-btn:focus-visible {
@@ -272,24 +531,44 @@
 
 .adm-icon-btn--badge {
   position: relative;
+  /* Allow the badge to bleed slightly outside the 38x38 button hitbox so
+   * it can sit on the bell's top-right corner without truncation. */
+  overflow: visible;
 }
 
+/*
+ * Notification badge — sits as a small red disc at the top-right corner of
+ * the bell icon (classic mobile-notification look) instead of covering the
+ * glyph. Pushed slightly outside the button (`top: -2px; right: -2px`) so a
+ * single-digit count never overlaps the bell symbol underneath.
+ */
 .adm-icon-badge {
   position: absolute;
-  top: 4px;
-  right: 4px;
-  min-width: 16px;
-  height: 16px;
+  top: -2px;
+  right: -2px;
+  min-width: 14px;
+  height: 14px;
   padding: 0 4px;
   border-radius: 999px;
   background: var(--adm-danger);
   color: #fff;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 800;
-  line-height: 16px;
+  line-height: 14px;
   text-align: center;
+  /* Contrast halo against the topbar background so the badge reads cleanly
+   * whether the button is hovered (lavender) or idle (transparent). */
   border: 2px solid #f7f8fc;
   box-sizing: content-box;
+  pointer-events: none;
+  box-shadow: 0 1px 3px rgba(220, 38, 38, 0.35);
+}
+
+/* When the bell is hovered the button background shifts to lavender —
+ * keep the badge halo matching so it doesn't look like a floating chip
+ * disconnected from the icon. */
+.adm-icon-btn:hover .adm-icon-badge {
+  border-color: #ece5fd;
 }
 
 /* ----- Page surface --------------------------------------------------------*/
@@ -329,76 +608,321 @@
   flex-wrap: wrap;
 }
 
-/* Reusable button variants used across admin pages ------------------------*/
+/* Reusable button variants used across admin pages ------------------------
+ *
+ * Each variant is fully self-contained — `.adm-btn-primary`, `.adm-btn-ghost`
+ * and `.adm-btn-danger` share the same base box (padding, radius, font,
+ * focus ring) so they can be used WITHOUT also adding `.adm-btn`. This
+ * also fixes the "Save cha..." truncation that happened when modal footer
+ * buttons only got the variant override class.
+ *
+ * `white-space: nowrap` keeps labels like "Save changes" or "Open inventory"
+ * on a single line; the dialog footer is always wide enough to show them.
+ * --------------------------------------------------------------------------*/
 
-.adm-btn {
+.adm-btn,
+.adm-btn-primary,
+.adm-btn-ghost,
+.adm-btn-danger {
   appearance: none;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 9px 16px;
+  padding: 9px 18px;
   border-radius: 10px;
   border: 1px solid var(--adm-border);
   background: #fff;
   color: var(--adm-text);
   font-size: 14px;
   font-weight: 600;
-  cursor: pointer;
-  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
-  text-decoration: none;
   font-family: inherit;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 140ms ease, border-color 140ms ease,
+    color 140ms ease, box-shadow 160ms ease, transform 140ms ease;
 }
 
-.adm-btn:hover {
-  background: #f1f0fa;
-  border-color: rgba(107, 56, 212, 0.45);
-}
-
-.adm-btn:disabled {
+.adm-btn:disabled,
+.adm-btn-primary:disabled,
+.adm-btn-ghost:disabled,
+.adm-btn-danger:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-.adm-btn:focus-visible {
+.adm-btn:focus-visible,
+.adm-btn-primary:focus-visible,
+.adm-btn-ghost:focus-visible,
+.adm-btn-danger:focus-visible {
   outline: 2px solid var(--adm-accent);
   outline-offset: 2px;
 }
 
+/* Default (neutral) button -------------------------------------------------*/
+.adm-btn:hover:not(:disabled) {
+  background: #f5f3fc;
+  border-color: rgba(107, 56, 212, 0.45);
+  color: var(--adm-accent);
+}
+
+/* Primary (purple) ---------------------------------------------------------*/
 .adm-btn-primary {
-  background: var(--adm-accent);
+  background: linear-gradient(135deg, var(--adm-accent) 0%, #8455ef 100%);
   border-color: var(--adm-accent);
   color: #fff;
+  box-shadow: 0 6px 16px rgba(107, 56, 212, 0.28);
 }
 
-.adm-btn-primary:hover {
-  background: var(--adm-accent-strong);
+.adm-btn-primary:hover:not(:disabled) {
+  /* Keep label + icon white — `.adm-btn:hover` also matches `adm-btn
+   * adm-btn-primary` and would otherwise paint purple text on a purple fill. */
+  color: #fff;
+  background: linear-gradient(135deg, var(--adm-accent-strong) 0%, var(--adm-accent) 100%);
   border-color: var(--adm-accent-strong);
+  box-shadow: 0 12px 26px rgba(107, 56, 212, 0.36);
+  transform: translateY(-1px);
 }
 
+.adm-btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(107, 56, 212, 0.3);
+}
+
+/* Ghost (subtle, used for Cancel/Dismiss) ---------------------------------*/
 .adm-btn-ghost {
-  background: transparent;
-  border-color: transparent;
+  background: #fff;
+  border-color: var(--adm-border);
   color: var(--adm-muted);
 }
 
-.adm-btn-ghost:hover {
-  background: #f1f0fa;
+.adm-btn-ghost:hover:not(:disabled) {
+  background: #f5f3fc;
+  border-color: rgba(107, 56, 212, 0.4);
   color: var(--adm-text);
-  border-color: transparent;
 }
 
+.adm-btn-ghost:active:not(:disabled) {
+  background: #ece5fd;
+}
+
+/* Danger (red) -------------------------------------------------------------*/
 .adm-btn-danger {
-  background: var(--adm-danger);
+  background: linear-gradient(135deg, var(--adm-danger) 0%, #ef4444 100%);
   border-color: var(--adm-danger);
   color: #fff;
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.26);
 }
 
-.adm-btn-danger:hover {
-  background: #b91c1c;
+.adm-btn-danger:hover:not(:disabled) {
+  color: #fff;
+  background: linear-gradient(135deg, #b91c1c 0%, var(--adm-danger) 100%);
   border-color: #b91c1c;
+  box-shadow: 0 12px 26px rgba(220, 38, 38, 0.34);
+  transform: translateY(-1px);
 }
 
-/* Cards reused on dashboard/inventory/orders -------------------------------*/
+.adm-btn-danger:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
+}
+
+/* AdmDropdown — shared custom dropdown ------------------------------------
+ *
+ * Used by `<AdmDropdown />` (Frontend/src/pages/Admin/AdmDropdown.jsx) so
+ * every admin page renders the same pill-style trigger + curved white menu
+ * with hover and selected states. Designed to replace native `<select>`
+ * elements where we want full control over the popover surface.
+ *
+ * Visual contract:
+ *   - Trigger is a white pill with a soft border and chevron caret.
+ *   - Menu is a curved white surface with a soft drop shadow.
+ *   - Each option gets a lavender hover background; the active option uses a
+ *     deeper lavender so it stays readable on hover.
+ *   - No icon next to options (per requested design).
+ * --------------------------------------------------------------------------*/
+
+.adm-dd {
+  position: relative;
+  display: inline-block;
+}
+
+.adm-dd-trigger {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 150px;
+  padding: 8px 12px;
+  /* Matches `.adm-btn` (10px) so dropdown triggers and surrounding buttons
+   * share the same rounded-rectangle silhouette across every admin toolbar. */
+  border-radius: 10px;
+  border: 1px solid var(--adm-border);
+  background: #fff;
+  color: var(--adm-text);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 140ms ease, border-color 140ms ease,
+    color 140ms ease, box-shadow 160ms ease;
+}
+
+.adm-dd-trigger:hover:not(:disabled) {
+  background: #faf7ff;
+  border-color: rgba(107, 56, 212, 0.45);
+  color: var(--adm-accent);
+}
+
+.adm-dd-trigger:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.adm-dd-trigger:focus {
+  outline: none;
+}
+
+.adm-dd-trigger:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(107, 56, 212, 0.55);
+}
+
+.adm-dd--open .adm-dd-trigger {
+  border-color: var(--adm-accent);
+  color: var(--adm-accent);
+  background: #faf7ff;
+}
+
+.adm-dd-label {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adm-dd-caret {
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: transform 160ms ease;
+}
+
+.adm-dd--open .adm-dd-caret {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+/* Menu is portalled into <body> with `position: fixed` set inline by the
+ * component, so it cannot be clipped by any ancestor's overflow (e.g. a
+ * horizontally-scrollable table cell). z-index is high enough to sit above
+ * sticky table headers and the admin top bar. */
+.adm-dd-menu {
+  z-index: 1000;
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  width: max-content;
+  max-width: 280px;
+  background: #fff;
+  border: 1px solid var(--adm-border);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
+}
+
+/* The dropdown auto-flips when there's no room below the trigger. We
+ * animate from the side closest to the trigger so the menu visually
+ * "grows out of" the trigger in both directions. */
+.adm-dd-menu--bottom {
+  animation: adm-dd-pop-down 140ms ease-out;
+  transform-origin: top center;
+}
+
+.adm-dd-menu--top {
+  animation: adm-dd-pop-up 140ms ease-out;
+  transform-origin: bottom center;
+}
+
+@keyframes adm-dd-pop-down {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes adm-dd-pop-up {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.adm-dd-option {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  width: 100%;
+  text-align: left;
+  display: block;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  color: #475569;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.adm-dd-option:hover {
+  background: #ede9fe;
+  color: #0f172a;
+}
+
+.adm-dd-option:focus {
+  outline: none;
+}
+
+.adm-dd-option:focus-visible {
+  outline: 2px solid rgba(107, 56, 212, 0.55);
+  outline-offset: 2px;
+}
+
+.adm-dd-option--active {
+  color: #5527b6;
+  font-weight: 700;
+  background: #f5f3ff;
+}
+
+/* Selected row + hover: keep label clearly readable. */
+.adm-dd-option--active:hover {
+  background: #ddd6fe;
+  color: #1e1b4b;
+}
+
+/* Cards reused on dashboard/inventory/orders -------------------------------
+ *
+ * Every `.adm-card` is a flex column with a consistent `gap`, so the header
+ * (`.adm-card-head`) is always separated from the content below it (lists,
+ * charts, tables) without each variant having to redeclare its own spacing.
+ *
+ * Cards that need a different inner layout (horizontal toolbars, the gradient
+ * tips banner) override `flex-direction` / `display` themselves.
+ * --------------------------------------------------------------------------*/
 
 .adm-card {
   background: var(--adm-surface);
@@ -406,6 +930,9 @@
   border-radius: 14px;
   padding: 20px;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .adm-card-head {
@@ -426,6 +953,461 @@
   margin: 4px 0 0;
   font-size: 13px;
   color: var(--adm-muted);
+}
+
+/* Shimmer skeletons + empty-state primitives -----------------------------
+ *
+ * Used across admin pages while data is loading or empty. `.adm-skel-*`
+ * variants are simple rectangles with a left-to-right shimmer; the
+ * `.adm-empty-state` block renders a friendly icon + headline + body + CTA.
+ * --------------------------------------------------------------------------*/
+
+@keyframes adm-shimmer {
+  0% {
+    background-position: -240px 0;
+  }
+  100% {
+    background-position: 240px 0;
+  }
+}
+
+.adm-skel {
+  background: linear-gradient(
+    90deg,
+    #f1f0fa 0%,
+    #ece8ff 50%,
+    #f1f0fa 100%
+  );
+  background-size: 480px 100%;
+  animation: adm-shimmer 1.4s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+.adm-skel-line {
+  height: 12px;
+  border-radius: 999px;
+}
+
+.adm-skel-line--sm { height: 10px; max-width: 60%; }
+.adm-skel-line--lg { height: 16px; }
+.adm-skel-line--title { height: 18px; max-width: 45%; }
+.adm-skel-line--num { height: 26px; width: 60%; }
+
+.adm-skel-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+}
+
+.adm-skel-row {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.adm-skel-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.adm-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 36px 20px;
+  color: var(--adm-muted);
+}
+
+.adm-empty-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f3ff;
+  color: var(--adm-accent);
+}
+
+.adm-empty-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--adm-text);
+}
+
+.adm-empty-text {
+  margin: 0;
+  font-size: 13px;
+  max-width: 360px;
+  line-height: 1.5;
+}
+
+/* Filter chip row (used above tables for quick filters) ------------------*/
+
+.adm-chips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.adm-chip {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--adm-border);
+  background: #fff;
+  color: var(--adm-muted);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+
+.adm-chip:hover {
+  background: #faf7ff;
+  color: var(--adm-accent);
+  border-color: rgba(107, 56, 212, 0.45);
+}
+
+.adm-chip:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(107, 56, 212, 0.55);
+}
+
+.adm-chip--active {
+  background: #ede9fe;
+  color: #5527b6;
+  border-color: rgba(107, 56, 212, 0.6);
+}
+
+.adm-chip--active:hover {
+  background: #ddd6fe;
+  color: #1e1b4b;
+}
+
+.adm-chip-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  padding: 0 5px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(107, 56, 212, 0.12);
+  color: #5527b6;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.adm-chip--active .adm-chip-count {
+  background: rgba(107, 56, 212, 0.22);
+}
+
+/* Bulk action bar — appears above tables when 1+ rows are selected -------*/
+
+.adm-bulkbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #ede9fe 0%, #faf7ff 100%);
+  border: 1px solid rgba(107, 56, 212, 0.35);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  animation: adm-bulkbar-pop 180ms ease-out;
+}
+
+@keyframes adm-bulkbar-pop {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.adm-bulkbar-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: #5527b6;
+}
+
+.adm-bulkbar-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Pagination ------------------------------------------------------------*/
+
+.adm-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-top: 1px solid #f1f0fa;
+  font-size: 13px;
+  color: var(--adm-muted);
+}
+
+.adm-pagination-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.adm-pagination-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.adm-pager-btn {
+  appearance: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--adm-border);
+  background: #fff;
+  color: var(--adm-text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+
+.adm-pager-btn:hover:not(:disabled) {
+  background: #f5f3fc;
+  color: var(--adm-accent);
+  border-color: rgba(107, 56, 212, 0.45);
+}
+
+.adm-pager-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.adm-pager-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(107, 56, 212, 0.55);
+}
+
+.adm-pager-page {
+  font-weight: 700;
+  color: var(--adm-text);
+  padding: 0 8px;
+}
+
+/* Checkbox cell (bulk select) ------------------------------------------*/
+
+.adm-th-check,
+.adm-td-check {
+  width: 36px;
+  padding-left: 16px;
+  padding-right: 0;
+}
+
+.adm-checkbox {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1.5px solid #cbd5e1;
+  background: #fff;
+  cursor: pointer;
+  display: inline-grid;
+  place-items: center;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.adm-checkbox:hover {
+  border-color: var(--adm-accent);
+}
+
+.adm-checkbox:checked {
+  background: var(--adm-accent);
+  border-color: var(--adm-accent);
+}
+
+.adm-checkbox:checked::after {
+  content: "";
+  width: 9px;
+  height: 5px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg) translate(1px, -1px);
+}
+
+.adm-checkbox:indeterminate {
+  background: var(--adm-accent);
+  border-color: var(--adm-accent);
+}
+
+.adm-checkbox:indeterminate::after {
+  content: "";
+  width: 8px;
+  height: 2px;
+  background: #fff;
+  border-radius: 1px;
+}
+
+.adm-checkbox:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(107, 56, 212, 0.55);
+}
+
+/* Right-side slide-in drawer (used for order details, etc.) -------------*/
+
+.adm-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(15, 23, 42, 0.5);
+  animation: adm-drawer-fade 180ms ease-out;
+}
+
+@keyframes adm-drawer-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.adm-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: min(560px, 100vw);
+  background: #fff;
+  z-index: 91;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -24px 0 60px rgba(15, 23, 42, 0.22);
+  animation: adm-drawer-slide 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes adm-drawer-slide {
+  from { transform: translateX(20px); opacity: 0.3; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.adm-drawer-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 22px;
+  border-bottom: 1px solid #f1f0fa;
+}
+
+.adm-drawer-title {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--adm-text);
+}
+
+.adm-drawer-sub {
+  margin: 0;
+  font-size: 13px;
+  color: var(--adm-muted);
+}
+
+.adm-drawer-close {
+  appearance: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 0;
+  background: #f1f0fa;
+  color: #475569;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.adm-drawer-close:hover {
+  background: #ece5fd;
+  color: var(--adm-accent);
+}
+
+.adm-drawer-close:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(107, 56, 212, 0.55);
+}
+
+.adm-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.adm-drawer-foot {
+  padding: 16px 22px;
+  border-top: 1px solid #f1f0fa;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  background: #fafafe;
+}
+
+.adm-drawer-section h4 {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+}
+
+.adm-drawer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 16px;
+}
+
+.adm-drawer-grid dt {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.adm-drawer-grid dd {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: var(--adm-text);
+  font-weight: 600;
+}
+
+/* Sparkline used inside StatCards ---------------------------------------*/
+
+.adm-spark {
+  width: 100%;
+  height: 36px;
+  margin-top: 8px;
+}
+
+/* Hide screen-only chrome when printing (used by invoice popup) ---------*/
+
+@media print {
+  .adm-no-print { display: none !important; }
 }
 
 /* ----- Floating add button -------------------------------------------------*/
@@ -684,6 +1666,275 @@
   color: rgba(220, 38, 38, 0.78);
 }
 
+/* ----- About modal (help "?" icon) ----------------------------------------*/
+
+.adm-about-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: admFadeIn 160ms ease-out;
+}
+
+@keyframes admFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.adm-about-dialog {
+  background: #fff;
+  width: min(100%, 600px);
+  max-height: calc(100vh - 48px);
+  border-radius: 18px;
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.35);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+  animation: admPanelIn 200ms ease-out;
+}
+
+.adm-about-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid #f1f0fa;
+  background: linear-gradient(
+    180deg,
+    rgba(107, 56, 212, 0.06) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+.adm-about-head-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.adm-about-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: max-content;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--adm-accent);
+  background: rgba(107, 56, 212, 0.1);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.adm-about-head h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--adm-text);
+  letter-spacing: -0.01em;
+}
+
+.adm-about-head p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--adm-muted);
+  max-width: 50ch;
+  line-height: 1.5;
+}
+
+.adm-about-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(107, 56, 212, 0.35) transparent;
+}
+
+.adm-about-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.adm-about-body::-webkit-scrollbar-thumb {
+  background: rgba(107, 56, 212, 0.28);
+  border-radius: 999px;
+  border: 2px solid #fff;
+}
+
+.adm-about-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 56, 212, 0.5);
+}
+
+.adm-about-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(107, 56, 212, 0.07) 0%, rgba(132, 85, 239, 0.04) 100%);
+  border: 1px solid rgba(107, 56, 212, 0.18);
+}
+
+.adm-about-callout-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6b38d4 0%, #8455ef 100%);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.adm-about-callout strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--adm-text);
+  margin-bottom: 4px;
+}
+
+.adm-about-callout p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--adm-muted);
+  line-height: 1.5;
+}
+
+.adm-about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.adm-about-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+  border: 1px solid var(--adm-border);
+  border-radius: 12px;
+  background: #fff;
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.adm-about-card:hover {
+  border-color: rgba(107, 56, 212, 0.4);
+  box-shadow: 0 6px 18px -10px rgba(107, 56, 212, 0.35);
+  transform: translateY(-1px);
+}
+
+.adm-about-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(107, 56, 212, 0.1);
+  color: var(--adm-accent);
+}
+
+.adm-about-card strong {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--adm-text);
+}
+
+.adm-about-card p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--adm-muted);
+  line-height: 1.5;
+}
+
+.adm-about-tips {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #f7f7fb;
+  border: 1px solid var(--adm-border);
+}
+
+.adm-about-tips-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--adm-accent);
+  border: 1px solid var(--adm-border);
+  flex-shrink: 0;
+}
+
+.adm-about-tips strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--adm-text);
+  margin-bottom: 6px;
+}
+
+.adm-about-tips ul {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--adm-muted);
+  line-height: 1.5;
+}
+
+.adm-about-tips kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 5px;
+  border: 1px solid var(--adm-border);
+  background: #fff;
+  color: var(--adm-text);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  margin: 0 2px;
+}
+
+.adm-about-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid #f1f0fa;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+@media (max-width: 560px) {
+  .adm-about-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ----- Inventory alerts modal (bell icon) ---------------------------------*/
 
 .adm-alerts-overlay {
@@ -881,15 +2132,21 @@
 /* ----- Responsive ----------------------------------------------------------*/
 
 @media (max-width: 960px) {
-  .adm-shell {
-    grid-template-columns: 1fr;
-  }
   .adm-sidebar {
+    /* On mobile we stack the sidebar above the main content rather than
+     * overlap it via `position: fixed`. */
     position: static;
+    width: auto;
     height: auto;
+    inset: auto;
     flex-direction: column;
     border-right: 0;
     border-bottom: 1px solid var(--adm-border);
+    overflow: visible;
+  }
+  .adm-main-wrap {
+    /* Drop the desktop margin so the main column stacks under the sidebar. */
+    margin-left: 0;
   }
   .adm-sidebar-foot {
     margin-top: 16px;
