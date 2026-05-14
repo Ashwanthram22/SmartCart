@@ -1,37 +1,28 @@
 import { useEffect } from "react";
 
-const DEFAULT_TITLE = "SmartCart AI — your AI-powered shopping assistant";
+/** Shown in the browser tab on every route — intentionally not per-page. */
+const DOCUMENT_TITLE = "SmartCart AI";
+
 const DEFAULT_DESCRIPTION =
   "SmartCart AI helps you find the right products faster with curated picks, intelligent recommendations, and a built-in shopping assistant.";
-const TITLE_SUFFIX = " · SmartCart AI";
 
 /**
- * Set the document title (and optional `<meta name="description">`)
- * for the lifetime of the calling component, then restore the
- * previous values on unmount.
+ * Keeps `document.title` fixed to the SmartCart brand. Call sites may still
+ * pass `title` / `appendBrand` for API compatibility; those values are ignored
+ * for the tab title.
  *
- *   usePageMeta("Cart", "Review your cart and check out securely.");
- *   usePageMeta({ title: "Profile", description: "..." });
- *
- * The `appendBrand` flag (default true) controls whether the
- * `· SmartCart AI` suffix is added — set to `false` for the home
- * page where the full brand title is already exact.
+ * Optional `description` still updates `<meta name="description">` when
+ * provided, and restores the previous content on unmount.
  */
 export default function usePageMeta(titleOrOptions, descriptionArg) {
   const opts =
     typeof titleOrOptions === "string"
       ? { title: titleOrOptions, description: descriptionArg }
       : titleOrOptions || {};
-  const { title, description, appendBrand = true } = opts;
+  const { description } = opts;
 
   useEffect(() => {
-    const previousTitle = document.title;
-
-    if (title) {
-      document.title = appendBrand ? `${title}${TITLE_SUFFIX}` : title;
-    } else {
-      document.title = DEFAULT_TITLE;
-    }
+    document.title = DOCUMENT_TITLE;
 
     let descTag = document.querySelector('meta[name="description"]');
     let createdDescTag = false;
@@ -49,7 +40,7 @@ export default function usePageMeta(titleOrOptions, descriptionArg) {
     }
 
     return () => {
-      document.title = previousTitle;
+      document.title = DOCUMENT_TITLE;
       if (description && descTag) {
         if (createdDescTag) {
           descTag.parentNode?.removeChild(descTag);
@@ -58,5 +49,5 @@ export default function usePageMeta(titleOrOptions, descriptionArg) {
         }
       }
     };
-  }, [title, description, appendBrand]);
+  }, [description]);
 }

@@ -1,13 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
 import { useSaved } from "../../hooks/useSaved";
+import { useAssistant } from "../../hooks/useAssistant";
 import { CartIcon } from "../../components/CartIcon";
 import { HeartIcon } from "../../components/HeartIcon";
 import { formatMoney } from "../../utils/money";
+import { getCatalogGridImageProps } from "../../utils/catalogImage";
+import { productDetailUrl } from "../../constants/shopRoutes";
 
 /** Product shape matches API / CDN mapping later: image field should be full Cloudinary URL */
-function ProductCard({ product, showAskAi = false, badgeOverride }) {
+function ProductCard({ product, showAskAi = false, badgeOverride, index = 0 }) {
   const navigate = useNavigate();
+  const { open: openAssistant } = useAssistant();
   const { addItem } = useCart();
   const { isSaved, toggleSaved } = useSaved();
   const {
@@ -31,6 +35,7 @@ function ProductCard({ product, showAskAi = false, badgeOverride }) {
     image ||
     "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=600&q=80";
 
+  const gridImg = getCatalogGridImageProps(imgSrc, { index });
   const reviewsShort =
     typeof reviewCount === "number"
       ? reviewCount >= 1000
@@ -39,7 +44,7 @@ function ProductCard({ product, showAskAi = false, badgeOverride }) {
       : "0";
 
   const openDetail = () => {
-    if (id) navigate(`/catalog/products/${id}`);
+    if (id) navigate(productDetailUrl("AI Picks", id, ""));
   };
 
   const handleCardKeyDown = (event) => {
@@ -67,6 +72,18 @@ function ProductCard({ product, showAskAi = false, badgeOverride }) {
     });
   };
 
+  const handleAskAiClick = (event) => {
+    event.stopPropagation();
+    if (!id) return;
+    openAssistant({
+      productId: id,
+      productTitle: title,
+      productCategory: category || "",
+      productPrice: price,
+      productImage: imgSrc,
+    });
+  };
+
   return (
     <article
       className="home-product-card"
@@ -76,7 +93,7 @@ function ProductCard({ product, showAskAi = false, badgeOverride }) {
       onKeyDown={handleCardKeyDown}
     >
       <div className="home-product-card-image-wrap">
-        <img src={imgSrc} alt="" className="home-product-card-img" loading="lazy" />
+        <img alt="" className="home-product-card-img" {...gridImg} />
         {displayBadge ? (
           <span
             className={`home-product-badge${
@@ -102,7 +119,8 @@ function ProductCard({ product, showAskAi = false, badgeOverride }) {
           <button
             type="button"
             className="home-product-ask-ai"
-            onClick={(e) => e.stopPropagation()}
+            aria-label={`Ask AI Assistant about ${title}`}
+            onClick={handleAskAiClick}
           >
             <span aria-hidden="true">✦</span> Ask AI Assistant
           </button>

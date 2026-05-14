@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { register } from "../../api/client";
-import AuthBrand from "../../components/auth/AuthBrand";
 import AuthInput from "../../components/auth/AuthInput";
 import { EyeIcon } from "../../components/auth/EyeIcon";
 import AuthPrimaryButton from "../../components/auth/AuthPrimaryButton";
+import LegalDocumentModal from "../../components/LegalDocumentModal";
 import { isAuthenticated, setToken } from "../../utils/authToken";
+import { isWellFormedEmail, EMAIL_FORMAT_HINT } from "../../utils/isWellFormedEmail";
 import usePageMeta from "../../hooks/usePageMeta";
 import "../../components/auth/AuthShared.css";
 import "./Register.css";
@@ -27,6 +28,8 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [message, setMessage] = useState("");
+  const [emailFieldError, setEmailFieldError] = useState("");
+  const [legalModal, setLegalModal] = useState(null);
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -34,10 +37,25 @@ function Register() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+    if (name === "email") setMessage("");
+    setEmailFieldError("");
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const email = form.email.trim();
+    if (!email) {
+      setEmailFieldError("Please enter your email.");
+      setMessage("");
+      return;
+    }
+    setEmailFieldError("");
+    if (!isWellFormedEmail(email)) {
+      setEmailFieldError(EMAIL_FORMAT_HINT);
+      setMessage("");
+      return;
+    }
 
     if (form.password !== form.confirmPassword) {
       setMessage("Password and confirm password do not match.");
@@ -54,7 +72,7 @@ function Register() {
     try {
       const data = await register({
         name: form.name,
-        email: form.email,
+        email: form.email.trim(),
         password: form.password,
       });
       setToken(data.jwt_token);
@@ -71,18 +89,11 @@ function Register() {
 
   return (
     <section className="register-page">
-      <header className="register-topbar">
-        <div className="register-topbar-inner">
-          <div className="register-topbar-brand">
-            <AuthBrand compact />
-          </div>
-          <nav className="register-topbar-nav" aria-label="Primary">
-            <a href="#">Categories</a>
-            <a href="#">Deals</a>
-            <a href="#">Support</a>
-          </nav>
-        </div>
-      </header>
+      <LegalDocumentModal
+        open={legalModal != null}
+        documentId={legalModal}
+        onClose={() => setLegalModal(null)}
+      />
 
       <main id="main-content" className="register-main">
         <div className="register-left-panel">
@@ -154,6 +165,7 @@ function Register() {
                 value={form.email}
                 onChange={handleChange}
                 placeholder="name@example.com"
+                errorBelow={emailFieldError}
               />
 
               <div className="register-password-grid">
@@ -209,8 +221,23 @@ function Register() {
                   onChange={handleChange}
                 />
                 <span>
-                  I agree to the <a href="#">Terms of Service</a> and{" "}
-                  <a href="#">Privacy Policy</a>.
+                  I agree to the{" "}
+                  <button
+                    type="button"
+                    className="register-legal-link"
+                    onClick={() => setLegalModal("terms")}
+                  >
+                    Terms of Service
+                  </button>{" "}
+                  and{" "}
+                  <button
+                    type="button"
+                    className="register-legal-link"
+                    onClick={() => setLegalModal("privacy")}
+                  >
+                    Privacy Policy
+                  </button>
+                  .
                 </span>
               </label>
 

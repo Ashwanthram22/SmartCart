@@ -1,19 +1,15 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown } from "lucide-react";
+import "./AdmDropdown.css";
 
 /* ============================================================================
  * AdmDropdown
  *
- * Shared, accessible custom dropdown that matches the admin status-filter
- * design — pill-style trigger, curved white menu, per-option hover and active
- * styles. Designed to replace native <select> elements where we want full
- * styling control over the popover.
+ * Shared, accessible custom dropdown — pill-style trigger, curved white menu,
+ * per-option hover and active styles. Used across admin, product list, and settings.
  *
- * The menu is rendered through a React portal directly into `document.body`
- * so it ALWAYS floats above any clipping ancestor (e.g. a horizontally
- * scrolling table cell). Position is computed from the trigger's
- * bounding rect and refreshed on scroll/resize while open.
+ * The menu is portalled to `document.body` so it is not clipped by overflow.
  *
  * Props
  * -----
@@ -43,25 +39,11 @@ export default function AdmDropdown({
 
   const selected = options.find((o) => o.value === value) || options[0];
 
-  /* Position the portalled menu relative to the trigger. We use viewport
-   * (fixed) coordinates so we don't have to chase ancestor offsets.
-   *
-   * Placement logic:
-   *  - Prefer opening *below* the trigger (natural reading order).
-   *  - If the menu doesn't fit below AND there's more room above, flip it
-   *    up so the user never sees a clipped/scrolled list when the trigger
-   *    is near the bottom of the viewport (e.g. pagination row).
-   *  - In either direction we also cap the menu height to the available
-   *    space minus a small margin, so the menu itself can scroll if it
-   *    still doesn't fit. */
   const updatePosition = useCallback(() => {
     if (!buttonRef.current) return;
     const rect = buttonRef.current.getBoundingClientRect();
     const margin = 8;
     const gap = 6;
-    // Use the actually measured menu height once it's in the DOM, otherwise
-    // estimate from option count for the first paint so we don't get a
-    // visible jump when the second pass runs.
     const measuredHeight =
       menuRef.current?.offsetHeight || options.length * 40 + 16;
     const spaceBelow = window.innerHeight - rect.bottom - margin - gap;
@@ -85,9 +67,6 @@ export default function AdmDropdown({
 
   useLayoutEffect(() => {
     if (!open) return undefined;
-    // Two-pass positioning: first pass uses an estimated menu height (since
-    // the menu isn't in the DOM yet), then a second pass re-measures once
-    // it's mounted to lock in the exact flip/maxHeight decision.
     updatePosition();
     const raf = requestAnimationFrame(() => updatePosition());
     const onScroll = () => updatePosition();

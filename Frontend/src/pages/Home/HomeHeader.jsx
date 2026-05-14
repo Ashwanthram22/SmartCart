@@ -1,15 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { ShopTopNav } from "../../components/ShopTopNav";
 import { ShopSegmentNav } from "../../components/ShopSegmentNav";
+import { catalogListUrl } from "../../constants/shopRoutes";
 
 function HomeHeader() {
   const navigate = useNavigate();
 
   const goToCatalogSegment = (segment) => {
-    const params = new URLSearchParams();
-    if (segment && segment !== "AI Picks") params.set("segment", segment);
-    const qs = params.toString();
-    navigate(qs ? `/catalog/products?${qs}` : "/catalog/products");
+    navigate(catalogListUrl(segment, ""));
   };
 
   return (

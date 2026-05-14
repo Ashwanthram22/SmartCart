@@ -4,6 +4,7 @@ import {
   CheckCircle2,
   Download,
   FileText,
+  Loader2,
   Upload,
   X,
 } from "lucide-react";
@@ -342,9 +343,14 @@ export default function ImportProductsModal({ open, onClose, onImported, toast }
                     : undefined
                 }
               >
-                {busy
-                  ? "Importing…"
-                  : `Import ${dryRunResult?.summary?.valid || 0} row${dryRunResult?.summary?.valid === 1 ? "" : "s"}`}
+                {busy ? (
+                  <>
+                    <Loader2 size={16} aria-hidden="true" className="adm-btn-spinner" />
+                    Importing…
+                  </>
+                ) : (
+                  `Import ${dryRunResult?.summary?.valid || 0} row${dryRunResult?.summary?.valid === 1 ? "" : "s"}`
+                )}
               </button>
             </>
           ) : null}

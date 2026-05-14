@@ -1,13 +1,15 @@
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
 import "./Breadcrumbs.css";
 
 /**
  * Reusable breadcrumb trail.
  *   <Breadcrumbs items={[
  *     { label: "Home", to: "/home" },
- *     { label: "Catalog", to: "/catalog/products" },
- *     { label: "AI Picks" },          // current page — no `to`
+ *     { label: "Products", to: "/products" },
+ *     { label: "Electronics", to: "/products/electronics" },
+ *     { label: "Aurapods Max" },     // current page — no `to`
  *   ]} />
  *
  * The last item is always rendered as plain text (the "current" crumb)
@@ -41,7 +43,7 @@ export default function Breadcrumbs({ items, className = "" }) {
               </li>
               {!isLast ? (
                 <li className="breadcrumbs-sep" aria-hidden="true">
-                  /
+                  <ChevronRight size={14} strokeWidth={2.25} className="breadcrumbs-sep-icon" />
                 </li>
               ) : null}
             </Fragment>

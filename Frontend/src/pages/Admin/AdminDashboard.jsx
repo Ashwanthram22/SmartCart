@@ -16,7 +16,7 @@ import {
   UserPlus,
 } from "lucide-react";
 import AdminLayout from "./AdminLayout";
-import AdmDropdown from "./AdmDropdown";
+import AdmDropdown from "../../components/AdmDropdown";
 import {
   adminGetRecentActivity,
   adminGetSalesChart,

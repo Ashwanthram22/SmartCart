@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { CATALOG_LIST_BASE } from "../../constants/shopRoutes";
 import {
   AlertCircle,
   BarChart3,
@@ -460,7 +461,7 @@ export default function OrderHistory() {
                 </p>
                 <div className="oh-order-actions">
                   <Link
-                    to="/catalog/products"
+                    to={CATALOG_LIST_BASE}
                     className="oh-action-btn oh-action-btn--primary"
                   >
                     Browse products

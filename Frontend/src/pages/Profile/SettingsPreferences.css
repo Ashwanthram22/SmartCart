@@ -4,6 +4,24 @@
   color: #64748b;
 }
 
+.sp-skeleton-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 8px;
+}
+
+.sp-skel-head {
+  gap: 14px;
+}
+
+.sp-skel-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
 .sp-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -25,23 +43,16 @@
   color: #141b2b;
 }
 
-.sp-select {
-  height: 42px;
-  padding: 0 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(15, 23, 42, 0.18);
-  background: #fff;
-  color: #141b2b;
-  font-size: 14px;
-  font-family: inherit;
-  outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+.sp-field-dd {
+  display: block;
+  width: 100%;
 }
 
-.sp-select:focus,
-.sp-select:focus-visible {
-  border-color: #6b38d4;
-  box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.18);
+.sp-field-dd .adm-dd-trigger {
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  box-sizing: border-box;
 }
 
 .sp-field-help {

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { CATALOG_LIST_BASE } from "../../constants/shopRoutes";
 import { Trash2 } from "lucide-react";
 import { useCart } from "../../hooks/useCart";
 import { useToast } from "../../hooks/useToast";
@@ -124,7 +125,7 @@ function Cart() {
           <h1>Shopping Cart</h1>
           {items.length === 0 ? (
             <p className="cart-intro-sub">
-              Your cart is empty. Browse the catalog and tap “Add to cart” on any product.
+              Your cart is empty. Browse products and tap “Add to cart” on any item.
             </p>
           ) : (
             <p className="cart-intro-sub">
@@ -136,7 +137,7 @@ function Cart() {
 
         {items.length === 0 ? (
           <div className="cart-empty">
-            <Link to="/catalog/products" className="cart-empty-cta">
+            <Link to={CATALOG_LIST_BASE} className="cart-empty-cta">
               Browse Products
             </Link>
           </div>

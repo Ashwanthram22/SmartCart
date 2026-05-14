@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const { readDb, withDb } = require("../lib/data-store");
+const { readDb, withDb } = require("../lib/store");
 const { hashPassword, verifyPassword } = require("../lib/passwords");
 const authMiddleware = require("../middleware/auth");
 const { authLimiter } = require("../middleware/rateLimits");

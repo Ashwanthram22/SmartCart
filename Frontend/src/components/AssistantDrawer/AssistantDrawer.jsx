@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { chatWithAssistant } from "../../api/client";
+import { productDetailUrl } from "../../constants/shopRoutes";
 import { useCart } from "../../hooks/useCart";
 import { useToast } from "../../hooks/useToast";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
@@ -110,11 +111,18 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const [errorRequestId, setErrorRequestId] = useState("");
   const [toast, setToast] = useState("");
   const listRef = useRef(null);
   const inputRef = useRef(null);
   const drawerRef = useRef(null);
   useFocusTrap(drawerRef, open);
+
+  useEffect(() => {
+    if (open) return;
+    setError("");
+    setErrorRequestId("");
+  }, [open]);
 
   /**
    * Reset the chat when the drawer transitions from closed → open so a new
@@ -199,7 +207,7 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
 
   const handleProductOpen = useCallback(
     (productId) => {
-      navigate(`/catalog/products/${productId}`);
+      navigate(productDetailUrl("AI Picks", productId, ""));
       onClose();
     },
     [navigate, onClose]
@@ -220,6 +228,7 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
       setDraft("");
       setSending(true);
       setError("");
+      setErrorRequestId("");
 
       try {
         const reply = await chatWithAssistant({
@@ -241,9 +250,17 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
         const message =
           status === 429
             ? "Slow down — too many messages in a row. Try again in a moment."
-            : err.response?.data?.message ||
-              "Assistant didn't respond. Try again?";
+            : status === 504
+              ? err.response?.data?.message ||
+                "That took too long. Try a shorter question or try again in a moment."
+              : err.response?.data?.message ||
+                "Assistant didn't respond. Try again?";
+        setTurns((prev) => prev.filter((t) => t.id !== userTurn.id));
+        setDraft(text);
         setError(message);
+        setErrorRequestId(
+          err.response?.data?.requestId ? String(err.response.data.requestId) : ""
+        );
         // Also surface a toast so the failure is noticed even if the user
         // has scrolled away from the input row inside the drawer.
         toastApi.error(message);
@@ -252,7 +269,7 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
         window.setTimeout(() => inputRef.current?.focus(), 30);
       }
     },
-    [draft, sending, turns, initialContext]
+    [draft, sending, turns, initialContext, toastApi]
   );
 
   const handleSubmit = useCallback(
@@ -375,9 +392,32 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
         ) : null}
 
         {error ? (
-          <p className="assist-error" role="alert">
-            {error}
-          </p>
+          <div className="assist-error-wrap" role="alert">
+            <p className="assist-error">{error}</p>
+            {errorRequestId ? (
+              <p className="assist-error-id">Reference: {errorRequestId}</p>
+            ) : null}
+            <div className="assist-error-actions">
+              <button
+                type="button"
+                className="assist-error-btn assist-error-btn--primary"
+                onClick={() => sendMessage(draft)}
+                disabled={!draft.trim() || sending}
+              >
+                Retry
+              </button>
+              <button
+                type="button"
+                className="assist-error-btn"
+                onClick={() => {
+                  setError("");
+                  setErrorRequestId("");
+                }}
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
         ) : null}
 
         <form className="assist-input-row" onSubmit={handleSubmit}>

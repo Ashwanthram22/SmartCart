@@ -1,4 +1,4 @@
-const { readDb, withDb } = require("./data-store");
+const { readDb, withDb } = require("./store");
 const { isHashed, hashPassword } = require("./passwords");
 
 /**

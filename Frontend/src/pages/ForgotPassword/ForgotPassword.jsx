@@ -4,6 +4,7 @@ import { requestPasswordReset } from "../../api/client";
 import AuthInput from "../../components/auth/AuthInput";
 import AuthPrimaryButton from "../../components/auth/AuthPrimaryButton";
 import { isAuthenticated } from "../../utils/authToken";
+import { isWellFormedEmail, EMAIL_FORMAT_HINT } from "../../utils/isWellFormedEmail";
 import usePageMeta from "../../hooks/usePageMeta";
 import "../../components/auth/AuthShared.css";
 import "./ForgotPassword.css";
@@ -16,17 +17,29 @@ function ForgotPassword() {
 
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [emailFieldError, setEmailFieldError] = useState("");
   const [devResetUrl, setDevResetUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const trimmed = email.trim();
+    if (!trimmed) {
+      setEmailFieldError("Please enter your email.");
+      return;
+    }
+    setEmailFieldError("");
+    if (!isWellFormedEmail(trimmed)) {
+      setEmailFieldError(EMAIL_FORMAT_HINT);
+      return;
+    }
+
     setIsSubmitting(true);
     setMessage("");
     setDevResetUrl("");
 
     try {
-      const data = await requestPasswordReset({ email });
+      const data = await requestPasswordReset({ email: trimmed });
       setMessage(data.message);
       // Dev-only convenience: backend returns the live reset URL when
       // NODE_ENV !== "production" so the flow works without an email
@@ -94,7 +107,12 @@ function ForgotPassword() {
                 type="email"
                 leftIcon="mail"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setMessage("");
+                  setEmailFieldError("");
+                }}
+                errorBelow={emailFieldError}
                 placeholder="name@example.com"
               />
 

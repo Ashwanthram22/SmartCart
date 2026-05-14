@@ -98,6 +98,42 @@
   align-items: center;
 }
 
+.ab-list--loading {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ab-card--skeleton {
+  pointer-events: none;
+}
+
+.ab-skel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.ab-skel-mt {
+  margin-top: 12px;
+}
+
+.ab-skel-mt-sm {
+  margin-top: 8px;
+}
+
+.ab-skel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
 .ab-form {
   background: #f9fafb;
   border: 1px solid #e5e7eb;

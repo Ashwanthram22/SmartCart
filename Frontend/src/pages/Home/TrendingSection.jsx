@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { catalogListUrl } from "../../constants/shopRoutes";
 import ProductCard from "./ProductCard";
 
 function TrendingSection({ products, loading, error }) {
@@ -11,7 +12,7 @@ function TrendingSection({ products, loading, error }) {
           <div>
             <h2 className="home-trending-title">Trending Now</h2>
           </div>
-          <Link to="/catalog/products?segment=Trending" className="home-section-link">
+          <Link to={catalogListUrl("Trending", "")} className="home-section-link">
             View all →
           </Link>
         </div>
@@ -27,6 +28,7 @@ function TrendingSection({ products, loading, error }) {
             list.map((product, index) => (
               <ProductCard
                 key={product.id ?? index}
+                index={index}
                 product={product}
                 badgeOverride="TRENDING"
               />

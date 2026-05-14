@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { CATALOG_LIST_BASE } from "../../constants/shopRoutes";
+import { Loader2 } from "lucide-react";
 import { useCart } from "../../hooks/useCart";
 import {
   createAddress,
@@ -9,6 +11,7 @@ import {
 } from "../../api/client";
 import HomeFooter from "../Home/HomeFooter";
 import usePageMeta from "../../hooks/usePageMeta";
+import Skeleton from "../../components/Skeleton";
 import { formatMoney } from "../../utils/money";
 import "./Checkout.css";
 
@@ -220,7 +223,7 @@ export default function Checkout() {
         <main id="main-content" className="checkout-main">
           <section className="checkout-card">
             <p className="checkout-empty-msg">Your cart is empty.</p>
-            <Link to="/catalog/products" className="checkout-btn-primary">
+            <Link to={CATALOG_LIST_BASE} className="checkout-btn-primary">
               Browse products
             </Link>
           </section>
@@ -239,7 +242,33 @@ export default function Checkout() {
         <Link to="/home" className="checkout-brand">
           SmartCart AI
         </Link>
-        <span className="checkout-step-label">Step {step} of 3</span>
+        <ol className="checkout-steps" aria-label="Checkout progress">
+          {[
+            { n: 1, label: "Address" },
+            { n: 2, label: "Payment" },
+            { n: 3, label: "Done" },
+          ].map(({ n, label }) => {
+            const allDone = step === 3;
+            const done = allDone || step > n;
+            const current = !allDone && step === n;
+            return (
+              <li
+                key={label}
+                className={
+                  "checkout-step" +
+                  (done ? " checkout-step--done" : "") +
+                  (current ? " checkout-step--current" : "")
+                }
+                aria-current={current ? "step" : undefined}
+              >
+                <span className="checkout-step-dot" aria-hidden="true">
+                  {done ? "✓" : n}
+                </span>
+                <span className="checkout-step-text">{label}</span>
+              </li>
+            );
+          })}
+        </ol>
       </header>
 
       <main id="main-content" className="checkout-main checkout-main--wide">
@@ -250,7 +279,18 @@ export default function Checkout() {
                 <h1 className="checkout-title">Shipping address</h1>
 
                 {loadingAddresses ? (
-                  <p className="checkout-empty-msg">Loading saved addresses…</p>
+                  <ul className="checkout-addr-list checkout-addr-list--skel" aria-busy="true" aria-label="Loading addresses">
+                    {Array.from({ length: 2 }).map((_, i) => (
+                      <li key={`addr-sk-${i}`} className="checkout-addr-card checkout-addr-card--skel">
+                        <div className="checkout-addr-skel-head">
+                          <Skeleton height={18} width="45%" radius={6} />
+                          <Skeleton height={14} width={56} radius={999} />
+                        </div>
+                        <Skeleton height={14} width="92%" radius={4} className="checkout-addr-skel-line" />
+                        <Skeleton height={14} width="70%" radius={4} className="checkout-addr-skel-line" />
+                      </li>
+                    ))}
+                  </ul>
                 ) : null}
 
                 {!loadingAddresses && savedAddresses.length > 0 && mode === "picker" ? (
@@ -419,7 +459,14 @@ export default function Checkout() {
                     onClick={placeOrder}
                     disabled={submitting}
                   >
-                    {submitting ? "Placing order…" : `Place order · ${formatMoney(grandTotal)}`}
+                    {submitting ? (
+                      <>
+                        <Loader2 className="checkout-btn-spinner" size={18} aria-hidden="true" />
+                        Placing order…
+                      </>
+                    ) : (
+                      `Place order · ${formatMoney(grandTotal)}`
+                    )}
                   </button>
                 </div>
               </section>

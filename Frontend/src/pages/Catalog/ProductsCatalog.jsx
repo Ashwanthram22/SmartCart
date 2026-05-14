@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
 import { useSaved } from "../../hooks/useSaved";
 import { HeartIcon } from "../../components/HeartIcon";
@@ -13,8 +13,15 @@ import Breadcrumbs from "../../components/Breadcrumbs";
 import HomeFooter from "../Home/HomeFooter";
 import { getProductFilters, getProducts } from "../../api/client";
 import { formatMoney, formatMoneyShort } from "../../utils/money";
+import { getCatalogGridImageProps } from "../../utils/catalogImage";
 import "./ProductsCatalog.css";
-import { isValidSegment } from "../../constants/shopSegments";
+import AdmDropdown from "../../components/AdmDropdown";
+import {
+  CATALOG_LIST_BASE,
+  catalogListUrl,
+  productDetailUrl,
+  segmentForProductsListRoute,
+} from "../../constants/shopRoutes";
 
 /** Debounce window for refetching products as the user drags the price slider. */
 const PRODUCT_REFETCH_DEBOUNCE_MS = 200;
@@ -42,11 +49,6 @@ const EMPTY_FILTER_OPTIONS = {
   specifications: {},
 };
 
-function segmentFromSearchParams(searchParams) {
-  const raw = searchParams.get("segment");
-  return isValidSegment(raw) ? raw : "AI Picks";
-}
-
 function stockCap(product) {
   const n = Number(product?.stock);
   return Number.isFinite(n) ? n : Infinity;
@@ -68,15 +70,18 @@ function ratingTierLabel(tier) {
 
 function ProductsCatalog() {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const activeSegment = segmentFromSearchParams(searchParams);
-  const searchQ = (searchParams.get("q") || "").trim().toLowerCase();
+  const { segmentSlug } = useParams();
+  const [searchParams] = useSearchParams();
+  const listSegment = segmentForProductsListRoute(segmentSlug);
+  const invalidListSlug = Boolean(segmentSlug && listSegment == null);
+  const activeSegment = listSegment ?? "AI Picks";
+  const rawQuery = (searchParams.get("q") || "").trim();
+  const searchQ = rawQuery.toLowerCase();
+  const [badCatalogImages, setBadCatalogImages] = useState(() => new Set());
   const { addItem } = useCart();
 
   usePageMeta({
-    title: searchQ
-      ? `Search: ${searchQ}`
-      : `${activeSegment} catalog`,
+    title: rawQuery ? `Search: ${rawQuery}` : `${activeSegment} — products`,
     description: `Browse ${activeSegment.toLowerCase()} on SmartCart AI with smart filters, ratings and AI-curated insights.`,
   });
   const { isSaved, toggleSaved } = useSaved();
@@ -97,6 +102,15 @@ function ProductsCatalog() {
   const [totalCount, setTotalCount] = useState(0);
   const [hasMore, setHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
+
+  useEffect(() => {
+    setBadCatalogImages(new Set());
+  }, [activeSegment, searchQ]);
+
+  useEffect(() => {
+    if (!invalidListSlug) return;
+    navigate(catalogListUrl("AI Picks", rawQuery), { replace: true });
+  }, [invalidListSlug, rawQuery, navigate]);
 
   /**
    * Step 1 of the per-tab flow: fetch the facet options for the current
@@ -298,30 +312,18 @@ function ProductsCatalog() {
   };
 
   const openProduct = (productId) => {
-    const params = new URLSearchParams();
-    if (activeSegment !== "AI Picks") params.set("segment", activeSegment);
-    const qRaw = searchParams.get("q");
-    if (qRaw && qRaw.trim()) params.set("q", qRaw.trim());
-    const qs = params.toString();
-    navigate(qs ? `/catalog/products/${productId}?${qs}` : `/catalog/products/${productId}`);
+    const q = (searchParams.get("q") || "").trim();
+    navigate(productDetailUrl(activeSegment, productId, q));
   };
 
   const handleSegmentChange = (segment) => {
-    const next = new URLSearchParams(searchParams);
-    if (segment === "AI Picks") {
-      next.delete("segment");
-    } else {
-      next.set("segment", segment);
-    }
-    setSearchParams(next);
+    const q = (searchParams.get("q") || "").trim();
+    navigate(catalogListUrl(segment, q));
   };
 
   const applySearch = (qRaw) => {
-    const next = new URLSearchParams(searchParams);
     const trimmed = qRaw.trim();
-    if (trimmed) next.set("q", trimmed);
-    else next.delete("q");
-    setSearchParams(next);
+    navigate(catalogListUrl(activeSegment, trimmed));
   };
 
   const resultsSummary =
@@ -330,6 +332,16 @@ function ProductsCatalog() {
       : `Showing ${products.length} of ${totalCount} results`;
 
   const showEmptyState = !showProductLoading && !error && products.length === 0;
+  const emptyFromSearch = showEmptyState && rawQuery.length > 0;
+
+  const markCatalogImageBad = (productId) => {
+    if (productId == null) return;
+    setBadCatalogImages((prev) => {
+      const next = new Set(prev);
+      next.add(productId);
+      return next;
+    });
+  };
 
   return (
     <div className="catalog-page">
@@ -349,7 +361,7 @@ function ProductsCatalog() {
         <Breadcrumbs
           items={[
             { label: "Home", to: "/home" },
-            { label: "Catalog", to: "/catalog/products" },
+            { label: "Products", to: CATALOG_LIST_BASE },
             { label: activeSegment },
           ]}
         />
@@ -450,20 +462,18 @@ function ProductsCatalog() {
         <section className="catalog-content">
           <div className="catalog-content-head">
             <p className="catalog-results-summary">{resultsSummary}</p>
-            <label className="catalog-sort-label">
-              Sort by:
-              <select
+            <div className="catalog-sort-row">
+              <span className="catalog-sort-label-text">Sort by:</span>
+              <AdmDropdown
                 value={sort}
-                onChange={(e) => setSort(e.target.value)}
+                options={SORT_OPTIONS}
+                onChange={setSort}
                 disabled={showProductLoading}
-              >
-                {SORT_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+                ariaLabel="Sort products"
+                menuAlign="right"
+                className="catalog-sort-dd"
+              />
+            </div>
           </div>
 
           {error ? <p className="catalog-error">{error}</p> : null}
@@ -475,6 +485,7 @@ function ProductsCatalog() {
                   const cap = stockCap(product);
                   const out = cap < 1;
                   const saved = product.id != null && isSaved(product.id);
+                  const gridImg = getCatalogGridImageProps(product.image, { index });
                   return (
                     <article
                       key={product.id ?? index}
@@ -487,7 +498,21 @@ function ProductsCatalog() {
                       }}
                     >
                       <div className="catalog-card-media">
-                        <img src={product.image} alt={product.title} />
+                        {!product.image || badCatalogImages.has(product.id) ? (
+                          <div
+                            className="catalog-card-media-placeholder"
+                            role="img"
+                            aria-label={`${product.title} — no image`}
+                          >
+                            <span aria-hidden="true">No image</span>
+                          </div>
+                        ) : (
+                          <img
+                            alt={product.title}
+                            onError={() => markCatalogImageBad(product.id)}
+                            {...gridImg}
+                          />
+                        )}
                         <button
                           type="button"
                           className={`wishlist-btn${saved ? " wishlist-btn--saved" : ""}`}
@@ -544,13 +569,40 @@ function ProductsCatalog() {
                 })}
             {showEmptyState ? (
               <div className="catalog-empty-state">
-                <h2 className="catalog-empty-title">No products match</h2>
-                <p className="catalog-empty-text">
-                  Try another tab or clear your search. AI Picks surfaces curated recommendations from across the store.
-                </p>
-                <Link className="catalog-empty-link" to="/catalog/products">
-                  Go to AI Picks
-                </Link>
+                {emptyFromSearch ? (
+                  <>
+                    <h2 className="catalog-empty-title">
+                      No results for &ldquo;{rawQuery}&rdquo;
+                    </h2>
+                    <p className="catalog-empty-text">
+                      Try a shorter phrase, check spelling, or browse AI Picks for curated picks in this category.
+                    </p>
+                    <div className="catalog-empty-actions">
+                      <button
+                        type="button"
+                        className="catalog-empty-btn"
+                        onClick={() => applySearch("")}
+                      >
+                        Clear search
+                      </button>
+                      <Link className="catalog-empty-link" to={CATALOG_LIST_BASE}>
+                        Go to AI Picks
+                      </Link>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <h2 className="catalog-empty-title">No products match</h2>
+                    <p className="catalog-empty-text">
+                      Try another tab or widen your filters. AI Picks surfaces curated recommendations from across the store.
+                    </p>
+                    <div className="catalog-empty-actions">
+                      <Link className="catalog-empty-link" to={CATALOG_LIST_BASE}>
+                        Go to AI Picks
+                      </Link>
+                    </div>
+                  </>
+                )}
               </div>
             ) : null}
           </div>

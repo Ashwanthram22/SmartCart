@@ -16,7 +16,7 @@ import {
   XCircle,
 } from "lucide-react";
 import AdminLayout from "./AdminLayout";
-import AdmDropdown from "./AdmDropdown";
+import AdmDropdown from "../../components/AdmDropdown";
 import {
   adminBulkUpdateOrderStatus,
   adminListOrders,
@@ -829,8 +829,17 @@ export default function AdminOrders() {
 
   async function bulkChangeStatus(status) {
     if (selected.size === 0) return;
-    setBulkBusy(true);
     const ids = Array.from(selected);
+    const snapshot = ids
+      .map((id) => orders.find((o) => o.id === id))
+      .filter(Boolean)
+      .map((o) => ({ ...o }));
+
+    setOrders((prev) =>
+      prev.map((o) => (ids.includes(o.id) ? { ...o, status } : o))
+    );
+
+    setBulkBusy(true);
     try {
       const data = await adminBulkUpdateOrderStatus(ids, status);
       setOrders((prev) =>
@@ -841,12 +850,53 @@ export default function AdminOrders() {
       );
       setSelected(new Set());
       const label = STATUS_META[status]?.label.toLowerCase() || status;
-      toast.success(`Marked ${data.updatedCount} order${data.updatedCount === 1 ? "" : "s"} as ${label}`);
+      const count = data.updatedCount ?? ids.length;
+      toast.success(
+        `Marked ${count} order${count === 1 ? "" : "s"} as ${label}`,
+        {
+          duration: 9000,
+          action: {
+            label: "Undo",
+            onClick: async () => {
+              try {
+                await Promise.all(
+                  snapshot.map((s) =>
+                    adminUpdateOrderStatus(s.id, s.status || "processing")
+                  )
+                );
+                setOrders((prev) =>
+                  prev.map((o) => {
+                    const snap = snapshot.find((s) => s.id === o.id);
+                    return snap ? { ...o, ...snap } : o;
+                  })
+                );
+                toast.info("Reverted bulk status update.");
+              } catch (err) {
+                toast.error(
+                  err.response?.data?.message || "Couldn't undo that change."
+                );
+              }
+            },
+          },
+        }
+      );
     } catch (err) {
+      setOrders((prev) =>
+        prev.map((o) => {
+          const snap = snapshot.find((s) => s.id === o.id);
+          return snap ? { ...o, ...snap } : o;
+        })
+      );
       toast.error(err.response?.data?.message || "Bulk update failed.");
     } finally {
       setBulkBusy(false);
     }
+  }
+
+  function clearOrderFilters() {
+    setSearch("");
+    setStatusFilter("");
+    setDateRange("all");
   }
 
   const activeFilterLabel =
@@ -976,7 +1026,7 @@ export default function AdminOrders() {
       </section>
 
       {selected.size > 0 ? (
-        <div className="adm-bulkbar" role="status" aria-live="polite">
+        <div className="adm-bulkbar adm-bulkbar--sticky" role="status" aria-live="polite">
           <span className="adm-bulkbar-text">
             {selected.size} order{selected.size === 1 ? "" : "s"} selected
           </span>
@@ -1060,6 +1110,27 @@ export default function AdminOrders() {
                           ? "Once customers start placing orders they'll appear here in real time."
                           : "Try widening the date range or clearing the status filter."}
                       </p>
+                      <div className="adm-empty-actions">
+                        {orders.length === 0 ? null : (
+                          <>
+                            <button
+                              type="button"
+                              className="adm-btn adm-btn-primary"
+                              onClick={clearOrderFilters}
+                            >
+                              Clear filters
+                            </button>
+                            <button
+                              type="button"
+                              className="adm-btn"
+                              onClick={handleExportCsv}
+                            >
+                              <Download size={16} aria-hidden="true" />
+                              Export CSV
+                            </button>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </td>
                 </tr>

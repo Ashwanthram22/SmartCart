@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { CATALOG_LIST_BASE } from "../../constants/shopRoutes";
 import { ProfileLayout } from "./ProfileLayout";
 import { useCart } from "../../hooks/useCart";
 import { useSaved } from "../../hooks/useSaved";
@@ -202,7 +203,7 @@ export default function SavedItems() {
             Want to save more?
           </h3>
           <p className="saved-empty-text">Continue exploring products to build your perfect collection.</p>
-          <Link to="/catalog/products" className="saved-empty-link">
+          <Link to={CATALOG_LIST_BASE} className="saved-empty-link">
             Browse Trending Items
           </Link>
         </section>

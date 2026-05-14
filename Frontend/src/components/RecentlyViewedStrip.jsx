@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useReducer } from "react";
 import { Link } from "react-router-dom";
 import { Clock } from "lucide-react";
+import { productDetailUrl } from "../constants/shopRoutes";
 import { getRecentlyViewed } from "../utils/recentlyViewed";
 import { onAuthChange } from "../utils/authToken";
 import { formatMoney } from "../utils/money";
@@ -45,7 +46,7 @@ export default function RecentlyViewedStrip({ excludeId, title = "Recently viewe
         {visible.map((product) => (
           <Link
             key={product.id}
-            to={`/catalog/products/${product.id}`}
+            to={productDetailUrl("AI Picks", product.id, "")}
             className="rv-strip-card"
             role="listitem"
           >

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { CATALOG_LIST_BASE } from "../../constants/shopRoutes";
 
 function scrollToAiRecommendations() {
   document.getElementById("home-ai-recommendations")?.scrollIntoView({
@@ -24,7 +25,7 @@ function HomeHero() {
           Save up to 40% on AI-curated electronics that match your lifestyle perfectly.
         </p>
         <div className="home-hero-actions">
-          <Link to="/catalog/products" className="home-btn home-btn--primary">
+          <Link to={CATALOG_LIST_BASE} className="home-btn home-btn--primary">
             Explore Deals
           </Link>
           <button type="button" className="home-btn home-btn--outline" onClick={scrollToAiRecommendations}>

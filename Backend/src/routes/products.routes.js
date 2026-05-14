@@ -1,5 +1,5 @@
 const express = require("express");
-const { readDb, withDb } = require("../lib/data-store");
+const { readDb, withDb } = require("../lib/store");
 const authMiddleware = require("../middleware/auth");
 const { writeLimiter } = require("../middleware/rateLimits");
 const { productMatchesSegment, pickTrendingProducts } = require("../lib/segments");

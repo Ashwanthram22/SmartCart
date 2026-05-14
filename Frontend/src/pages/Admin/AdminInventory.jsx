@@ -10,6 +10,7 @@ import {
   Copy,
   Download,
   Inbox,
+  Loader2,
   Pencil,
   Plus,
   Search,
@@ -18,7 +19,7 @@ import {
   X,
 } from "lucide-react";
 import AdminLayout from "./AdminLayout";
-import AdmDropdown from "./AdmDropdown";
+import AdmDropdown from "../../components/AdmDropdown";
 import ImageUpload from "./ImageUpload";
 import ImportProductsModal from "./ImportProductsModal";
 import { exportProductsCsv } from "./csvExport";
@@ -33,6 +34,8 @@ import { useFocusTrap } from "../../hooks/useFocusTrap";
 import usePageMeta from "../../hooks/usePageMeta";
 import { formatMoney } from "../../utils/money";
 import "./AdminInventory.css";
+
+const INV_COLS_STORAGE_KEY = "smartcart_admin_inventory_columns";
 
 /**
  * Compact relative-time string used by the "Last edited" inventory column.
@@ -150,11 +153,22 @@ function ProductFormBody({ initial, onClose, onSaved, onRequestClose }) {
   const [form, setForm] = useState(() => fromProduct(initial));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState([]);
 
   // Tell the parent if the form is dirty so it can intercept close.
   useEffect(() => {
     onRequestClose?.(isFormDirty(initial, form));
   }, [form, initial, onRequestClose]);
+
+  useEffect(() => {
+    if (!isFormDirty(initial, form)) return undefined;
+    const onBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [form, initial]);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -165,15 +179,23 @@ function ProductFormBody({ initial, onClose, onSaved, onRequestClose }) {
   }, [onClose]);
 
   const editing = Boolean(initial?.id);
-  const update = (patch) => setForm((prev) => ({ ...prev, ...patch }));
-  const updateSpec = (idx, patch) =>
+  const update = (patch) => {
+    setFieldErrors([]);
+    setForm((prev) => ({ ...prev, ...patch }));
+  };
+  const updateSpec = (idx, patch) => {
+    setFieldErrors([]);
     setForm((prev) => ({
       ...prev,
       specsList: prev.specsList.map((row, i) => (i === idx ? { ...row, ...patch } : row)),
     }));
-  const addSpecRow = () =>
+  };
+  const addSpecRow = () => {
+    setFieldErrors([]);
     setForm((prev) => ({ ...prev, specsList: [...prev.specsList, { key: "", value: "" }] }));
-  const removeSpecRow = (idx) =>
+  };
+  const removeSpecRow = (idx) => {
+    setFieldErrors([]);
     setForm((prev) => {
       const next = prev.specsList.filter((_, i) => i !== idx);
       return {
@@ -181,8 +203,10 @@ function ProductFormBody({ initial, onClose, onSaved, onRequestClose }) {
         specsList: next.length > 0 ? next : [{ key: "", value: "" }],
       };
     });
+  };
 
   const toggleSegment = (seg) => {
+    setFieldErrors([]);
     setForm((prev) => {
       const has = prev.catalogSegments.includes(seg);
       return {
@@ -197,21 +221,29 @@ function ProductFormBody({ initial, onClose, onSaved, onRequestClose }) {
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    setFieldErrors([]);
+    const errs = [];
     if (!form.title.trim() || form.title.trim().length < 2) {
-      setError("Title must be at least 2 characters.");
-      return;
+      errs.push({ id: "ai-inventory-title", msg: "Title must be at least 2 characters." });
     }
     if (!form.category.trim()) {
-      setError("Category is required.");
-      return;
+      errs.push({ id: "ai-inventory-category", msg: "Category is required." });
     }
     const priceNum = Number(form.price);
     if (!Number.isFinite(priceNum) || priceNum <= 0) {
-      setError("Price must be greater than 0.");
-      return;
+      errs.push({ id: "ai-inventory-price", msg: "Price must be greater than 0." });
     }
     if (form.images.length === 0) {
-      setError("Please add at least one product image.");
+      errs.push({ id: "ai-inventory-images", msg: "Please add at least one product image." });
+    }
+    if (errs.length > 0) {
+      setFieldErrors(errs);
+      requestAnimationFrame(() => {
+        document.getElementById(errs[0].id)?.scrollIntoView({
+          block: "center",
+          behavior: "smooth",
+        });
+      });
       return;
     }
 
@@ -262,13 +294,37 @@ function ProductFormBody({ initial, onClose, onSaved, onRequestClose }) {
           </button>
         </header>
 
+        {fieldErrors.length > 0 ? (
+          <div className="ai-form-summary" role="alert">
+            <strong>Please fix the following</strong>
+            <ul className="ai-form-summary-list">
+              {fieldErrors.map((fe) => (
+                <li key={fe.id}>
+                  <button
+                    type="button"
+                    className="ai-form-summary-link"
+                    onClick={() =>
+                      document.getElementById(fe.id)?.scrollIntoView({
+                        block: "center",
+                        behavior: "smooth",
+                      })
+                    }
+                  >
+                    {fe.msg}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
         <form
           id="ai-product-form"
           className="ai-form"
           onSubmit={handleSubmit}
         >
           <div className="ai-form-grid">
-            <label className="ai-field ai-field--wide">
+            <label id="ai-inventory-title" className="ai-field ai-field--wide">
               <span>Title</span>
               <input
                 type="text"
@@ -287,7 +343,7 @@ function ProductFormBody({ initial, onClose, onSaved, onRequestClose }) {
                 placeholder="Nebula"
               />
             </label>
-            <label className="ai-field">
+            <label id="ai-inventory-category" className="ai-field">
               <span>Category</span>
               <input
                 type="text"
@@ -297,7 +353,7 @@ function ProductFormBody({ initial, onClose, onSaved, onRequestClose }) {
                 required
               />
             </label>
-            <label className="ai-field">
+            <label id="ai-inventory-price" className="ai-field">
               <span>Price (INR)</span>
               <input
                 type="number"
@@ -379,7 +435,7 @@ function ProductFormBody({ initial, onClose, onSaved, onRequestClose }) {
               </div>
             </div>
 
-            <div className="ai-field ai-field--wide">
+            <div id="ai-inventory-images" className="ai-field ai-field--wide">
               <ImageUpload
                 value={form.images}
                 onChange={(images) => update({ images })}
@@ -449,7 +505,16 @@ function ProductFormBody({ initial, onClose, onSaved, onRequestClose }) {
             className="adm-btn adm-btn-primary"
             disabled={busy}
           >
-            {busy ? "Saving…" : editing ? "Save changes" : "Add product"}
+            {busy ? (
+              <>
+                <Loader2 size={16} aria-hidden="true" className="adm-btn-spinner" />
+                Saving…
+              </>
+            ) : editing ? (
+              "Save changes"
+            ) : (
+              "Add product"
+            )}
           </button>
         </footer>
       </div>
@@ -620,12 +685,6 @@ function SortHeader({ field, label, sort, onToggle }) {
   const direction = isActive ? sort.direction : null;
   const Icon =
     direction === "asc" ? ArrowUp : direction === "desc" ? ArrowDown : ArrowUpDown;
-  const ariaSort =
-    direction === "asc"
-      ? "ascending"
-      : direction === "desc"
-      ? "descending"
-      : "none";
   const nextLabel =
     direction === null
       ? `Sort ${label.toLowerCase()} ascending`
@@ -644,7 +703,6 @@ function SortHeader({ field, label, sort, onToggle }) {
       onClick={() => onToggle(field)}
       aria-label={nextLabel}
       aria-pressed={isActive}
-      data-aria-sort={ariaSort}
     >
       <span>{label}</span>
       <Icon size={14} aria-hidden="true" className="ai-sort-icon" />
@@ -657,7 +715,7 @@ function SortHeader({ field, label, sort, onToggle }) {
  * without bloating every admin page. */
 
 /* ---- Skeleton row used while products are loading ---------------------*/
-function ProductSkeletonRow() {
+function ProductSkeletonRow({ showEdited }) {
   return (
     <tr aria-hidden="true">
       <td><span className="adm-checkbox" aria-hidden="true" /></td>
@@ -673,7 +731,9 @@ function ProductSkeletonRow() {
       <td><span className="adm-skel adm-skel-line" style={{ width: "60%" }} /></td>
       <td><span className="adm-skel adm-skel-line" style={{ width: "40%" }} /></td>
       <td><span className="adm-skel adm-skel-line" style={{ width: "50%" }} /></td>
-      <td><span className="adm-skel adm-skel-line" style={{ width: "65%" }} /></td>
+      {showEdited ? (
+        <td><span className="adm-skel adm-skel-line" style={{ width: "65%" }} /></td>
+      ) : null}
       <td><span className="adm-skel adm-skel-line" style={{ width: "80%" }} /></td>
     </tr>
   );
@@ -744,6 +804,29 @@ export default function AdminInventory() {
   const bulkBusy = false;
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
+  const [showEditedColumn, setShowEditedColumn] = useState(() => {
+    try {
+      const raw = localStorage.getItem(INV_COLS_STORAGE_KEY);
+      if (!raw) return true;
+      const j = JSON.parse(raw);
+      return j.showEdited !== false;
+    } catch {
+      return true;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        INV_COLS_STORAGE_KEY,
+        JSON.stringify({ showEdited: showEditedColumn })
+      );
+    } catch {
+      /* ignore */
+    }
+  }, [showEditedColumn]);
+
+  const tableColSpan = showEditedColumn ? 7 : 6;
 
   const toggleSort = (field) => {
     setSort((prev) => {
@@ -1122,26 +1205,36 @@ export default function AdminInventory() {
             aria-label="Search products"
           />
         </label>
-        <ul className="adm-chips" role="tablist" aria-label="Filter by stock">
-          {STOCK_CHIPS.map((c) => (
-            <li key={c.key}>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={chip === c.key}
-                className={"adm-chip" + (chip === c.key ? " adm-chip--active" : "")}
-                onClick={() => setChip(c.key)}
-              >
-                {c.label}
-                <span className="adm-chip-count">{counts[c.key]}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
+        <div className="ai-toolbar-right">
+          <ul className="adm-chips" role="tablist" aria-label="Filter by stock">
+            {STOCK_CHIPS.map((c) => (
+              <li key={c.key}>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={chip === c.key}
+                  className={"adm-chip" + (chip === c.key ? " adm-chip--active" : "")}
+                  onClick={() => setChip(c.key)}
+                >
+                  {c.label}
+                  <span className="adm-chip-count">{counts[c.key]}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+          <label className="ai-col-toggle">
+            <input
+              type="checkbox"
+              checked={showEditedColumn}
+              onChange={(e) => setShowEditedColumn(e.target.checked)}
+            />
+            <span>Last edited column</span>
+          </label>
+        </div>
       </section>
 
       {selected.size > 0 ? (
-        <div className="adm-bulkbar" role="status" aria-live="polite">
+        <div className="adm-bulkbar adm-bulkbar--sticky" role="status" aria-live="polite">
           <span className="adm-bulkbar-text">
             {selected.size} selected
           </span>
@@ -1216,18 +1309,20 @@ export default function AdminInventory() {
                     onToggle={toggleSort}
                   />
                 </th>
-                <th scope="col" className="ai-th-edited">Last edited</th>
+                {showEditedColumn ? (
+                  <th scope="col" className="ai-th-edited">Last edited</th>
+                ) : null}
                 <th scope="col" className="ai-th-actions">Actions</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 Array.from({ length: 6 }).map((_, i) => (
-                  <ProductSkeletonRow key={`sk-${i}`} />
+                  <ProductSkeletonRow key={`sk-${i}`} showEdited={showEditedColumn} />
                 ))
               ) : pageRows.length === 0 ? (
                 <tr>
-                  <td colSpan={7}>
+                  <td colSpan={tableColSpan}>
                     <div className="adm-empty-state">
                       <span className="adm-empty-icon">
                         <Inbox size={26} aria-hidden="true" />
@@ -1242,16 +1337,39 @@ export default function AdminInventory() {
                           ? "Add your first product to start populating the storefront catalog."
                           : "Try clearing the search or switching the stock filter."}
                       </p>
-                      {products.length === 0 ? (
-                        <button
-                          type="button"
-                          className="adm-btn adm-btn-primary"
-                          onClick={openCreate}
-                        >
-                          <Plus size={14} aria-hidden="true" />
-                          Add product
-                        </button>
-                      ) : null}
+                      <div className="adm-empty-actions">
+                        {products.length === 0 ? (
+                          <button
+                            type="button"
+                            className="adm-btn adm-btn-primary"
+                            onClick={openCreate}
+                          >
+                            <Plus size={16} aria-hidden="true" />
+                            Add product
+                          </button>
+                        ) : (
+                          <>
+                            <button
+                              type="button"
+                              className="adm-btn adm-btn-primary"
+                              onClick={() => {
+                                setSearch("");
+                                setChip("all");
+                              }}
+                            >
+                              Clear filters
+                            </button>
+                            <button
+                              type="button"
+                              className="adm-btn"
+                              onClick={() => setImportOpen(true)}
+                            >
+                              <Upload size={16} aria-hidden="true" />
+                              Import CSV
+                            </button>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -1290,9 +1408,11 @@ export default function AdminInventory() {
                     <td>
                       <StockBadge stock={p.stock} />
                     </td>
-                    <td>
-                      <EditedCell product={p} />
-                    </td>
+                    {showEditedColumn ? (
+                      <td>
+                        <EditedCell product={p} />
+                      </td>
+                    ) : null}
                     <td>
                       <div className="ai-row-actions">
                         <button
@@ -1302,7 +1422,7 @@ export default function AdminInventory() {
                           title="Edit"
                           aria-label={`Edit ${p.title}`}
                         >
-                          <Pencil size={14} aria-hidden="true" />
+                          <Pencil size={16} aria-hidden="true" />
                         </button>
                         <button
                           type="button"
@@ -1311,7 +1431,7 @@ export default function AdminInventory() {
                           title="Duplicate"
                           aria-label={`Duplicate ${p.title}`}
                         >
-                          <Copy size={14} aria-hidden="true" />
+                          <Copy size={16} aria-hidden="true" />
                         </button>
                         <button
                           type="button"
@@ -1320,7 +1440,7 @@ export default function AdminInventory() {
                           title="Delete"
                           aria-label={`Delete ${p.title}`}
                         >
-                          <Trash2 size={14} aria-hidden="true" />
+                          <Trash2 size={16} aria-hidden="true" />
                         </button>
                       </div>
                     </td>

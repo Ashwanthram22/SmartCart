@@ -200,7 +200,9 @@
   min-width: 0;
 }
 
+/* Used by sticky bulk bars so they tuck under the sticky topbar. */
 .adm-topbar {
+  --adm-topbar-h: 57px;
   position: sticky;
   top: 0;
   z-index: 4;
@@ -209,6 +211,8 @@
   justify-content: space-between;
   gap: 16px;
   padding: 14px 24px;
+  min-height: var(--adm-topbar-h);
+  box-sizing: border-box;
   background: rgba(247, 248, 252, 0.92);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--adm-border);
@@ -601,6 +605,152 @@
   color: var(--adm-muted);
 }
 
+/* Breadcrumbs — aligned with shop `Breadcrumbs.css` (grey trail, navy current, chevron) */
+.adm-page-breadcrumbs {
+  margin-top: 10px;
+  display: inline-block;
+  max-width: 100%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #f4f6fb;
+  border: 1px solid rgba(229, 231, 235, 0.95);
+  box-sizing: border-box;
+}
+
+.adm-page-breadcrumbs-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #6b7280;
+}
+
+.adm-page-breadcrumbs-list > li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+}
+
+.adm-page-breadcrumbs-list a {
+  color: #6b7280;
+  font-weight: 400;
+  text-decoration: none;
+  border-radius: 4px;
+  padding: 2px 4px;
+  margin: 0 -4px;
+  transition: color 120ms ease, background 120ms ease;
+}
+
+.adm-page-breadcrumbs-list a:hover {
+  color: #6b38d4;
+  background: rgba(107, 56, 212, 0.06);
+  text-decoration: none;
+}
+
+.adm-page-breadcrumbs-list a:focus-visible {
+  color: #6b38d4;
+  background: rgba(107, 56, 212, 0.06);
+  outline: none;
+}
+
+.adm-page-bc-sep {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin: 0;
+  color: #cbd5e1;
+  line-height: 0;
+}
+
+.adm-page-bc-current {
+  color: #141b2b;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Keyboard shortcuts popover (same shell tone as Settings modal) */
+.adm-shortcuts-dialog {
+  width: min(420px, calc(100vw - 32px));
+  max-height: min(80vh, 520px);
+  overflow: auto;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid var(--adm-border);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.2);
+  padding: 0;
+}
+
+.adm-shortcuts-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px 12px;
+  border-bottom: 1px solid #f1f0fa;
+}
+
+.adm-shortcuts-head h2 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--adm-text);
+}
+
+.adm-shortcuts-head p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--adm-muted);
+}
+
+.adm-shortcuts-body {
+  padding: 14px 20px 20px;
+}
+
+.adm-shortcuts-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.adm-shortcuts-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--adm-text);
+  line-height: 1.35;
+}
+
+.adm-shortcuts-list kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  margin: 0 2px;
+  border-radius: 6px;
+  border: 1px solid var(--adm-border);
+  background: #f4f5fb;
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  white-space: nowrap;
+}
+
 .adm-page-actions {
   display: flex;
   align-items: center;
@@ -731,188 +881,8 @@
   box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
 }
 
-/* AdmDropdown — shared custom dropdown ------------------------------------
- *
- * Used by `<AdmDropdown />` (Frontend/src/pages/Admin/AdmDropdown.jsx) so
- * every admin page renders the same pill-style trigger + curved white menu
- * with hover and selected states. Designed to replace native `<select>`
- * elements where we want full control over the popover surface.
- *
- * Visual contract:
- *   - Trigger is a white pill with a soft border and chevron caret.
- *   - Menu is a curved white surface with a soft drop shadow.
- *   - Each option gets a lavender hover background; the active option uses a
- *     deeper lavender so it stays readable on hover.
- *   - No icon next to options (per requested design).
- * --------------------------------------------------------------------------*/
-
-.adm-dd {
-  position: relative;
-  display: inline-block;
-}
-
-.adm-dd-trigger {
-  appearance: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  min-width: 150px;
-  padding: 8px 12px;
-  /* Matches `.adm-btn` (10px) so dropdown triggers and surrounding buttons
-   * share the same rounded-rectangle silhouette across every admin toolbar. */
-  border-radius: 10px;
-  border: 1px solid var(--adm-border);
-  background: #fff;
-  color: var(--adm-text);
-  font-size: 13px;
-  font-weight: 600;
-  font-family: inherit;
-  line-height: 1.2;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background 140ms ease, border-color 140ms ease,
-    color 140ms ease, box-shadow 160ms ease;
-}
-
-.adm-dd-trigger:hover:not(:disabled) {
-  background: #faf7ff;
-  border-color: rgba(107, 56, 212, 0.45);
-  color: var(--adm-accent);
-}
-
-.adm-dd-trigger:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.adm-dd-trigger:focus {
-  outline: none;
-}
-
-.adm-dd-trigger:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(107, 56, 212, 0.55);
-}
-
-.adm-dd--open .adm-dd-trigger {
-  border-color: var(--adm-accent);
-  color: var(--adm-accent);
-  background: #faf7ff;
-}
-
-.adm-dd-label {
-  flex: 1;
-  text-align: left;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.adm-dd-caret {
-  flex-shrink: 0;
-  opacity: 0.7;
-  transition: transform 160ms ease;
-}
-
-.adm-dd--open .adm-dd-caret {
-  transform: rotate(180deg);
-  opacity: 1;
-}
-
-/* Menu is portalled into <body> with `position: fixed` set inline by the
- * component, so it cannot be clipped by any ancestor's overflow (e.g. a
- * horizontally-scrollable table cell). z-index is high enough to sit above
- * sticky table headers and the admin top bar. */
-.adm-dd-menu {
-  z-index: 1000;
-  list-style: none;
-  margin: 0;
-  padding: 6px;
-  width: max-content;
-  max-width: 280px;
-  background: #fff;
-  border: 1px solid var(--adm-border);
-  border-radius: 12px;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
-}
-
-/* The dropdown auto-flips when there's no room below the trigger. We
- * animate from the side closest to the trigger so the menu visually
- * "grows out of" the trigger in both directions. */
-.adm-dd-menu--bottom {
-  animation: adm-dd-pop-down 140ms ease-out;
-  transform-origin: top center;
-}
-
-.adm-dd-menu--top {
-  animation: adm-dd-pop-up 140ms ease-out;
-  transform-origin: bottom center;
-}
-
-@keyframes adm-dd-pop-down {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes adm-dd-pop-up {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.adm-dd-option {
-  appearance: none;
-  background: transparent;
-  border: 0;
-  width: 100%;
-  text-align: left;
-  display: block;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  font-family: inherit;
-  color: #475569;
-  cursor: pointer;
-  transition: background 120ms ease, color 120ms ease;
-}
-
-.adm-dd-option:hover {
-  background: #ede9fe;
-  color: #0f172a;
-}
-
-.adm-dd-option:focus {
-  outline: none;
-}
-
-.adm-dd-option:focus-visible {
-  outline: 2px solid rgba(107, 56, 212, 0.55);
-  outline-offset: 2px;
-}
-
-.adm-dd-option--active {
-  color: #5527b6;
-  font-weight: 700;
-  background: #f5f3ff;
-}
-
-/* Selected row + hover: keep label clearly readable. */
-.adm-dd-option--active:hover {
-  background: #ddd6fe;
-  color: #1e1b4b;
-}
+/* `<AdmDropdown />` styles live in `Frontend/src/components/AdmDropdown.css`
+ * (imported by the component). Admin shell still defines `--adm-*` tokens. */
 
 /* Cards reused on dashboard/inventory/orders -------------------------------
  *
@@ -999,6 +969,23 @@
   border-radius: 10px;
 }
 
+@keyframes adm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.adm-btn-spinner {
+  flex-shrink: 0;
+  animation: adm-spin 0.7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adm-btn-spinner {
+    animation: none;
+  }
+}
+
 .adm-skel-row {
   display: grid;
   grid-template-columns: 44px 1fr;
@@ -1045,6 +1032,21 @@
   font-size: 13px;
   max-width: 360px;
   line-height: 1.5;
+}
+
+.adm-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.adm-empty-actions .adm-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 /* Filter chip row (used above tables for quick filters) ------------------*/
@@ -1145,6 +1147,14 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+}
+
+/* Stays visible while scrolling long tables (sits just under the sticky topbar). */
+.adm-bulkbar--sticky {
+  position: sticky;
+  top: var(--adm-topbar-h, 57px);
+  z-index: 3;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
 }
 
 /* Pagination ------------------------------------------------------------*/
@@ -2165,5 +2175,23 @@
     align-items: center;
     justify-content: center;
     padding: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adm-bulkbar {
+    animation: none;
+  }
+
+  .adm-drawer-overlay,
+  .adm-drawer {
+    animation: none !important;
+  }
+
+  .adm-alerts-overlay,
+  .adm-settings-overlay,
+  .adm-logout-overlay,
+  .adm-about-overlay {
+    animation: none !important;
   }
 }

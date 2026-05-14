@@ -144,6 +144,46 @@
   gap: 24px;
 }
 
+.profile-breadcrumb {
+  margin: -4px 0 0;
+}
+
+.profile-breadcrumb-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.profile-breadcrumb-item a {
+  color: #6b38d4;
+  text-decoration: none;
+}
+
+.profile-breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+
+.profile-breadcrumb-sep {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: #cbd5e1;
+  user-select: none;
+  list-style: none;
+}
+
+.profile-breadcrumb-item--current {
+  color: #141b2b;
+  font-weight: 700;
+}
+
 .profile-bento {
   display: grid;
   grid-template-columns: 1fr;
@@ -632,9 +672,19 @@
   transition: color 0.15s, transform 0.1s;
 }
 
-.profile-bottom-link span:first-child {
-  font-size: 18px;
-  line-height: 1;
+.profile-bottom-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+
+.profile-bottom-link:hover .profile-bottom-icon {
+  color: inherit;
+}
+
+.profile-bottom-link--active .profile-bottom-icon {
+  color: #7c3aed;
 }
 
 .profile-bottom-link:hover {
@@ -682,4 +732,24 @@ a.profile-track-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-skeleton {
+    animation: none;
+    background: #e9edff;
+  }
+
+  .profile-side-link,
+  .profile-bottom-link,
+  .profile-track-btn,
+  .profile-logout-btn-cancel,
+  .profile-logout-btn-confirm {
+    transition: none;
+  }
+
+  .profile-bottom-link:active,
+  .profile-track-btn:active {
+    transform: none;
+  }
 }

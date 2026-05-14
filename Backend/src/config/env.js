@@ -41,14 +41,27 @@ const CORS_ORIGINS = (process.env.CORS_ORIGINS || FRONTEND_URL)
   .filter(Boolean);
 
 /**
- * MongoDB toggle. The actual connection lives in `lib/mongo/connection.js`
- * and is currently a no-op scaffold. We still read these values now so the
- * env contract is stable: tomorrow you only need to flip `USE_MONGO=true`
- * and supply a `MONGODB_URI`, no other code change required.
+ * MongoDB toggle. Connection is established in `lib/mongo/connection.js`
+ * when `USE_MONGO=true`. Routes still use the JSON file store until migrated.
  */
 const USE_MONGO =
   String(process.env.USE_MONGO || "").toLowerCase() === "true";
 const MONGODB_URI = process.env.MONGODB_URI || null;
+
+if (USE_MONGO && !MONGODB_URI) {
+  throw new Error("MONGODB_URI must be set when USE_MONGO=true");
+}
+
+/**
+ * Hard cap for one assistant `/chat` request (rule-based + optional LLM).
+ */
+const ASSISTANT_GENERATION_TIMEOUT_MS = Math.min(
+  120_000,
+  Math.max(
+    5_000,
+    Number(process.env.ASSISTANT_GENERATION_TIMEOUT_MS) || 45_000
+  )
+);
 
 /**
  * Cloudinary credentials. All three are required for signed uploads
@@ -102,4 +115,5 @@ module.exports = {
   CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET,
   CLOUDINARY_UPLOAD_FOLDER,
+  ASSISTANT_GENERATION_TIMEOUT_MS,
 };

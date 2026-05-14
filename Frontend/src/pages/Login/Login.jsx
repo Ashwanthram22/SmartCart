@@ -8,6 +8,7 @@ import AuthPrimaryButton from "../../components/auth/AuthPrimaryButton";
 import AuthSocialButtons from "../../components/auth/AuthSocialButtons";
 import AuthTip from "../../components/auth/AuthTip";
 import { isAdmin, isAuthenticated, setToken } from "../../utils/authToken";
+import { isWellFormedEmail, EMAIL_FORMAT_HINT } from "../../utils/isWellFormedEmail";
 import usePageMeta from "../../hooks/usePageMeta";
 import "../../components/auth/AuthShared.css";
 import "./Login.css";
@@ -25,7 +26,9 @@ function Login() {
     password: "demo123",
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const [emailFieldError, setEmailFieldError] = useState("");
   const backendBaseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
   const params = new URLSearchParams(location.search);
   const googleError = params.get("error");
@@ -33,23 +36,37 @@ function Login() {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    setLoginError("");
+    setEmailFieldError("");
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setMessage("Signing in...");
+    setLoginError("");
+    const email = form.email.trim();
+    if (!email) {
+      setEmailFieldError("Please enter your email.");
+      return;
+    }
+    setEmailFieldError("");
+    if (!isWellFormedEmail(email)) {
+      setEmailFieldError(EMAIL_FORMAT_HINT);
+      return;
+    }
+    setIsSubmitting(true);
 
     try {
       const data = await login(form);
       setToken(data.jwt_token);
-      setMessage(`Welcome back, ${data.user.name}`);
       const isAdminUser =
         data.user?.role === "admin" || Boolean(data.user?.isAdmin);
       const intended = location.state?.from?.pathname;
       const redirectTo = intended || (isAdminUser ? "/admin" : "/home");
       navigate(redirectTo, { replace: true });
     } catch (error) {
-      setMessage(error.response?.data?.message || "Invalid credentials");
+      setLoginError(error.response?.data?.message || "Invalid credentials");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -66,7 +83,10 @@ function Login() {
     google_email_missing: "No email found in selected Google account.",
     google_auth_failed: "Google login failed. Please try again.",
   };
-  const displayMessage = message || (googleError ? googleErrorMap[googleError] || "Google login failed." : "");
+  const oauthErrorText = googleError
+    ? googleErrorMap[googleError] || "Google login failed."
+    : "";
+  const formErrorText = loginError || oauthErrorText;
 
   if (isAuthenticated()) {
     return <Navigate to={isAdmin() ? "/admin" : "/home"} replace />;
@@ -89,6 +109,7 @@ function Login() {
               value={form.email}
               onChange={handleChange}
               placeholder="name@company.com"
+              errorBelow={emailFieldError}
             />
 
             <div className="login-password-row">
@@ -117,7 +138,15 @@ function Login() {
               }
             />
 
-            <AuthPrimaryButton type="submit">Sign In</AuthPrimaryButton>
+            {formErrorText ? (
+              <p className="login-form-error" role="alert">
+                {formErrorText}
+              </p>
+            ) : null}
+
+            <AuthPrimaryButton type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Signing in…" : "Sign In"}
+            </AuthPrimaryButton>
           </form>
 
           <AuthDivider text="Or continue with" />
@@ -129,7 +158,6 @@ function Login() {
         </p>
 
         <AuthTip />
-        {displayMessage ? <div className="login-message">{displayMessage}</div> : null}
       </main>
     </section>
   );

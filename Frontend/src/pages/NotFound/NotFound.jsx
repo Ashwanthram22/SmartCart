@@ -1,6 +1,7 @@
 import { useState } from "react";
 import usePageMeta from "../../hooks/usePageMeta";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { CATALOG_LIST_BASE, catalogListUrl } from "../../constants/shopRoutes";
 import {
   ArrowLeft,
   Compass,
@@ -15,8 +16,8 @@ import "./NotFound.css";
 
 /**
  * Hand-picked "popular categories" surfaced on the 404 page so a typo
- * doesn't dead-end the visitor. Each routes into the catalog with the
- * matching segment pre-selected.
+ * doesn't dead-end the visitor. Each links into the product list for that
+ * segment.
  */
 const POPULAR_CATEGORIES = [
   { id: "electronics", label: "Electronics", segment: "Electronics", Icon: Smartphone },
@@ -30,8 +31,8 @@ const POPULAR_CATEGORIES = [
 /**
  * Friendly 404 page. Replaces the previous behaviour where every unknown
  * URL silently redirected to root, which made typos invisible. Includes a
- * search box that routes into the catalog (works for both signed-in and
- * signed-out visitors — the catalog itself enforces auth).
+ * search box that routes into `/products` (works for both signed-in and
+ * signed-out visitors — the app enforces auth on that route).
  */
 export default function NotFound() {
   usePageMeta({
@@ -51,10 +52,10 @@ export default function NotFound() {
     e.preventDefault();
     const q = search.trim();
     if (!q) {
-      navigate("/catalog/products");
+      navigate(CATALOG_LIST_BASE);
       return;
     }
-    navigate(`/catalog/products?q=${encodeURIComponent(q)}`);
+    navigate(catalogListUrl("AI Picks", q));
   };
 
   return (
@@ -81,7 +82,7 @@ export default function NotFound() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Try 'wireless headphones', 'laptop', 'OmniWatch'…"
-              aria-label="Search the catalog"
+              aria-label="Search products"
               autoFocus
             />
             <button type="submit" className="nf-search-submit">
@@ -94,7 +95,7 @@ export default function NotFound() {
               <ArrowLeft size={16} aria-hidden="true" />
               {homeLabel}
             </Link>
-            <Link to="/catalog/products" className="nf-btn nf-btn--primary">
+            <Link to={CATALOG_LIST_BASE} className="nf-btn nf-btn--primary">
               Browse products
             </Link>
           </div>
@@ -108,7 +109,7 @@ export default function NotFound() {
             {POPULAR_CATEGORIES.map(({ id, label, segment, Icon }) => (
               <Link
                 key={id}
-                to={`/catalog/products?segment=${encodeURIComponent(segment)}`}
+                to={catalogListUrl(segment, "")}
                 className="nf-popular-card"
               >
                 <span className="nf-popular-icon" aria-hidden="true">

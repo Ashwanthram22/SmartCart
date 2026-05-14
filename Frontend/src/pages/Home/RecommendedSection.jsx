@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { CATALOG_LIST_BASE } from "../../constants/shopRoutes";
 import ProductCard from "./ProductCard";
 
 function RecommendedSection({ products, loading, error }) {
@@ -12,7 +13,7 @@ function RecommendedSection({ products, loading, error }) {
             <span className="home-section-kicker">PERSONALIZED INTELLIGENCE</span>
             <h2 className="home-section-title">Recommended for You</h2>
           </div>
-          <Link to="/catalog/products" className="home-section-link">
+          <Link to={CATALOG_LIST_BASE} className="home-section-link">
             View all picks →
           </Link>
         </div>
@@ -28,8 +29,9 @@ function RecommendedSection({ products, loading, error }) {
             list.map((product, index) => (
               <ProductCard
                 key={product.id ?? index}
+                index={index}
                 product={product}
-                showAskAi={index === 3}
+                // showAskAi={index === 3}
               />
             ))
           ) : (

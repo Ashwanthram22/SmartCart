@@ -1,3 +1,7 @@
+/**
+ * JSON file persistence. App code should import `../lib/store` instead of
+ * this module directly so storage can be swapped without wide refactors.
+ */
 const fs = require("fs/promises");
 const path = require("path");
 

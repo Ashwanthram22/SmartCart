@@ -176,8 +176,24 @@
   border-bottom: 1px solid #e6e6ee;
 }
 
-.ao-table tbody tr:hover {
+.ao-table tbody tr:nth-child(even):not(.ao-row--selected) td {
+  background: #fafbfc;
+}
+
+.ao-table tbody tr:nth-child(odd):not(.ao-row--selected) td {
+  background: #fff;
+}
+
+.ao-table tbody tr.ao-row--selected td {
+  background: #f5f3ff;
+}
+
+.ao-table tbody tr:hover:not(.ao-row--selected) td {
   background: #faf7ff;
+}
+
+.ao-table tbody tr.ao-row--selected:hover td {
+  background: #ede9fe;
 }
 
 .ao-th-actions {
@@ -242,9 +258,9 @@
 }
 
 /* Per-row status updater. Uses the shared `<AdmDropdown />` component
- * (`.adm-dd` styles in AdminLayout.css). The trigger sits inside a table cell
- * so we let it shrink with the column and right-align its menu via the
- * `menuAlign="right"` prop. */
+ * (`AdmDropdown.css`). The trigger sits inside a table cell so we let it
+ * shrink with the column and right-align its menu via the `menuAlign="right"`
+ * prop. */
 .ao-status-dd .adm-dd-trigger {
   min-width: 130px;
   font-size: 12px;
@@ -271,8 +287,6 @@
   box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(107, 56, 212, 0.55);
   border-radius: 4px;
 }
-
-.ao-row--selected td { background: #f5f3ff; }
 
 /* Drawer line items + timeline ----------------------------------------*/
 

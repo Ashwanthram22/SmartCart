@@ -17,11 +17,40 @@
    * back to a horizontal row for the search + add-product layout. */
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
   padding: 14px 18px;
   margin-bottom: 16px;
+}
+
+.ai-toolbar-right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px 16px;
+  margin-left: auto;
+}
+
+.ai-col-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.ai-col-toggle input {
+  width: 14px;
+  height: 14px;
+  accent-color: #6b38d4;
+  cursor: pointer;
 }
 
 .ai-search {
@@ -62,10 +91,6 @@
 }
 
 /* Selected-row highlight + checkbox cell + stock adjuster --------------*/
-
-.ai-row-selected td {
-  background: #f5f3ff;
-}
 
 .ai-stock-cell {
   display: inline-flex;
@@ -197,8 +222,24 @@
   color: #6b38d4;
 }
 
-.ai-table tbody tr:hover {
+.ai-table tbody tr:nth-child(even):not(.ai-row-selected) td {
+  background: #fafbfc;
+}
+
+.ai-table tbody tr:nth-child(odd):not(.ai-row-selected) td {
+  background: #fff;
+}
+
+.ai-table tbody tr.ai-row-selected td {
+  background: #f5f3ff;
+}
+
+.ai-table tbody tr:hover:not(.ai-row-selected) td {
   background: #faf7ff;
+}
+
+.ai-table tbody tr.ai-row-selected:hover td {
+  background: #ede9fe;
 }
 
 .ai-th-edited {
@@ -630,6 +671,44 @@
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 13px;
+}
+
+.ai-form-summary {
+  margin: 0 0 14px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #fecaca;
+  background: #fff7f7;
+  color: #991b1b;
+  font-size: 13px;
+}
+
+.ai-form-summary-title {
+  margin: 0 0 8px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.ai-form-summary-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.ai-form-summary-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: #6b38d4;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ai-form-summary-link:hover {
+  color: #5527b6;
 }
 
 .ai-dialog-foot {

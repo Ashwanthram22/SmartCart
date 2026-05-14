@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { CATALOG_LIST_BASE, catalogListUrl } from "../constants/shopRoutes";
 import { DEFAULT_PROFILE_AVATAR } from "../data/profileDisplay";
 import { useCart } from "../hooks/useCart";
 import { CartIcon } from "./CartIcon";
@@ -41,7 +42,7 @@ export function ShopTopNav({
       onSearchSubmit(q);
       return;
     }
-    navigate(q ? `/catalog/products?q=${encodeURIComponent(q)}` : "/catalog/products");
+    navigate(q ? catalogListUrl("AI Picks", q) : CATALOG_LIST_BASE);
   };
 
   return (

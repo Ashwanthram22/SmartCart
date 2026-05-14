@@ -47,6 +47,14 @@
 }
 
 .breadcrumbs-sep {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
   color: #cbd5e1;
   user-select: none;
+}
+
+.breadcrumbs-sep-icon {
+  display: block;
+  color: inherit;
 }

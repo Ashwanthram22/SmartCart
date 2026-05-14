@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 const express = require("express");
-const { readDb, withDb } = require("../lib/data-store");
+const { readDb, withDb } = require("../lib/store");
 const authMiddleware = require("../middleware/auth");
 const adminMiddleware = require("../middleware/admin");
 const { writeLimiter } = require("../middleware/rateLimits");

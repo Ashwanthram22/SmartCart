@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Link, NavLink, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {
   Activity as ActivityIcon,
   AlertTriangle,
   Bell,
   BookOpen,
+  ChevronRight,
   HelpCircle,
+  Keyboard,
   LayoutGrid,
   LogOut,
   Package,
@@ -51,6 +53,151 @@ function pageLabelForPath(pathname) {
     if (entry.match.test(pathname)) return entry.label;
   }
   return "Admin Console";
+}
+
+/** Contextual trail under the page title (URL + query driven). */
+function AdminBreadcrumbs() {
+  const { pathname } = useLocation();
+  const [params] = useSearchParams();
+
+  const items = useMemo(() => {
+    if (pathname === "/admin" || pathname === "/admin/") {
+      return [
+        { label: "Admin", to: "/admin" },
+        { label: "Dashboard" },
+      ];
+    }
+    const crumbs = [{ label: "Admin", to: "/admin" }];
+    if (pathname.startsWith("/admin/inventory")) {
+      crumbs.push({ label: "Inventory", to: "/admin/inventory" });
+      const q = (params.get("q") || "").trim();
+      if (q) crumbs.push({ label: `Search “${q}”` });
+      return crumbs;
+    }
+    if (pathname.startsWith("/admin/orders")) {
+      crumbs.push({ label: "Orders", to: "/admin/orders" });
+      return crumbs;
+    }
+    if (pathname.startsWith("/admin/analytics")) {
+      crumbs.push({ label: "Analytics", to: "/admin/analytics" });
+      return crumbs;
+    }
+    if (pathname.startsWith("/admin/activity")) {
+      crumbs.push({ label: "Activity", to: "/admin/activity" });
+      const parts = [];
+      const q = (params.get("q") || "").trim();
+      const act = (params.get("action") || "").trim();
+      if (act) parts.push(`Action: ${act}`);
+      if (q) parts.push(`Search: ${q}`);
+      if (parts.length) crumbs.push({ label: parts.join(" · ") });
+      return crumbs;
+    }
+    return crumbs;
+  }, [pathname, params]);
+
+  if (items.length <= 1) return null;
+
+  return (
+    <nav className="adm-page-breadcrumbs" aria-label="Breadcrumb">
+      <ol className="adm-page-breadcrumbs-list">
+        {items.map((cr, i) => (
+          <li key={`${i}-${cr.label}`}>
+            {i > 0 ? (
+              <span className="adm-page-bc-sep" aria-hidden="true">
+                <ChevronRight size={14} strokeWidth={2.25} />
+              </span>
+            ) : null}
+            {i < items.length - 1 && cr.to ? (
+              <Link to={cr.to}>{cr.label}</Link>
+            ) : (
+              <span
+                className="adm-page-bc-current"
+                aria-current={i === items.length - 1 ? "page" : undefined}
+              >
+                {cr.label}
+              </span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+}
+
+/* ============================================================================
+ * AdminShortcutsModal — keyboard reference for power users.
+ * ==========================================================================*/
+
+function AdminShortcutsModal({ open, onClose }) {
+  const ref = useRef(null);
+  useFocusTrap(ref, open);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div className="adm-settings-overlay" role="presentation" onClick={onClose}>
+      <div
+        ref={ref}
+        className="adm-shortcuts-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="adm-shortcuts-title"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <header className="adm-shortcuts-head">
+          <div>
+            <h2 id="adm-shortcuts-title">Keyboard shortcuts</h2>
+            <p>Works anywhere in the admin console unless focus is inside a text field.</p>
+          </div>
+          <button
+            type="button"
+            className="adm-settings-close"
+            onClick={onClose}
+            aria-label="Close shortcuts"
+          >
+            <X size={18} aria-hidden="true" />
+          </button>
+        </header>
+        <div className="adm-shortcuts-body">
+          <ul className="adm-shortcuts-list">
+            <li>
+              <span>Close modals, menus and the order drawer</span>
+              <span>
+                <kbd>Esc</kbd>
+              </span>
+            </li>
+            <li>
+              <span>Focus global search</span>
+              <span>
+                <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>K</kbd> or <kbd>/</kbd>
+              </span>
+            </li>
+            <li>
+              <span>Inventory — add product (when inventory is focused)</span>
+              <span>
+                <kbd>N</kbd>
+              </span>
+            </li>
+            <li>
+              <span>Navigate sections</span>
+              <span>
+                <kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 /* ============================================================================
@@ -533,7 +680,9 @@ export default function AdminLayout({
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [alertsOpen, setAlertsOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [alertCount, setAlertCount] = useState(null);
+  const bellRef = useRef(null);
 
   const resolvedTitle = title || pageLabelForPath(location.pathname);
 
@@ -591,6 +740,12 @@ export default function AdminLayout({
     clearToken();
     navigate("/login", { replace: true });
   };
+
+  const closeAlerts = useCallback(() => {
+    setAlertsOpen(false);
+    refreshAlertCount();
+    queueMicrotask(() => bellRef.current?.focus?.());
+  }, [refreshAlertCount]);
 
   return (
     <div className="adm-shell">
@@ -652,6 +807,7 @@ export default function AdminLayout({
           <div className="adm-topbar-right">
             <button
               type="button"
+              ref={bellRef}
               className="adm-icon-btn adm-icon-btn--badge"
               aria-label={
                 alertCount
@@ -667,6 +823,15 @@ export default function AdminLayout({
                   {alertCount > 9 ? "9+" : alertCount}
                 </span>
               ) : null}
+            </button>
+            <button
+              type="button"
+              className="adm-icon-btn"
+              aria-label="Keyboard shortcuts"
+              title="Keyboard shortcuts"
+              onClick={() => setShortcutsOpen(true)}
+            >
+              <Keyboard size={18} aria-hidden="true" />
             </button>
             <button
               type="button"
@@ -694,6 +859,7 @@ export default function AdminLayout({
             <div>
               <h2 className="adm-page-title">{resolvedTitle}</h2>
               {subtitle ? <p className="adm-page-subtitle">{subtitle}</p> : null}
+              <AdminBreadcrumbs />
             </div>
             {actions ? <div className="adm-page-actions">{actions}</div> : null}
           </div>
@@ -725,17 +891,15 @@ export default function AdminLayout({
 
       <InventoryAlertsModal
         open={alertsOpen}
-        onClose={() => {
-          setAlertsOpen(false);
-          // Extra refresh on dismiss: covers the case where the admin opens
-          // the modal, restocks something elsewhere (e.g. via the catalog
-          // inline), then closes — without it the bell would lag until the
-          // next mutation event.
-          refreshAlertCount();
-        }}
+        onClose={closeAlerts}
       />
 
       <AboutAdminModal open={aboutOpen} onClose={() => setAboutOpen(false)} />
+
+      <AdminShortcutsModal
+        open={shortcutsOpen}
+        onClose={() => setShortcutsOpen(false)}
+      />
 
       <LogoutDialog
         open={logoutOpen}

@@ -36,6 +36,15 @@
   gap: 16px;
 }
 
+.login-form-error {
+  margin: -6px 0 0;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 600;
+  color: #b91c1c;
+}
+
 .login-password-row {
   margin-top: 2px;
   display: flex;
@@ -75,15 +84,6 @@
 
 .login-register-note a:hover {
   text-decoration: underline;
-}
-
-.login-message {
-  margin-top: 16px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: #ebe4ff;
-  color: #3f1d8f;
-  font-size: 14px;
 }
 
 @media (max-width: 640px) {

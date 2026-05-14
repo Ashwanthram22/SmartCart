@@ -3,65 +3,8 @@
   background: #ffffff;
 }
 
-.register-topbar {
-  height: 64px;
-  border-bottom: 1px solid rgba(226, 228, 234, 0.9);
-  background: rgba(255, 255, 255, 0.92);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  backdrop-filter: blur(10px);
-}
-
-.register-topbar-inner {
-  position: relative;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 24px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.register-topbar-brand {
-  position: absolute;
-  left: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.register-topbar-brand .auth-brand-logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  font-size: 14px;
-}
-
-.register-topbar-brand .auth-brand.auth-brand-compact h1 {
-  font-size: 20px;
-  letter-spacing: -0.03em;
-}
-
-.register-topbar-nav {
-  display: flex;
-  gap: 32px;
-  align-items: center;
-}
-
-.register-topbar-nav a {
-  color: #5c5f60;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.register-topbar-nav a:hover {
-  color: #141b2b;
-}
-
 .register-main {
-  min-height: calc(100vh - 64px);
+  min-height: 100vh;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
@@ -246,6 +189,10 @@
   line-height: 1.45;
 }
 
+.register-terms span {
+  color: #4b5563;
+}
+
 .register-terms input {
   margin-top: 3px;
   width: 18px;
@@ -254,14 +201,28 @@
   cursor: pointer;
 }
 
-.register-terms a {
+.register-legal-link {
+  border: 0;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-size: inherit;
   color: #6b38d4;
-  font-weight: 500;
-  text-decoration: none;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 600;
 }
 
-.register-terms a:hover {
-  text-decoration: underline;
+.register-legal-link:hover {
+  color: #5527b6;
+}
+
+.register-legal-link:focus-visible {
+  outline: 2px solid #6b38d4;
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 .register-login-link {
@@ -327,19 +288,6 @@
 }
 
 @media (max-width: 760px) {
-  .register-topbar-nav {
-    display: none;
-  }
-
-  .register-topbar-brand {
-    position: static;
-    transform: none;
-  }
-
-  .register-topbar-inner {
-    justify-content: flex-start;
-  }
-
   .register-password-grid {
     grid-template-columns: 1fr;
   }

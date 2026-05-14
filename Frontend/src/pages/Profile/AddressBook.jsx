@@ -8,6 +8,7 @@ import {
 } from "../../api/client";
 import { useToast } from "../../hooks/useToast";
 import usePageMeta from "../../hooks/usePageMeta";
+import Skeleton from "../../components/Skeleton";
 import { ProfileLayout } from "./ProfileLayout";
 import "./AddressBook.css";
 
@@ -275,7 +276,23 @@ export default function AddressBook() {
         ) : null}
 
         {loading ? (
-          <p className="ab-empty">Loading your saved addresses…</p>
+          <ul className="ab-list ab-list--loading" aria-busy="true" aria-label="Loading addresses">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <li key={`ab-sk-${i}`} className="ab-card ab-card--skeleton">
+                <div className="ab-skel-head">
+                  <Skeleton height={14} width={72} radius={6} />
+                  <Skeleton height={14} width={56} radius={999} />
+                </div>
+                <Skeleton height={16} width="55%" radius={4} className="ab-skel-mt" />
+                <Skeleton height={14} width="90%" radius={4} className="ab-skel-mt-sm" />
+                <Skeleton height={14} width="70%" radius={4} className="ab-skel-mt-sm" />
+                <div className="ab-skel-actions">
+                  <Skeleton height={36} width={100} radius={8} />
+                  <Skeleton height={36} width={88} radius={8} />
+                </div>
+              </li>
+            ))}
+          </ul>
         ) : addresses.length === 0 && !editing ? (
           <div className="ab-empty-card">
             <p className="ab-empty">No addresses saved yet.</p>

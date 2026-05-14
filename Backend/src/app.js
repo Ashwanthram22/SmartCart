@@ -3,6 +3,9 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 const { CORS_ORIGINS } = require("./config/env");
+const { readDb } = require("./lib/store");
+const { getMongoHealth } = require("./lib/mongo/connection");
+const logger = require("./lib/logger");
 const { apiLimiter } = require("./middleware/rateLimits");
 const authRouter = require("./routes/auth.routes");
 const productsRouter = require("./routes/products.routes");
@@ -40,10 +43,32 @@ app.use(express.json({ limit: "200kb" }));
 
 app.use("/api", apiLimiter);
 
-app.get("/api/health", (req, res) => {
-  res.json({
-    status: "ok",
-    message: "API is running",
+app.get("/api/health", async (req, res) => {
+  const started = Date.now();
+  const mongo = getMongoHealth();
+  let fileStore = "unknown";
+  try {
+    await Promise.race([
+      readDb(),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("readDb timeout")), 2000)
+      ),
+    ]);
+    fileStore = "ok";
+  } catch (e) {
+    fileStore = "error";
+    logger.warn("[health] file store check failed", { message: e.message });
+  }
+
+  const ok = fileStore === "ok";
+  res.status(ok ? 200 : 503).json({
+    status: ok ? "ok" : "degraded",
+    uptime: Math.round(process.uptime()),
+    node: process.version,
+    env: process.env.NODE_ENV || "development",
+    fileStore,
+    mongo,
+    tookMs: Date.now() - started,
   });
 });
 

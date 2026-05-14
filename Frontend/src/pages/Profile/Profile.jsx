@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { CATALOG_LIST_BASE } from "../../constants/shopRoutes";
 import { getCurrentUser, getOrders, updateCurrentUser } from "../../api/client";
 import {
   DEFAULT_PROFILE_AVATAR,
@@ -173,7 +174,7 @@ function Profile() {
         ) : orders.length === 0 ? (
           <div className="profile-orders-empty">
             <p>You haven&apos;t placed any orders yet.</p>
-            <Link to="/catalog/products" className="profile-orders-empty-cta">
+            <Link to={CATALOG_LIST_BASE} className="profile-orders-empty-cta">
               Start shopping
             </Link>
           </div>

@@ -25,7 +25,7 @@ function shouldShowGlobalLauncher(pathname) {
   return true;
 }
 
-const PRODUCT_DETAIL_RE = /^\/catalog\/products\/([^/]+)$/;
+const PRODUCT_DETAIL_RE = /^\/product\/[^/]+\/([^/]+)$/;
 
 function productIdFromPath(pathname) {
   const m = PRODUCT_DETAIL_RE.exec(pathname || "");
@@ -40,7 +40,7 @@ export function AssistantProvider({ children }) {
   /**
    * Background cache of product context for the page the user is currently
    * looking at. We fetch in the background as soon as they land on a
-   * `/catalog/products/:id` route and reuse it as the drawer's initial
+   * `/product/:segment/:id` route and reuse it as the drawer's initial
    * context — even when the launcher is opened via a click rather than via
    * `open(ctx)`. Cleared when the user navigates away.
    */

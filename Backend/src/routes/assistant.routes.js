@@ -1,8 +1,20 @@
+const crypto = require("crypto");
 const express = require("express");
-const { readDb } = require("../lib/data-store");
+const { readDb } = require("../lib/store");
 const authMiddleware = require("../middleware/auth");
 const { writeLimiter } = require("../middleware/rateLimits");
 const { generate, PROVIDER } = require("../lib/assistant/provider");
+const { ASSISTANT_GENERATION_TIMEOUT_MS } = require("../config/env");
+const logger = require("../lib/logger");
+
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error(`Assistant timed out after ${ms}ms`)), ms)
+    ),
+  ]);
+}
 
 const router = express.Router();
 
@@ -54,22 +66,39 @@ router.post("/chat", writeLimiter, async (req, res) => {
     : [];
 
   const context = sanitiseContext(req.body?.context);
+  const requestId = crypto.randomUUID();
 
   try {
     const db = await readDb();
-    const reply = await generate({
-      db,
-      message,
-      history,
-      userId: req.user.sub,
-      context,
-    });
+    const reply = await withTimeout(
+      generate({
+        db,
+        message,
+        history,
+        userId: req.user.sub,
+        context,
+      }),
+      ASSISTANT_GENERATION_TIMEOUT_MS
+    );
     return res.json(reply);
   } catch (err) {
-    console.error("[assistant] generate failed", err);
-    return res
-      .status(500)
-      .json({ message: "Assistant is unavailable, please try again" });
+    const timedOut = /timed out/i.test(String(err.message || ""));
+    logger.error("[assistant] chat failed", {
+      requestId,
+      message: err.message,
+      timedOut,
+    });
+    if (timedOut) {
+      return res.status(504).json({
+        message:
+          "Assistant took too long to respond. Try a shorter question or try again in a moment.",
+        requestId,
+      });
+    }
+    return res.status(500).json({
+      message: "Assistant is unavailable, please try again",
+      requestId,
+    });
   }
 });
 

@@ -4,7 +4,13 @@ import { useCart } from "../../hooks/useCart";
 import { useSaved } from "../../hooks/useSaved";
 import { useToast } from "../../hooks/useToast";
 import { HeartIcon } from "../../components/HeartIcon";
-import { isValidSegment } from "../../constants/shopSegments";
+import {
+  CATALOG_LIST_BASE,
+  catalogListUrl,
+  productDetailSlugForSegment,
+  productDetailUrl,
+  segmentFromProductDetailSlug,
+} from "../../constants/shopRoutes";
 import { DEFAULT_PROFILE_AVATAR } from "../../data/profileDisplay";
 import { productSpecsFor } from "../../data/productSpecs";
 import { createProductReview, getProductById } from "../../api/client";
@@ -75,31 +81,38 @@ function formatRelativeDate(iso) {
 }
 
 function ProductDetail() {
-  const { id } = useParams();
+  const { segmentSlug, id: idParam } = useParams();
+  const id = idParam ? decodeURIComponent(idParam) : undefined;
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const segmentRaw = searchParams.get("segment");
-  const qRaw = searchParams.get("q");
+  const qRaw = (searchParams.get("q") || "").trim();
 
-  const catalogListHref = useMemo(() => {
-    const p = new URLSearchParams();
-    if (segmentRaw && isValidSegment(segmentRaw) && segmentRaw !== "AI Picks") {
-      p.set("segment", segmentRaw);
-    }
-    if (qRaw && qRaw.trim()) p.set("q", qRaw.trim());
-    const s = p.toString();
-    return s ? `/catalog/products?${s}` : "/catalog/products";
-  }, [segmentRaw, qRaw]);
+  const resolvedSegment = useMemo(
+    () => (segmentSlug ? segmentFromProductDetailSlug(segmentSlug) : null),
+    [segmentSlug]
+  );
+  const unknownDetailSlug = Boolean(segmentSlug && resolvedSegment === null);
+  const activeSegment = resolvedSegment ?? "AI Picks";
 
-  const detailQuerySuffix = useMemo(() => {
-    const p = new URLSearchParams();
-    if (segmentRaw && isValidSegment(segmentRaw) && segmentRaw !== "AI Picks") {
-      p.set("segment", segmentRaw);
+  const productsListHref = useMemo(
+    () => catalogListUrl(activeSegment, qRaw),
+    [activeSegment, qRaw]
+  );
+
+  useEffect(() => {
+    if (!id) return;
+    if (unknownDetailSlug) {
+      navigate(productDetailUrl("AI Picks", id, qRaw), { replace: true });
     }
-    if (qRaw && qRaw.trim()) p.set("q", qRaw.trim());
-    const s = p.toString();
-    return s ? `?${s}` : "";
-  }, [segmentRaw, qRaw]);
+  }, [unknownDetailSlug, id, qRaw, navigate]);
+
+  useEffect(() => {
+    if (!segmentSlug || !id || unknownDetailSlug) return;
+    const canonical = productDetailSlugForSegment(activeSegment);
+    if (String(segmentSlug).toLowerCase() !== canonical) {
+      navigate(productDetailUrl(activeSegment, id, qRaw), { replace: true });
+    }
+  }, [segmentSlug, id, activeSegment, qRaw, navigate, unknownDetailSlug]);
 
   const { addItem, itemCount } = useCart();
   const { isSaved, toggleSaved } = useSaved();
@@ -139,6 +152,25 @@ function ProductDetail() {
 
   const product = data?.product;
   const similar = data?.similar || [];
+
+  const productBreadcrumbItems = useMemo(() => {
+    if (!product) {
+      return [
+        { label: "Home", to: "/home" },
+        { label: "Products", to: CATALOG_LIST_BASE },
+      ];
+    }
+    const segmentListHref = catalogListUrl(activeSegment, qRaw);
+    const items = [
+      { label: "Home", to: "/home" },
+      { label: "Products", to: CATALOG_LIST_BASE },
+    ];
+    if (activeSegment !== "AI Picks") {
+      items.push({ label: activeSegment, to: segmentListHref });
+    }
+    items.push({ label: product.title });
+    return items;
+  }, [product, activeSegment, qRaw]);
 
   const visibleReviews = reviews.length > 0 ? reviews : FALLBACK_REVIEWS;
   const specRows = useMemo(() => productSpecsFor(product), [product]);
@@ -283,7 +315,7 @@ function ProductDetail() {
       <div className="product-page">
         <div className="product-error">
           <p>{error || "Product not found."}</p>
-          <Link to={catalogListHref}>Back to catalog</Link>
+          <Link to={productsListHref}>Back to products</Link>
         </div>
       </div>
     );
@@ -343,15 +375,7 @@ function ProductDetail() {
           </div>
 
           <div className="product-buy">
-            <Breadcrumbs
-              className="product-breadcrumbs"
-              items={[
-                { label: "Home", to: "/home" },
-                { label: "Catalog", to: "/catalog/products" },
-                { label: product.category || "Products", to: catalogListHref },
-                { label: product.title },
-              ]}
-            />
+            <Breadcrumbs className="product-breadcrumbs" items={productBreadcrumbItems} />
 
             <h1>{product.title}</h1>
 
@@ -533,7 +557,11 @@ function ProductDetail() {
               <div className="quick-compare">
                 <h4>Compare Quick-View</h4>
                 {similar.map((item) => (
-                  <Link to={`/catalog/products/${item.id}${detailQuerySuffix}`} key={item.id} className="quick-link">
+                  <Link
+                    to={productDetailUrl(activeSegment, item.id, qRaw)}
+                    key={item.id}
+                    className="quick-link"
+                  >
                     <img src={item.image} alt="" />
                     <div>
                       <p>{item.title}</p>

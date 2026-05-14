@@ -3,20 +3,18 @@ require("dotenv").config();
 const app = require("./app");
 const { PORT } = require("./config/env");
 const { runStartupMigrations } = require("./lib/migrations");
-// MongoDB scaffold (currently a no-op). Uncomment to enable when you flip
-// `USE_MONGO=true` in `.env` and uncomment the body of
-// `src/lib/mongo/connection.js`.
-// const { connectMongo } = require("./lib/mongo/connection");
+const { connectMongo } = require("./lib/mongo/connection");
+const logger = require("./lib/logger");
 
 async function bootstrap() {
-  // await connectMongo();
+  await connectMongo();
   await runStartupMigrations();
   app.listen(PORT, () => {
-    console.log(`Backend running on http://localhost:${PORT}`);
+    logger.info(`Backend listening`, { url: `http://localhost:${PORT}` });
   });
 }
 
 bootstrap().catch((err) => {
-  console.error("[bootstrap] failed", err);
+  logger.error("[bootstrap] failed", { message: err.message, stack: err.stack });
   process.exit(1);
 });

@@ -333,14 +333,65 @@
   color: #fff;
 }
 
-.assist-error {
+.assist-error-wrap {
   flex-shrink: 0;
   margin: 0 18px 8px;
-  padding: 8px 12px;
+  padding: 10px 12px;
   border-radius: 10px;
   background: rgba(220, 38, 38, 0.15);
+}
+
+.assist-error {
+  margin: 0 0 6px;
   color: #fca5a5;
   font-size: 13px;
+  line-height: 1.4;
+}
+
+.assist-error-id {
+  margin: 0 0 10px;
+  color: rgba(252, 165, 165, 0.75);
+  font-size: 11px;
+  font-family: ui-monospace, monospace;
+  word-break: break-all;
+}
+
+.assist-error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.assist-error-btn {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: transparent;
+  color: #fecaca;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.assist-error-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.assist-error-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.assist-error-btn--primary {
+  background: rgba(127, 29, 29, 0.55);
+  border-color: rgba(248, 113, 113, 0.35);
+  color: #fff;
+}
+
+.assist-error-btn--primary:hover:not(:disabled) {
+  background: rgba(153, 27, 27, 0.65);
 }
 
 .assist-input-row {

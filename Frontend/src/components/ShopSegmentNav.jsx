@@ -5,8 +5,8 @@ import "./ShopSegmentNav.css";
 export { SHOP_SEGMENTS };
 
 /**
- * Category segment chips + optional results line (catalog uses controlled active).
- * Pass `onSegmentNavigate` on Home to jump to `/catalog/products?segment=…`.
+ * Category segment chips + optional results line (product list uses controlled active).
+ * Pass `onSegmentNavigate` on Home to jump to `/products/...` paths.
  */
 export function ShopSegmentNav({
   segments = SHOP_SEGMENTS,
@@ -20,7 +20,7 @@ export function ShopSegmentNav({
   const [canScrollRight, setCanScrollRight] = useState(false);
   const scrollRef = useRef(null);
   const controlled = activeControlled !== undefined && typeof onSegmentChange === "function";
-  /** Home uses chips only to open the catalog — no segment matches the current page, so never highlight. */
+  /** Home uses chips only to open the product list — no segment matches the current page, so never highlight. */
   const browseOnly = typeof onSegmentNavigate === "function" && !controlled;
   const active = browseOnly ? null : controlled ? activeControlled : internalActive;
 

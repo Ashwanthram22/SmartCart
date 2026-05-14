@@ -13,7 +13,7 @@ import {
   UserRound,
 } from "lucide-react";
 import AdminLayout from "./AdminLayout";
-import AdmDropdown from "./AdmDropdown";
+import AdmDropdown from "../../components/AdmDropdown";
 import { adminListAuditLogs } from "../../api/client";
 import usePageMeta from "../../hooks/usePageMeta";
 import "./AdminActivity.css";
@@ -316,6 +316,17 @@ export default function AdminActivity() {
                 ? "Every product change, order status update and bulk action will appear here once admins start making changes."
                 : "Try widening the date range or clearing some filters."}
             </p>
+            {hasActiveFilters ? (
+              <div className="adm-empty-actions">
+                <button
+                  type="button"
+                  className="adm-btn adm-btn-primary"
+                  onClick={clearFilters}
+                >
+                  Clear filters
+                </button>
+              </div>
+            ) : null}
           </div>
         ) : (
           <ul className="aa-list" aria-label="Audit log entries">

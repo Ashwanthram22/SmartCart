@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { CATALOG_LIST_BASE } from "../../constants/shopRoutes";
+import { Home, ChevronRight, LayoutGrid, ListOrdered, User } from "lucide-react";
 import { clearToken } from "../../utils/authToken";
 import { ShopTopNav } from "../../components/ShopTopNav";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
@@ -34,6 +36,15 @@ export function ProfileLayout({ children }) {
       path.startsWith("/profile/settings") ||
       path.startsWith("/profile/saved") ||
       path.startsWith("/profile/addresses"));
+
+  const pageTitle = useMemo(() => {
+    if (path.startsWith("/profile/orders")) return "Order history";
+    if (path.startsWith("/profile/settings/preferences")) return "Preferences";
+    if (path.startsWith("/profile/settings")) return "Security";
+    if (path.startsWith("/profile/saved")) return "Saved items";
+    if (path.startsWith("/profile/addresses")) return "Addresses";
+    return "My profile";
+  }, [path]);
 
   const confirmLogout = () => {
     clearToken();
@@ -145,13 +156,28 @@ export function ProfileLayout({ children }) {
               <span>Smart Insight</span>
             </div>
             <p>
-              Based on your recent browsing, you might save ₹3,200 this month by using SmartCart&apos;s personalized
-              deals.
+              Turn on deal alerts in Preferences to hear about offers on categories you browse—no fixed savings
+              promises, just timely nudges when we spot a good match.
             </p>
           </div>
         </aside>
 
-        <section className="profile-content">{children}</section>
+        <section className="profile-content">
+          <nav className="profile-breadcrumb" aria-label="Breadcrumb">
+            <ol className="profile-breadcrumb-list">
+              <li className="profile-breadcrumb-item">
+                <Link to="/profile">Account</Link>
+              </li>
+              <li className="profile-breadcrumb-sep" aria-hidden="true">
+                <ChevronRight size={14} strokeWidth={2.25} />
+              </li>
+              <li className="profile-breadcrumb-item profile-breadcrumb-item--current" aria-current="page">
+                {pageTitle}
+              </li>
+            </ol>
+          </nav>
+          {children}
+        </section>
       </main>
 
       {logoutConfirmOpen ? (
@@ -193,25 +219,33 @@ export function ProfileLayout({ children }) {
 
       <nav className="profile-bottom-nav" aria-label="Mobile">
         <Link to="/home" className="profile-bottom-link">
-          <span aria-hidden="true">⌂</span>
+          <span className="profile-bottom-icon" aria-hidden="true">
+            <Home size={20} strokeWidth={2} />
+          </span>
           Home
         </Link>
-        <Link to="/catalog/products" className="profile-bottom-link">
-          <span aria-hidden="true">▣</span>
+        <Link to={CATALOG_LIST_BASE} className="profile-bottom-link">
+          <span className="profile-bottom-icon" aria-hidden="true">
+            <LayoutGrid size={20} strokeWidth={2} />
+          </span>
           Shop
         </Link>
         <Link
           to="/profile/orders"
           className={`profile-bottom-link${isOrdersRoute ? " profile-bottom-link--active" : ""}`}
         >
-          <span aria-hidden="true">☰</span>
+          <span className="profile-bottom-icon" aria-hidden="true">
+            <ListOrdered size={20} strokeWidth={2} />
+          </span>
           Orders
         </Link>
         <Link
           to="/profile"
           className={`profile-bottom-link${profileTabActive ? " profile-bottom-link--active" : ""}`}
         >
-          <span aria-hidden="true">◉</span>
+          <span className="profile-bottom-icon" aria-hidden="true">
+            <User size={20} strokeWidth={2} />
+          </span>
           Profile
         </Link>
       </nav>

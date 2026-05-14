@@ -12,6 +12,8 @@ import SettingsTabs from "./SettingsTabs";
 import { getPreferences, updatePreferences } from "../../api/client";
 import { useToast } from "../../hooks/useToast";
 import usePageMeta from "../../hooks/usePageMeta";
+import Skeleton from "../../components/Skeleton";
+import AdmDropdown from "../../components/AdmDropdown";
 import "./SettingsSecurity.css";
 import "./SettingsPreferences.css";
 
@@ -184,7 +186,29 @@ export default function SettingsPreferences() {
         </header>
 
         {loading ? (
-          <p className="sp-loading">Loading your preferences…</p>
+          <div className="sp-skeleton-stack" aria-busy="true" aria-label="Loading preferences">
+            <section className="settings-card">
+              <div className="settings-card-head sp-skel-head">
+                <Skeleton height={40} width={40} radius={12} />
+                <Skeleton height={22} width={140} radius={6} />
+              </div>
+              <div className="sp-grid">
+                <Skeleton height={72} width="100%" radius={10} />
+                <Skeleton height={72} width="100%" radius={10} />
+              </div>
+            </section>
+            <section className="settings-card">
+              <div className="settings-card-head sp-skel-head">
+                <Skeleton height={40} width={40} radius={12} />
+                <Skeleton height={22} width={160} radius={6} />
+              </div>
+              <div className="sp-skel-rows">
+                <Skeleton height={52} width="100%" radius={8} />
+                <Skeleton height={52} width="100%" radius={8} />
+                <Skeleton height={52} width="100%" radius={8} />
+              </div>
+            </section>
+          </div>
         ) : (
           <div className="settings-stack">
             <section className="settings-card" aria-labelledby="sp-display-heading">
@@ -197,43 +221,38 @@ export default function SettingsPreferences() {
                 </h2>
               </div>
               <div className="sp-grid">
-                <label className="sp-field">
+                <div className="sp-field">
                   <span className="sp-field-label">Preferred currency</span>
-                  <select
-                    className="sp-select"
+                  <AdmDropdown
                     value={prefs.currency}
-                    onChange={(e) => updateField({ currency: e.target.value })}
-                  >
-                    {CURRENCIES.map((c) => (
-                      <option key={c.code} value={c.code}>
-                        {c.label}
-                      </option>
-                    ))}
-                  </select>
+                    options={CURRENCIES.map((c) => ({
+                      value: c.code,
+                      label: c.label,
+                    }))}
+                    onChange={(next) => updateField({ currency: next })}
+                    ariaLabel="Preferred currency"
+                    className="sp-field-dd"
+                  />
                   <span className="sp-field-help">
                     Used in receipts and emails. UI currency may follow soon.
                   </span>
-                </label>
+                </div>
 
-                <label className="sp-field">
+                <div className="sp-field">
                   <span className="sp-field-label">
                     <Sun size={14} aria-hidden="true" /> Theme
                   </span>
-                  <select
-                    className="sp-select"
+                  <AdmDropdown
                     value={prefs.theme}
-                    onChange={(e) => updateField({ theme: e.target.value })}
-                  >
-                    {THEMES.map((t) => (
-                      <option key={t.value} value={t.value}>
-                        {t.label}
-                      </option>
-                    ))}
-                  </select>
+                    options={THEMES}
+                    onChange={(next) => updateField({ theme: next })}
+                    ariaLabel="Color theme"
+                    className="sp-field-dd"
+                  />
                   <span className="sp-field-help">
                     System matches your OS appearance setting.
                   </span>
-                </label>
+                </div>
               </div>
             </section>
 

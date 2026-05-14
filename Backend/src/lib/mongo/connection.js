@@ -1,76 +1,89 @@
 /**
- * MongoDB connection helper — SCAFFOLD ONLY.
- *
- * Everything below is intentionally commented out. The app currently runs
- * against the file-based `db.json` store via `lib/data-store.js`. When you're
- * ready to switch:
- *   1. Uncomment the `require("mongoose")` and the `connectMongo` body.
- *   2. Set `MONGODB_URI` (and optional `USE_MONGO=true`) in `.env`.
- *   3. Uncomment the `connectMongo()` call in `src/server.js`.
- *   4. Migrate reads/writes off `data-store.js` onto the Mongoose models in
- *      `./models/*` (one router at a time is fine — the file db can keep
- *      serving the rest while you cut over).
- *
- * The intent of this scaffold is to make tomorrow's switch as small and
- * mechanical as possible: types are already declared, env keys are already
- * threaded through, and nothing here will run today (no mongoose import is
- * resolved at runtime, so the package can even be missing without breaking
- * the boot).
+ * MongoDB connection — used when `USE_MONGO=true` and `MONGODB_URI` is set.
+ * Routes still read/write via `lib/store.js` (JSON) until you migrate them to
+ * Mongoose models; this connection is mainly for health checks and upcoming
+ * repository work.
  */
 
-// const mongoose = require("mongoose");
-// const { MONGODB_URI, USE_MONGO } = require("../../config/env");
+const mongoose = require("mongoose");
+const { USE_MONGO, MONGODB_URI, IS_PROD } = require("../../config/env");
+const logger = require("../logger");
 
-// let connectionPromise = null;
+let connectionPromise = null;
 
 /**
- * Idempotent connector — call this from server bootstrap. Returns the same
- * connection promise on subsequent calls so it's safe to invoke from multiple
- * places (e.g. server start + a cron worker later).
+ * Idempotent connector — call from `server.js` bootstrap.
+ * @returns {Promise<import("mongoose").Connection | null>}
  */
-// async function connectMongo() {
-//   if (!USE_MONGO) {
-//     console.log("[mongo] USE_MONGO is false — skipping MongoDB connection");
-//     return null;
-//   }
-//   if (!MONGODB_URI) {
-//     throw new Error("MONGODB_URI must be set when USE_MONGO=true");
-//   }
-//   if (connectionPromise) return connectionPromise;
-//
-//   mongoose.set("strictQuery", true);
-//
-//   connectionPromise = mongoose
-//     .connect(MONGODB_URI, {
-//       // Mongoose 8+ defaults are sensible; only override if needed.
-//       autoIndex: process.env.NODE_ENV !== "production",
-//       serverSelectionTimeoutMS: 10_000,
-//     })
-//     .then((conn) => {
-//       console.log(
-//         `[mongo] connected → ${conn.connection.host}/${conn.connection.name}`
-//       );
-//       return conn;
-//     })
-//     .catch((err) => {
-//       connectionPromise = null;
-//       console.error("[mongo] connection failed", err.message);
-//       throw err;
-//     });
-//
-//   return connectionPromise;
-// }
+async function connectMongo() {
+  if (!USE_MONGO) {
+    logger.debug("[mongo] USE_MONGO is false — file JSON store only");
+    return null;
+  }
+  if (!MONGODB_URI) {
+    throw new Error("MONGODB_URI is required when USE_MONGO=true");
+  }
+  if (connectionPromise) return connectionPromise;
 
-// async function disconnectMongo() {
-//   if (!connectionPromise) return;
-//   await mongoose.disconnect();
-//   connectionPromise = null;
-// }
+  mongoose.set("strictQuery", true);
+
+  connectionPromise = mongoose
+    .connect(MONGODB_URI, {
+      autoIndex: !IS_PROD,
+      serverSelectionTimeoutMS: 10_000,
+    })
+    .then((conn) => {
+      logger.info("[mongo] connected", {
+        host: conn.connection.host,
+        name: conn.connection.name,
+      });
+      return conn;
+    })
+    .catch((err) => {
+      connectionPromise = null;
+      logger.error("[mongo] connection failed", { message: err.message });
+      throw err;
+    });
+
+  return connectionPromise;
+}
+
+async function disconnectMongo() {
+  if (!USE_MONGO) return;
+  try {
+    await mongoose.disconnect();
+  } finally {
+    connectionPromise = null;
+  }
+}
+
+function isMongoEnabled() {
+  return USE_MONGO && mongoose.connection.readyState === 1;
+}
+
+/** For `/api/health` — never throws. */
+function getMongoHealth() {
+  if (!USE_MONGO) {
+    return { mode: "json", configured: false, ready: false };
+  }
+  const st = mongoose.connection.readyState;
+  const labels = {
+    0: "disconnected",
+    1: "connected",
+    2: "connecting",
+    3: "disconnecting",
+  };
+  return {
+    mode: "mongo",
+    configured: true,
+    ready: st === 1,
+    state: labels[st] || String(st),
+  };
+}
 
 module.exports = {
-  // Exported as no-ops while the scaffold is dormant so callers that get
-  // wired up early don't have to defend against `undefined`.
-  connectMongo: async () => null,
-  disconnectMongo: async () => undefined,
-  isMongoEnabled: () => false,
+  connectMongo,
+  disconnectMongo,
+  isMongoEnabled,
+  getMongoHealth,
 };
