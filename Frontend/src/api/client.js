@@ -61,20 +61,47 @@ export async function changePassword({ currentPassword, newPassword }) {
 }
 
 /**
- * List products. Filtering happens server-side: pass any combination of
- * `segment`, `q`, `brand` (string or string[]), `priceMin`, `priceMax`,
- * `minRating`. Empty / missing values are dropped before the request is sent
- * so callers can spread their state without checking each field.
+ * Normalise `POST /api/products` responses. Same endpoint for Home and Catalog;
+ * only JSON body fields differ (segment, filters, page, limit).
+ *
+ * - With `page` or `limit`: backend returns `{ items, total, page, ... }`.
+ * - Without both: legacy bare array (avoid for new callers).
  */
-export async function getProducts(params) {
+export function parseProductsListResponse(data) {
+  if (Array.isArray(data)) {
+    return {
+      items: data,
+      total: data.length,
+      page: 1,
+      limit: data.length,
+      totalPages: 1,
+      hasMore: false,
+    };
+  }
+  const items = Array.isArray(data?.items) ? data.items : [];
+  return {
+    items,
+    total: Number(data?.total) || items.length,
+    page: Number(data?.page) || 1,
+    limit: Number(data?.limit) || items.length,
+    totalPages: Number(data?.totalPages) || 1,
+    hasMore: Boolean(data?.hasMore),
+    sort: data?.sort,
+  };
+}
+
+function buildProductsListPayload(params) {
   const cleaned = {};
   if (params?.segment) cleaned.segment = params.segment;
   if (params?.q) cleaned.q = String(params.q).trim();
   if (params?.brand != null) {
-    const brand = Array.isArray(params.brand)
-      ? params.brand.filter(Boolean).join(",")
-      : String(params.brand).trim();
-    if (brand) cleaned.brand = brand;
+    if (Array.isArray(params.brand)) {
+      const brands = params.brand.map((b) => String(b).trim()).filter(Boolean);
+      if (brands.length) cleaned.brand = brands;
+    } else {
+      const brand = String(params.brand).trim();
+      if (brand) cleaned.brand = brand;
+    }
   }
   if (params?.priceMin != null && params.priceMin !== "") {
     cleaned.priceMin = params.priceMin;
@@ -86,14 +113,17 @@ export async function getProducts(params) {
     cleaned.minRating = params.minRating;
   }
   if (params?.sort) cleaned.sort = String(params.sort);
-  // Asking for either `page` or `limit` switches the backend to the
-  // `{ items, total, page, limit, totalPages, hasMore }` envelope.
   if (params?.page != null && params.page !== "") cleaned.page = params.page;
   if (params?.limit != null && params.limit !== "") cleaned.limit = params.limit;
-  const { data } = await api.get(
-    "/products",
-    Object.keys(cleaned).length ? { params: cleaned } : undefined
-  );
+  return cleaned;
+}
+
+/**
+ * List products — `POST /api/products` with JSON body (segment, filters, page, limit).
+ * Network tab shows the route name only; filters are not appended to the URL.
+ */
+export async function getProducts(params) {
+  const { data } = await api.post("/products", buildProductsListPayload(params));
   return data;
 }
 
@@ -103,20 +133,20 @@ export async function getProductById(id) {
 }
 
 /**
- * Catalog sidebar facets (price range, brands, ratings, specifications) for
- * the current segment + optional search. Always reflects the products that
- * are actually present in that tab so the UI never exposes empty filters.
+ * Catalog sidebar facets — `POST /api/products/filters` with JSON body
+ * (`segment`, optional `q`). Network tab shows `filters` only, no query string.
+ * Load this before `getProducts` so facet ranges match the first product page.
  */
-export async function getProductFilters(params) {
-  const cleaned = {};
-  if (params?.segment) cleaned.segment = params.segment;
-  if (params?.q) cleaned.q = String(params.q).trim();
-  const { data } = await api.get(
-    "/products/filters",
-    Object.keys(cleaned).length ? { params: cleaned } : undefined
-  );
+export async function getFilterData(params) {
+  const body = {};
+  if (params?.segment) body.segment = params.segment;
+  if (params?.q) body.q = String(params.q).trim();
+  const { data } = await api.post("/products/filters", body);
   return data;
 }
+
+/** @deprecated Use `getFilterData` — same behaviour. */
+export const getProductFilters = getFilterData;
 
 export async function getProductReviews(id) {
   const { data } = await api.get(`/products/${id}/reviews`);

@@ -11,7 +11,11 @@ import StockBadge from "../../components/StockBadge";
 import StockAlertButton from "../../components/StockAlertButton";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import HomeFooter from "../Home/HomeFooter";
-import { getProductFilters, getProducts } from "../../api/client";
+import {
+  getFilterData,
+  getProducts,
+  parseProductsListResponse,
+} from "../../api/client";
 import { formatMoney, formatMoneyShort } from "../../utils/money";
 import { getCatalogGridImageProps } from "../../utils/catalogImage";
 import "./ProductsCatalog.css";
@@ -38,7 +42,8 @@ const SORT_OPTIONS = [
 ];
 
 /**
- * Filter facets are loaded from `GET /api/products/filters?segment=...&q=...`.
+ * Filter facets are loaded from `POST /api/products/filters` (`getFilterData`)
+ * with `{ segment, q? }` in the body, then products load via `POST /api/products`.
  * This is the empty shape we render before the first response lands so the
  * sidebar can keep its layout instead of jumping when data arrives.
  */
@@ -136,7 +141,7 @@ function ProductsCatalog() {
       setFiltersReady(false);
       setProducts([]);
       try {
-        const data = await getProductFilters({
+        const data = await getFilterData({
           segment: activeSegment,
           q: searchQ || undefined,
         });
@@ -181,11 +186,10 @@ function ProductsCatalog() {
   /**
    * Step 2 of the per-tab flow: once filter options are ready (and any time
    * the user adjusts a filter or sort) we re-fetch the product list from
-   * the filter-aware `/api/products` endpoint. Brand whitelist is sent
+   * the filter-aware `POST /api/products` endpoint. Brand whitelist is sent
    * only when something is actually checked, and the price cap is omitted
-   * when the slider is sitting at the catalog max — both keep the URL
-   * clean and let the backend short-circuit to "every product in this
-   * category".
+   * when the slider is sitting at the catalog max — both let the backend
+   * short-circuit to "every product in this category".
    *
    * A short debounce smooths out price-slider drags so we don't fire one
    * request per pixel. The first page is always replaced; "Load more"
@@ -213,10 +217,10 @@ function ProductsCatalog() {
           limit: PAGE_SIZE,
         });
         if (cancelled) return;
-        const items = Array.isArray(data?.items) ? data.items : [];
-        setProducts(items);
-        setTotalCount(Number(data?.total) || items.length);
-        setHasMore(Boolean(data?.hasMore));
+        const page = parseProductsListResponse(data);
+        setProducts(page.items);
+        setTotalCount(page.total);
+        setHasMore(page.hasMore);
         setPage(1);
       } catch {
         if (!cancelled) setError("Unable to load products right now.");
@@ -259,16 +263,16 @@ function ProductsCatalog() {
         page: next,
         limit: PAGE_SIZE,
       });
-      const items = Array.isArray(data?.items) ? data.items : [];
+      const nextPage = parseProductsListResponse(data);
       setProducts((prev) => {
         // De-dupe defensively in case the user pages quickly while a
         // filter change is also in flight.
         const seen = new Set(prev.map((p) => String(p.id)));
-        const additions = items.filter((p) => !seen.has(String(p.id)));
+        const additions = nextPage.items.filter((p) => !seen.has(String(p.id)));
         return [...prev, ...additions];
       });
-      setTotalCount(Number(data?.total) || 0);
-      setHasMore(Boolean(data?.hasMore));
+      setTotalCount(nextPage.total);
+      setHasMore(nextPage.hasMore);
       setPage(next);
     } catch {
       setError("Couldn't load more products.");

@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { getCurrentUser, getProducts } from "../../api/client";
+import {
+  getCurrentUser,
+  getProducts,
+  parseProductsListResponse,
+} from "../../api/client";
 import { CartIcon } from "../../components/CartIcon";
 import { formatMoney } from "../../utils/money";
 import "./Dashboard.css";
@@ -14,10 +18,10 @@ function Dashboard() {
       try {
         const [{ user }, productsData] = await Promise.all([
           getCurrentUser(),
-          getProducts(),
+          getProducts({ segment: "AI Picks", page: 1, limit: 12 }),
         ]);
         setUserName(user.name);
-        setProducts(productsData);
+        setProducts(parseProductsListResponse(productsData).items);
         setMessage("");
       } catch (error) {
         setMessage(error.response?.data?.message || "Session expired.");

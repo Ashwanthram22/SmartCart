@@ -24,12 +24,13 @@ const MAX_LIMIT = 60;
  * Parse + clamp pagination/sort params with defaults that keep the
  * endpoint backward-compatible: when neither `page` nor `limit` is sent
  * the response is still a bare array. Only requests that opt in via
- * `?page=` or `?limit=` get the new `{ items, total, ... }` envelope.
+ * `page` / `limit` (query or JSON body) get the `{ items, total, ... }` envelope.
  */
-function parsePagination(query) {
-  const opted = "page" in query || "limit" in query;
-  const limitRaw = Number(query.limit);
-  const pageRaw = Number(query.page);
+function parsePagination(input) {
+  const source = input && typeof input === "object" ? input : {};
+  const opted = "page" in source || "limit" in source;
+  const limitRaw = Number(source.limit);
+  const pageRaw = Number(source.page);
   const limit = Number.isFinite(limitRaw) && limitRaw > 0
     ? Math.min(MAX_LIMIT, Math.floor(limitRaw))
     : DEFAULT_LIMIT;
@@ -136,26 +137,23 @@ function capitalizeKey(key) {
  *   3. brand whitelist (empty = no brand restriction)
  *   4. price range
  *   5. rating floor
- * Then the sort key (`sort=`) is applied, then pagination if requested.
+ * Then the sort key is applied, then pagination if requested.
  *
- * Backward compatibility: when neither `page` nor `limit` is in the query
- * the response is the historical bare array. Adding either one switches
- * to the `{ items, total, page, limit, totalPages }` envelope so the
- * frontend can render a Load-More button without an extra round trip.
+ * `input` is either query (GET) or JSON body (POST). When neither `page` nor
+ * `limit` is present the response is a bare array; otherwise paginated envelope.
  */
-router.get("/", authMiddleware, async (req, res) => {
-  const db = await readDb();
+async function buildProductListResponse(db, input) {
   const segment =
-    typeof req.query.segment === "string" && req.query.segment.trim()
-      ? req.query.segment.trim()
+    typeof input.segment === "string" && input.segment.trim()
+      ? input.segment.trim()
       : "AI Picks";
-  const q = typeof req.query.q === "string" ? req.query.q.trim().toLowerCase() : "";
-  const brandFilters = parseList(req.query.brand);
-  const priceMin = parseNumber(req.query.priceMin);
-  const priceMax = parseNumber(req.query.priceMax);
-  const minRating = parseNumber(req.query.minRating);
-  const sort = parseSort(req.query.sort);
-  const { opted: paginate, page, limit } = parsePagination(req.query);
+  const q = typeof input.q === "string" ? input.q.trim().toLowerCase() : "";
+  const brandFilters = parseList(input.brand);
+  const priceMin = parseNumber(input.priceMin);
+  const priceMax = parseNumber(input.priceMax);
+  const minRating = parseNumber(input.minRating);
+  const sort = parseSort(input.sort);
+  const { opted: paginate, page, limit } = parsePagination(input);
 
   let list = db.products.filter((p) => productMatchesSegment(p, segment));
   if (segment === "Trending") {
@@ -183,7 +181,7 @@ router.get("/", authMiddleware, async (req, res) => {
   list = applySort(list, sort);
 
   if (!paginate) {
-    return res.json(list);
+    return list;
   }
 
   const total = list.length;
@@ -192,7 +190,7 @@ router.get("/", authMiddleware, async (req, res) => {
   const start = (safePage - 1) * limit;
   const items = list.slice(start, start + limit);
 
-  return res.json({
+  return {
     items,
     total,
     page: safePage,
@@ -200,26 +198,31 @@ router.get("/", authMiddleware, async (req, res) => {
     totalPages,
     hasMore: safePage < totalPages,
     sort,
-  });
+  };
+}
+
+/** POST /api/products — segment, filters, pagination in JSON body (preferred). */
+router.post("/", authMiddleware, async (req, res) => {
+  const db = await readDb();
+  return res.json(await buildProductListResponse(db, req.body || {}));
+});
+
+/** GET /api/products — legacy query-string variant (same behaviour). */
+router.get("/", authMiddleware, async (req, res) => {
+  const db = await readDb();
+  return res.json(await buildProductListResponse(db, req.query));
 });
 
 /**
- * Filter facets for the catalog sidebar. Always derived from the products
- * actually present in the requested segment (after the optional `q` search),
- * so the UI never offers a brand / processor / price range that wouldn't
- * return any results. Trending is treated as a virtual segment using the
- * shared popularity ranker.
- *
- * NOTE: This route MUST be declared before `/:id` so Express doesn't try to
- * resolve "filters" as a product id.
+ * Filter facets for the catalog sidebar. `input` is query (GET) or JSON body (POST).
+ * Must stay before `/:id` so "filters" is not parsed as a product id.
  */
-router.get("/filters", authMiddleware, async (req, res) => {
-  const db = await readDb();
+async function buildFilterFacetsResponse(db, input) {
   const segment =
-    typeof req.query.segment === "string" && req.query.segment.trim()
-      ? req.query.segment.trim()
+    typeof input.segment === "string" && input.segment.trim()
+      ? input.segment.trim()
       : "AI Picks";
-  const q = typeof req.query.q === "string" ? req.query.q.trim().toLowerCase() : "";
+  const q = typeof input.q === "string" ? input.q.trim().toLowerCase() : "";
 
   let inSegment = db.products.filter((p) => productMatchesSegment(p, segment));
   if (segment === "Trending") {
@@ -258,14 +261,26 @@ router.get("/filters", authMiddleware, async (req, res) => {
     inSegment.some((p) => (Number(p.rating) || 0) >= tier)
   );
 
-  return res.json({
+  return {
     segment,
     totalCount: inSegment.length,
     price: { min: priceMin, max: priceMax },
     brands,
     ratings,
     specifications,
-  });
+  };
+}
+
+/** POST /api/products/filters — segment + optional search in JSON body (no query string). */
+router.post("/filters", authMiddleware, async (req, res) => {
+  const db = await readDb();
+  return res.json(await buildFilterFacetsResponse(db, req.body || {}));
+});
+
+/** GET /api/products/filters — legacy query-string variant. */
+router.get("/filters", authMiddleware, async (req, res) => {
+  const db = await readDb();
+  return res.json(await buildFilterFacetsResponse(db, req.query));
 });
 
 router.get("/:id", authMiddleware, async (req, res) => {
