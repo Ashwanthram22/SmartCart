@@ -1,0 +1,37 @@
+{
+  "id": "o1778574632318",
+  "userId": "u1778574592688",
+  "items": [
+    {
+      "productId": "p1",
+      "title": "OmniWatch Pro 4",
+      "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80",
+      "subtitle": "smartwatch",
+      "unitPrice": 3213.93,
+      "quantity": 2,
+      "lineTotal": 6427.86
+    }
+  ],
+  "subtotal": 6427.86,
+  "discount": 642.79,
+  "tax": 462.81,
+  "total": 6247.88,
+  "coupon": {
+    "code": "WELCOME10",
+    "type": "percent",
+    "value": 10,
+    "label": "10% off your first order",
+    "description": "Save 10% on any order — no minimum.",
+    "minOrder": 0
+  },
+  "address": {
+    "fullName": "Pack D Tester",
+    "line1": "42 Maple St",
+    "city": "Springfield",
+    "postal": "00042"
+  },
+  "status": "cancelled",
+  "createdAt": "2026-05-12T08:30:32.318Z",
+  "updatedAt": "2026-05-13T08:54:00.780Z",
+  "cancelledAt": "2026-05-13T08:54:00.780Z"
+}

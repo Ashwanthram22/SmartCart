@@ -1,0 +1,72 @@
+{
+  "id": "u1778574592688",
+  "name": "Pack D Tester",
+  "email": "packd-test@aicart.com",
+  "password": "$2b$10$4o.Pltd63dIBfbhEGlYluuwA28soBpf3Qak93KQGINXK9TYYr3YQK",
+  "role": "customer",
+  "provider": null,
+  "cart": {
+    "items": [
+      { "productId": "p1", "quantity": 2 },
+      { "productId": "p2", "quantity": 1 }
+    ],
+    "updatedAt": "2026-05-12T08:30:42.445Z"
+  },
+  "savedItems": {
+    "items": [
+      {
+        "productId": "p2",
+        "savedAt": "2026-05-15T09:59:35.403Z"
+      }
+    ],
+    "updatedAt": "2026-05-15T09:59:35.403Z"
+  },
+  "preferences": {
+    "currency": "INR",
+    "theme": "system",
+    "notifications": {
+      "orderUpdates": true,
+      "dealAlerts": true,
+      "backInStock": true,
+      "priceDrops": true,
+      "weeklyDigest": false
+    },
+    "marketingEmails": false,
+    "updatedAt": "2026-05-20T10:35:11.023Z"
+  },
+  "addresses": [
+    {
+      "id": "a1778574611334",
+      "fullName": "Pack D Tester",
+      "line1": "42 Maple St",
+      "line2": "",
+      "city": "Springfield",
+      "postal": "00042",
+      "label": "Home",
+      "phone": "555-0100",
+      "isDefault": true,
+      "createdAt": "2026-05-12T08:30:11.334Z",
+      "updatedAt": "2026-05-12T08:30:22.783Z"
+    }
+  ],
+  "stockAlerts": [
+    {
+      "id": "sa1779000000001",
+      "productId": "p15",
+      "productTitle": "UltraTab 12\" Tablet",
+      "createdAt": "2026-05-20T11:00:00.000Z",
+      "notified": false
+    }
+  ],
+  "priceAlerts": [
+    {
+      "id": "pa1779000000001",
+      "productId": "p1",
+      "productTitle": "OmniWatch Pro 4",
+      "targetPrice": 7999,
+      "referencePrice": 8999,
+      "createdAt": "2026-05-20T11:00:00.000Z",
+      "triggered": false
+    }
+  ]
+}

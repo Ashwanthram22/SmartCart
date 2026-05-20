@@ -309,8 +309,14 @@ export async function replaceSavedItems(items) {
   return data;
 }
 
-export async function addSavedItem(item) {
-  const { data } = await api.post("/saved/items", item);
+export async function addSavedItem(payload) {
+  const productId =
+    payload?.productId != null
+      ? String(payload.productId)
+      : payload?.id != null
+        ? String(payload.id)
+        : "";
+  const { data } = await api.post("/saved/items", productId ? { productId } : payload);
   return data;
 }
 

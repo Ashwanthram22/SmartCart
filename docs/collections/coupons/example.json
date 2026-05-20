@@ -1,0 +1,10 @@
+{
+  "code": "WELCOME10",
+  "type": "percent",
+  "value": 10,
+  "label": "10% off your first order",
+  "description": "Save 10% on any order — no minimum.",
+  "minOrder": 0,
+  "active": true,
+  "expiresAt": null
+}

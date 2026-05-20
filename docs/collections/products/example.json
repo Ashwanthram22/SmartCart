@@ -1,0 +1,26 @@
+{
+  "id": "p15",
+  "title": "UltraTab 12\" Tablet",
+  "description": "High-performance tablet for creative and productivity workflows.",
+  "category": "Computing",
+  "brand": "Nexus",
+  "catalogSegments": ["Electronics", "Laptops"],
+  "stock": 11,
+  "price": 53999,
+  "originalPrice": 58999,
+  "rating": 4.9,
+  "reviewCount": 3105,
+  "badge": "TRENDING",
+  "image": "https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=600&q=80",
+  "images": [
+    "https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=600&q=80"
+  ],
+  "specs": {
+    "processor": "Apple M3",
+    "display": "12-inch Liquid Retina"
+  },
+  "createdAt": "2026-05-01T08:00:00.000Z",
+  "updatedAt": "2026-05-13T13:53:11.295Z",
+  "createdBy": "admin@aicart.com",
+  "updatedBy": "admin@aicart.com"
+}

@@ -1,7 +1,12 @@
 const express = require("express");
 const { withDb } = require("../lib/store");
 const authMiddleware = require("../middleware/auth");
-
+const {
+  normaliseStoredSaved,
+  buildSavedResponse,
+  persistSavedItems,
+  productMapFromDb,
+} = require("../lib/saved-items");
 const { withUserProfile, touchSaved } = require("../lib/user-profile");
 
 const router = express.Router();
@@ -16,48 +21,18 @@ function requireSaved(db, userId) {
   return user.savedItems;
 }
 
-/**
- * Normalise a saved item payload. Like the cart, we keep the snapshot
- * fields client-side too (title, image, subtitle, price) so the saved
- * page renders instantly without re-fetching every product. The optional
- * `category` is the chip-group ("electronics" | "home" | "apparel") the
- * frontend uses for filtering, so we let the client tell us once and store
- * it alongside the item rather than recomputing on every request.
- */
-function normaliseItem(input) {
-  const id = String(input?.id || "").trim();
-  if (!id) return null;
-  const priceNum = Number(input?.price);
-  const ratingNum = Number(input?.rating);
-  const stockNum = Number(input?.stock);
-  return {
-    id,
-    title: String(input?.title || "").trim() || id,
-    subtitle: typeof input?.subtitle === "string" ? input.subtitle : "",
-    image: typeof input?.image === "string" ? input.image : "",
-    category: typeof input?.category === "string" ? input.category : "electronics",
-    price: Number.isFinite(priceNum) ? priceNum : 0,
-    rating: Number.isFinite(ratingNum) ? ratingNum : 0,
-    ...(Number.isFinite(stockNum) ? { stock: stockNum } : {}),
-    savedAt: new Date().toISOString(),
-  };
-}
-
 router.get("/", async (req, res) => {
   const result = await withDb(async (db) => {
     const entry = requireSaved(db, req.user.sub);
     if (!entry) return { error: "User not found" };
-    return { items: entry.items, updatedAt: entry.updatedAt };
+    entry.items = persistSavedItems(entry.items);
+    return buildSavedResponse(db, entry);
   });
   return res.json(result);
 });
 
 /**
- * Replace the whole list. Used when the client merges its guest
- * (localStorage) saved list with the server list on login. The merge
- * strategy is "union, keeping the server's snapshot when the same id
- * exists in both" — we treat re-saving an item as a no-op rather than a
- * timestamp bump.
+ * Replace the whole list (login merge). Body items: { productId } or legacy { id }.
  */
 router.put("/", async (req, res) => {
   const incoming = Array.isArray(req.body?.items) ? req.body.items : [];
@@ -70,50 +45,75 @@ router.put("/", async (req, res) => {
   const result = await withDb(async (db) => {
     const entry = requireSaved(db, req.user.sub);
     if (!entry) return { error: "User not found" };
+    const map = productMapFromDb(db);
     const seen = new Map();
-    // Existing items take precedence so we keep the original savedAt.
-    for (const it of entry.items) seen.set(it.id, it);
-    for (const raw of incoming) {
-      const item = normaliseItem(raw);
-      if (!item) continue;
-      if (!seen.has(item.id)) seen.set(item.id, item);
+
+    for (const it of entry.items) {
+      const row = normaliseStoredSaved(it);
+      if (row && map.has(row.productId)) seen.set(row.productId, row);
     }
+    for (const raw of incoming) {
+      const row = normaliseStoredSaved(raw);
+      if (!row || !map.has(row.productId)) continue;
+      if (!seen.has(row.productId)) seen.set(row.productId, row);
+    }
+
     entry.items = Array.from(seen.values()).slice(0, MAX_ITEMS);
     touchSaved(entry);
-    return { items: entry.items, updatedAt: entry.updatedAt };
+    return buildSavedResponse(db, entry);
   });
 
   return res.json(result);
 });
 
-/** Add a single item (no-op if already saved). */
+/** Body: { productId } — product fields loaded from products collection. */
 router.post("/items", async (req, res) => {
+  const productId = String(
+    req.body?.productId || req.body?.id || ""
+  ).trim();
+
+  if (!productId) {
+    return res.status(400).json({ message: "productId is required" });
+  }
+
   const result = await withDb(async (db) => {
+    const product = (db.products || []).find((p) => String(p.id) === productId);
+    if (!product) return { notFound: true };
+
     const entry = requireSaved(db, req.user.sub);
     if (!entry) return { error: "User not found" };
-    const item = normaliseItem(req.body);
-    if (!item) return { error: "Item id is required" };
-    if (entry.items.length >= MAX_ITEMS) {
-      return { error: `Saved list cannot exceed ${MAX_ITEMS} items` };
-    }
-    if (!entry.items.some((i) => i.id === item.id)) {
-      entry.items.unshift(item);
+
+    if (!entry.items.some((i) => String(i.productId || i.id) === productId)) {
+      if (entry.items.length >= MAX_ITEMS) {
+        return { error: `Saved list cannot exceed ${MAX_ITEMS} items` };
+      }
+      entry.items.unshift({
+        productId,
+        savedAt: new Date().toISOString(),
+      });
       touchSaved(entry);
     }
-    return { items: entry.items, updatedAt: entry.updatedAt };
+
+    return buildSavedResponse(db, entry);
   });
+
+  if (result.notFound) {
+    return res.status(404).json({ message: "Product not found" });
+  }
   if (result.error) return res.status(400).json({ message: result.error });
   return res.json(result);
 });
 
 router.delete("/items/:id", async (req, res) => {
-  const id = String(req.params.id);
+  const productId = String(req.params.id);
   const result = await withDb(async (db) => {
     const entry = requireSaved(db, req.user.sub);
     if (!entry) return { error: "User not found" };
-    entry.items = entry.items.filter((i) => i.id !== id);
+    entry.items = entry.items.filter(
+      (i) => String(i.productId || i.id) !== productId
+    );
     touchSaved(entry);
-    return { items: entry.items, updatedAt: entry.updatedAt };
+    return buildSavedResponse(db, entry);
   });
   return res.json(result);
 });
@@ -124,7 +124,7 @@ router.delete("/", async (req, res) => {
     if (!entry) return { error: "User not found" };
     entry.items = [];
     touchSaved(entry);
-    return { items: entry.items, updatedAt: entry.updatedAt };
+    return buildSavedResponse(db, entry);
   });
   return res.json(result);
 });

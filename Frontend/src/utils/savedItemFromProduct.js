@@ -19,19 +19,9 @@ export function getSavedCategory(product) {
   return "electronics";
 }
 
-/**
- * @param {Record<string, unknown>} product
- */
+import { buildSavedLine } from "./savedLine";
+
+/** @deprecated Prefer `buildSavedLine` — kept for any legacy imports. */
 export function savedItemFromProduct(product) {
-  const stockNum = Number(product.stock);
-  return {
-    id: String(product.id),
-    category: getSavedCategory(product),
-    title: String(product.title || ""),
-    subtitle: `${product.category || "Product"} • ${product.rating ?? "—"}★ rated`,
-    price: Number(product.price) || 0,
-    rating: Number(product.rating) || 0,
-    image: String(product.image || ""),
-    ...(Number.isFinite(stockNum) ? { stock: stockNum } : {}),
-  };
+  return buildSavedLine(product);
 }

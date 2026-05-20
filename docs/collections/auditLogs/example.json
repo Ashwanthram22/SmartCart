@@ -1,0 +1,18 @@
+{
+  "id": "log-1778680036177-rwlpzs",
+  "ts": "2026-05-13T13:47:16.177Z",
+  "actorId": "u-admin",
+  "actorEmail": "admin@aicart.com",
+  "action": "product.update",
+  "target": {
+    "type": "product",
+    "id": "p15"
+  },
+  "summary": "Updated UltraTab 12\" Tablet (stock)",
+  "changes": {
+    "stock": {
+      "from": 31,
+      "to": 1
+    }
+  }
+}

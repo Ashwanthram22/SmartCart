@@ -1,0 +1,10 @@
+{
+  "code": "SAVE25",
+  "type": "flat",
+  "value": 2000,
+  "label": "₹2,000 off orders over ₹16,000",
+  "description": "Take ₹2,000 off when your subtotal is at least ₹16,000.",
+  "minOrder": 16000,
+  "active": true,
+  "expiresAt": null
+}

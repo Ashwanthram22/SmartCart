@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SavedContext } from "./saved-context";
-import { savedItemFromProduct } from "../utils/savedItemFromProduct";
 import { isAuthenticated, onAuthChange } from "../utils/authToken";
 import {
   addSavedItem,
@@ -9,6 +8,13 @@ import {
   removeSavedItem,
   replaceSavedItems,
 } from "../api/client";
+import {
+  buildSavedLine,
+  mergeGuestSavedLines,
+  resolveSavedProductInput,
+  savedLineId,
+  storedSavedLines,
+} from "../utils/savedLine";
 
 const STORAGE_KEY = "aicart_saved_v1";
 
@@ -23,73 +29,72 @@ function readStoredItems() {
   }
 }
 
-/**
- * Union-merge by id: prefer the existing entry (server) when both contain
- * the same id so we don't blow away the original `savedAt` timestamp on
- * re-save. Items unique to either side are kept.
- */
-function mergeSaved(serverItems, localItems) {
-  const map = new Map();
-  for (const item of serverItems) map.set(String(item.id), { ...item });
-  for (const item of localItems) {
-    if (!item?.id) continue;
-    const id = String(item.id);
-    if (!map.has(id)) map.set(id, { ...item });
-  }
-  return Array.from(map.values());
+function adoptServerSaved(data) {
+  return Array.isArray(data?.items) ? data.items : [];
 }
 
 export function SavedProvider({ children }) {
   const [items, setItems] = useState(readStoredItems);
   const [authed, setAuthed] = useState(isAuthenticated);
   const syncGenRef = useRef(0);
+  const mergeGuestOnLoadRef = useRef(false);
 
-  /** Mirror to localStorage so guest mode + refresh continue to work. */
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ items }));
   }, [items]);
 
-  /**
-   * Auth-change subscriber. Drives both the local `authed` flag (which
-   * triggers the load effect below) and the immediate logout cleanup.
-   * The setItems on logout sits inside an event handler — not the effect
-   * body — which is what the React docs recommend for external-system
-   * synchronisation.
-   */
   useEffect(() => {
     return onAuthChange(({ authenticated }) => {
       setAuthed(authenticated);
-      if (!authenticated) setItems([]);
+      if (authenticated) {
+        mergeGuestOnLoadRef.current = true;
+      } else {
+        mergeGuestOnLoadRef.current = false;
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch {
+          /* ignore */
+        }
+        setItems([]);
+      }
     });
   }, []);
 
-  /**
-   * On login: merge any guest items into the server list, push the union
-   * back, and adopt the server's view as truth.
-   */
   useEffect(() => {
-    if (!authed) return undefined;
+    if (!authed) {
+      setItems([]);
+      return undefined;
+    }
+
+    const shouldMergeGuest = mergeGuestOnLoadRef.current;
+    mergeGuestOnLoadRef.current = false;
 
     let cancelled = false;
     const myGen = ++syncGenRef.current;
 
     (async () => {
       try {
-        const localItems = readStoredItems();
         const server = await getSavedItems();
         if (cancelled || myGen !== syncGenRef.current) return;
 
-        const serverItems = Array.isArray(server?.items) ? server.items : [];
+        const serverItems = adoptServerSaved(server);
+
+        if (!shouldMergeGuest) {
+          setItems(serverItems);
+          return;
+        }
+
+        const localItems = readStoredItems();
         if (localItems.length === 0) {
           setItems(serverItems);
           return;
         }
-        const merged = mergeSaved(serverItems, localItems);
-        const pushed = await replaceSavedItems(merged);
+        const merged = mergeGuestSavedLines(serverItems, localItems);
+        const pushed = await replaceSavedItems(storedSavedLines(merged));
         if (cancelled || myGen !== syncGenRef.current) return;
-        setItems(Array.isArray(pushed?.items) ? pushed.items : merged);
+        setItems(adoptServerSaved(pushed));
       } catch {
-        // Network failure: keep using local cache silently.
+        /* keep local cache */
       }
     })();
 
@@ -98,11 +103,6 @@ export function SavedProvider({ children }) {
     };
   }, [authed]);
 
-  /**
-   * Mirror of CartProvider.syncFromResponse — adopts the server's
-   * canonical list after a mutation, falls back to a refetch, then
-   * finally to a local rollback if everything fails.
-   */
   const syncFromResponse = useCallback(async (call, fallbackOptimistic) => {
     if (!isAuthenticated()) return;
     try {
@@ -116,14 +116,15 @@ export function SavedProvider({ children }) {
           return;
         }
       } catch {
-        /* ignore — keep optimistic */
+        /* ignore */
       }
       if (fallbackOptimistic) fallbackOptimistic();
     }
   }, []);
 
   const isSaved = useCallback(
-    (productId) => items.some((i) => String(i.id) === String(productId)),
+    (productId) =>
+      items.some((i) => savedLineId(i) === String(productId)),
     [items]
   );
 
@@ -133,7 +134,7 @@ export function SavedProvider({ children }) {
       let snapshotBefore = null;
       setItems((prev) => {
         snapshotBefore = prev;
-        return prev.filter((i) => String(i.id) !== id);
+        return prev.filter((i) => savedLineId(i) !== id);
       });
       syncFromResponse(
         () => removeSavedItem(id),
@@ -144,25 +145,27 @@ export function SavedProvider({ children }) {
   );
 
   const toggleSaved = useCallback(
-    (product) => {
+    (input) => {
+      const product = resolveSavedProductInput(input);
       if (!product?.id) return;
+
       const id = String(product.id);
-      const alreadySaved = items.some((i) => String(i.id) === id);
+      const alreadySaved = items.some((i) => savedLineId(i) === id);
 
       if (alreadySaved) {
         removeSaved(id);
         return;
       }
 
-      const item = savedItemFromProduct(product);
+      const line = buildSavedLine(product);
       let snapshotBefore = null;
       setItems((prev) => {
         snapshotBefore = prev;
-        if (prev.some((i) => String(i.id) === id)) return prev;
-        return [item, ...prev];
+        if (prev.some((i) => savedLineId(i) === id)) return prev;
+        return [line, ...prev];
       });
       syncFromResponse(
-        () => addSavedItem(item),
+        () => addSavedItem({ productId: id }),
         () => setItems(snapshotBefore || [])
       );
     },

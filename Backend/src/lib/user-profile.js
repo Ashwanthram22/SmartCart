@@ -141,9 +141,22 @@ function migrateLegacyUserCollections(db) {
       const user = findUser(db, row.userId);
       if (!user) continue;
       ensureUserProfile(user);
-      const seen = new Map(user.savedItems.items.map((it) => [it.id, it]));
+      const seen = new Map();
+      for (const it of user.savedItems.items) {
+        const pid = String(it?.productId || it?.id || "").trim();
+        if (!pid) continue;
+        seen.set(pid, {
+          productId: pid,
+          savedAt: it.savedAt || new Date().toISOString(),
+        });
+      }
       for (const it of row.items || []) {
-        if (it?.id && !seen.has(it.id)) seen.set(it.id, it);
+        const pid = String(it?.productId || it?.id || "").trim();
+        if (!pid || seen.has(pid)) continue;
+        seen.set(pid, {
+          productId: pid,
+          savedAt: it.savedAt || new Date().toISOString(),
+        });
       }
       user.savedItems.items = Array.from(seen.values());
       if (row.updatedAt) user.savedItems.updatedAt = row.updatedAt;

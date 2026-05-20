@@ -7,6 +7,15 @@ import { useSaved } from "../../hooks/useSaved";
 import usePageMeta from "../../hooks/usePageMeta";
 import { CartIcon } from "../../components/CartIcon";
 import { formatMoney as formatUsd } from "../../utils/money";
+import {
+  savedLineCategory,
+  savedLineId,
+  savedLineImage,
+  savedLinePrice,
+  savedLineRating,
+  savedLineSubtitle,
+  savedLineTitle,
+} from "../../utils/savedLine";
 import "./SavedItems.css";
 
 const CATEGORIES = [
@@ -76,26 +85,19 @@ export default function SavedItems() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return items.filter((p) => {
-      const catOk = activeCategory === "all" || p.category === activeCategory;
-      const textOk =
-        !q ||
-        p.title.toLowerCase().includes(q) ||
-        p.subtitle.toLowerCase().includes(q);
+    return items.filter((line) => {
+      const catOk =
+        activeCategory === "all" || savedLineCategory(line) === activeCategory;
+      const title = savedLineTitle(line).toLowerCase();
+      const sub = savedLineSubtitle(line.product).toLowerCase();
+      const textOk = !q || title.includes(q) || sub.includes(q);
       return catOk && textOk;
     });
   }, [items, activeCategory, query]);
 
-  const handleAddToCart = (p) => {
-    addItem({
-      id: p.id,
-      title: p.title,
-      image: p.image,
-      category: p.category || p.subtitle || "electronics",
-      price: p.price,
-      rating: p.rating,
-      stock: p.stock,
-    });
+  const handleAddToCart = (line) => {
+    if (!line?.product) return;
+    addItem(line.product);
   };
 
   return (
@@ -146,38 +148,47 @@ export default function SavedItems() {
         </header>
 
         <div className="saved-grid">
-          {filtered.map((p) => (
-            <article key={p.id} className="saved-card">
-              <div className="saved-card-media">
-                <img src={p.image} alt="" loading="lazy" />
-                <div className="saved-card-rating">
-                  <IconStar />
-                  <span>{Number(p.rating || 0).toFixed(1)}</span>
-                </div>
-                <button
-                  type="button"
-                  className="saved-card-remove"
-                  aria-label={`Remove ${p.title} from saved`}
-                  onClick={() => removeSaved(p.id)}
-                >
-                  <IconTrash />
-                </button>
-              </div>
-              <div className="saved-card-body">
-                <div className="saved-card-row">
-                  <div>
-                    <h3 className="saved-card-title">{p.title}</h3>
-                    <p className="saved-card-sub">{p.subtitle}</p>
+          {filtered.map((line) => {
+            const id = savedLineId(line);
+            const title = savedLineTitle(line);
+            const subtitle = savedLineSubtitle(line.product);
+            return (
+              <article key={id} className="saved-card">
+                <div className="saved-card-media">
+                  <img src={savedLineImage(line)} alt="" loading="lazy" />
+                  <div className="saved-card-rating">
+                    <IconStar />
+                    <span>{savedLineRating(line).toFixed(1)}</span>
                   </div>
-                  <p className="saved-card-price">{formatUsd(p.price)}</p>
+                  <button
+                    type="button"
+                    className="saved-card-remove"
+                    aria-label={`Remove ${title} from saved`}
+                    onClick={() => removeSaved(id)}
+                  >
+                    <IconTrash />
+                  </button>
                 </div>
-                <button type="button" className="saved-add-cart" onClick={() => handleAddToCart(p)}>
-                  <CartIcon size={26} />
-                  Add to Cart
-                </button>
-              </div>
-            </article>
-          ))}
+                <div className="saved-card-body">
+                  <div className="saved-card-row">
+                    <div>
+                      <h3 className="saved-card-title">{title}</h3>
+                      <p className="saved-card-sub">{subtitle}</p>
+                    </div>
+                    <p className="saved-card-price">{formatUsd(savedLinePrice(line))}</p>
+                  </div>
+                  <button
+                    type="button"
+                    className="saved-add-cart"
+                    onClick={() => handleAddToCart(line)}
+                  >
+                    <CartIcon size={26} />
+                    Add to Cart
+                  </button>
+                </div>
+              </article>
+            );
+          })}
 
           <aside className="saved-ai-card">
             <div className="saved-ai-glow" aria-hidden="true" />
