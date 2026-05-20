@@ -1,6 +1,7 @@
 const express = require("express");
 const { withDb } = require("../lib/store");
 const authMiddleware = require("../middleware/auth");
+const { withUserProfile } = require("../lib/user-profile");
 
 const router = express.Router();
 
@@ -8,26 +9,14 @@ router.use(authMiddleware);
 
 const MAX_PER_USER = 50;
 
-function ensureCollection(db) {
-  if (!Array.isArray(db.stockAlerts)) db.stockAlerts = [];
-}
-
 router.get("/", async (req, res) => {
   const list = await withDb(async (db) => {
-    ensureCollection(db);
-    return db.stockAlerts
-      .filter((a) => a.userId === req.user.sub)
-      .map((a) => ({ ...a }));
+    const user = withUserProfile(db, req.user.sub);
+    return (user?.stockAlerts || []).map((a) => ({ ...a }));
   });
   return res.json({ alerts: list });
 });
 
-/**
- * Subscribe the current user to be notified when a product is back in
- * stock. Returns the existing record if they're already subscribed
- * (no-op so the UI can call this on every click without duplicating
- * rows). The product must exist in the catalog.
- */
 router.post("/", async (req, res) => {
   const productId = String(req.body?.productId || "").trim();
   if (!productId) {
@@ -35,11 +24,13 @@ router.post("/", async (req, res) => {
   }
 
   const result = await withDb(async (db) => {
-    ensureCollection(db);
     const product = (db.products || []).find((p) => String(p.id) === productId);
     if (!product) return { notFound: true };
 
-    const own = db.stockAlerts.filter((a) => a.userId === req.user.sub);
+    const user = withUserProfile(db, req.user.sub);
+    if (!user) return { error: "User not found" };
+
+    const own = user.stockAlerts;
     const existing = own.find((a) => String(a.productId) === productId);
     if (existing) return { alert: existing, alreadyExists: true };
 
@@ -49,13 +40,12 @@ router.post("/", async (req, res) => {
 
     const alert = {
       id: `sa${Date.now()}`,
-      userId: req.user.sub,
       productId,
       productTitle: product.title || productId,
       createdAt: new Date().toISOString(),
       notified: false,
     };
-    db.stockAlerts.push(alert);
+    own.push(alert);
     return { alert };
   });
 
@@ -69,17 +59,19 @@ router.post("/", async (req, res) => {
 router.delete("/:productId", async (req, res) => {
   const productId = String(req.params.productId || "").trim();
   const result = await withDb(async (db) => {
-    ensureCollection(db);
-    const idx = db.stockAlerts.findIndex(
-      (a) => a.userId === req.user.sub && String(a.productId) === productId
+    const user = withUserProfile(db, req.user.sub);
+    if (!user) return { error: "User not found" };
+    const idx = user.stockAlerts.findIndex(
+      (a) => String(a.productId) === productId
     );
     if (idx < 0) return { notFound: true };
-    db.stockAlerts.splice(idx, 1);
+    user.stockAlerts.splice(idx, 1);
     return { removed: productId };
   });
   if (result.notFound) {
     return res.status(404).json({ message: "Subscription not found" });
   }
+  if (result.error) return res.status(404).json({ message: result.error });
   return res.json({ removed: result.removed });
 });
 

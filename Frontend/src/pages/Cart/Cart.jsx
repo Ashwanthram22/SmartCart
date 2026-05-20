@@ -10,15 +10,32 @@ import HomeFooter from "../Home/HomeFooter";
 import { validateCoupon } from "../../api/client";
 import usePageMeta from "../../hooks/usePageMeta";
 import { formatMoney } from "../../utils/money";
+import {
+  cartLineImage,
+  cartLineStock,
+  cartLineSubtitle,
+  cartLineTitle,
+  cartLineUnitPrice,
+} from "../../utils/cartLine";
 import "./Cart.css";
 
 const TAX_RATE = 0.08;
 const UPSLEEVE_ID = "ai-upsell-sleeve-13";
-// Roughly the INR equivalent of the original placeholder ($39.20 ≈ ₹3,259) so
-// the upsell tile still demonstrates a believable accessory price range.
-const UPSLEEVE_PRICE = 3259;
-const UPSLEEVE_IMAGE =
-  "https://images.unsplash.com/photo-1544816155-12df96455549?auto=format&fit=crop&w=400&q=80";
+const UPSLEEVE_PRODUCT = {
+  id: UPSLEEVE_ID,
+  title: "SmartSleeve 13",
+  description: "Premium felt sleeve designed for 13-inch laptops and tablets.",
+  category: "Accessories",
+  brand: "SmartCart",
+  catalogSegments: ["Accessories"],
+  stock: 200,
+  price: 3259,
+  originalPrice: 3999,
+  rating: 4.7,
+  reviewCount: 412,
+  image:
+    "https://images.unsplash.com/photo-1544816155-12df96455549?auto=format&fit=crop&w=600&q=80",
+};
 
 function Cart() {
   const navigate = useNavigate();
@@ -35,7 +52,10 @@ function Cart() {
   const [couponBusy, setCouponBusy] = useState(false);
   const [couponError, setCouponError] = useState("");
 
-  const subtotal = items.reduce((sum, line) => sum + line.unitPrice * line.quantity, 0);
+  const subtotal = items.reduce(
+    (sum, line) => sum + cartLineUnitPrice(line) * line.quantity,
+    0
+  );
   const discount = applied
     ? Math.min(subtotal, Number(applied.discount) || 0)
     : 0;
@@ -78,38 +98,24 @@ function Cart() {
   };
 
   const hasUpsell = items.some((i) => i.productId === UPSLEEVE_ID);
-  const firstCartProductTitle = items.find((i) => i.productId !== UPSLEEVE_ID)?.title;
+  const firstCartProductTitle = items.find(
+    (i) => i.productId !== UPSLEEVE_ID
+  )?.product?.title;
 
   const addSleeveUpsell = () => {
     if (hasUpsell) return;
-    addItem({
-      productId: UPSLEEVE_ID,
-      title: "SmartSleeve 13",
-      image: UPSLEEVE_IMAGE,
-      subtitle: "Premium felt sleeve • Charcoal gray",
-      unitPrice: UPSLEEVE_PRICE,
-      quantity: 1,
-    });
+    addItem(UPSLEEVE_PRODUCT);
     toast.success("SmartSleeve 13 added to your cart.");
   };
 
   const handleRemove = (line) => {
     removeItem(line.productId);
     toast.show({
-      message: `Removed ${line.title}`,
+      message: `Removed ${cartLineTitle(line)}`,
       variant: "info",
       action: {
         label: "Undo",
-        onClick: () =>
-          addItem({
-            productId: line.productId,
-            title: line.title,
-            image: line.image,
-            subtitle: line.subtitle,
-            unitPrice: line.unitPrice,
-            quantity: line.quantity,
-            stockAvailable: line.stockAvailable,
-          }),
+        onClick: () => addItem(line.product, line.quantity),
       },
     });
   };
@@ -145,35 +151,34 @@ function Cart() {
           <div className="cart-layout">
             <div className="cart-col cart-col--items">
               {items.map((line) => {
+                const stock = cartLineStock(line);
                 const maxQty =
-                  typeof line.stockAvailable === "number" && Number.isFinite(line.stockAvailable)
-                    ? line.stockAvailable
-                    : Infinity;
+                  typeof stock === "number" && Number.isFinite(stock) ? stock : Infinity;
                 return (
                 <article key={line.productId} className="cart-item-card">
                   <div className="cart-item-media">
-                    <img src={line.image} alt={line.title} />
+                    <img src={cartLineImage(line)} alt={cartLineTitle(line)} />
                   </div>
                   <div className="cart-item-body">
                     <div className="cart-item-top">
                       <div>
-                        <h2 className="cart-item-title">{line.title}</h2>
-                        <p className="cart-item-sub">{line.subtitle}</p>
-                        {line.stockAvailable != null ? (
+                        <h2 className="cart-item-title">{cartLineTitle(line)}</h2>
+                        <p className="cart-item-sub">{cartLineSubtitle(line.product)}</p>
+                        {stock != null ? (
                           <div className="cart-item-stock">
-                            <StockBadge stock={line.stockAvailable} />
+                            <StockBadge stock={stock} />
                           </div>
                         ) : null}
                       </div>
                       <p className="cart-item-price">
-                        {formatMoney(line.unitPrice)}
+                        {formatMoney(cartLineUnitPrice(line))}
                         {line.quantity > 1 ? (
                           <span className="cart-item-price-meta"> × {line.quantity}</span>
                         ) : null}
                       </p>
                     </div>
                     <div className="cart-item-controls">
-                      <div className="cart-qty" role="group" aria-label={`Quantity for ${line.title}`}>
+                      <div className="cart-qty" role="group" aria-label={`Quantity for ${cartLineTitle(line)}`}>
                         <button
                           type="button"
                           className="cart-qty-btn"
@@ -212,7 +217,7 @@ function Cart() {
                   <div className="cart-ai-glow" aria-hidden="true" />
                   <div className="cart-ai-inner">
                     <div className="cart-ai-thumb">
-                      <img src={UPSLEEVE_IMAGE} alt="" />
+                      <img src={UPSLEEVE_PRODUCT.image} alt="" />
                     </div>
                     <div className="cart-ai-copy">
                       <div className="cart-ai-badge">
@@ -227,7 +232,7 @@ function Cart() {
                       </p>
                     </div>
                     <button type="button" className="cart-ai-add-btn" onClick={addSleeveUpsell}>
-                      Add for {formatMoney(UPSLEEVE_PRICE)}
+                      Add for {formatMoney(UPSLEEVE_PRODUCT.price)}
                     </button>
                   </div>
                 </div>

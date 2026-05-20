@@ -3,6 +3,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const { readDb, withDb } = require("../lib/store");
 const { hashPassword, verifyPassword } = require("../lib/passwords");
+const { ensureUserProfile } = require("../lib/user-profile");
 const authMiddleware = require("../middleware/auth");
 const { authLimiter } = require("../middleware/rateLimits");
 const {
@@ -82,6 +83,7 @@ router.post("/register", authLimiter, async (req, res) => {
       password: await hashPassword(password),
       role: "customer",
     };
+    ensureUserProfile(created);
     db.users.push(created);
     return created;
   });
@@ -245,6 +247,7 @@ async function findOrCreateGoogleUser({ email, name }) {
         role: "customer",
         provider: "google",
       };
+      ensureUserProfile(user);
       db.users.push(user);
     }
     return user;

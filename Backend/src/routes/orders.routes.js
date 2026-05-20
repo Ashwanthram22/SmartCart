@@ -4,6 +4,7 @@ const authMiddleware = require("../middleware/auth");
 const { writeLimiter } = require("../middleware/rateLimits");
 const { decorateOrder, effectiveStatus } = require("../lib/order-lifecycle");
 const { resolveCoupon } = require("./coupons.routes");
+const { withUserProfile, touchCart } = require("../lib/user-profile");
 
 const router = express.Router();
 
@@ -20,8 +21,9 @@ const MAX_ORDER_LINES = 50;
  * that isn't in the products table) we honour the unitPrice the FE attached.
  */
 function priceLine(line, productMap) {
-  const product = productMap.get(String(line.productId));
-  let unitPrice = Number(line.unitPrice);
+  const product =
+    productMap.get(String(line.productId)) || line.product || null;
+  let unitPrice = Number(product?.price ?? line.unitPrice);
   if (product && Number.isFinite(Number(product.price))) {
     unitPrice = Number(product.price);
   }
@@ -29,11 +31,16 @@ function priceLine(line, productMap) {
 
   const quantity = Math.max(1, Math.floor(Number(line.quantity) || 1));
 
+  const category = product?.category || line.product?.category || "Product";
+  const rating = product?.rating ?? line.product?.rating;
+  const ratingLabel =
+    rating != null && Number.isFinite(Number(rating)) ? `${rating}★` : "—★";
+
   return {
     productId: String(line.productId),
-    title: product?.title || line.title || String(line.productId),
-    image: product?.image || line.image || "",
-    subtitle: line.subtitle || product?.category || "",
+    title: product?.title || line.product?.title || line.title || String(line.productId),
+    image: product?.image || line.product?.image || line.image || "",
+    subtitle: `${category} • ${ratingLabel} rated`,
     unitPrice: Number(unitPrice.toFixed(2)),
     quantity,
     lineTotal: Number((unitPrice * quantity).toFixed(2)),
@@ -76,9 +83,8 @@ router.post("/", writeLimiter, async (req, res) => {
   // Pre-compute pricing outside the write queue. We need the subtotal to
   // re-validate the coupon before we touch the cart/orders collections.
   const previewSubtotalResult = await withDb(async (db) => {
-    if (!Array.isArray(db.carts)) db.carts = [];
-    const cart = db.carts.find((c) => c.userId === req.user.sub);
-    const sourceItems = Array.isArray(cart?.items) ? cart.items : [];
+    const user = withUserProfile(db, req.user.sub);
+    const sourceItems = Array.isArray(user?.cart?.items) ? user.cart.items : [];
     if (sourceItems.length === 0) return { error: "Cart is empty" };
     if (sourceItems.length > MAX_ORDER_LINES) {
       return { error: `Order cannot exceed ${MAX_ORDER_LINES} items` };
@@ -105,10 +111,10 @@ router.post("/", writeLimiter, async (req, res) => {
   }
 
   const result = await withDb(async (db) => {
-    if (!Array.isArray(db.carts)) db.carts = [];
     if (!Array.isArray(db.orders)) db.orders = [];
 
-    const cart = db.carts.find((c) => c.userId === req.user.sub);
+    const user = withUserProfile(db, req.user.sub);
+    const cart = user?.cart;
     const sourceItems = Array.isArray(cart?.items) ? cart.items : [];
     if (sourceItems.length === 0) {
       return { error: "Cart is empty" };
@@ -139,7 +145,10 @@ router.post("/", writeLimiter, async (req, res) => {
     };
 
     db.orders.push(order);
-    if (cart) cart.items = [];
+    if (cart) {
+      cart.items = [];
+      touchCart(cart);
+    }
     return { order };
   });
 

@@ -1,3 +1,5 @@
+import "./HomeFooter.css";
+
 /**
  * Footer columns rendered as plain data so editors can tweak labels without
  * touching markup. `href: "#"` is the placeholder until each section has a

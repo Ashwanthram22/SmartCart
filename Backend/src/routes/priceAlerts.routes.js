@@ -1,16 +1,13 @@
 const express = require("express");
 const { withDb } = require("../lib/store");
 const authMiddleware = require("../middleware/auth");
+const { withUserProfile } = require("../lib/user-profile");
 
 const router = express.Router();
 
 router.use(authMiddleware);
 
 const MAX_PER_USER = 50;
-
-function ensureCollection(db) {
-  if (!Array.isArray(db.priceAlerts)) db.priceAlerts = [];
-}
 
 function findProduct(db, productId) {
   return (db.products || []).find((p) => String(p.id) === String(productId));
@@ -31,23 +28,12 @@ function publicShape(alert) {
 
 router.get("/", async (req, res) => {
   const list = await withDb(async (db) => {
-    ensureCollection(db);
-    return db.priceAlerts
-      .filter((a) => a.userId === req.user.sub)
-      .map(publicShape);
+    const user = withUserProfile(db, req.user.sub);
+    return (user?.priceAlerts || []).map(publicShape);
   });
   return res.json({ alerts: list });
 });
 
-/**
- * Subscribe the current user to be notified when `productId` drops to
- * `targetPrice` (or below). Idempotent on `(userId, productId)` —
- * sending again with a new target updates the threshold instead of
- * creating a duplicate row, so the UI can call this on every change
- * without having to know whether a record already exists.
- *
- * Body: { productId: string, targetPrice: number }
- */
 router.post("/", async (req, res) => {
   const productId = String(req.body?.productId || "").trim();
   const targetPriceRaw = Number(req.body?.targetPrice);
@@ -60,9 +46,11 @@ router.post("/", async (req, res) => {
   const targetPrice = Math.round(targetPriceRaw * 100) / 100;
 
   const result = await withDb(async (db) => {
-    ensureCollection(db);
     const product = findProduct(db, productId);
     if (!product) return { notFound: true };
+
+    const user = withUserProfile(db, req.user.sub);
+    if (!user) return { error: "User not found" };
 
     const referencePrice = Number(product.price) || 0;
     if (targetPrice >= referencePrice) {
@@ -72,7 +60,7 @@ router.post("/", async (req, res) => {
       };
     }
 
-    const own = db.priceAlerts.filter((a) => a.userId === req.user.sub);
+    const own = user.priceAlerts;
     const existing = own.find((a) => String(a.productId) === productId);
     if (existing) {
       existing.targetPrice = targetPrice;
@@ -88,7 +76,6 @@ router.post("/", async (req, res) => {
 
     const alert = {
       id: `pa${Date.now()}`,
-      userId: req.user.sub,
       productId,
       productTitle: product.title || productId,
       targetPrice,
@@ -96,7 +83,7 @@ router.post("/", async (req, res) => {
       createdAt: new Date().toISOString(),
       triggered: false,
     };
-    db.priceAlerts.push(alert);
+    own.push(alert);
     return { alert, created: true };
   });
 
@@ -110,17 +97,19 @@ router.post("/", async (req, res) => {
 router.delete("/:productId", async (req, res) => {
   const productId = String(req.params.productId || "").trim();
   const result = await withDb(async (db) => {
-    ensureCollection(db);
-    const idx = db.priceAlerts.findIndex(
-      (a) => a.userId === req.user.sub && String(a.productId) === productId
+    const user = withUserProfile(db, req.user.sub);
+    if (!user) return { error: "User not found" };
+    const idx = user.priceAlerts.findIndex(
+      (a) => String(a.productId) === productId
     );
     if (idx < 0) return { notFound: true };
-    db.priceAlerts.splice(idx, 1);
+    user.priceAlerts.splice(idx, 1);
     return { removed: productId };
   });
   if (result.notFound) {
     return res.status(404).json({ message: "Price alert not found" });
   }
+  if (result.error) return res.status(404).json({ message: result.error });
   return res.json({ removed: result.removed });
 });
 

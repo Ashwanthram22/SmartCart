@@ -1,5 +1,10 @@
 const { readDb, withDb } = require("./store");
 const { isHashed, hashPassword } = require("./passwords");
+const {
+  ensureUserProfile,
+  migrateLegacyUserCollections,
+  needsUserProfileWork,
+} = require("./user-profile");
 
 /**
  * Default admin account seeded into a fresh db so the admin console
@@ -95,16 +100,12 @@ async function runStartupMigrations() {
 
   const collectionsToAdd = [];
   if (!Array.isArray(snapshot.reviews)) collectionsToAdd.push("reviews");
-  if (!Array.isArray(snapshot.carts)) collectionsToAdd.push("carts");
   if (!Array.isArray(snapshot.orders)) collectionsToAdd.push("orders");
   if (!Array.isArray(snapshot.passwordResets)) collectionsToAdd.push("passwordResets");
-  if (!Array.isArray(snapshot.savedItems)) collectionsToAdd.push("savedItems");
   if (!Array.isArray(snapshot.coupons)) collectionsToAdd.push("coupons");
-  if (!Array.isArray(snapshot.addresses)) collectionsToAdd.push("addresses");
-  if (!Array.isArray(snapshot.stockAlerts)) collectionsToAdd.push("stockAlerts");
-  if (!Array.isArray(snapshot.preferences)) collectionsToAdd.push("preferences");
-  if (!Array.isArray(snapshot.priceAlerts)) collectionsToAdd.push("priceAlerts");
   if (!Array.isArray(snapshot.auditLogs)) collectionsToAdd.push("auditLogs");
+
+  const userProfileWork = needsUserProfileWork(snapshot);
 
   const usersNeedingHash = (snapshot.users || []).filter(
     (u) => typeof u.password === "string" && u.password.length > 0 && !isHashed(u.password)
@@ -125,7 +126,8 @@ async function runStartupMigrations() {
     collectionsToAdd.length === 0 &&
     usersNeedingHash.length === 0 &&
     !adminMissing &&
-    seedCustomersMissing.length === 0
+    seedCustomersMissing.length === 0 &&
+    !userProfileWork
   ) {
     return;
   }
@@ -136,6 +138,8 @@ async function runStartupMigrations() {
       addedCollections: [],
       seededAdmin: false,
       seededCustomers: [],
+      userProfileMigrated: false,
+      usersProfileInitialised: 0,
     };
 
     if (!Array.isArray(db.users)) db.users = [];
@@ -147,6 +151,7 @@ async function runStartupMigrations() {
       if (db.users.some((u) => u.id === seed.id)) {
         seed.id = `u-admin-${Date.now()}`;
       }
+      ensureUserProfile(seed);
       db.users.push(seed);
       stats.seededAdmin = true;
     }
@@ -163,22 +168,20 @@ async function runStartupMigrations() {
       if (db.users.some((u) => u.id === id)) {
         id = `u-${seed.email.split("@")[0]}-${Date.now()}`;
       }
-      db.users.push({
+      const created = {
         ...seed,
         id,
         // eslint-disable-next-line no-await-in-loop
         password: await hashPassword(seed.password),
-      });
+      };
+      ensureUserProfile(created);
+      db.users.push(created);
       stats.seededCustomers.push(seed.email);
     }
 
     if (!Array.isArray(db.reviews)) {
       db.reviews = [];
       stats.addedCollections.push("reviews");
-    }
-    if (!Array.isArray(db.carts)) {
-      db.carts = [];
-      stats.addedCollections.push("carts");
     }
     if (!Array.isArray(db.orders)) {
       db.orders = [];
@@ -188,29 +191,9 @@ async function runStartupMigrations() {
       db.passwordResets = [];
       stats.addedCollections.push("passwordResets");
     }
-    if (!Array.isArray(db.savedItems)) {
-      db.savedItems = [];
-      stats.addedCollections.push("savedItems");
-    }
     if (!Array.isArray(db.coupons)) {
       db.coupons = SEED_COUPONS.map((c) => ({ ...c }));
       stats.addedCollections.push("coupons");
-    }
-    if (!Array.isArray(db.addresses)) {
-      db.addresses = [];
-      stats.addedCollections.push("addresses");
-    }
-    if (!Array.isArray(db.stockAlerts)) {
-      db.stockAlerts = [];
-      stats.addedCollections.push("stockAlerts");
-    }
-    if (!Array.isArray(db.preferences)) {
-      db.preferences = [];
-      stats.addedCollections.push("preferences");
-    }
-    if (!Array.isArray(db.priceAlerts)) {
-      db.priceAlerts = [];
-      stats.addedCollections.push("priceAlerts");
     }
     if (!Array.isArray(db.auditLogs)) {
       db.auditLogs = [];
@@ -227,7 +210,11 @@ async function runStartupMigrations() {
         user.password = await hashPassword(user.password);
         stats.hashedUsers += 1;
       }
+      ensureUserProfile(user);
+      stats.usersProfileInitialised += 1;
     }
+
+    stats.userProfileMigrated = migrateLegacyUserCollections(db);
 
     return stats;
   });
@@ -246,6 +233,11 @@ async function runStartupMigrations() {
   if (summary.seededCustomers.length > 0) {
     console.log(
       `[migrations] seeded sample customer account(s): ${summary.seededCustomers.join(", ")}`
+    );
+  }
+  if (summary.userProfileMigrated) {
+    console.log(
+      "[migrations] moved per-user data (cart, saved, addresses, prefs, alerts) into users[]"
     );
   }
 }

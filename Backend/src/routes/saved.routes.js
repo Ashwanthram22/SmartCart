@@ -2,26 +2,18 @@ const express = require("express");
 const { withDb } = require("../lib/store");
 const authMiddleware = require("../middleware/auth");
 
+const { withUserProfile, touchSaved } = require("../lib/user-profile");
+
 const router = express.Router();
 
 router.use(authMiddleware);
 
 const MAX_ITEMS = 100;
 
-function ensureSaved(db, userId) {
-  if (!Array.isArray(db.savedItems)) db.savedItems = [];
-  let entry = db.savedItems.find((s) => s.userId === userId);
-  if (!entry) {
-    entry = { userId, items: [], updatedAt: new Date().toISOString() };
-    db.savedItems.push(entry);
-  } else if (!Array.isArray(entry.items)) {
-    entry.items = [];
-  }
-  return entry;
-}
-
-function touch(entry) {
-  entry.updatedAt = new Date().toISOString();
+function requireSaved(db, userId) {
+  const user = withUserProfile(db, userId);
+  if (!user) return null;
+  return user.savedItems;
 }
 
 /**
@@ -53,7 +45,8 @@ function normaliseItem(input) {
 
 router.get("/", async (req, res) => {
   const result = await withDb(async (db) => {
-    const entry = ensureSaved(db, req.user.sub);
+    const entry = requireSaved(db, req.user.sub);
+    if (!entry) return { error: "User not found" };
     return { items: entry.items, updatedAt: entry.updatedAt };
   });
   return res.json(result);
@@ -75,7 +68,8 @@ router.put("/", async (req, res) => {
   }
 
   const result = await withDb(async (db) => {
-    const entry = ensureSaved(db, req.user.sub);
+    const entry = requireSaved(db, req.user.sub);
+    if (!entry) return { error: "User not found" };
     const seen = new Map();
     // Existing items take precedence so we keep the original savedAt.
     for (const it of entry.items) seen.set(it.id, it);
@@ -85,7 +79,7 @@ router.put("/", async (req, res) => {
       if (!seen.has(item.id)) seen.set(item.id, item);
     }
     entry.items = Array.from(seen.values()).slice(0, MAX_ITEMS);
-    touch(entry);
+    touchSaved(entry);
     return { items: entry.items, updatedAt: entry.updatedAt };
   });
 
@@ -95,7 +89,8 @@ router.put("/", async (req, res) => {
 /** Add a single item (no-op if already saved). */
 router.post("/items", async (req, res) => {
   const result = await withDb(async (db) => {
-    const entry = ensureSaved(db, req.user.sub);
+    const entry = requireSaved(db, req.user.sub);
+    if (!entry) return { error: "User not found" };
     const item = normaliseItem(req.body);
     if (!item) return { error: "Item id is required" };
     if (entry.items.length >= MAX_ITEMS) {
@@ -103,7 +98,7 @@ router.post("/items", async (req, res) => {
     }
     if (!entry.items.some((i) => i.id === item.id)) {
       entry.items.unshift(item);
-      touch(entry);
+      touchSaved(entry);
     }
     return { items: entry.items, updatedAt: entry.updatedAt };
   });
@@ -114,9 +109,10 @@ router.post("/items", async (req, res) => {
 router.delete("/items/:id", async (req, res) => {
   const id = String(req.params.id);
   const result = await withDb(async (db) => {
-    const entry = ensureSaved(db, req.user.sub);
+    const entry = requireSaved(db, req.user.sub);
+    if (!entry) return { error: "User not found" };
     entry.items = entry.items.filter((i) => i.id !== id);
-    touch(entry);
+    touchSaved(entry);
     return { items: entry.items, updatedAt: entry.updatedAt };
   });
   return res.json(result);
@@ -124,9 +120,10 @@ router.delete("/items/:id", async (req, res) => {
 
 router.delete("/", async (req, res) => {
   const result = await withDb(async (db) => {
-    const entry = ensureSaved(db, req.user.sub);
+    const entry = requireSaved(db, req.user.sub);
+    if (!entry) return { error: "User not found" };
     entry.items = [];
-    touch(entry);
+    touchSaved(entry);
     return { items: entry.items, updatedAt: entry.updatedAt };
   });
   return res.json(result);

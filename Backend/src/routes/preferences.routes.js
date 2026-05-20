@@ -1,17 +1,15 @@
 const express = require("express");
 const { withDb } = require("../lib/store");
 const authMiddleware = require("../middleware/auth");
+const {
+  DEFAULT_PREFERENCES,
+  withUserProfile,
+} = require("../lib/user-profile");
 
 const router = express.Router();
 
 router.use(authMiddleware);
 
-/**
- * Per-user preferences. The shape is intentionally permissive — new
- * fields can be added later without a backend change as long as they
- * pass the validators below. Any field omitted in the PUT body keeps
- * its existing value, so the UI can patch only what it changed.
- */
 const ALLOWED_CURRENCIES = new Set(["USD", "INR", "EUR", "GBP"]);
 const ALLOWED_THEMES = new Set(["system", "light", "dark"]);
 
@@ -22,27 +20,6 @@ const NOTIFICATION_KEYS = [
   "priceDrops",
   "weeklyDigest",
 ];
-
-const DEFAULT_PREFERENCES = {
-  currency: "INR",
-  theme: "system",
-  notifications: {
-    orderUpdates: true,
-    dealAlerts: true,
-    backInStock: true,
-    priceDrops: true,
-    weeklyDigest: false,
-  },
-  marketingEmails: false,
-};
-
-function ensureCollection(db) {
-  if (!Array.isArray(db.preferences)) db.preferences = [];
-}
-
-function findRecord(db, userId) {
-  return db.preferences.find((p) => p.userId === userId);
-}
 
 function withDefaults(record) {
   if (!record) {
@@ -63,12 +40,6 @@ function withDefaults(record) {
   };
 }
 
-/**
- * Merge a PUT body onto an existing record without ever blowing away
- * unknown fields. Throws when the body contains an explicitly invalid
- * value (e.g. an unsupported currency); silently ignores fields it
- * doesn't recognise so the API is forward-compatible with newer UIs.
- */
 function mergePatch(existing, body) {
   const next = withDefaults(existing);
 
@@ -109,36 +80,33 @@ function mergePatch(existing, body) {
 
 router.get("/", async (req, res) => {
   const data = await withDb(async (db) => {
-    ensureCollection(db);
-    return withDefaults(findRecord(db, req.user.sub));
+    const user = withUserProfile(db, req.user.sub);
+    return withDefaults(user?.preferences);
   });
   return res.json({ preferences: data });
 });
 
 router.put("/", async (req, res) => {
-  const body = (req.body && typeof req.body === "object") ? req.body : {};
+  const body = req.body && typeof req.body === "object" ? req.body : {};
 
   let result;
   try {
     result = await withDb(async (db) => {
-      ensureCollection(db);
-      const existing = findRecord(db, req.user.sub);
-      const merged = mergePatch(existing, body);
-      const stamped = { ...merged, updatedAt: new Date().toISOString() };
-      if (existing) {
-        Object.assign(existing, stamped);
-        return existing;
-      }
-      const record = {
-        id: `pref${Date.now()}`,
-        userId: req.user.sub,
-        ...stamped,
+      const user = withUserProfile(db, req.user.sub);
+      if (!user) return { error: "User not found" };
+      const merged = mergePatch(user.preferences, body);
+      user.preferences = {
+        ...merged,
+        updatedAt: new Date().toISOString(),
       };
-      db.preferences.push(record);
-      return record;
+      return user.preferences;
     });
   } catch (err) {
     return res.status(err.status || 400).json({ message: err.message });
+  }
+
+  if (result?.error) {
+    return res.status(404).json({ message: result.error });
   }
 
   return res.json({ preferences: withDefaults(result) });

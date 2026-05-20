@@ -88,12 +88,13 @@ export default function SavedItems() {
 
   const handleAddToCart = (p) => {
     addItem({
-      productId: p.id,
+      id: p.id,
       title: p.title,
       image: p.image,
-      subtitle: p.subtitle,
-      unitPrice: p.price,
-      ...(typeof p.stock === "number" && Number.isFinite(p.stock) ? { stockAvailable: p.stock } : {}),
+      category: p.category || p.subtitle || "electronics",
+      price: p.price,
+      rating: p.rating,
+      stock: p.stock,
     });
   };
 

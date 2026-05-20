@@ -270,14 +270,17 @@ export default function OrderHistory() {
     let added = 0;
     let skipped = 0;
     (order.items || []).forEach((line) => {
-      const ok = addItem({
-        productId: line.productId,
-        title: line.title,
-        image: line.image,
-        subtitle: line.subtitle,
-        unitPrice: line.unitPrice,
-        quantity: line.quantity,
-      });
+      const ok = addItem(
+        {
+          id: line.productId,
+          title: line.title,
+          image: line.image,
+          category: line.subtitle?.split("•")[0]?.trim() || "Product",
+          price: line.unitPrice,
+          rating: 0,
+        },
+        line.quantity
+      );
       if (ok) added += 1;
       else skipped += 1;
     });

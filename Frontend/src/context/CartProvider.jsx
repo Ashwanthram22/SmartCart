@@ -9,6 +9,13 @@ import {
   replaceCart,
   setCartItemQuantity,
 } from "../api/client";
+import {
+  buildCartLine,
+  cartLineStock,
+  mergeGuestCartLines,
+  resolveAddToCartInput,
+  storedCartLines,
+} from "../utils/cartLine";
 
 const STORAGE_KEY = "aicart_cart_v1";
 
@@ -23,26 +30,8 @@ function readStoredItems() {
   }
 }
 
-/**
- * Fold two carts (server + local) into one, summing quantities by productId.
- * Local snapshot fields win where the server doesn't have them, so newly added
- * lines from a guest session keep their title/image after merge.
- */
-function mergeCarts(serverItems, localItems) {
-  const map = new Map();
-  for (const item of serverItems) map.set(item.productId, { ...item });
-  for (const item of localItems) {
-    if (!item?.productId) continue;
-    const prior = map.get(item.productId);
-    if (prior) {
-      const cap =
-        typeof prior.stockAvailable === "number" ? prior.stockAvailable : Infinity;
-      prior.quantity = Math.min(cap, prior.quantity + (Number(item.quantity) || 0));
-    } else {
-      map.set(item.productId, { ...item });
-    }
-  }
-  return Array.from(map.values());
+function adoptServerCart(data) {
+  return Array.isArray(data?.items) ? data.items : [];
 }
 
 export function CartProvider({ children }) {
@@ -50,28 +39,37 @@ export function CartProvider({ children }) {
   const [authed, setAuthed] = useState(isAuthenticated);
   const syncGenRef = useRef(0);
   const isSyncingRef = useRef(false);
+  /** True only right after login — used to merge guest localStorage once, not on refresh. */
+  const mergeGuestOnLoadRef = useRef(false);
 
-  /** Mirror local cart to localStorage so guests / refreshes / offline work. */
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ items }));
   }, [items]);
 
-  /** Keep auth state reactive so we trigger a sync on login/logout. */
   useEffect(() => {
-    return onAuthChange(({ authenticated }) => setAuthed(authenticated));
+    return onAuthChange(({ authenticated }) => {
+      setAuthed(authenticated);
+      if (authenticated) {
+        mergeGuestOnLoadRef.current = true;
+      } else {
+        mergeGuestOnLoadRef.current = false;
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch {
+          /* ignore */
+        }
+      }
+    });
   }, []);
 
-  /**
-   * On login: merge any guest items with whatever the server already has,
-   * push the result back, and adopt the server's view as the new local cart.
-   * On logout: drop the cart so a different user signing in next never sees
-   * the previous user's items.
-   */
   useEffect(() => {
     if (!authed) {
       setItems([]);
       return undefined;
     }
+
+    const shouldMergeGuest = mergeGuestOnLoadRef.current;
+    mergeGuestOnLoadRef.current = false;
 
     let cancelled = false;
     isSyncingRef.current = true;
@@ -79,19 +77,27 @@ export function CartProvider({ children }) {
 
     (async () => {
       try {
-        const localItems = readStoredItems();
         const server = await getCart();
         if (cancelled || myGen !== syncGenRef.current) return;
 
-        const serverItems = Array.isArray(server?.items) ? server.items : [];
+        const serverItems = adoptServerCart(server);
+
+        // Normal page load / refresh: server is the only source of truth.
+        if (!shouldMergeGuest) {
+          setItems(serverItems);
+          return;
+        }
+
+        // Login only: fold guest localStorage cart into the server cart once.
+        const localItems = readStoredItems();
         if (localItems.length === 0) {
           setItems(serverItems);
           return;
         }
-        const merged = mergeCarts(serverItems, localItems);
-        const pushed = await replaceCart(merged);
+        const merged = mergeGuestCartLines(serverItems, localItems);
+        const pushed = await replaceCart(storedCartLines(merged));
         if (cancelled || myGen !== syncGenRef.current) return;
-        setItems(Array.isArray(pushed?.items) ? pushed.items : merged);
+        setItems(adoptServerCart(pushed));
       } catch {
         // network failure: keep using local cache silently
       } finally {
@@ -104,16 +110,8 @@ export function CartProvider({ children }) {
     };
   }, [authed]);
 
-  /**
-   * Helper: when the server returns the canonical cart after a mutation we
-   * adopt it as the truth; if the request failed we just keep the optimistic
-   * state and try a full refetch so the next render matches reality.
-   */
   const syncFromResponse = useCallback(async (promise, fallbackOptimistic) => {
-    if (!isAuthenticated()) {
-      // guest mode: optimistic state is the only state
-      return;
-    }
+    if (!isAuthenticated()) return;
     try {
       const res = await promise();
       if (res && Array.isArray(res.items)) {
@@ -127,73 +125,52 @@ export function CartProvider({ children }) {
           return;
         }
       } catch {
-        /* ignore — keep optimistic */
+        /* keep optimistic */
       }
       if (fallbackOptimistic) fallbackOptimistic();
     }
   }, []);
 
   const addItem = useCallback(
-    (payload) => {
-      const qty = Math.max(1, Number(payload.quantity) || 1);
-      const payloadStock =
-        typeof payload.stockAvailable === "number" && Number.isFinite(payload.stockAvailable)
-          ? Math.max(0, payload.stockAvailable)
-          : null;
+    (input, quantityOverride) => {
+      const resolved = resolveAddToCartInput(input, quantityOverride);
+      if (!resolved?.product?.id) return false;
 
-      if (payloadStock !== null && payloadStock < 1) return false;
+      const { product, quantity: qty } = resolved;
+      const productId = String(product.id);
+      const stock = cartLineStock({ product });
+      if (stock !== null && stock < 1) return false;
 
       let accepted = false;
       let snapshotBefore = null;
+
       setItems((prev) => {
         snapshotBefore = prev;
-        const idx = prev.findIndex((i) => i.productId === payload.productId);
+        const idx = prev.findIndex((i) => i.productId === productId);
         const existing = idx >= 0 ? prev[idx] : null;
         const lineStock =
-          payloadStock !== null
-            ? payloadStock
-            : typeof existing?.stockAvailable === "number"
-              ? existing.stockAvailable
-              : Infinity;
+          stock !== null
+            ? stock
+            : cartLineStock(existing) ?? Infinity;
         const existingQty = existing?.quantity ?? 0;
         if (existingQty + qty > lineStock) return prev;
 
         accepted = true;
         if (idx >= 0) {
           const next = [...prev];
-          next[idx] = {
-            ...next[idx],
-            quantity: next[idx].quantity + qty,
-            ...(payloadStock !== null ? { stockAvailable: payloadStock } : {}),
-          };
+          const mergedQty = existingQty + qty;
+          next[idx] = buildCartLine(
+            { ...existing.product, ...product },
+            mergedQty
+          );
           return next;
         }
-        return [
-          ...prev,
-          {
-            productId: payload.productId,
-            title: payload.title,
-            image: payload.image,
-            subtitle: payload.subtitle || "",
-            unitPrice: Number(payload.unitPrice),
-            quantity: qty,
-            ...(payloadStock !== null ? { stockAvailable: payloadStock } : {}),
-          },
-        ];
+        return [...prev, buildCartLine(product, qty)];
       });
 
       if (accepted) {
         syncFromResponse(
-          () =>
-            addCartItem({
-              productId: payload.productId,
-              title: payload.title,
-              image: payload.image,
-              subtitle: payload.subtitle || "",
-              unitPrice: Number(payload.unitPrice),
-              quantity: qty,
-              ...(payloadStock !== null ? { stockAvailable: payloadStock } : {}),
-            }),
+          () => addCartItem({ productId, quantity: qty }),
           () => setItems(snapshotBefore || [])
         );
       }
@@ -212,11 +189,12 @@ export function CartProvider({ children }) {
         snapshotBefore = prev;
         const item = prev.find((i) => i.productId === productId);
         if (!item) return prev;
-        const cap = typeof item.stockAvailable === "number" ? item.stockAvailable : Infinity;
+        const stock = cartLineStock(item);
+        const cap = typeof stock === "number" ? stock : Infinity;
         nextQ = Math.min(q, cap);
         if (nextQ < 1) return prev.filter((i) => i.productId !== productId);
         return prev.map((i) =>
-          i.productId === productId ? { ...i, quantity: nextQ } : i
+          i.productId === productId ? buildCartLine(i.product, nextQ) : i
         );
       });
 
@@ -266,4 +244,4 @@ export function CartProvider({ children }) {
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
-}
+};

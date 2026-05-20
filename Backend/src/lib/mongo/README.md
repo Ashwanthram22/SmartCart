@@ -12,7 +12,7 @@ it executes today — the app continues to read/write `src/data/db.json` via
 | `models/User.js` | Mongoose schema mirroring the current `users[]` shape. |
 | `models/Product.js` | Mongoose schema mirroring the current `products[]` shape. |
 | `models/Review.js` | Mongoose schema mirroring `reviews[]` (+ unique `(productId, userId)` index). |
-| `models/Cart.js` | One cart per user; items inlined as a sub-array. |
+| `models/Cart.js` | Deprecated — cart lives on `User.cart` (see `User.js`). |
 | `models/Order.js` | Order schema with the `cancelled` status added. |
 | `models/index.js` | Convenience barrel re-export. |
 

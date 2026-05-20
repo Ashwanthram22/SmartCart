@@ -171,8 +171,9 @@ export async function replaceCart(items) {
   return data;
 }
 
-export async function addCartItem(line) {
-  const { data } = await api.post("/cart/items", line);
+/** Body: { productId, quantity? } — full product comes back on the response. */
+export async function addCartItem({ productId, quantity = 1 }) {
+  const { data } = await api.post("/cart/items", { productId, quantity });
   return data;
 }
 

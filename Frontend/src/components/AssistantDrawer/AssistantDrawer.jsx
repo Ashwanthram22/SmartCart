@@ -184,13 +184,7 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
         setToast("Couldn't add — product not in this conversation.");
         return;
       }
-      addItem({
-        productId: productInfo.id,
-        title: productInfo.title,
-        image: productInfo.image,
-        subtitle: `${productInfo.category || "Product"} • ${productInfo.rating ?? "—"}★`,
-        unitPrice: Number(productInfo.price) || 0,
-      });
+      addItem(productInfo);
       setToast(`Added ${productInfo.title} to cart`);
     },
     [turns, addItem]

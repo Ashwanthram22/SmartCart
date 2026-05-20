@@ -1,19 +1,56 @@
 /**
  * User model — SCAFFOLD ONLY (commented out).
  *
- * Mirrors the shape used today in `db.json`:
- *   { id, name, email, password, role, provider? }
+ * Auth fields plus embedded per-user profile (cart, saved list, prefs,
+ * addresses, alerts). Orders stay in a separate `orders` collection.
  *
  * Notes for the cutover:
- *   - We keep a `legacyId` field so existing string IDs like "u1" / "u17775..."
- *     can be preserved during migration. Mongo's _id stays the new canonical
- *     primary key, but `legacyId` lets old foreign keys (cart.userId, etc.)
- *     continue resolving until you backfill them.
- *   - `password` stays bcrypt-hashed. Use the same `lib/passwords.js` helpers.
+ *   - `legacyId` preserves string IDs like "u1" during migration.
+ *   - `password` stays bcrypt-hashed via `lib/passwords.js`.
  *   - `email` is unique + lowercased.
  */
 
 // const mongoose = require("mongoose");
+
+// const cartLineSchema = new mongoose.Schema(
+//   {
+//     productId: { type: String, required: true },
+//     quantity: { type: Number, default: 1, min: 1 },
+//   },
+//   { _id: false }
+// );
+
+// const savedItemSchema = new mongoose.Schema(
+//   {
+//     id: { type: String, required: true },
+//     title: String,
+//     subtitle: String,
+//     image: String,
+//     category: String,
+//     price: Number,
+//     rating: Number,
+//     stock: Number,
+//     savedAt: String,
+//   },
+//   { _id: false }
+// );
+
+// const addressSchema = new mongoose.Schema(
+//   {
+//     id: { type: String, required: true },
+//     fullName: String,
+//     line1: String,
+//     line2: String,
+//     city: String,
+//     postal: String,
+//     label: String,
+//     phone: String,
+//     isDefault: Boolean,
+//     createdAt: String,
+//     updatedAt: String,
+//   },
+//   { _id: false }
+// );
 
 // const userSchema = new mongoose.Schema(
 //   {
@@ -26,9 +63,21 @@
 //       lowercase: true,
 //       trim: true,
 //     },
-//     password: { type: String, default: null }, // null for OAuth-only users
+//     password: { type: String, default: null },
 //     role: { type: String, enum: ["customer", "admin"], default: "customer" },
-//     provider: { type: String, default: null }, // e.g. "google"
+//     provider: { type: String, default: null },
+//     cart: {
+//       items: { type: [cartLineSchema], default: [] },
+//       updatedAt: { type: Date, default: Date.now },
+//     },
+//     savedItems: {
+//       items: { type: [savedItemSchema], default: [] },
+//       updatedAt: { type: Date, default: Date.now },
+//     },
+//     preferences: { type: mongoose.Schema.Types.Mixed, default: {} },
+//     addresses: { type: [addressSchema], default: [] },
+//     stockAlerts: { type: [mongoose.Schema.Types.Mixed], default: [] },
+//     priceAlerts: { type: [mongoose.Schema.Types.Mixed], default: [] },
 //   },
 //   { timestamps: true }
 // );

@@ -296,12 +296,9 @@ function ProductDetail() {
       typeof product.stock === "number" && Number.isFinite(product.stock) ? product.stock : Infinity;
     if (cap < 1) return;
     addItem({
-      productId: `${product.id}-${selectedConfig}`,
-      title: product.title,
-      image: product.image,
-      subtitle: `${product.category || "Product"} • ${configSubtitle}`,
-      unitPrice,
-      stockAvailable: Number.isFinite(cap) ? cap : undefined,
+      ...product,
+      price: unitPrice,
+      stock: Number.isFinite(cap) ? cap : undefined,
     });
     toast.success(`Added ${product.title} to cart`);
   };

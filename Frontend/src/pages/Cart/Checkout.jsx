@@ -13,6 +13,7 @@ import HomeFooter from "../Home/HomeFooter";
 import usePageMeta from "../../hooks/usePageMeta";
 import Skeleton from "../../components/Skeleton";
 import { formatMoney } from "../../utils/money";
+import { cartLineTitle, cartLineUnitPrice } from "../../utils/cartLine";
 import "./Checkout.css";
 
 const TAX_RATE = 0.08;
@@ -67,7 +68,11 @@ export default function Checkout() {
   const [couponError, setCouponError] = useState("");
 
   const subtotal = useMemo(
-    () => items.reduce((s, l) => s + l.unitPrice * l.quantity, 0),
+    () =>
+      items.reduce(
+        (s, l) => s + (Number(l.product?.price ?? l.unitPrice) || 0) * l.quantity,
+        0
+      ),
     [items]
   );
   const discount = couponPreview
@@ -510,10 +515,10 @@ export default function Checkout() {
                 {items.slice(0, 4).map((line) => (
                   <li key={line.productId} className="checkout-summary-item">
                     <span className="checkout-summary-item-name">
-                      {line.title}
+                      {cartLineTitle(line)}
                       <span className="checkout-summary-item-qty"> × {line.quantity}</span>
                     </span>
-                    <span>{formatMoney(line.unitPrice * line.quantity)}</span>
+                    <span>{formatMoney(cartLineUnitPrice(line) * line.quantity)}</span>
                   </li>
                 ))}
                 {items.length > 4 ? (

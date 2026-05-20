@@ -6,21 +6,107 @@
       "email": "ashwanthram2002@gmail.com",
       "password": null,
       "role": "customer",
-      "provider": "google"
+      "provider": "google",
+      "cart": {
+        "items": [],
+        "updatedAt": "2026-05-20T10:35:11.023Z"
+      },
+      "savedItems": {
+        "items": [],
+        "updatedAt": "2026-05-20T10:35:11.023Z"
+      },
+      "preferences": {
+        "currency": "INR",
+        "theme": "system",
+        "notifications": {
+          "orderUpdates": true,
+          "dealAlerts": true,
+          "backInStock": true,
+          "priceDrops": true,
+          "weeklyDigest": false
+        },
+        "marketingEmails": false,
+        "updatedAt": "2026-05-20T10:35:11.023Z"
+      },
+      "addresses": [],
+      "stockAlerts": [],
+      "priceAlerts": []
     },
     {
       "id": "u1778574592688",
       "name": "Pack D Tester",
       "email": "packd-test@aicart.com",
       "password": "$2b$10$4o.Pltd63dIBfbhEGlYluuwA28soBpf3Qak93KQGINXK9TYYr3YQK",
-      "role": "customer"
+      "role": "customer",
+      "cart": {
+        "items": [],
+        "updatedAt": "2026-05-12T08:30:42.445Z"
+      },
+      "savedItems": {
+        "items": [],
+        "updatedAt": "2026-05-20T10:35:11.023Z"
+      },
+      "preferences": {
+        "currency": "INR",
+        "theme": "system",
+        "notifications": {
+          "orderUpdates": true,
+          "dealAlerts": true,
+          "backInStock": true,
+          "priceDrops": true,
+          "weeklyDigest": false
+        },
+        "marketingEmails": false,
+        "updatedAt": "2026-05-20T10:35:11.023Z"
+      },
+      "addresses": [
+        {
+          "id": "a1778574611334",
+          "fullName": "Pack D Tester",
+          "line1": "42 Maple St",
+          "city": "Springfield",
+          "postal": "00042",
+          "label": "Home",
+          "line2": "",
+          "phone": "555-0100",
+          "isDefault": true,
+          "createdAt": "2026-05-12T08:30:11.334Z",
+          "updatedAt": "2026-05-12T08:30:22.783Z"
+        }
+      ],
+      "stockAlerts": [],
+      "priceAlerts": []
     },
     {
       "id": "u1778580697379",
       "name": "Pack F Tester",
       "email": "packf-test@aicart.com",
       "password": "$2b$10$o7GP3kF2oTD0Jd5G7VypA.zcDxB10XegAxQgyfNI3JfaUIs5p0/h.",
-      "role": "customer"
+      "role": "customer",
+      "cart": {
+        "items": [],
+        "updatedAt": "2026-05-20T10:35:11.023Z"
+      },
+      "savedItems": {
+        "items": [],
+        "updatedAt": "2026-05-20T10:35:11.023Z"
+      },
+      "preferences": {
+        "currency": "INR",
+        "theme": "dark",
+        "notifications": {
+          "orderUpdates": true,
+          "dealAlerts": true,
+          "backInStock": true,
+          "priceDrops": false,
+          "weeklyDigest": true
+        },
+        "marketingEmails": true,
+        "updatedAt": "2026-05-12T10:11:49.642Z"
+      },
+      "addresses": [],
+      "stockAlerts": [],
+      "priceAlerts": []
     },
     {
       "id": "u-admin",
@@ -28,14 +114,62 @@
       "email": "admin@aicart.com",
       "password": "$2b$10$oUvrGPkX45yTmddnthmacewcBidRdm9wNFWk.C2vgqqcT7bPTq1Dm",
       "role": "admin",
-      "isAdmin": true
+      "isAdmin": true,
+      "cart": {
+        "items": [],
+        "updatedAt": "2026-05-12T11:14:44.898Z"
+      },
+      "savedItems": {
+        "items": [],
+        "updatedAt": "2026-05-12T11:14:44.895Z"
+      },
+      "preferences": {
+        "currency": "INR",
+        "theme": "system",
+        "notifications": {
+          "orderUpdates": true,
+          "dealAlerts": true,
+          "backInStock": true,
+          "priceDrops": true,
+          "weeklyDigest": false
+        },
+        "marketingEmails": false,
+        "updatedAt": "2026-05-20T10:35:11.023Z"
+      },
+      "addresses": [],
+      "stockAlerts": [],
+      "priceAlerts": []
     },
     {
       "id": "u1",
       "name": "Demo User",
       "email": "demo@aicart.com",
       "password": "$2b$10$kMtD4XNPaXSj0Piy28X2Cu8/Aw1B5UqiUMYKFU5fpr8fnYKxE6RWa",
-      "role": "customer"
+      "role": "customer",
+      "cart": {
+        "items": [],
+        "updatedAt": "2026-05-20T10:04:04.004Z"
+      },
+      "savedItems": {
+        "items": [],
+        "updatedAt": "2026-05-15T09:59:35.403Z"
+      },
+      "preferences": {
+        "currency": "INR",
+        "theme": "system",
+        "notifications": {
+          "orderUpdates": true,
+          "dealAlerts": true,
+          "backInStock": true,
+          "priceDrops": true,
+          "weeklyDigest": false
+        },
+        "marketingEmails": false,
+        "updatedAt": "2026-05-20T10:35:11.023Z"
+      },
+      "addresses": [],
+      "stockAlerts": [],
+      "priceAlerts": []
     }
   ],
   "products": [
@@ -305,6 +439,26 @@
         "https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=600&q=80"
       ],
       "updatedBy": "admin@aicart.com"
+    },
+    {
+      "id": "ai-upsell-sleeve-13",
+      "title": "SmartSleeve 13",
+      "description": "Premium felt sleeve designed for 13-inch laptops and tablets.",
+      "category": "Accessories",
+      "brand": "SmartCart",
+      "catalogSegments": [
+        "Accessories"
+      ],
+      "stock": 200,
+      "price": 3259,
+      "originalPrice": 3999,
+      "rating": 4.7,
+      "reviewCount": 412,
+      "badge": "AI PICK",
+      "image": "https://images.unsplash.com/photo-1544816155-12df96455549?auto=format&fit=crop&w=600&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1544816155-12df96455549?auto=format&fit=crop&w=1200&q=80"
+      ]
     }
   ],
   "orders": [
@@ -412,23 +566,6 @@
       "createdAt": "2026-05-07T13:22:36.255Z"
     }
   ],
-  "carts": [
-    {
-      "userId": "u1",
-      "items": [],
-      "updatedAt": "2026-05-12T09:57:24.818Z"
-    },
-    {
-      "userId": "u1778574592688",
-      "items": [],
-      "updatedAt": "2026-05-12T08:30:42.445Z"
-    },
-    {
-      "userId": "u-admin",
-      "items": [],
-      "updatedAt": "2026-05-12T11:14:44.898Z"
-    }
-  ],
   "passwordResets": [
     {
       "id": "pr1778570373221",
@@ -437,18 +574,6 @@
       "createdAt": "2026-05-12T07:19:33.221Z",
       "expiresAt": 1778573973221,
       "usedAt": "2026-05-12T07:19:34.559Z"
-    }
-  ],
-  "savedItems": [
-    {
-      "userId": "u1",
-      "items": [],
-      "updatedAt": "2026-05-15T09:59:35.403Z"
-    },
-    {
-      "userId": "u-admin",
-      "items": [],
-      "updatedAt": "2026-05-12T11:14:44.895Z"
     }
   ],
   "coupons": [
@@ -480,41 +605,6 @@
       "active": true
     }
   ],
-  "addresses": [
-    {
-      "id": "a1778574611334",
-      "userId": "u1778574592688",
-      "fullName": "Pack D Tester",
-      "line1": "42 Maple St",
-      "city": "Springfield",
-      "postal": "00042",
-      "label": "Home",
-      "line2": "",
-      "phone": "555-0100",
-      "isDefault": true,
-      "createdAt": "2026-05-12T08:30:11.334Z",
-      "updatedAt": "2026-05-12T08:30:22.783Z"
-    }
-  ],
-  "stockAlerts": [],
-  "preferences": [
-    {
-      "id": "pref1778580709642",
-      "userId": "u1778580697379",
-      "currency": "INR",
-      "theme": "dark",
-      "notifications": {
-        "orderUpdates": true,
-        "dealAlerts": true,
-        "backInStock": true,
-        "priceDrops": false,
-        "weeklyDigest": true
-      },
-      "marketingEmails": true,
-      "updatedAt": "2026-05-12T10:11:49.642Z"
-    }
-  ],
-  "priceAlerts": [],
   "auditLogs": [
     {
       "id": "log-1778680036177-rwlpzs",

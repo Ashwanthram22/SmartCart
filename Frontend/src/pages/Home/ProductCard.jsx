@@ -62,14 +62,7 @@ function ProductCard({ product, showAskAi = false, badgeOverride, index = 0 }) {
   const handleAddToCart = (event) => {
     event.stopPropagation();
     if (!id || outOfStock) return;
-    addItem({
-      productId: id,
-      title,
-      image: imgSrc,
-      subtitle: `${category || "Electronics"} • ${rating ?? "—"}★ rated`,
-      unitPrice,
-      stockAvailable: Number.isFinite(stockNum) ? stockNum : undefined,
-    });
+    addItem({ ...product, image: imgSrc, price: unitPrice });
   };
 
   const handleAskAiClick = (event) => {

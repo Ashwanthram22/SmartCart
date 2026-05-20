@@ -554,14 +554,7 @@ function ProductsCatalog() {
                             aria-label="Add to cart"
                             onClick={(e) => {
                               e.stopPropagation();
-                              addItem({
-                                productId: product.id,
-                                title: product.title,
-                                image: product.image,
-                                subtitle: `${product.category || "Product"} • ${product.rating ?? 4.7}★ rated`,
-                                unitPrice: Number(product.price) || 0,
-                                stockAvailable: Number.isFinite(cap) ? cap : undefined,
-                              });
+                              addItem(product);
                             }}
                           >
                             <CartIcon size={26} className="catalog-add-cart-icon" />
