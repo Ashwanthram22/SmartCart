@@ -1,0 +1,357 @@
+[
+  {
+    "id": "sp1001",
+    "title": "SG English Willow Cricket Bat",
+    "description": "Professional grade English willow cricket bat designed for powerful stroke play.",
+    "category": "Sports",
+    "brand": "SG",
+    "catalogSegments": [
+      "Trending",
+      "Sports"
+    ],
+    "stock": 26,
+    "price": 12999,
+    "originalPrice": 14999,
+    "rating": 4.7,
+    "reviewCount": 2140,
+    "badge": "PRO PLAYER",
+    "image": "https://images.unsplash.com/photo-1624526267942-ab0ff8a3e972?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1624526267942-ab0ff8a3e972?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1624880357913-a8539238245b?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "sp1002",
+    "title": "Adidas FIFA Club Football",
+    "description": "Durable football with premium grip and match-ready performance.",
+    "category": "Sports",
+    "brand": "Adidas",
+    "catalogSegments": [
+      "Sports"
+    ],
+    "stock": 48,
+    "price": 2499,
+    "originalPrice": 3299,
+    "rating": 4.6,
+    "reviewCount": 1830,
+    "badge": "MATCH READY",
+    "image": "https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1553778263-73a83bab9b0c?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1486286701208-1d58e9338013?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "sp1003",
+    "title": "Spalding NBA Basketball",
+    "description": "Official style basketball with premium grip and indoor-outdoor durability.",
+    "category": "Sports",
+    "brand": "Spalding",
+    "catalogSegments": [
+      "Trending",
+      "Sports"
+    ],
+    "stock": 39,
+    "price": 3999,
+    "originalPrice": 4799,
+    "rating": 4.8,
+    "reviewCount": 2560,
+    "badge": "NBA EDITION",
+    "image": "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1519861531473-9200262188bf?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1505666287802-931dc83948e9?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1515523110800-9415d13b84a8?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "sp1004",
+    "title": "Yonex Astrox 99 Badminton Racket",
+    "description": "High-performance badminton racket engineered for aggressive smashes.",
+    "category": "Sports",
+    "brand": "Yonex",
+    "catalogSegments": [
+      "AI Picks",
+      "Sports"
+    ],
+    "stock": 17,
+    "price": 18999,
+    "originalPrice": 20999,
+    "rating": 4.9,
+    "reviewCount": 1320,
+    "badge": "POWER SMASH",
+    "image": "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1613918431703-aa508c8db888?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "sp1005",
+    "title": "Nike Metcon 9 Training Shoes",
+    "description": "Versatile training shoes built for gym workouts and cross-training.",
+    "category": "Sports",
+    "brand": "Nike",
+    "catalogSegments": [
+      "Trending",
+      "Sports"
+    ],
+    "stock": 54,
+    "price": 11999,
+    "originalPrice": 13999,
+    "rating": 4.7,
+    "reviewCount": 3460,
+    "badge": "TRAIN HARD",
+    "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "sp1006",
+    "title": "Decathlon Yoga Mat",
+    "description": "Comfortable anti-slip yoga mat for workouts, stretching, and meditation.",
+    "category": "Sports",
+    "brand": "Decathlon",
+    "catalogSegments": [
+      "Sports"
+    ],
+    "stock": 61,
+    "price": 1499,
+    "originalPrice": 1999,
+    "rating": 4.5,
+    "reviewCount": 2280,
+    "badge": "FITNESS ESSENTIAL",
+    "image": "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "sp1007",
+    "title": "Fitbit Charge 6",
+    "description": "Advanced fitness tracker with heart rate monitoring and built-in GPS.",
+    "category": "Sports",
+    "brand": "Fitbit",
+    "catalogSegments": [
+      "AI Picks",
+      "Sports"
+    ],
+    "stock": 42,
+    "price": 15999,
+    "originalPrice": 18999,
+    "rating": 4.7,
+    "reviewCount": 3180,
+    "badge": "FIT TRACKER",
+    "image": "https://images.unsplash.com/photo-1510017803434-a899398421b3?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1510017803434-a899398421b3?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "sp1008",
+    "title": "Cosco Skipping Rope",
+    "description": "Lightweight skipping rope designed for cardio and endurance workouts.",
+    "category": "Sports",
+    "brand": "Cosco",
+    "catalogSegments": [
+      "Sports"
+    ],
+    "stock": 75,
+    "price": 699,
+    "originalPrice": 999,
+    "rating": 4.4,
+    "reviewCount": 1240,
+    "badge": "CARDIO BOOST",
+    "image": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1518611012118-fb4c2c68327f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "sp1009",
+    "title": "Puma Gym Gloves",
+    "description": "Breathable workout gloves with superior grip and wrist support.",
+    "category": "Sports",
+    "brand": "Puma",
+    "catalogSegments": [
+      "Trending",
+      "Sports"
+    ],
+    "stock": 58,
+    "price": 1499,
+    "originalPrice": 1999,
+    "rating": 4.5,
+    "reviewCount": 1680,
+    "badge": "GYM ESSENTIAL",
+    "image": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1518611012118-fb4c2c68327f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "sp1010",
+    "title": "USI Dumbbell Set",
+    "description": "Premium adjustable dumbbell set for strength and resistance training.",
+    "category": "Sports",
+    "brand": "USI",
+    "catalogSegments": [
+      "AI Picks",
+      "Sports"
+    ],
+    "stock": 23,
+    "price": 8999,
+    "originalPrice": 10999,
+    "rating": 4.8,
+    "reviewCount": 2450,
+    "badge": "STRENGTH BUILD",
+    "image": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1518611012118-fb4c2c68327f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "sp1011",
+    "title": "Adidas Running Backpack",
+    "description": "Lightweight sports backpack with ergonomic straps and multiple compartments.",
+    "category": "Sports",
+    "brand": "Adidas",
+    "catalogSegments": [
+      "Sports"
+    ],
+    "stock": 46,
+    "price": 2999,
+    "originalPrice": 3999,
+    "rating": 4.6,
+    "reviewCount": 1540,
+    "badge": "SPORTS GEAR",
+    "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "sp1012",
+    "title": "Boldfit Resistance Bands",
+    "description": "Multi-level resistance bands perfect for strength and flexibility training.",
+    "category": "Sports",
+    "brand": "Boldfit",
+    "catalogSegments": [
+      "Trending",
+      "Sports"
+    ],
+    "stock": 63,
+    "price": 1299,
+    "originalPrice": 1699,
+    "rating": 4.5,
+    "reviewCount": 2030,
+    "badge": "HOME WORKOUT",
+    "image": "https://images.unsplash.com/photo-1518611012118-fb4c2c68327f?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1518611012118-fb4c2c68327f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "sp1013",
+    "title": "Garmin Forerunner 265",
+    "description": "Advanced GPS running smartwatch with training insights and AMOLED display.",
+    "category": "Sports",
+    "brand": "Garmin",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Sports"
+    ],
+    "stock": 19,
+    "price": 42999,
+    "originalPrice": 46999,
+    "rating": 4.9,
+    "reviewCount": 1870,
+    "badge": "RUNNER PRO",
+    "image": "https://images.unsplash.com/photo-1510017803434-a899398421b3?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1510017803434-a899398421b3?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "sp1014",
+    "title": "Cultsport Treadmill",
+    "description": "Smart treadmill with multiple workout modes and shock absorption system.",
+    "category": "Sports",
+    "brand": "Cultsport",
+    "catalogSegments": [
+      "Sports"
+    ],
+    "stock": 11,
+    "price": 38999,
+    "originalPrice": 42999,
+    "rating": 4.6,
+    "reviewCount": 1120,
+    "badge": "HOME FITNESS",
+    "image": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1518611012118-fb4c2c68327f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "sp1015",
+    "title": "Nike Hyperfuel Shaker Bottle",
+    "description": "Durable shaker bottle with leak-proof design for protein and hydration.",
+    "category": "Sports",
+    "brand": "Nike",
+    "catalogSegments": [
+      "Sports"
+    ],
+    "stock": 88,
+    "price": 899,
+    "originalPrice": 1299,
+    "rating": 4.4,
+    "reviewCount": 2860,
+    "badge": "GYM ACCESSORY",
+    "image": "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1518611012118-fb4c2c68327f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=1200&q=80"
+    ]
+  }
+]

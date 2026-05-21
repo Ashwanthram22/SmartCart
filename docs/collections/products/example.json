@@ -1,26 +1,38 @@
 {
-  "id": "p15",
-  "title": "UltraTab 12\" Tablet",
-  "description": "High-performance tablet for creative and productivity workflows.",
-  "category": "Computing",
-  "brand": "Nexus",
-  "catalogSegments": ["Electronics", "Laptops"],
-  "stock": 11,
-  "price": 53999,
-  "originalPrice": 58999,
-  "rating": 4.9,
-  "reviewCount": 3105,
-  "badge": "TRENDING",
-  "image": "https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=600&q=80",
+  "id": "el1015",
+  "title": "Amazon Echo Show 10",
+  "description": "Smart display with Alexa voice assistant and rotating HD screen.",
+  "category": "Electronics",
+  "brand": "Amazon",
+  "catalogSegments": ["AI Picks", "Electronics"],
+  "stock": 31,
+  "price": 24999,
+  "originalPrice": 28999,
+  "discountPercent": 14,
+  "rating": 4.7,
+  "reviewCount": 3540,
+  "badge": "SMART HOME",
+  "image": "https://images.unsplash.com/photo-1512446816042-444d64126727?auto=format&fit=crop&w=600&q=80",
   "images": [
-    "https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=600&q=80"
+    "https://images.unsplash.com/photo-1512446816042-444d64126727?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1527443154391-507e9dc6c5cc?auto=format&fit=crop&w=1200&q=80"
   ],
   "specs": {
-    "processor": "Apple M3",
-    "display": "12-inch Liquid Retina"
+    "Voice Assistant": "Alexa",
+    "Display": "10.1-inch HD",
+    "Camera": "13MP Auto-Framing"
+  },
+  "similarProductIds": ["el1001", "el1002"],
+  "warranty": {
+    "label": "2YR WARRANTY"
+  },
+  "returns": {
+    "label": "30-DAY RETURNS"
   },
   "createdAt": "2026-05-01T08:00:00.000Z",
-  "updatedAt": "2026-05-13T13:53:11.295Z",
+  "updatedAt": "2026-05-21T10:30:00.000Z",
   "createdBy": "admin@aicart.com",
   "updatedBy": "admin@aicart.com"
 }

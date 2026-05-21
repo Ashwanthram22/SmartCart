@@ -12,7 +12,6 @@ import {
   segmentFromProductDetailSlug,
 } from "../../constants/shopRoutes";
 import { DEFAULT_PROFILE_AVATAR } from "../../data/profileDisplay";
-import { productSpecsFor } from "../../data/productSpecs";
 import { createProductReview, getProductById } from "../../api/client";
 import { trackViewedProduct } from "../../utils/recentlyViewed";
 import HomeFooter from "../Home/HomeFooter";
@@ -26,7 +25,7 @@ import usePageMeta from "../../hooks/usePageMeta";
 import useStructuredData from "../../hooks/useStructuredData";
 import ReviewModal from "./ReviewModal";
 import ProductDetailSkeleton from "./ProductDetailSkeleton";
-import { estimateDelivery, formatDeliveryWindow } from "../../utils/delivery";
+// import { estimateDelivery, formatDeliveryWindow } from "../../utils/delivery"; // BACKEND: product.delivery
 import { formatMoney } from "../../utils/money";
 import "./ProductDetail.css";
 
@@ -41,6 +40,11 @@ const GALLERY_FALLBACKS = [
  * reviews so the panel never looks empty. As soon as a real review lands, the
  * API list takes over.
  */
+/** Free shipping badge when product price is at or above this amount (INR). */
+const FREE_SHIPPING_MIN_PRICE = 500;
+
+const BENEFIT_ICONS = { warranty: "✅", returns: "↩" };
+
 const FALLBACK_REVIEWS = [
   {
     id: "seed-ms",
@@ -121,7 +125,7 @@ function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeImageIdx, setActiveImageIdx] = useState(0);
-  const [selectedConfig, setSelectedConfig] = useState("base");
+  // const [selectedConfig, setSelectedConfig] = useState("base"); // BACKEND: product.configurations
   const [reviews, setReviews] = useState([]);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
 
@@ -173,7 +177,66 @@ function ProductDetail() {
   }, [product, activeSegment, qRaw]);
 
   const visibleReviews = reviews.length > 0 ? reviews : FALLBACK_REVIEWS;
-  const specRows = useMemo(() => productSpecsFor(product), [product]);
+
+  /** Up to 3 highlight specs from `product.specs` (name → value). */
+  const highlightSpecs = useMemo(() => {
+    const raw = product?.specs;
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return [];
+    return Object.entries(raw)
+      .slice(0, 3)
+      .map(([name, value]) => ({
+        name: String(name).trim(),
+        value: value == null ? "" : String(value).trim(),
+      }))
+      .filter((row) => row.name && row.value);
+  }, [product]);
+
+  const saleDisplay = useMemo(() => {
+    if (!product) return { strikePrice: null, discountLabel: null };
+    const price = Number(product.price) || 0;
+    const original = Number(product.originalPrice);
+    let pct = Number(product.discountPercent);
+    if (!Number.isFinite(pct) || pct <= 0) {
+      if (Number.isFinite(original) && original > price && original > 0) {
+        pct = Math.round(((original - price) / original) * 100);
+      } else {
+        pct = null;
+      }
+    } else {
+      pct = Math.round(pct);
+    }
+    const strikePrice =
+      Number.isFinite(original) && original > price ? original : null;
+    return {
+      strikePrice,
+      discountLabel: pct > 0 ? `-${pct}%` : null,
+    };
+  }, [product]);
+
+  const productBenefits = useMemo(() => {
+    if (!product) return [];
+    const items = [];
+    const price = Number(product.price) || 0;
+    if (price >= FREE_SHIPPING_MIN_PRICE) {
+      items.push({ key: "shipping", icon: "🚚", label: "FREE SHIPPING" });
+    }
+    for (const key of ["warranty", "returns"]) {
+      const field = product[key];
+      const label =
+        typeof field === "string"
+          ? field.trim()
+          : field && typeof field === "object"
+          ? String(field.label || "").trim()
+          : "";
+      if (!label) continue;
+      const icon =
+        field && typeof field === "object" && field.icon
+          ? String(field.icon)
+          : BENEFIT_ICONS[key];
+      items.push({ key, icon, label });
+    }
+    return items;
+  }, [product]);
 
   usePageMeta({
     title: product?.title || "Product",
@@ -272,17 +335,6 @@ function ProductDetail() {
 
   const activeImage = gallery[activeImageIdx] || gallery[0];
 
-  const unitPrice = useMemo(() => {
-    if (!product) return 0;
-    const base = Number(product.price || 0);
-    // Pro tier upcharge — kept proportional to the previous USD upcharge
-    // ($400 ≈ ₹33,000) so the demo price tier still feels meaningful.
-    return selectedConfig === "pro" ? base + 33000 : base;
-  }, [product, selectedConfig]);
-
-  const configSubtitle =
-    selectedConfig === "pro" ? "64GB RAM / 2TB SSD • Performance tier" : "32GB RAM / 1TB SSD • Standard tier";
-
   const stockCap =
     product && typeof product.stock === "number" && Number.isFinite(product.stock)
       ? product.stock
@@ -297,7 +349,7 @@ function ProductDetail() {
     if (cap < 1) return;
     addItem({
       ...product,
-      price: unitPrice,
+      price: Number(product.price || 0),
       stock: Number.isFinite(cap) ? cap : undefined,
     });
     toast.success(`Added ${product.title} to cart`);
@@ -341,6 +393,11 @@ function ProductDetail() {
 
       <main id="main-content" className="product-main">
         <section className="product-hero-grid">
+          <Breadcrumbs
+            className="product-breadcrumbs product-breadcrumbs--lead"
+            items={productBreadcrumbItems}
+          />
+
           <div className="product-gallery">
             <div className="product-main-image-wrap">
               <img src={activeImage} alt={product.title} className="product-main-image" />
@@ -372,7 +429,10 @@ function ProductDetail() {
           </div>
 
           <div className="product-buy">
-            <Breadcrumbs className="product-breadcrumbs" items={productBreadcrumbItems} />
+            <Breadcrumbs
+              className="product-breadcrumbs product-breadcrumbs--inline"
+              items={productBreadcrumbItems}
+            />
 
             <h1>{product.title}</h1>
 
@@ -387,45 +447,46 @@ function ProductDetail() {
               </div>
             ) : null}
 
+            {/* BACKEND: product.delivery — "Get it by … with SmartCart Express"
             {product && product.stock != null && product.stock > 0 ? (
               <p className="product-delivery-line">
-                <span aria-hidden="true">🚚</span>{" "}
-                Get it by{" "}
-                <strong>{formatDeliveryWindow(estimateDelivery(product.stock))}</strong>
-                {" "}with SmartCart Express
+                <span aria-hidden="true">🚚</span> Get it by{" "}
+                <strong>{formatDeliveryWindow(estimateDelivery(product.stock))}</strong> with SmartCart
+                Express
               </p>
             ) : null}
+            */}
 
             <div className="price-wrap">
               <div className="price-row">
                 <strong>{formatMoney(product.price || 0)}</strong>
-                <span className="old">{formatMoney(product.originalPrice || (product.price || 0) * 1.15)}</span>
-                <span className="discount">-14%</span>
+                {saleDisplay.strikePrice != null ? (
+                  <span className="old">{formatMoney(saleDisplay.strikePrice)}</span>
+                ) : null}
+                {saleDisplay.discountLabel ? (
+                  <span className="discount">{saleDisplay.discountLabel}</span>
+                ) : null}
               </div>
+              {/* BACKEND: product.financing — SmartPay EMI line
               <p>Or {formatMoney((Number(product.price) || 0) / 12)}/mo for 12 months with SmartPay</p>
+              */}
             </div>
 
+            {/* BACKEND: product.configurations — Choose Configuration
             <div className="config-box">
               <h3>Choose Configuration</h3>
               <div className="config-grid">
-                <button
-                  type="button"
-                  className={selectedConfig === "base" ? "config-btn active" : "config-btn"}
-                  onClick={() => setSelectedConfig("base")}
-                >
+                <button type="button" className="config-btn active">
                   <span>32GB RAM / 1TB SSD</span>
                   <small>Standard Performance</small>
                 </button>
-                <button
-                  type="button"
-                  className={selectedConfig === "pro" ? "config-btn active" : "config-btn"}
-                  onClick={() => setSelectedConfig("pro")}
-                >
+                <button type="button" className="config-btn">
                   <span>64GB RAM / 2TB SSD</span>
                   <small>+{formatMoney(33000)}</small>
                 </button>
               </div>
             </div>
+            */}
 
             <div className="cta-stack">
               <button
@@ -461,33 +522,14 @@ function ProductDetail() {
               ) : null}
             </div>
 
-            <div className="benefits">
-              <div>
-                <span>🚚</span>
-                <p>FREE SHIPPING</p>
-              </div>
-              <div>
-                <span>✅</span>
-                <p>2YR WARRANTY</p>
-              </div>
-              <div>
-                <span>↩</span>
-                <p>30-DAY RETURNS</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="product-detail-grid">
-          <div className="left-col">
-            <article className="panel">
+            <article className="panel product-buy-spec-panel">
               <h2>Technical Specifications</h2>
               <div className="spec-grid">
-                {specRows.length > 0 ? (
-                  specRows.map(([key, value]) => (
-                    <div key={key} className="spec-row">
-                      <span>{key}</span>
-                      <strong>{value}</strong>
+                {highlightSpecs.length > 0 ? (
+                  highlightSpecs.map((row) => (
+                    <div key={row.name} className="spec-row">
+                      <span>{row.name}</span>
+                      <strong>{row.value}</strong>
                     </div>
                   ))
                 ) : (
@@ -498,6 +540,21 @@ function ProductDetail() {
               </div>
             </article>
 
+            {productBenefits.length > 0 ? (
+              <div className="benefits">
+                {productBenefits.map((item) => (
+                  <div key={item.key}>
+                    <span aria-hidden="true">{item.icon}</span>
+                    <p>{item.label}</p>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </section>
+
+        <section className="product-detail-grid">
+          <div className="left-col">
             <article className="panel">
               <div className="panel-head">
                 <h2>Community Feedback</h2>
@@ -533,8 +590,8 @@ function ProductDetail() {
 
           <div className="right-col">
             <article className="panel ai-panel">
+              {/* BACKEND: product.insights — Why It Suits You
               <h3>✦ Why It Suits You</h3>
-
               <div className="ai-card">
                 <strong>Performance Match</strong>
                 <p>
@@ -550,9 +607,10 @@ function ProductDetail() {
                 <strong>Eco-Efficiency</strong>
                 <p>Uses 15% less power than comparable models in your history under heavy load.</p>
               </div>
+              */}
 
               <div className="quick-compare">
-                <h4>Compare Quick-View</h4>
+                <h4>Similar Products</h4>
                 {similar.map((item) => (
                   <Link
                     to={productDetailUrl(activeSegment, item.id, qRaw)}
@@ -570,13 +628,13 @@ function ProductDetail() {
               </div>
             </article>
 
-            <article className="cert-card">
+            {/* <article className="cert-card">
               <h4>⊛ SmartCart Certified</h4>
               <p>
                 This product qualifies for AI-driven tech support and exclusive trade-in bonuses through
                 SmartCart AI ecosystem.
               </p>
-            </article>
+            </article> */}
           </div>
         </section>
         <RecentlyViewedStrip excludeId={product.id} title="Recently viewed" />

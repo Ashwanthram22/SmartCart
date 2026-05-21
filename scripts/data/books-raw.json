@@ -1,0 +1,378 @@
+[
+  {
+    "id": "bk1001",
+    "title": "Atomic Habits",
+    "description": "A practical guide to building good habits and breaking bad ones by James Clear.",
+    "category": "Books",
+    "brand": "Penguin",
+    "author": "James Clear",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Books"
+    ],
+    "stock": 74,
+    "price": 599,
+    "originalPrice": 799,
+    "rating": 4.9,
+    "reviewCount": 12840,
+    "badge": "BESTSELLER",
+    "image": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "bk1002",
+    "title": "Rich Dad Poor Dad",
+    "description": "Classic personal finance book teaching wealth mindset and financial literacy.",
+    "category": "Books",
+    "brand": "Plata Publishing",
+    "author": "Robert Kiyosaki",
+    "catalogSegments": [
+      "Trending",
+      "Books"
+    ],
+    "stock": 62,
+    "price": 499,
+    "originalPrice": 699,
+    "rating": 4.8,
+    "reviewCount": 9540,
+    "badge": "FINANCE FAVORITE",
+    "image": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "bk1003",
+    "title": "The Psychology of Money",
+    "description": "Morgan Housel explains how emotions and behavior shape financial success.",
+    "category": "Books",
+    "brand": "Harriman House",
+    "author": "Morgan Housel",
+    "catalogSegments": [
+      "AI Picks",
+      "Books"
+    ],
+    "stock": 58,
+    "price": 649,
+    "originalPrice": 899,
+    "rating": 4.9,
+    "reviewCount": 7340,
+    "badge": "MUST READ",
+    "image": "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "bk1004",
+    "title": "Ikigai",
+    "description": "A Japanese philosophy book about finding purpose and happiness in life.",
+    "category": "Books",
+    "brand": "Penguin",
+    "author": "Héctor García",
+    "catalogSegments": [
+      "Trending",
+      "Books"
+    ],
+    "stock": 49,
+    "price": 399,
+    "originalPrice": 599,
+    "rating": 4.7,
+    "reviewCount": 6120,
+    "badge": "LIFE CHANGING",
+    "image": "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "bk1005",
+    "title": "The Alchemist",
+    "description": "Inspirational fiction novel about dreams, destiny, and self-discovery.",
+    "category": "Books",
+    "brand": "HarperOne",
+    "author": "Paulo Coelho",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Books"
+    ],
+    "stock": 53,
+    "price": 449,
+    "originalPrice": 649,
+    "rating": 4.8,
+    "reviewCount": 11820,
+    "badge": "GLOBAL CLASSIC",
+    "image": "https://images.unsplash.com/photo-1524578271613-d550eacf6090?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1524578271613-d550eacf6090?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "bk1006",
+    "title": "Deep Work",
+    "description": "A productivity-focused book teaching how to achieve focused success in a distracted world.",
+    "category": "Books",
+    "brand": "Grand Central Publishing",
+    "author": "Cal Newport",
+    "catalogSegments": [
+      "AI Picks",
+      "Books"
+    ],
+    "stock": 41,
+    "price": 549,
+    "originalPrice": 749,
+    "rating": 4.8,
+    "reviewCount": 5420,
+    "badge": "PRODUCTIVITY",
+    "image": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "bk1007",
+    "title": "Think and Grow Rich",
+    "description": "Classic success and wealth-building philosophy book by Napoleon Hill.",
+    "category": "Books",
+    "brand": "TarcherPerigee",
+    "author": "Napoleon Hill",
+    "catalogSegments": [
+      "Trending",
+      "Books"
+    ],
+    "stock": 57,
+    "price": 399,
+    "originalPrice": 599,
+    "rating": 4.7,
+    "reviewCount": 6870,
+    "badge": "SUCCESS CLASSIC",
+    "image": "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "bk1008",
+    "title": "Zero to One",
+    "description": "Startup and innovation insights from entrepreneur and investor Peter Thiel.",
+    "category": "Books",
+    "brand": "Crown Business",
+    "author": "Peter Thiel",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Books"
+    ],
+    "stock": 38,
+    "price": 699,
+    "originalPrice": 899,
+    "rating": 4.8,
+    "reviewCount": 4820,
+    "badge": "STARTUP FAVORITE",
+    "image": "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "bk1009",
+    "title": "The Lean Startup",
+    "description": "Essential startup methodology book focused on innovation and rapid experimentation.",
+    "category": "Books",
+    "brand": "Currency",
+    "author": "Eric Ries",
+    "catalogSegments": [
+      "Books"
+    ],
+    "stock": 46,
+    "price": 649,
+    "originalPrice": 849,
+    "rating": 4.7,
+    "reviewCount": 5930,
+    "badge": "ENTREPRENEUR PICK",
+    "image": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "bk1010",
+    "title": "Elon Musk Biography",
+    "description": "Comprehensive biography exploring Elon Musk’s life, companies, and innovations.",
+    "category": "Books",
+    "brand": "Simon & Schuster",
+    "author": "Walter Isaacson",
+    "catalogSegments": [
+      "Trending",
+      "Books"
+    ],
+    "stock": 33,
+    "price": 899,
+    "originalPrice": 1199,
+    "rating": 4.8,
+    "reviewCount": 4120,
+    "badge": "BIOGRAPHY HIT",
+    "image": "https://images.unsplash.com/photo-1524578271613-d550eacf6090?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1524578271613-d550eacf6090?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "bk1011",
+    "title": "Harry Potter and the Sorcerer’s Stone",
+    "description": "The magical beginning of Harry Potter’s journey at Hogwarts School.",
+    "category": "Books",
+    "brand": "Bloomsbury",
+    "author": "J.K. Rowling",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Books"
+    ],
+    "stock": 89,
+    "price": 499,
+    "originalPrice": 699,
+    "rating": 4.9,
+    "reviewCount": 15840,
+    "badge": "MAGICAL CLASSIC",
+    "image": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1524578271613-d550eacf6090?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "bk1012",
+    "title": "The Intelligent Investor",
+    "description": "Legendary investing guide teaching long-term value investing principles.",
+    "category": "Books",
+    "brand": "Harper Business",
+    "author": "Benjamin Graham",
+    "catalogSegments": [
+      "Books"
+    ],
+    "stock": 37,
+    "price": 799,
+    "originalPrice": 999,
+    "rating": 4.9,
+    "reviewCount": 6340,
+    "badge": "INVESTING BIBLE",
+    "image": "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "bk1013",
+    "title": "Can’t Hurt Me",
+    "description": "David Goggins shares his inspiring journey of mental toughness and resilience.",
+    "category": "Books",
+    "brand": "Lioncrest Publishing",
+    "author": "David Goggins",
+    "catalogSegments": [
+      "Trending",
+      "Books"
+    ],
+    "stock": 44,
+    "price": 749,
+    "originalPrice": 949,
+    "rating": 4.9,
+    "reviewCount": 7180,
+    "badge": "MENTAL TOUGHNESS",
+    "image": "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "bk1014",
+    "title": "Sapiens",
+    "description": "A fascinating exploration of human history and evolution by Yuval Noah Harari.",
+    "category": "Books",
+    "brand": "Harper",
+    "author": "Yuval Noah Harari",
+    "catalogSegments": [
+      "AI Picks",
+      "Books"
+    ],
+    "stock": 52,
+    "price": 849,
+    "originalPrice": 1099,
+    "rating": 4.8,
+    "reviewCount": 8230,
+    "badge": "HISTORY MASTERPIECE",
+    "image": "https://images.unsplash.com/photo-1524578271613-d550eacf6090?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1524578271613-d550eacf6090?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": "bk1015",
+    "title": "Introduction to Algorithms",
+    "description": "Comprehensive computer science textbook covering algorithms and data structures.",
+    "category": "Books",
+    "brand": "MIT Press",
+    "author": "Thomas H. Cormen",
+    "catalogSegments": [
+      "Books"
+    ],
+    "stock": 21,
+    "price": 2499,
+    "originalPrice": 2999,
+    "rating": 4.8,
+    "reviewCount": 2840,
+    "badge": "CS CLASSIC",
+    "image": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?auto=format&fit=crop&w=1200&q=80"
+    ]
+  }
+]

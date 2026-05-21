@@ -283,6 +283,36 @@ router.get("/filters", authMiddleware, async (req, res) => {
   return res.json(await buildFilterFacetsResponse(db, req.query));
 });
 
+function resolveSimilarProducts(db, product, limit = 2) {
+  const productId = String(product.id);
+  const byId = new Map((db.products || []).map((p) => [String(p.id), p]));
+  const picked = [];
+
+  const requested = Array.isArray(product.similarProductIds)
+    ? product.similarProductIds.map((id) => String(id).trim()).filter(Boolean)
+    : [];
+
+  for (const id of requested) {
+    if (picked.length >= limit) break;
+    if (id === productId) continue;
+    const match = byId.get(id);
+    if (match && !picked.some((p) => String(p.id) === String(match.id))) {
+      picked.push(match);
+    }
+  }
+
+  if (picked.length < limit) {
+    for (const candidate of db.products || []) {
+      if (picked.length >= limit) break;
+      if (String(candidate.id) === productId) continue;
+      if (picked.some((p) => String(p.id) === String(candidate.id))) continue;
+      picked.push(candidate);
+    }
+  }
+
+  return picked.slice(0, limit);
+}
+
 router.get("/:id", authMiddleware, async (req, res) => {
   const db = await readDb();
   const product = db.products.find((item) => String(item.id) === String(req.params.id));
@@ -293,9 +323,7 @@ router.get("/:id", authMiddleware, async (req, res) => {
     });
   }
 
-  const similar = db.products
-    .filter((item) => item.id !== product.id)
-    .slice(0, 2);
+  const similar = resolveSimilarProducts(db, product, 2);
 
   return res.json({
     product,

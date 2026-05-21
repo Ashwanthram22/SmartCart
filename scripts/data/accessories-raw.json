@@ -1,0 +1,499 @@
+[
+  {
+    "id": "ac1001",
+    "title": "Logitech MX Master 3S Mouse",
+    "description": "The ultimate productivity mouse with ultra-fast MagSpeed scrolling, near-silent clicks, and ergonomic design engineered for power users working across multiple devices.",
+    "category": "Accessories",
+    "brand": "Logitech",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Accessories"
+    ],
+    "stock": 48,
+    "price": 9999,
+    "originalPrice": 11999,
+    "rating": 4.9,
+    "reviewCount": 6420,
+    "badge": "BESTSELLER",
+    "specs": {
+      "connectivity": "Bluetooth & 2.4GHz USB Receiver",
+      "dpi": "200–8000 DPI (adjustable)",
+      "buttons": "7 programmable buttons",
+      "scrollWheel": "MagSpeed Electromagnetic",
+      "battery": "Up to 70 days",
+      "compatibility": "Windows, macOS, Linux, iPadOS",
+      "weight": "141g"
+    },
+    "image": "https://source.unsplash.com/600x400/?logitech,mouse,wireless",
+    "images": [
+      "https://source.unsplash.com/1200x800/?logitech,mx,mouse",
+      "https://source.unsplash.com/1200x800/?wireless,mouse,desk",
+      "https://source.unsplash.com/1200x800/?ergonomic,mouse,workspace",
+      "https://source.unsplash.com/1200x800/?mouse,computer,setup"
+    ]
+  },
+  {
+    "id": "ac1002",
+    "title": "Keychron K2 Mechanical Keyboard",
+    "description": "Compact 75% wireless mechanical keyboard with hot-swappable switches, RGB backlight, and aluminum frame — a beloved choice for typing enthusiasts and programmers alike.",
+    "category": "Accessories",
+    "brand": "Keychron",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Accessories"
+    ],
+    "stock": 36,
+    "price": 8499,
+    "originalPrice": 9999,
+    "rating": 4.8,
+    "reviewCount": 5120,
+    "badge": "TYPING LEGEND",
+    "specs": {
+      "layout": "75% Compact (84 keys)",
+      "switches": "Hot-swappable Gateron G Pro Red/Brown/Blue",
+      "connectivity": "Bluetooth 5.1 & USB-C Wired",
+      "backlight": "RGB per-key backlight",
+      "frame": "Aluminum top frame",
+      "battery": "4000mAh, up to 240 hours",
+      "compatibility": "Windows, macOS"
+    },
+    "image": "https://source.unsplash.com/600x400/?mechanical,keyboard,rgb",
+    "images": [
+      "https://source.unsplash.com/1200x800/?keychron,keyboard,mechanical",
+      "https://source.unsplash.com/1200x800/?mechanical,keyboard,rgb,backlight",
+      "https://source.unsplash.com/1200x800/?keyboard,switches,closeup",
+      "https://source.unsplash.com/1200x800/?keyboard,desk,setup,typing"
+    ]
+  },
+  {
+    "id": "ac1003",
+    "title": "Razer DeathAdder V3",
+    "description": "Iconic esports gaming mouse redesigned with an ultra-lightweight 59g body, Focus Pro 30K optical sensor, and ergonomic contoured shape for precision in the heat of battle.",
+    "category": "Accessories",
+    "brand": "Razer",
+    "catalogSegments": [
+      "Trending",
+      "Accessories"
+    ],
+    "stock": 42,
+    "price": 7499,
+    "originalPrice": 8999,
+    "rating": 4.8,
+    "reviewCount": 4380,
+    "badge": "ESPORTS PRO",
+    "specs": {
+      "sensor": "Razer Focus Pro 30K Optical",
+      "dpi": "100–30000 DPI",
+      "buttons": "5 programmable buttons",
+      "connectivity": "USB-C Wired",
+      "weight": "59g (ultralight)",
+      "switches": "Razer Optical Gen-3",
+      "compatibility": "Windows, macOS"
+    },
+    "image": "https://source.unsplash.com/600x400/?razer,gaming,mouse",
+    "images": [
+      "https://source.unsplash.com/1200x800/?razer,mouse,gaming",
+      "https://source.unsplash.com/1200x800/?gaming,mouse,rgb,dark",
+      "https://source.unsplash.com/1200x800/?esports,mouse,precision",
+      "https://source.unsplash.com/1200x800/?gaming,mouse,desk,setup"
+    ]
+  },
+  {
+    "id": "ac1004",
+    "title": "HyperX Cloud III Headset",
+    "description": "Premium gaming headset with 53mm angled drivers, DTS Headphone:X spatial audio, and memory foam ear cushions — delivering crisp, immersive sound for long gaming sessions.",
+    "category": "Accessories",
+    "brand": "HyperX",
+    "catalogSegments": [
+      "AI Picks",
+      "Accessories"
+    ],
+    "stock": 29,
+    "price": 10999,
+    "originalPrice": 12999,
+    "rating": 4.8,
+    "reviewCount": 3760,
+    "badge": "AUDIO KING",
+    "specs": {
+      "drivers": "53mm angled dynamic drivers",
+      "frequencyResponse": "10Hz–21kHz",
+      "microphone": "Detachable noise-cancelling mic",
+      "connectivity": "USB-A / 3.5mm Jack",
+      "surround": "DTS Headphone:X Spatial Audio",
+      "earpads": "Memory foam with leatherette",
+      "weight": "320g"
+    },
+    "image": "https://source.unsplash.com/600x400/?hyperx,gaming,headset",
+    "images": [
+      "https://source.unsplash.com/1200x800/?hyperx,headset,gaming",
+      "https://source.unsplash.com/1200x800/?gaming,headset,rgb",
+      "https://source.unsplash.com/1200x800/?headset,microphone,gamer",
+      "https://source.unsplash.com/1200x800/?headset,desk,gaming,setup"
+    ]
+  },
+  {
+    "id": "ac1005",
+    "title": "Anker 8-in-1 USB-C Hub",
+    "description": "Expand your laptop's connectivity with this compact 8-in-1 hub featuring 4K HDMI, 100W Power Delivery, USB 3.0 ports, SD/microSD card slots, and ethernet — all in one plug-and-play device.",
+    "category": "Accessories",
+    "brand": "Anker",
+    "catalogSegments": [
+      "Trending",
+      "Accessories"
+    ],
+    "stock": 65,
+    "price": 3999,
+    "originalPrice": 4999,
+    "rating": 4.7,
+    "reviewCount": 7210,
+    "badge": "MUST HAVE",
+    "specs": {
+      "ports": "8-in-1 (HDMI, 3x USB-A 3.0, USB-C PD, SD, microSD, Ethernet)",
+      "hdmiOutput": "4K@30Hz",
+      "powerDelivery": "100W USB-C Pass-through",
+      "usbSpeed": "USB 3.0 (5Gbps)",
+      "ethernet": "Gigabit Ethernet",
+      "compatibility": "MacBook, Windows Laptops, Chromebook",
+      "weight": "56g"
+    },
+    "image": "https://source.unsplash.com/600x400/?usb,hub,dock,laptop",
+    "images": [
+      "https://source.unsplash.com/1200x800/?usb,hub,ports,anker",
+      "https://source.unsplash.com/1200x800/?laptop,hub,connectivity",
+      "https://source.unsplash.com/1200x800/?usbc,hub,desk,cables",
+      "https://source.unsplash.com/1200x800/?usb,dock,macbook,setup"
+    ]
+  },
+  {
+    "id": "ac1006",
+    "title": "Samsung 1TB T7 Portable SSD",
+    "description": "Blazing-fast portable SSD with USB 3.2 Gen 2 speeds up to 1050MB/s, a sleek metal body, and password protection — your data, safe and fast wherever you go.",
+    "category": "Accessories",
+    "brand": "Samsung",
+    "catalogSegments": [
+      "AI Picks",
+      "Accessories"
+    ],
+    "stock": 53,
+    "price": 8999,
+    "originalPrice": 10999,
+    "rating": 4.8,
+    "reviewCount": 5890,
+    "badge": "LIGHTNING FAST",
+    "specs": {
+      "capacity": "1TB",
+      "interface": "USB 3.2 Gen 2 (10Gbps)",
+      "readSpeed": "Up to 1050 MB/s",
+      "writeSpeed": "Up to 1000 MB/s",
+      "security": "AES 256-bit password protection",
+      "dimensions": "85 x 57 x 8mm",
+      "weight": "58g"
+    },
+    "image": "https://source.unsplash.com/600x400/?samsung,portable,ssd,storage",
+    "images": [
+      "https://source.unsplash.com/1200x800/?samsung,t7,ssd",
+      "https://source.unsplash.com/1200x800/?portable,ssd,fast,storage",
+      "https://source.unsplash.com/1200x800/?external,ssd,metal",
+      "https://source.unsplash.com/1200x800/?ssd,storage,desk,laptop"
+    ]
+  },
+  {
+    "id": "ac1007",
+    "title": "Apple MagSafe Charger",
+    "description": "Apple's official MagSafe charger delivers perfectly aligned 15W wireless charging for iPhone 12 and later, with a satisfying magnetic snap and a braided cable for everyday durability.",
+    "category": "Accessories",
+    "brand": "Apple",
+    "catalogSegments": [
+      "Trending",
+      "Accessories"
+    ],
+    "stock": 87,
+    "price": 3999,
+    "originalPrice": 4499,
+    "rating": 4.7,
+    "reviewCount": 9120,
+    "badge": "APPLE OFFICIAL",
+    "specs": {
+      "chargingSpeed": "Up to 15W (MagSafe) / 7.5W (Qi)",
+      "connector": "USB-C",
+      "cableLength": "1 metre braided",
+      "compatibility": "iPhone 12 and later, AirPods Pro",
+      "magneticAlignment": "Built-in magnet array",
+      "certification": "MFi Certified",
+      "weight": "22g"
+    },
+    "image": "https://source.unsplash.com/600x400/?apple,magsafe,charger,iphone",
+    "images": [
+      "https://source.unsplash.com/1200x800/?magsafe,charger,apple",
+      "https://source.unsplash.com/1200x800/?wireless,charger,iphone,magnetic",
+      "https://source.unsplash.com/1200x800/?apple,charger,desk",
+      "https://source.unsplash.com/1200x800/?iphone,charging,magsafe"
+    ]
+  },
+  {
+    "id": "ac1008",
+    "title": "Logitech Brio 4K Webcam",
+    "description": "Professional-grade 4K webcam with HDR, RightLight 4 AI-powered auto-light correction, and ultra-wide 90° field of view — making every video call look studio quality.",
+    "category": "Accessories",
+    "brand": "Logitech",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Accessories"
+    ],
+    "stock": 31,
+    "price": 19999,
+    "originalPrice": 22999,
+    "rating": 4.8,
+    "reviewCount": 3410,
+    "badge": "4K CLARITY",
+    "specs": {
+      "resolution": "4K Ultra HD (4096x2160) @ 30fps",
+      "fieldOfView": "65°, 78°, 90° adjustable",
+      "hdr": "HDR with RightLight 4",
+      "microphone": "Dual omnidirectional mics",
+      "connectivity": "USB-A / USB-C",
+      "privacyShutter": "Built-in",
+      "compatibility": "Windows, macOS, ChromeOS"
+    },
+    "image": "https://source.unsplash.com/600x400/?logitech,brio,webcam,4k",
+    "images": [
+      "https://source.unsplash.com/1200x800/?logitech,webcam,4k",
+      "https://source.unsplash.com/1200x800/?webcam,monitor,desk,setup",
+      "https://source.unsplash.com/1200x800/?webcam,streaming,professional",
+      "https://source.unsplash.com/1200x800/?video,call,webcam,hd"
+    ]
+  },
+  {
+    "id": "ac1009",
+    "title": "BenQ ScreenBar Monitor Light",
+    "description": "Asymmetric optical design monitor light that illuminates your desk without screen glare, featuring auto-dimming, colour temperature adjustment, and a clip-on design that needs no extra desk space.",
+    "category": "Accessories",
+    "brand": "BenQ",
+    "catalogSegments": [
+      "Accessories"
+    ],
+    "stock": 44,
+    "price": 5999,
+    "originalPrice": 7499,
+    "rating": 4.8,
+    "reviewCount": 4620,
+    "badge": "EYE CARE",
+    "specs": {
+      "lightSource": "LED (High-CRI ≥95)",
+      "colourTemperature": "2700K–6500K adjustable",
+      "brightness": "1000 lux max",
+      "control": "Touch-sensitive rotary knob",
+      "power": "USB powered (5W)",
+      "mounting": "Clip-on, fits monitors 1–3cm thick",
+      "weight": "530g"
+    },
+    "image": "https://source.unsplash.com/600x400/?benq,monitor,light,desk",
+    "images": [
+      "https://source.unsplash.com/1200x800/?monitor,light,screenbar",
+      "https://source.unsplash.com/1200x800/?desk,lamp,monitor,setup",
+      "https://source.unsplash.com/1200x800/?workspace,light,led,desk",
+      "https://source.unsplash.com/1200x800/?home,office,monitor,light"
+    ]
+  },
+  {
+    "id": "ac1010",
+    "title": "Elgato Stream Deck MK.2",
+    "description": "The go-to control surface for streamers and content creators — 15 customizable LCD keys to launch scenes, control audio, trigger actions, and automate workflows with a single tap.",
+    "category": "Accessories",
+    "brand": "Elgato",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Accessories"
+    ],
+    "stock": 26,
+    "price": 14999,
+    "originalPrice": 17499,
+    "rating": 4.8,
+    "reviewCount": 5830,
+    "badge": "STREAMER MUST",
+    "specs": {
+      "keys": "15 customizable LCD keys",
+      "keyResolution": "72x72px per key",
+      "connectivity": "USB-C",
+      "software": "Elgato Stream Deck software",
+      "plugins": "200+ integrations (OBS, Twitch, Spotify, etc.)",
+      "stand": "Adjustable tilt stand included",
+      "compatibility": "Windows 10/11, macOS 10.15+"
+    },
+    "image": "https://source.unsplash.com/600x400/?elgato,stream,deck,creator",
+    "images": [
+      "https://source.unsplash.com/1200x800/?elgato,stream,deck",
+      "https://source.unsplash.com/1200x800/?streaming,setup,creator,desk",
+      "https://source.unsplash.com/1200x800/?content,creator,studio,setup",
+      "https://source.unsplash.com/1200x800/?streamer,desk,rgb,setup"
+    ]
+  },
+  {
+    "id": "ac1011",
+    "title": "Spigen MagFit Power Bank",
+    "description": "Slim MagSafe-compatible 5000mAh power bank with 7.5W wireless charging and USB-C output, designed to magnetically snap onto your iPhone for hassle-free on-the-go charging.",
+    "category": "Accessories",
+    "brand": "Spigen",
+    "catalogSegments": [
+      "Trending",
+      "Accessories"
+    ],
+    "stock": 57,
+    "price": 3499,
+    "originalPrice": 4299,
+    "rating": 4.6,
+    "reviewCount": 2840,
+    "badge": "MAG CHARGE",
+    "specs": {
+      "capacity": "5000mAh",
+      "wirelessCharging": "7.5W MagSafe compatible",
+      "wiredOutput": "USB-C 18W",
+      "magneticAlignment": "MagFit magnet ring",
+      "compatibility": "iPhone 12 and later",
+      "dimensions": "96 x 66 x 14mm",
+      "weight": "142g"
+    },
+    "image": "https://source.unsplash.com/600x400/?powerbank,magsafe,wireless,charge",
+    "images": [
+      "https://source.unsplash.com/1200x800/?power,bank,magnetic,iphone",
+      "https://source.unsplash.com/1200x800/?portable,charger,slim,magsafe",
+      "https://source.unsplash.com/1200x800/?powerbank,wireless,charging",
+      "https://source.unsplash.com/1200x800/?mobile,charger,travel,compact"
+    ]
+  },
+  {
+    "id": "ac1012",
+    "title": "Amazon Basics Laptop Sleeve",
+    "description": "Lightweight protective laptop sleeve with soft neoprene padding, accessory pocket, and water-resistant exterior — reliable everyday protection for your laptop at an unbeatable price.",
+    "category": "Accessories",
+    "brand": "Amazon Basics",
+    "catalogSegments": [
+      "Accessories"
+    ],
+    "stock": 120,
+    "price": 899,
+    "originalPrice": 1299,
+    "rating": 4.4,
+    "reviewCount": 11240,
+    "badge": "BUDGET PICK",
+    "specs": {
+      "compatibility": "13–15.6 inch laptops",
+      "material": "Neoprene exterior, microfiber lining",
+      "waterResistance": "Water-resistant exterior",
+      "pockets": "1 front accessory pocket",
+      "closure": "Dual zipper",
+      "colors": "Black, Grey, Blue",
+      "weight": "220g"
+    },
+    "image": "https://source.unsplash.com/600x400/?laptop,sleeve,bag,protection",
+    "images": [
+      "https://source.unsplash.com/1200x800/?laptop,sleeve,neoprene",
+      "https://source.unsplash.com/1200x800/?laptop,bag,protection,case",
+      "https://source.unsplash.com/1200x800/?laptop,carry,sleeve,minimal",
+      "https://source.unsplash.com/1200x800/?laptop,travel,bag,desk"
+    ]
+  },
+  {
+    "id": "ac1013",
+    "title": "ASUS ROG Sheath Mouse Pad",
+    "description": "XXL gaming desk mat with a ROG-optimized micro-textured surface for pixel-precise tracking, non-slip rubber base, anti-fray stitched edges, and an iconic ROG Republic of Gamers design.",
+    "category": "Accessories",
+    "brand": "ASUS",
+    "catalogSegments": [
+      "Trending",
+      "Accessories"
+    ],
+    "stock": 62,
+    "price": 2999,
+    "originalPrice": 3999,
+    "rating": 4.7,
+    "reviewCount": 6750,
+    "badge": "XXL GAMING",
+    "specs": {
+      "dimensions": "900 x 440 x 3mm (XXL)",
+      "surface": "Micro-textured cloth",
+      "base": "Non-slip rubber",
+      "edges": "Anti-fray stitched",
+      "optimizedFor": "All sensor types & DPI settings",
+      "design": "ROG Republic of Gamers theme",
+      "weight": "480g"
+    },
+    "image": "https://source.unsplash.com/600x400/?asus,rog,mousepad,gaming",
+    "images": [
+      "https://source.unsplash.com/1200x800/?rog,mousepad,xxl,gaming",
+      "https://source.unsplash.com/1200x800/?gaming,desk,mousepad,rgb",
+      "https://source.unsplash.com/1200x800/?xxl,deskmat,gaming,setup",
+      "https://source.unsplash.com/1200x800/?gaming,deskmat,keyboard,mouse"
+    ]
+  },
+  {
+    "id": "ac1014",
+    "title": "Belkin BoostCharge Pro 3-in-1",
+    "description": "Charge your iPhone, Apple Watch, and AirPods simultaneously with MagSafe alignment, delivering up to 15W fast wireless charging — the cleanest charging solution for the Apple ecosystem.",
+    "category": "Accessories",
+    "brand": "Belkin",
+    "catalogSegments": [
+      "AI Picks",
+      "Accessories"
+    ],
+    "stock": 38,
+    "price": 7999,
+    "originalPrice": 9499,
+    "rating": 4.7,
+    "reviewCount": 3190,
+    "badge": "3-IN-1 CHARGE",
+    "specs": {
+      "chargingPads": "3 (iPhone MagSafe + Apple Watch + AirPods)",
+      "iphoneSpeed": "15W MagSafe fast charging",
+      "applWatchSpeed": "Fast charge compatible",
+      "powerAdapter": "30W included",
+      "cableLength": "1.2m",
+      "compatibility": "iPhone 12+, Apple Watch Series 4+, AirPods",
+      "weight": "190g"
+    },
+    "image": "https://source.unsplash.com/600x400/?belkin,wireless,charger,3in1",
+    "images": [
+      "https://source.unsplash.com/1200x800/?belkin,charging,station,apple",
+      "https://source.unsplash.com/1200x800/?wireless,charging,station,iphone",
+      "https://source.unsplash.com/1200x800/?apple,watch,airpods,charge",
+      "https://source.unsplash.com/1200x800/?3in1,charger,desk,nightstand"
+    ]
+  },
+  {
+    "id": "ac1015",
+    "title": "UGREEN Nexode 100W USB-C Charger",
+    "description": "Compact 100W GaN fast charger with 4 ports (2x USB-C + 2x USB-A), capable of simultaneously charging a laptop, tablet, and two smartphones — all from one wall plug.",
+    "category": "Accessories",
+    "brand": "UGREEN",
+    "catalogSegments": [
+      "Trending",
+      "Accessories"
+    ],
+    "stock": 74,
+    "price": 4499,
+    "originalPrice": 5999,
+    "rating": 4.8,
+    "reviewCount": 4980,
+    "badge": "POWER UP",
+    "specs": {
+      "totalPower": "100W",
+      "ports": "2x USB-C + 2x USB-A (4 ports total)",
+      "fastCharging": "PD 3.0, PPS, QC 4+",
+      "technology": "GaN III",
+      "singlePortMax": "100W (USB-C1)",
+      "compatibility": "MacBook, iPhone, Android, Laptops",
+      "weight": "132g"
+    },
+    "image": "https://source.unsplash.com/600x400/?ugreen,gan,charger,usbc",
+    "images": [
+      "https://source.unsplash.com/1200x800/?ugreen,charger,usbc,100w",
+      "https://source.unsplash.com/1200x800/?gan,charger,compact,fast",
+      "https://source.unsplash.com/1200x800/?usbc,charger,multiport",
+      "https://source.unsplash.com/1200x800/?fast,charger,laptop,phone"
+    ]
+  }
+]

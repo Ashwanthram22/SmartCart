@@ -41,18 +41,24 @@ export default function ProductDetailSkeleton() {
               <Skeleton height={48} radius={10} />
               <Skeleton height={48} radius={10} />
             </div>
-          </div>
-        </div>
 
-        <div className="pd-skel-section pd-skel-mt-32">
-          <Skeleton height={22} width={220} radius={6} />
-          <div className="pd-skel-spec-grid pd-skel-mt-16">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="pd-skel-spec-row">
-                <Skeleton height={14} width="40%" radius={4} />
-                <Skeleton height={14} width="55%" radius={4} />
+            <div className="pd-skel-buy-spec-panel pd-skel-mt-24">
+              <Skeleton height={28} width="75%" radius={6} />
+              <div className="pd-skel-buy-spec-rows pd-skel-mt-16">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="pd-skel-spec-row">
+                    <Skeleton height={14} width="40%" radius={4} />
+                    <Skeleton height={14} width="45%" radius={4} />
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            <div className="pd-skel-benefits pd-skel-mt-16">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} height={36} radius={8} />
+              ))}
+            </div>
           </div>
         </div>
 

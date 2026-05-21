@@ -92,6 +92,15 @@ function buildProductPayload(body, existing = null) {
   if ("images" in body) merged.images = normaliseStringList(body.images);
   if ("catalogSegments" in body) merged.catalogSegments = normaliseStringList(body.catalogSegments);
   if ("specs" in body) merged.specs = normaliseSpecs(body.specs);
+  if ("similarProductIds" in body) {
+    merged.similarProductIds = normaliseStringList(body.similarProductIds);
+  }
+  if ("discountPercent" in body) {
+    merged.discountPercent =
+      body.discountPercent === null || body.discountPercent === ""
+        ? null
+        : Math.min(100, Math.max(0, safeInt(body.discountPercent, 0)));
+  }
 
   return merged;
 }

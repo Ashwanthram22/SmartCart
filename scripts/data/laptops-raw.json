@@ -1,0 +1,514 @@
+[
+  {
+    "id": "lp1001",
+    "title": "Apple MacBook Pro M4",
+    "description": "The most powerful MacBook Pro ever with the M4 chip, featuring a stunning Liquid Retina XDR display, up to 24-hour battery life, and pro-level performance for demanding workflows.",
+    "category": "Laptops",
+    "brand": "Apple",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Laptops"
+    ],
+    "stock": 22,
+    "price": 199999,
+    "originalPrice": 219999,
+    "rating": 4.9,
+    "reviewCount": 4821,
+    "badge": "BEST IN CLASS",
+    "specs": {
+      "processor": "Apple M4 Pro (12-core CPU)",
+      "ram": "24GB Unified Memory",
+      "storage": "512GB SSD",
+      "display": "14.2-inch Liquid Retina XDR, 3024x1964, 120Hz ProMotion",
+      "graphics": "20-core GPU",
+      "battery": "Up to 24 hours",
+      "os": "macOS Sequoia",
+      "weight": "1.61 kg"
+    },
+    "image": "https://source.unsplash.com/600x400/?macbook,apple,laptop",
+    "images": [
+      "https://source.unsplash.com/1200x800/?macbook,pro,laptop",
+      "https://source.unsplash.com/1200x800/?apple,macbook,silver",
+      "https://source.unsplash.com/1200x800/?laptop,apple,desk",
+      "https://source.unsplash.com/1200x800/?macbook,keyboard,workspace"
+    ]
+  },
+  {
+    "id": "lp1002",
+    "title": "Dell XPS 15",
+    "description": "Premium ultrabook with a stunning InfinityEdge OLED display, Intel Core Ultra processor, and exceptional build quality in a sleek thin design for professionals and creatives.",
+    "category": "Laptops",
+    "brand": "Dell",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Laptops"
+    ],
+    "stock": 18,
+    "price": 179999,
+    "originalPrice": 199999,
+    "rating": 4.8,
+    "reviewCount": 3240,
+    "badge": "EDITOR'S CHOICE",
+    "specs": {
+      "processor": "Intel Core Ultra 7 185H",
+      "ram": "32GB DDR5",
+      "storage": "1TB NVMe SSD",
+      "display": "15.6-inch OLED, 3456x2160, 60Hz",
+      "graphics": "NVIDIA GeForce RTX 4060 8GB",
+      "battery": "Up to 13 hours",
+      "os": "Windows 11 Home",
+      "weight": "1.86 kg"
+    },
+    "image": "https://source.unsplash.com/600x400/?dell,xps,laptop",
+    "images": [
+      "https://source.unsplash.com/1200x800/?dell,laptop,oled",
+      "https://source.unsplash.com/1200x800/?ultrabook,thin,laptop",
+      "https://source.unsplash.com/1200x800/?laptop,premium,silver",
+      "https://source.unsplash.com/1200x800/?laptop,workspace,professional"
+    ]
+  },
+  {
+    "id": "lp1003",
+    "title": "ASUS ROG Zephyrus G16",
+    "description": "Slim yet powerful gaming laptop featuring the latest AMD Ryzen AI 9 processor and NVIDIA RTX 4090, wrapped in a stunning AniMe Matrix LED lid for the ultimate gaming experience.",
+    "category": "Laptops",
+    "brand": "ASUS",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Laptops"
+    ],
+    "stock": 14,
+    "price": 249999,
+    "originalPrice": 274999,
+    "rating": 4.9,
+    "reviewCount": 2180,
+    "badge": "GAMING BEAST",
+    "specs": {
+      "processor": "AMD Ryzen AI 9 HX 370",
+      "ram": "32GB DDR5",
+      "storage": "2TB NVMe SSD",
+      "display": "16-inch QHD+ OLED, 2560x1600, 240Hz",
+      "graphics": "NVIDIA GeForce RTX 4090 16GB",
+      "battery": "Up to 10 hours",
+      "os": "Windows 11 Home",
+      "weight": "1.85 kg"
+    },
+    "image": "https://source.unsplash.com/600x400/?asus,rog,gaming,laptop",
+    "images": [
+      "https://source.unsplash.com/1200x800/?rog,gaming,laptop,rgb",
+      "https://source.unsplash.com/1200x800/?gaming,laptop,rgb,keyboard",
+      "https://source.unsplash.com/1200x800/?gaming,laptop,dark",
+      "https://source.unsplash.com/1200x800/?gamer,laptop,setup"
+    ]
+  },
+  {
+    "id": "lp1004",
+    "title": "Lenovo Legion Pro 7i",
+    "description": "High-performance gaming laptop with Intel Core i9 HX processor and RTX 4080, designed for serious gamers demanding top-tier frame rates and immersive visuals.",
+    "category": "Laptops",
+    "brand": "Lenovo",
+    "catalogSegments": [
+      "Trending",
+      "Laptops"
+    ],
+    "stock": 16,
+    "price": 229999,
+    "originalPrice": 249999,
+    "rating": 4.8,
+    "reviewCount": 1870,
+    "badge": "PRO GAMING",
+    "specs": {
+      "processor": "Intel Core i9-14900HX",
+      "ram": "32GB DDR5",
+      "storage": "1TB NVMe SSD",
+      "display": "16-inch IPS, 2560x1600, 240Hz",
+      "graphics": "NVIDIA GeForce RTX 4080 12GB",
+      "battery": "Up to 8 hours",
+      "os": "Windows 11 Home",
+      "weight": "2.55 kg"
+    },
+    "image": "https://source.unsplash.com/600x400/?lenovo,legion,gaming,laptop",
+    "images": [
+      "https://source.unsplash.com/1200x800/?lenovo,gaming,laptop",
+      "https://source.unsplash.com/1200x800/?gaming,laptop,blue,rgb",
+      "https://source.unsplash.com/1200x800/?gaming,laptop,performance",
+      "https://source.unsplash.com/1200x800/?laptop,gaming,desk,setup"
+    ]
+  },
+  {
+    "id": "lp1005",
+    "title": "HP Spectre x360",
+    "description": "Versatile 2-in-1 convertible laptop with a gorgeous OLED touch display, Intel Core Ultra processor, and premium aluminum chassis — perfect for work, creativity, and entertainment.",
+    "category": "Laptops",
+    "brand": "HP",
+    "catalogSegments": [
+      "AI Picks",
+      "Laptops"
+    ],
+    "stock": 27,
+    "price": 159999,
+    "originalPrice": 179999,
+    "rating": 4.7,
+    "reviewCount": 2950,
+    "badge": "TOP 2-IN-1",
+    "specs": {
+      "processor": "Intel Core Ultra 7 155H",
+      "ram": "16GB LPDDR5",
+      "storage": "512GB NVMe SSD",
+      "display": "14-inch OLED Touch, 2880x1800, 120Hz",
+      "graphics": "Intel Arc Graphics",
+      "battery": "Up to 17 hours",
+      "os": "Windows 11 Home",
+      "weight": "1.41 kg"
+    },
+    "image": "https://source.unsplash.com/600x400/?hp,spectre,convertible,laptop",
+    "images": [
+      "https://source.unsplash.com/1200x800/?hp,laptop,premium",
+      "https://source.unsplash.com/1200x800/?convertible,2in1,laptop",
+      "https://source.unsplash.com/1200x800/?laptop,touchscreen,tablet",
+      "https://source.unsplash.com/1200x800/?laptop,stylus,pen,drawing"
+    ]
+  },
+  {
+    "id": "lp1006",
+    "title": "Acer Predator Helios Neo 16",
+    "description": "Feature-packed gaming laptop with AMD Ryzen 9 and RTX 4070, delivering outstanding gaming performance at an aggressive price point with advanced cooling technology.",
+    "category": "Laptops",
+    "brand": "Acer",
+    "catalogSegments": [
+      "Trending",
+      "Laptops"
+    ],
+    "stock": 20,
+    "price": 149999,
+    "originalPrice": 169999,
+    "rating": 4.6,
+    "reviewCount": 1540,
+    "badge": "VALUE GAMING",
+    "specs": {
+      "processor": "AMD Ryzen 9 7945HX",
+      "ram": "32GB DDR5",
+      "storage": "1TB NVMe SSD",
+      "display": "16-inch IPS, 2560x1600, 165Hz",
+      "graphics": "NVIDIA GeForce RTX 4070 8GB",
+      "battery": "Up to 6 hours",
+      "os": "Windows 11 Home",
+      "weight": "2.8 kg"
+    },
+    "image": "https://source.unsplash.com/600x400/?acer,predator,gaming,laptop",
+    "images": [
+      "https://source.unsplash.com/1200x800/?acer,gaming,laptop",
+      "https://source.unsplash.com/1200x800/?predator,gaming,keyboard,rgb",
+      "https://source.unsplash.com/1200x800/?gaming,laptop,cooling,vent",
+      "https://source.unsplash.com/1200x800/?gaming,laptop,aggressive,design"
+    ]
+  },
+  {
+    "id": "lp1007",
+    "title": "MSI Stealth 16 Studio",
+    "description": "Creator-focused gaming laptop with Intel Core i9 and RTX 4070, housed in an ultra-slim magnesium alloy chassis delivering the perfect balance of portability and power.",
+    "category": "Laptops",
+    "brand": "MSI",
+    "catalogSegments": [
+      "AI Picks",
+      "Laptops"
+    ],
+    "stock": 12,
+    "price": 209999,
+    "originalPrice": 229999,
+    "rating": 4.7,
+    "reviewCount": 980,
+    "badge": "CREATOR GAMING",
+    "specs": {
+      "processor": "Intel Core i9-13950HX",
+      "ram": "32GB DDR5",
+      "storage": "2TB NVMe SSD",
+      "display": "16-inch QHD+ OLED, 2560x1600, 120Hz",
+      "graphics": "NVIDIA GeForce RTX 4070 8GB",
+      "battery": "Up to 10 hours",
+      "os": "Windows 11 Home",
+      "weight": "1.99 kg"
+    },
+    "image": "https://source.unsplash.com/600x400/?msi,stealth,laptop,slim",
+    "images": [
+      "https://source.unsplash.com/1200x800/?msi,laptop,creator",
+      "https://source.unsplash.com/1200x800/?thin,gaming,laptop,black",
+      "https://source.unsplash.com/1200x800/?laptop,studio,creative,design",
+      "https://source.unsplash.com/1200x800/?gaming,laptop,sleek"
+    ]
+  },
+  {
+    "id": "lp1008",
+    "title": "Lenovo Yoga Slim 7",
+    "description": "Ultra-lightweight productivity laptop with AMD Ryzen AI processor, Dolby Vision display, and all-day battery life — engineered for professionals on the go.",
+    "category": "Laptops",
+    "brand": "Lenovo",
+    "catalogSegments": [
+      "Laptops"
+    ],
+    "stock": 34,
+    "price": 94999,
+    "originalPrice": 109999,
+    "rating": 4.6,
+    "reviewCount": 2120,
+    "badge": "SLIM & SMART",
+    "specs": {
+      "processor": "AMD Ryzen 7 7730U",
+      "ram": "16GB LPDDR5",
+      "storage": "512GB NVMe SSD",
+      "display": "14-inch IPS, 2240x1400, 90Hz, Dolby Vision",
+      "graphics": "AMD Radeon 780M",
+      "battery": "Up to 15 hours",
+      "os": "Windows 11 Home",
+      "weight": "1.36 kg"
+    },
+    "image": "https://source.unsplash.com/600x400/?lenovo,yoga,slim,laptop",
+    "images": [
+      "https://source.unsplash.com/1200x800/?lenovo,yoga,ultrabook",
+      "https://source.unsplash.com/1200x800/?slim,laptop,light,portable",
+      "https://source.unsplash.com/1200x800/?laptop,business,professional",
+      "https://source.unsplash.com/1200x800/?laptop,cafe,work,travel"
+    ]
+  },
+  {
+    "id": "lp1009",
+    "title": "ASUS Vivobook S15 OLED",
+    "description": "Stunning OLED laptop with AMD Ryzen 9 processor and beautiful Lumina OLED display, offering vibrant visuals and smooth performance for everyday creators and students.",
+    "category": "Laptops",
+    "brand": "ASUS",
+    "catalogSegments": [
+      "Trending",
+      "Laptops"
+    ],
+    "stock": 41,
+    "price": 89999,
+    "originalPrice": 99999,
+    "rating": 4.7,
+    "reviewCount": 3410,
+    "badge": "OLED VALUE",
+    "specs": {
+      "processor": "AMD Ryzen 9 7940H",
+      "ram": "16GB DDR5",
+      "storage": "512GB NVMe SSD",
+      "display": "15.6-inch OLED, 2880x1620, 120Hz",
+      "graphics": "AMD Radeon 780M",
+      "battery": "Up to 10 hours",
+      "os": "Windows 11 Home",
+      "weight": "1.5 kg"
+    },
+    "image": "https://source.unsplash.com/600x400/?asus,vivobook,oled,laptop",
+    "images": [
+      "https://source.unsplash.com/1200x800/?asus,oled,laptop,display",
+      "https://source.unsplash.com/1200x800/?oled,screen,laptop,vivid",
+      "https://source.unsplash.com/1200x800/?laptop,colorful,screen",
+      "https://source.unsplash.com/1200x800/?student,laptop,desk"
+    ]
+  },
+  {
+    "id": "lp1010",
+    "title": "Dell Inspiron 14",
+    "description": "Reliable everyday laptop with Intel Core i5 processor, compact 14-inch design, and solid build quality — an ideal choice for students and home users seeking great value.",
+    "category": "Laptops",
+    "brand": "Dell",
+    "catalogSegments": [
+      "Laptops"
+    ],
+    "stock": 58,
+    "price": 59999,
+    "originalPrice": 69999,
+    "rating": 4.4,
+    "reviewCount": 5680,
+    "badge": "BEST VALUE",
+    "specs": {
+      "processor": "Intel Core i5-1335U",
+      "ram": "8GB DDR4",
+      "storage": "512GB SSD",
+      "display": "14-inch FHD IPS, 1920x1080, 60Hz",
+      "graphics": "Intel Iris Xe Graphics",
+      "battery": "Up to 12 hours",
+      "os": "Windows 11 Home",
+      "weight": "1.65 kg"
+    },
+    "image": "https://source.unsplash.com/600x400/?dell,inspiron,laptop,student",
+    "images": [
+      "https://source.unsplash.com/1200x800/?dell,inspiron,laptop",
+      "https://source.unsplash.com/1200x800/?student,laptop,everyday",
+      "https://source.unsplash.com/1200x800/?laptop,compact,14inch",
+      "https://source.unsplash.com/1200x800/?laptop,home,office"
+    ]
+  },
+  {
+    "id": "lp1011",
+    "title": "Apple MacBook Air M4",
+    "description": "The world's best consumer laptop gets even better with M4 chip — delivering incredible speed, fanless silent operation, an immersive Liquid Retina display, and all-day battery in a featherlight design.",
+    "category": "Laptops",
+    "brand": "Apple",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Laptops"
+    ],
+    "stock": 45,
+    "price": 119999,
+    "originalPrice": 129999,
+    "rating": 4.9,
+    "reviewCount": 9840,
+    "badge": "MOST POPULAR",
+    "specs": {
+      "processor": "Apple M4 (10-core CPU)",
+      "ram": "16GB Unified Memory",
+      "storage": "256GB SSD",
+      "display": "13.6-inch Liquid Retina, 2560x1664, 60Hz",
+      "graphics": "10-core GPU",
+      "battery": "Up to 18 hours",
+      "os": "macOS Sequoia",
+      "weight": "1.24 kg"
+    },
+    "image": "https://source.unsplash.com/600x400/?macbook,air,apple,thin",
+    "images": [
+      "https://source.unsplash.com/1200x800/?macbook,air,m2,laptop",
+      "https://source.unsplash.com/1200x800/?apple,laptop,starlight",
+      "https://source.unsplash.com/1200x800/?macbook,air,lightweight",
+      "https://source.unsplash.com/1200x800/?apple,macbook,coffee,shop"
+    ]
+  },
+  {
+    "id": "lp1012",
+    "title": "HP Omen 16",
+    "description": "Powerful gaming laptop with AMD Ryzen 9 and NVIDIA RTX 4070, featuring OMEN Tempest Cooling and a high-refresh-rate display for a competitive gaming edge.",
+    "category": "Laptops",
+    "brand": "HP",
+    "catalogSegments": [
+      "Trending",
+      "Laptops"
+    ],
+    "stock": 19,
+    "price": 164999,
+    "originalPrice": 184999,
+    "rating": 4.7,
+    "reviewCount": 2240,
+    "badge": "OMEN POWER",
+    "specs": {
+      "processor": "AMD Ryzen 9 7945HX",
+      "ram": "32GB DDR5",
+      "storage": "1TB NVMe SSD",
+      "display": "16.1-inch QHD IPS, 2560x1440, 165Hz",
+      "graphics": "NVIDIA GeForce RTX 4070 8GB",
+      "battery": "Up to 8 hours",
+      "os": "Windows 11 Home",
+      "weight": "2.35 kg"
+    },
+    "image": "https://source.unsplash.com/600x400/?hp,omen,gaming,laptop",
+    "images": [
+      "https://source.unsplash.com/1200x800/?hp,omen,gaming",
+      "https://source.unsplash.com/1200x800/?gaming,laptop,hp,rgb",
+      "https://source.unsplash.com/1200x800/?laptop,gaming,shadow",
+      "https://source.unsplash.com/1200x800/?gaming,setup,laptop,dark"
+    ]
+  },
+  {
+    "id": "lp1013",
+    "title": "Samsung Galaxy Book4 Pro",
+    "description": "Ultra-slim premium laptop with Intel Core Ultra processor, Dynamic AMOLED 2X display, and seamless Galaxy ecosystem integration — crafted for the modern mobile professional.",
+    "category": "Laptops",
+    "brand": "Samsung",
+    "catalogSegments": [
+      "AI Picks",
+      "Laptops"
+    ],
+    "stock": 23,
+    "price": 149999,
+    "originalPrice": 164999,
+    "rating": 4.7,
+    "reviewCount": 1760,
+    "badge": "AMOLED PRO",
+    "specs": {
+      "processor": "Intel Core Ultra 7 155H",
+      "ram": "16GB LPDDR5X",
+      "storage": "512GB NVMe SSD",
+      "display": "16-inch Dynamic AMOLED 2X, 2880x1800, 120Hz",
+      "graphics": "Intel Arc Graphics",
+      "battery": "Up to 22 hours",
+      "os": "Windows 11 Home",
+      "weight": "1.55 kg"
+    },
+    "image": "https://source.unsplash.com/600x400/?samsung,galaxy,book,laptop",
+    "images": [
+      "https://source.unsplash.com/1200x800/?samsung,laptop,amoled",
+      "https://source.unsplash.com/1200x800/?samsung,book,ultrabook",
+      "https://source.unsplash.com/1200x800/?laptop,amoled,vivid,display",
+      "https://source.unsplash.com/1200x800/?samsung,laptop,professional"
+    ]
+  },
+  {
+    "id": "lp1014",
+    "title": "Microsoft Surface Laptop 7",
+    "description": "Elegantly designed laptop powered by Snapdragon X Elite, offering exceptional AI performance, a brilliant PixelSense touchscreen, and the thinnest Surface Laptop ever built.",
+    "category": "Laptops",
+    "brand": "Microsoft",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Laptops"
+    ],
+    "stock": 31,
+    "price": 139999,
+    "originalPrice": 154999,
+    "rating": 4.8,
+    "reviewCount": 2090,
+    "badge": "AI LAPTOP",
+    "specs": {
+      "processor": "Snapdragon X Elite X1E-80-100",
+      "ram": "16GB LPDDR5X",
+      "storage": "512GB SSD",
+      "display": "13.8-inch PixelSense Touch, 2304x1536, 60Hz",
+      "graphics": "Qualcomm Adreno GPU",
+      "battery": "Up to 22 hours",
+      "os": "Windows 11 Home",
+      "weight": "1.34 kg"
+    },
+    "image": "https://source.unsplash.com/600x400/?microsoft,surface,laptop",
+    "images": [
+      "https://source.unsplash.com/1200x800/?microsoft,surface,touchscreen",
+      "https://source.unsplash.com/1200x800/?surface,laptop,elegant",
+      "https://source.unsplash.com/1200x800/?laptop,touchscreen,windows",
+      "https://source.unsplash.com/1200x800/?laptop,minimal,clean,design"
+    ]
+  },
+  {
+    "id": "lp1015",
+    "title": "Acer Aspire Lite 14",
+    "description": "Affordable and capable everyday laptop with Intel Core i3 processor, a clean design, and solid battery life — the perfect entry-level laptop for students and light users.",
+    "category": "Laptops",
+    "brand": "Acer",
+    "catalogSegments": [
+      "Laptops"
+    ],
+    "stock": 72,
+    "price": 34999,
+    "originalPrice": 42999,
+    "rating": 4.3,
+    "reviewCount": 4230,
+    "badge": "BUDGET PICK",
+    "specs": {
+      "processor": "Intel Core i3-1215U",
+      "ram": "8GB DDR4",
+      "storage": "256GB SSD",
+      "display": "14-inch FHD IPS, 1920x1080, 60Hz",
+      "graphics": "Intel UHD Graphics",
+      "battery": "Up to 10 hours",
+      "os": "Windows 11 Home",
+      "weight": "1.59 kg"
+    },
+    "image": "https://source.unsplash.com/600x400/?acer,aspire,laptop,budget",
+    "images": [
+      "https://source.unsplash.com/1200x800/?acer,laptop,student",
+      "https://source.unsplash.com/1200x800/?budget,laptop,affordable",
+      "https://source.unsplash.com/1200x800/?student,laptop,college",
+      "https://source.unsplash.com/1200x800/?laptop,study,notebook"
+    ]
+  }
+]

@@ -1,0 +1,505 @@
+[
+  {
+    "id": "fa1001",
+    "title": "Nike Air Force 1 '07",
+    "description": "The iconic streetwear staple that started it all. The Nike Air Force 1 features a classic low-top silhouette, durable leather upper, and Air cushioning — a timeless sneaker that goes with everything.",
+    "category": "Fashion",
+    "brand": "Nike",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Fashion"
+    ],
+    "stock": 84,
+    "price": 8995,
+    "originalPrice": 10995,
+    "rating": 4.9,
+    "reviewCount": 18420,
+    "badge": "ICONIC",
+    "specs": {
+      "type": "Lifestyle Sneaker",
+      "upper": "Full-grain leather",
+      "sole": "Rubber outsole with pivot circle",
+      "cushioning": "Nike Air unit",
+      "closure": "Lace-up",
+      "sizes": "UK 6–12",
+      "colors": "White, Black, Triple White"
+    },
+    "image": "https://source.unsplash.com/600x400/?nike,air,force,sneaker,white",
+    "images": [
+      "https://source.unsplash.com/1200x800/?nike,airforce,sneaker",
+      "https://source.unsplash.com/1200x800/?white,sneaker,nike,lifestyle",
+      "https://source.unsplash.com/1200x800/?sneaker,streetwear,classic",
+      "https://source.unsplash.com/1200x800/?nike,shoe,fashion,street"
+    ]
+  },
+  {
+    "id": "fa1002",
+    "title": "Adidas Ultraboost Light",
+    "description": "Experience the lightest Ultraboost ever — featuring LIGHTBOOST midsole technology, a sock-like Primeknit+ upper, and Continental rubber outsole for an ultra-responsive ride on every run.",
+    "category": "Fashion",
+    "brand": "Adidas",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Fashion"
+    ],
+    "stock": 56,
+    "price": 16999,
+    "originalPrice": 19999,
+    "rating": 4.8,
+    "reviewCount": 9840,
+    "badge": "BESTSELLER",
+    "specs": {
+      "type": "Running / Lifestyle Sneaker",
+      "upper": "Primeknit+ woven textile",
+      "midsole": "LIGHTBOOST foam",
+      "outsole": "Continental rubber",
+      "closure": "Lace-up",
+      "sizes": "UK 6–13",
+      "colors": "Core Black, Cloud White, Wonder Beige"
+    },
+    "image": "https://source.unsplash.com/600x400/?adidas,ultraboost,running,shoe",
+    "images": [
+      "https://source.unsplash.com/1200x800/?adidas,ultraboost,sneaker",
+      "https://source.unsplash.com/1200x800/?adidas,running,shoe,boost",
+      "https://source.unsplash.com/1200x800/?adidas,shoe,knit,upper",
+      "https://source.unsplash.com/1200x800/?running,sneaker,sport,adidas"
+    ]
+  },
+  {
+    "id": "fa1003",
+    "title": "Puma RS-X Sneakers",
+    "description": "Bold, chunky, and unmistakably 90s-inspired — the Puma RS-X features a multi-layered upper, RS cushioning technology, and vibrant colour-blocking for a fashion-forward statement look.",
+    "category": "Fashion",
+    "brand": "Puma",
+    "catalogSegments": [
+      "Trending",
+      "Fashion"
+    ],
+    "stock": 43,
+    "price": 7999,
+    "originalPrice": 9999,
+    "rating": 4.6,
+    "reviewCount": 5210,
+    "badge": "RETRO VIBES",
+    "specs": {
+      "type": "Lifestyle / Chunky Sneaker",
+      "upper": "Mesh, suede & synthetic overlays",
+      "midsole": "RS cushioning foam",
+      "outsole": "Rubber with RS branding",
+      "closure": "Lace-up",
+      "sizes": "UK 6–12",
+      "colors": "White/Blue, Black/Red, Grey/Yellow"
+    },
+    "image": "https://source.unsplash.com/600x400/?puma,rsx,chunky,sneaker",
+    "images": [
+      "https://source.unsplash.com/1200x800/?puma,sneaker,colorful",
+      "https://source.unsplash.com/1200x800/?chunky,sneaker,90s,retro",
+      "https://source.unsplash.com/1200x800/?puma,shoe,fashion,lifestyle",
+      "https://source.unsplash.com/1200x800/?sneaker,bold,colorblock,street"
+    ]
+  },
+  {
+    "id": "fa1004",
+    "title": "Levi's 511 Slim Fit Jeans",
+    "description": "The perfect everyday slim jean — the Levi's 511 sits below the waist with a slim leg from hip to ankle, crafted from stretch denim for all-day comfort without sacrificing sharp style.",
+    "category": "Fashion",
+    "brand": "Levi's",
+    "catalogSegments": [
+      "AI Picks",
+      "Fashion"
+    ],
+    "stock": 97,
+    "price": 3999,
+    "originalPrice": 4999,
+    "rating": 4.7,
+    "reviewCount": 22140,
+    "badge": "WARDROBE STAPLE",
+    "specs": {
+      "type": "Slim Fit Jeans",
+      "fabric": "99% Cotton, 1% Elastane stretch denim",
+      "rise": "Mid-rise",
+      "leg": "Slim from hip to ankle",
+      "waistSizes": "28–38",
+      "inseam": "30\", 32\", 34\"",
+      "colors": "Midnight Indigo, Light Wash, Stonewash, Black"
+    },
+    "image": "https://source.unsplash.com/600x400/?levis,slim,jeans,denim",
+    "images": [
+      "https://source.unsplash.com/1200x800/?levis,jeans,denim,511",
+      "https://source.unsplash.com/1200x800/?slim,jeans,denim,fashion",
+      "https://source.unsplash.com/1200x800/?denim,jeans,blue,casual",
+      "https://source.unsplash.com/1200x800/?jeans,outfit,street,style"
+    ]
+  },
+  {
+    "id": "fa1005",
+    "title": "H&M Oversized Hoodie",
+    "description": "Ultra-cosy oversized hoodie crafted from soft cotton-blend fleece with a relaxed dropped-shoulder fit, front kangaroo pocket, and ribbed cuffs — effortless loungewear meets streetwear cool.",
+    "category": "Fashion",
+    "brand": "H&M",
+    "catalogSegments": [
+      "Trending",
+      "Fashion"
+    ],
+    "stock": 115,
+    "price": 1999,
+    "originalPrice": 2999,
+    "rating": 4.5,
+    "reviewCount": 14320,
+    "badge": "COSY ESSENTIAL",
+    "specs": {
+      "type": "Oversized Hoodie / Sweatshirt",
+      "fabric": "80% Cotton, 20% Polyester fleece",
+      "fit": "Oversized / Relaxed",
+      "features": "Kangaroo pocket, drawstring hood, ribbed hem & cuffs",
+      "sizes": "XS–XXL",
+      "care": "Machine washable",
+      "colors": "Black, White, Grey Marl, Beige, Dusty Pink"
+    },
+    "image": "https://source.unsplash.com/600x400/?oversized,hoodie,streetwear,casual",
+    "images": [
+      "https://source.unsplash.com/1200x800/?hoodie,oversized,fashion",
+      "https://source.unsplash.com/1200x800/?sweatshirt,cozy,streetwear",
+      "https://source.unsplash.com/1200x800/?hoodie,casual,outfit,street",
+      "https://source.unsplash.com/1200x800/?hoodie,model,fashion,grey"
+    ]
+  },
+  {
+    "id": "fa1006",
+    "title": "Zara Bomber Jacket",
+    "description": "A modern wardrobe essential — this Zara bomber jacket features a sleek satin-finish fabric, ribbed collar, cuffs and hem, front zip closure, and a minimal aesthetic that pairs effortlessly with any outfit.",
+    "category": "Fashion",
+    "brand": "Zara",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Fashion"
+    ],
+    "stock": 38,
+    "price": 5999,
+    "originalPrice": 7999,
+    "rating": 4.6,
+    "reviewCount": 7640,
+    "badge": "STREET STYLE",
+    "specs": {
+      "type": "Bomber Jacket",
+      "fabric": "100% Polyester satin finish",
+      "lining": "Full polyester lining",
+      "closure": "Front zip",
+      "collar": "Ribbed stand collar",
+      "pockets": "2 side zip pockets + 1 inner pocket",
+      "sizes": "XS–XL",
+      "colors": "Black, Olive Green, Navy, Camel"
+    },
+    "image": "https://source.unsplash.com/600x400/?zara,bomber,jacket,fashion",
+    "images": [
+      "https://source.unsplash.com/1200x800/?bomber,jacket,fashion,street",
+      "https://source.unsplash.com/1200x800/?jacket,satin,black,style",
+      "https://source.unsplash.com/1200x800/?bomber,jacket,model,urban",
+      "https://source.unsplash.com/1200x800/?jacket,fashion,outfit,cool"
+    ]
+  },
+  {
+    "id": "fa1007",
+    "title": "Tommy Hilfiger Polo T-Shirt",
+    "description": "The quintessential preppy classic — Tommy Hilfiger's signature polo features a piqué cotton knit, embroidered flag logo, ribbed collar and cuffs, and a clean regular fit for polished casual dressing.",
+    "category": "Fashion",
+    "brand": "Tommy Hilfiger",
+    "catalogSegments": [
+      "Fashion"
+    ],
+    "stock": 72,
+    "price": 3499,
+    "originalPrice": 4499,
+    "rating": 4.7,
+    "reviewCount": 11280,
+    "badge": "CLASSIC PREP",
+    "specs": {
+      "type": "Polo T-Shirt",
+      "fabric": "100% Cotton piqué knit",
+      "fit": "Regular fit",
+      "collar": "Ribbed polo collar with 2-button placket",
+      "logo": "Embroidered Tommy Hilfiger flag logo",
+      "sizes": "S–XXL",
+      "colors": "White, Navy, Red, Sky Blue, Dark Green"
+    },
+    "image": "https://source.unsplash.com/600x400/?tommy,hilfiger,polo,shirt",
+    "images": [
+      "https://source.unsplash.com/1200x800/?polo,shirt,tommy,preppy",
+      "https://source.unsplash.com/1200x800/?polo,tshirt,casual,fashion",
+      "https://source.unsplash.com/1200x800/?polo,collar,shirt,classic",
+      "https://source.unsplash.com/1200x800/?shirt,fashion,menswear,smart"
+    ]
+  },
+  {
+    "id": "fa1008",
+    "title": "Ray-Ban Aviator Classic Sunglasses",
+    "description": "The original aviator, born in 1937 and still unmistakable — Ray-Ban Aviator Classic features teardrop metal frames, crystal glass lenses with 100% UV protection, and a silhouette that never goes out of style.",
+    "category": "Fashion",
+    "brand": "Ray-Ban",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Fashion"
+    ],
+    "stock": 63,
+    "price": 11999,
+    "originalPrice": 13999,
+    "rating": 4.8,
+    "reviewCount": 16730,
+    "badge": "ICONIC",
+    "specs": {
+      "type": "Aviator Sunglasses",
+      "frame": "Metal (Gold, Silver, Gunmetal)",
+      "lens": "Crystal glass, G-15 gradient",
+      "uvProtection": "100% UV400",
+      "frameSize": "58mm (medium) / 62mm (large)",
+      "nosePads": "Adjustable silicone",
+      "gender": "Unisex"
+    },
+    "image": "https://source.unsplash.com/600x400/?rayban,aviator,sunglasses",
+    "images": [
+      "https://source.unsplash.com/1200x800/?rayban,aviator,classic,sunglass",
+      "https://source.unsplash.com/1200x800/?sunglasses,aviator,fashion",
+      "https://source.unsplash.com/1200x800/?sunglasses,model,style,summer",
+      "https://source.unsplash.com/1200x800/?rayban,sunglasses,outdoor"
+    ]
+  },
+  {
+    "id": "fa1009",
+    "title": "Fossil Gen 6 Smartwatch",
+    "description": "A stunning fusion of traditional watch craftsmanship and modern smart technology — Fossil Gen 6 features a round AMOLED display, Wear OS by Google, SpO2 tracking, and rapid 80% charging in just 30 minutes.",
+    "category": "Fashion",
+    "brand": "Fossil",
+    "catalogSegments": [
+      "AI Picks",
+      "Fashion"
+    ],
+    "stock": 29,
+    "price": 22999,
+    "originalPrice": 27999,
+    "rating": 4.6,
+    "reviewCount": 4180,
+    "badge": "SMART STYLE",
+    "specs": {
+      "type": "Smartwatch",
+      "display": "1.28-inch AMOLED, 416x416px",
+      "os": "Wear OS by Google",
+      "processor": "Snapdragon Wear 4100+",
+      "sensors": "Heart rate, SpO2, GPS, NFC",
+      "battery": "Up to 24 hours, fast charge (80% in 30 min)",
+      "waterResistance": "3 ATM",
+      "caseSize": "44mm"
+    },
+    "image": "https://source.unsplash.com/600x400/?fossil,smartwatch,watch,fashion",
+    "images": [
+      "https://source.unsplash.com/1200x800/?fossil,gen6,smartwatch",
+      "https://source.unsplash.com/1200x800/?smartwatch,fashion,wrist",
+      "https://source.unsplash.com/1200x800/?watch,round,amoled,style",
+      "https://source.unsplash.com/1200x800/?smartwatch,wrist,analog,fashion"
+    ]
+  },
+  {
+    "id": "fa1010",
+    "title": "Allen Solly Formal Shirt",
+    "description": "Sharply tailored formal shirt from Allen Solly with a wrinkle-resistant easy iron finish, spread collar, and slim fit cut — the perfect office essential that takes you from desk to dinner effortlessly.",
+    "category": "Fashion",
+    "brand": "Allen Solly",
+    "catalogSegments": [
+      "Fashion"
+    ],
+    "stock": 88,
+    "price": 1799,
+    "originalPrice": 2499,
+    "rating": 4.5,
+    "reviewCount": 8920,
+    "badge": "OFFICE READY",
+    "specs": {
+      "type": "Formal Shirt",
+      "fabric": "60% Cotton, 40% Polyester",
+      "fit": "Slim Fit",
+      "collar": "Spread collar",
+      "finish": "Easy iron / wrinkle resistant",
+      "sizes": "S–XXXL (38–46)",
+      "colors": "White, Sky Blue, Light Pink, Mint, Lavender"
+    },
+    "image": "https://source.unsplash.com/600x400/?formal,shirt,office,menswear",
+    "images": [
+      "https://source.unsplash.com/1200x800/?formal,shirt,business,white",
+      "https://source.unsplash.com/1200x800/?dress,shirt,office,fashion",
+      "https://source.unsplash.com/1200x800/?shirt,collar,formal,slim",
+      "https://source.unsplash.com/1200x800/?menswear,shirt,professional"
+    ]
+  },
+  {
+    "id": "fa1011",
+    "title": "Louis Vuitton Neverfull MM Tote",
+    "description": "The most coveted tote bag in the world — the LV Neverfull MM in Monogram canvas with supple side laces, removable interior pochette, and iconic LV monogram that defines luxury fashion.",
+    "category": "Fashion",
+    "brand": "Louis Vuitton",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Fashion"
+    ],
+    "stock": 7,
+    "price": 149999,
+    "originalPrice": 159999,
+    "rating": 4.9,
+    "reviewCount": 3840,
+    "badge": "LUXURY ICON",
+    "specs": {
+      "type": "Tote Bag",
+      "material": "Monogram canvas with cowhide leather trim",
+      "lining": "Striped textile interior",
+      "closure": "Open top with side laces",
+      "dimensions": "31 x 28 x 14cm",
+      "pockets": "Interior zip pocket + removable pochette",
+      "hardware": "Polished gold-tone metal"
+    },
+    "image": "https://source.unsplash.com/600x400/?louis,vuitton,luxury,bag,tote",
+    "images": [
+      "https://source.unsplash.com/1200x800/?louis,vuitton,monogram,bag",
+      "https://source.unsplash.com/1200x800/?luxury,tote,bag,fashion",
+      "https://source.unsplash.com/1200x800/?designer,handbag,lv,fashion",
+      "https://source.unsplash.com/1200x800/?luxury,bag,woman,fashion"
+    ]
+  },
+  {
+    "id": "fa1012",
+    "title": "Gucci Ace Sneakers",
+    "description": "A modern luxury icon — the Gucci Ace features soft white leather, the signature green-red-green web stripe, and an embroidered bee motif. Where Italian craftsmanship meets contemporary streetwear.",
+    "category": "Fashion",
+    "brand": "Gucci",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Fashion"
+    ],
+    "stock": 11,
+    "price": 74999,
+    "originalPrice": 82999,
+    "rating": 4.8,
+    "reviewCount": 2140,
+    "badge": "LUXURY SNEAKER",
+    "specs": {
+      "type": "Luxury Lifestyle Sneaker",
+      "upper": "Soft white leather",
+      "lining": "Leather",
+      "sole": "Rubber",
+      "signature": "Green-red-green web stripe",
+      "detail": "Embroidered bee & star motifs",
+      "sizes": "UK 5–12",
+      "origin": "Made in Italy"
+    },
+    "image": "https://source.unsplash.com/600x400/?gucci,ace,sneaker,luxury",
+    "images": [
+      "https://source.unsplash.com/1200x800/?gucci,sneaker,white,luxury",
+      "https://source.unsplash.com/1200x800/?luxury,sneaker,designer,fashion",
+      "https://source.unsplash.com/1200x800/?gucci,shoe,leather,white",
+      "https://source.unsplash.com/1200x800/?designer,sneaker,high,end"
+    ]
+  },
+  {
+    "id": "fa1013",
+    "title": "Nike Dri-FIT Running Tee",
+    "description": "Lightweight and breathable performance tee engineered with Nike Dri-FIT technology to wick sweat away and keep you dry and comfortable during every run, workout, or training session.",
+    "category": "Fashion",
+    "brand": "Nike",
+    "catalogSegments": [
+      "Trending",
+      "Fashion"
+    ],
+    "stock": 134,
+    "price": 1999,
+    "originalPrice": 2499,
+    "rating": 4.7,
+    "reviewCount": 19640,
+    "badge": "PERFORMANCE",
+    "specs": {
+      "type": "Running / Training T-Shirt",
+      "fabric": "100% Polyester Dri-FIT",
+      "fit": "Standard / Athletic fit",
+      "technology": "Nike Dri-FIT moisture wicking",
+      "neckline": "Crew neck",
+      "sizes": "XS–3XL",
+      "colors": "Black, White, Royal Blue, Grey, Red, Volt Green"
+    },
+    "image": "https://source.unsplash.com/600x400/?nike,drifit,running,tshirt",
+    "images": [
+      "https://source.unsplash.com/1200x800/?nike,running,shirt,sport",
+      "https://source.unsplash.com/1200x800/?drifit,tshirt,athletic,performance",
+      "https://source.unsplash.com/1200x800/?running,tee,sportswear,nike",
+      "https://source.unsplash.com/1200x800/?sport,shirt,workout,gym"
+    ]
+  },
+  {
+    "id": "fa1014",
+    "title": "Calvin Klein Slim Fold Wallet",
+    "description": "Minimalist and refined — the Calvin Klein Slim Fold wallet is crafted from pebbled leather with the iconic CK logo debossed on the front, multiple card slots, and a slim profile that fits cleanly in any pocket.",
+    "category": "Fashion",
+    "brand": "Calvin Klein",
+    "catalogSegments": [
+      "Fashion"
+    ],
+    "stock": 76,
+    "price": 2999,
+    "originalPrice": 3999,
+    "rating": 4.6,
+    "reviewCount": 7320,
+    "badge": "MINIMAL LUXE",
+    "specs": {
+      "type": "Bi-fold Wallet",
+      "material": "Pebbled leather",
+      "cardSlots": "6 card slots",
+      "billCompartment": "2 bill compartments",
+      "logo": "Debossed CK logo",
+      "dimensions": "11 x 9 x 1cm (folded)",
+      "colors": "Black, Brown, Navy, Tan"
+    },
+    "image": "https://source.unsplash.com/600x400/?calvin,klein,wallet,leather",
+    "images": [
+      "https://source.unsplash.com/1200x800/?calvin,klein,leather,wallet",
+      "https://source.unsplash.com/1200x800/?wallet,slim,leather,fashion",
+      "https://source.unsplash.com/1200x800/?bifold,wallet,minimalist,black",
+      "https://source.unsplash.com/1200x800/?wallet,leather,fashion,men"
+    ]
+  },
+  {
+    "id": "fa1015",
+    "title": "Biba Embroidered Anarkali Kurti",
+    "description": "Graceful and vibrant — this Biba Anarkali kurti features intricate thread embroidery on soft cotton fabric, a flared silhouette, and rich ethnic prints that celebrate the beauty of traditional Indian fashion.",
+    "category": "Fashion",
+    "brand": "Biba",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Fashion"
+    ],
+    "stock": 52,
+    "price": 2499,
+    "originalPrice": 3299,
+    "rating": 4.7,
+    "reviewCount": 10480,
+    "badge": "ETHNIC SPECIAL",
+    "specs": {
+      "type": "Anarkali Kurti",
+      "fabric": "Pure Cotton",
+      "work": "Thread embroidery with block print",
+      "silhouette": "Flared Anarkali",
+      "neckline": "Round neck with keyhole",
+      "sleeves": "3/4 sleeves",
+      "sizes": "XS–3XL",
+      "colors": "Teal, Coral Red, Mustard, Rose Pink, Indigo"
+    },
+    "image": "https://source.unsplash.com/600x400/?biba,kurti,indian,ethnic,embroidery",
+    "images": [
+      "https://source.unsplash.com/1200x800/?indian,kurti,ethnic,fashion",
+      "https://source.unsplash.com/1200x800/?anarkali,kurti,embroidery,cotton",
+      "https://source.unsplash.com/1200x800/?ethnic,indian,wear,traditional",
+      "https://source.unsplash.com/1200x800/?kurti,indian,woman,fashion"
+    ]
+  }
+]

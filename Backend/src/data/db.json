@@ -190,8 +190,21 @@
       "badge": "93% MATCH",
       "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80",
       "specs": {
-        "display": "1.4-inch AMOLED"
-      }
+        "Display": "1.4-inch AMOLED",
+        "Battery": "Up to 7 days",
+        "Water Resistance": "5 ATM"
+      },
+      "warranty": {
+        "label": "2YR WARRANTY"
+      },
+      "returns": {
+        "label": "30-DAY RETURNS"
+      },
+      "discountPercent": 25,
+      "similarProductIds": [
+        "p4",
+        "p13"
+      ]
     },
     {
       "id": "p2",
@@ -208,7 +221,23 @@
       "rating": 4.9,
       "reviewCount": 5120,
       "badge": "94% MATCH",
-      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80",
+      "specs": {
+        "Driver": "40mm dynamic",
+        "Noise Cancelling": "Hybrid ANC",
+        "Battery": "30 hrs (ANC off)"
+      },
+      "warranty": {
+        "label": "2YR WARRANTY"
+      },
+      "returns": {
+        "label": "30-DAY RETURNS"
+      },
+      "discountPercent": 21,
+      "similarProductIds": [
+        "p1",
+        "p3"
+      ]
     },
     {
       "id": "p3",
@@ -227,9 +256,21 @@
       "badge": "AI CHOICE",
       "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=600&q=80",
       "specs": {
-        "processor": "Apple M3",
-        "display": "12.9-inch OLED"
-      }
+        "Processor": "Apple M3",
+        "Display": "12.9-inch OLED",
+        "Storage": "256GB"
+      },
+      "warranty": {
+        "label": "2YR WARRANTY"
+      },
+      "returns": {
+        "label": "30-DAY RETURNS"
+      },
+      "discountPercent": null,
+      "similarProductIds": [
+        "p1",
+        "p2"
+      ]
     },
     {
       "id": "p4",
@@ -251,8 +292,23 @@
       "images": [
         "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?auto=format&fit=crop&w=600&q=80"
       ],
-      "specs": {},
-      "updatedAt": "2026-05-13T07:40:04.946Z"
+      "specs": {
+        "Display": "0.96-inch OLED",
+        "Battery": "Up to 10 days",
+        "Sensors": "Heart rate, sleep, steps"
+      },
+      "updatedAt": "2026-05-13T07:40:04.946Z",
+      "warranty": {
+        "label": "2YR WARRANTY"
+      },
+      "returns": {
+        "label": "30-DAY RETURNS"
+      },
+      "discountPercent": 20,
+      "similarProductIds": [
+        "p1",
+        "p13"
+      ]
     },
     {
       "id": "p5",
@@ -266,7 +322,23 @@
       "price": 4299,
       "rating": 4.5,
       "reviewCount": 834,
-      "image": "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=600&q=80",
+      "specs": {
+        "Brightness": "800 lumens",
+        "Smart Hub": "Wi-Fi + Matter",
+        "Voice Control": "Alexa, Google"
+      },
+      "warranty": {
+        "label": "2YR WARRANTY"
+      },
+      "returns": {
+        "label": "30-DAY RETURNS"
+      },
+      "discountPercent": null,
+      "similarProductIds": [
+        "p6",
+        "p7"
+      ]
     },
     {
       "id": "p6",
@@ -281,7 +353,23 @@
       "price": 12999,
       "rating": 4.4,
       "reviewCount": 412,
-      "image": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=600&q=80",
+      "specs": {
+        "Coverage": "Up to 400 sq ft",
+        "Filter": "True HEPA H13",
+        "Noise Level": "24 dB (sleep mode)"
+      },
+      "warranty": {
+        "label": "2YR WARRANTY"
+      },
+      "returns": {
+        "label": "30-DAY RETURNS"
+      },
+      "discountPercent": null,
+      "similarProductIds": [
+        "p5",
+        "p7"
+      ]
     },
     {
       "id": "p7",
@@ -297,7 +385,23 @@
       "price": 7999,
       "rating": 4.3,
       "reviewCount": 289,
-      "image": "https://images.unsplash.com/photo-1558002038-bb4237efdf97?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1558002038-bb4237efdf97?auto=format&fit=crop&w=600&q=80",
+      "specs": {
+        "Connectivity": "Wi-Fi, Bluetooth",
+        "Display": "3.5-inch touchscreen",
+        "Compatibility": "Works with Alexa & Google"
+      },
+      "warranty": {
+        "label": "2YR WARRANTY"
+      },
+      "returns": {
+        "label": "30-DAY RETURNS"
+      },
+      "discountPercent": null,
+      "similarProductIds": [
+        "p1",
+        "p2"
+      ]
     },
     {
       "id": "p8",
@@ -312,7 +416,23 @@
       "price": 9999,
       "rating": 4.7,
       "reviewCount": 756,
-      "image": "https://images.unsplash.com/photo-1575311376447-675d6f139d79?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1575311376447-675d6f139d79?auto=format&fit=crop&w=600&q=80",
+      "specs": {
+        "Upper": "Breathable knit",
+        "Midsole": "Responsive foam",
+        "Weight": "248 g (US 9)"
+      },
+      "warranty": {
+        "label": "2YR WARRANTY"
+      },
+      "returns": {
+        "label": "30-DAY RETURNS"
+      },
+      "discountPercent": null,
+      "similarProductIds": [
+        "p2",
+        "p4"
+      ]
     },
     {
       "id": "p9",
@@ -327,7 +447,23 @@
       "rating": 4.6,
       "reviewCount": 312,
       "badge": "EDITOR'S PICK",
-      "image": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=600&q=80",
+      "specs": {
+        "Pages": "384",
+        "Publisher": "Forge Press",
+        "Format": "Paperback"
+      },
+      "warranty": {
+        "label": "2YR WARRANTY"
+      },
+      "returns": {
+        "label": "30-DAY RETURNS"
+      },
+      "discountPercent": null,
+      "similarProductIds": [
+        "p1",
+        "p2"
+      ]
     },
     {
       "id": "p10",
@@ -342,7 +478,23 @@
       "rating": 4.5,
       "reviewCount": 890,
       "badge": "FRESH",
-      "image": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80",
+      "specs": {
+        "Contents": "Granola, oats, honey mix",
+        "Servings": "8 breakfasts",
+        "Shelf Life": "Best within 14 days"
+      },
+      "warranty": {
+        "label": "2YR WARRANTY"
+      },
+      "returns": {
+        "label": "30-DAY RETURNS"
+      },
+      "discountPercent": null,
+      "similarProductIds": [
+        "p1",
+        "p2"
+      ]
     },
     {
       "id": "p11",
@@ -361,9 +513,21 @@
       "badge": "NEW",
       "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80",
       "specs": {
-        "processor": "Snapdragon X",
-        "display": "6.7-inch AMOLED"
-      }
+        "Processor": "Snapdragon X Elite",
+        "Display": "6.7-inch AMOLED",
+        "Camera": "50MP triple array"
+      },
+      "warranty": {
+        "label": "2YR WARRANTY"
+      },
+      "returns": {
+        "label": "30-DAY RETURNS"
+      },
+      "discountPercent": 8,
+      "similarProductIds": [
+        "p15",
+        "p3"
+      ]
     },
     {
       "id": "p12",
@@ -378,7 +542,23 @@
       "rating": 4.9,
       "reviewCount": 3210,
       "badge": "TRENDING",
-      "image": "https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=600&q=80",
+      "specs": {
+        "Camera": "4K HDR @ 60fps",
+        "Flight Time": "34 minutes",
+        "Range": "10 km OcuSync"
+      },
+      "warranty": {
+        "label": "2YR WARRANTY"
+      },
+      "returns": {
+        "label": "30-DAY RETURNS"
+      },
+      "discountPercent": null,
+      "similarProductIds": [
+        "p1",
+        "p2"
+      ]
     },
     {
       "id": "p13",
@@ -395,7 +575,23 @@
       "rating": 4.7,
       "reviewCount": 2410,
       "badge": "TRENDING",
-      "image": "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?auto=format&fit=crop&w=600&q=80",
+      "specs": {
+        "Driver": "11mm dynamic",
+        "Noise Cancelling": "Adaptive ANC",
+        "Battery": "8 hrs + 24 hrs case"
+      },
+      "warranty": {
+        "label": "2YR WARRANTY"
+      },
+      "returns": {
+        "label": "30-DAY RETURNS"
+      },
+      "discountPercent": 21,
+      "similarProductIds": [
+        "p1",
+        "p2"
+      ]
     },
     {
       "id": "p14",
@@ -411,7 +607,23 @@
       "rating": 4.8,
       "reviewCount": 850,
       "badge": "TRENDING",
-      "image": "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=600&q=80",
+      "specs": {
+        "Grow Pods": "6 included",
+        "Light": "Full-spectrum LED",
+        "Reservoir": "3 L auto-watering"
+      },
+      "warranty": {
+        "label": "2YR WARRANTY"
+      },
+      "returns": {
+        "label": "30-DAY RETURNS"
+      },
+      "discountPercent": null,
+      "similarProductIds": [
+        "p5",
+        "p6"
+      ]
     },
     {
       "id": "p15",
@@ -429,16 +641,28 @@
       "reviewCount": 3105,
       "badge": "TRENDING",
       "image": "https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=600&q=80",
-      "specs": {
-        "processor": "Apple M3",
-        "display": "12-inch Liquid Retina"
-      },
-      "updatedAt": "2026-05-13T13:53:11.295Z",
-      "description": "",
       "images": [
         "https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=600&q=80"
       ],
-      "updatedBy": "admin@aicart.com"
+      "description": "",
+      "warranty": {
+        "label": "1YR WARRANTY"
+      },
+      "returns": {
+        "label": "30-DAY RETURNS"
+      },
+      "specs": {
+        "Processor": "Apple M3",
+        "Display": "12-inch Liquid Retina",
+        "Storage": "1TB SSD"
+      },
+      "updatedAt": "2026-05-13T13:53:11.295Z",
+      "updatedBy": "admin@aicart.com",
+      "discountPercent": 8,
+      "similarProductIds": [
+        "p3",
+        "p11"
+      ]
     },
     {
       "id": "ai-upsell-sleeve-13",
@@ -458,6 +682,22 @@
       "image": "https://images.unsplash.com/photo-1544816155-12df96455549?auto=format&fit=crop&w=600&q=80",
       "images": [
         "https://images.unsplash.com/photo-1544816155-12df96455549?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "specs": {
+        "Material": "Recycled felt",
+        "Fits": "13-inch laptops & tablets",
+        "Closure": "Magnetic flap"
+      },
+      "warranty": {
+        "label": "2YR WARRANTY"
+      },
+      "returns": {
+        "label": "30-DAY RETURNS"
+      },
+      "discountPercent": 19,
+      "similarProductIds": [
+        "p2",
+        "p4"
       ]
     }
   ],
@@ -533,8 +773,8 @@
       },
       "status": "delivered",
       "createdAt": "2026-05-12T08:30:42.482Z",
-      "updatedAt": "2026-05-13T08:54:00.766Z",
-      "deliveredAt": "2026-05-13T08:54:00.766Z"
+      "updatedAt": "2026-05-21T10:31:28.833Z",
+      "deliveredAt": "2026-05-21T10:31:28.833Z"
     }
   ],
   "reviews": [
@@ -675,6 +915,42 @@
         "stock": {
           "from": 1,
           "to": 11
+        }
+      }
+    },
+    {
+      "id": "log-1779359484838-a2ze2f",
+      "ts": "2026-05-21T10:31:24.838Z",
+      "actorId": "u-admin",
+      "actorEmail": "admin@aicart.com",
+      "action": "order.status",
+      "target": {
+        "type": "order",
+        "id": "o1778574642482"
+      },
+      "summary": "Order o1778574642482 marked processing",
+      "changes": {
+        "status": {
+          "from": "delivered",
+          "to": "processing"
+        }
+      }
+    },
+    {
+      "id": "log-1779359488833-6fx89b",
+      "ts": "2026-05-21T10:31:28.833Z",
+      "actorId": "u-admin",
+      "actorEmail": "admin@aicart.com",
+      "action": "order.status",
+      "target": {
+        "type": "order",
+        "id": "o1778574642482"
+      },
+      "summary": "Order o1778574642482 marked delivered",
+      "changes": {
+        "status": {
+          "from": "processing",
+          "to": "delivered"
         }
       }
     }

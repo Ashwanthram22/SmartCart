@@ -749,10 +749,6 @@ export default function AdminLayout({
 
   return (
     <div className="adm-shell">
-      <a href="#admin-main" className="skip-link">
-        Skip to admin content
-      </a>
-
       <aside className="adm-sidebar" aria-label="Admin navigation">
         <Link to="/admin" className="adm-brand">
           <span className="adm-brand-mark" aria-hidden="true">SC</span>

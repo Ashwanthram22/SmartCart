@@ -1,0 +1,500 @@
+[
+  {
+    "id": "hk1001",
+    "title": "Philips Air Fryer HD9252",
+    "description": "Enjoy guilt-free crispy food with up to 90% less fat — Philips' Rapid Air technology circulates hot air evenly around food for perfectly crispy results without the oil, from fries to chicken to pastries.",
+    "category": "Home & Kitchen",
+    "brand": "Philips",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Home & Kitchen"
+    ],
+    "stock": 47,
+    "price": 8499,
+    "originalPrice": 10999,
+    "rating": 4.8,
+    "reviewCount": 14320,
+    "badge": "BESTSELLER",
+    "specs": {
+      "capacity": "4.1 Litres",
+      "power": "1400W",
+      "technology": "Rapid Air Circulation",
+      "temperatureRange": "80°C – 200°C",
+      "timer": "Up to 60 minutes",
+      "panelType": "Digital touch display",
+      "dishwasherSafe": "Yes (basket & drawer)"
+    },
+    "image": "https://source.unsplash.com/600x400/?air,fryer,kitchen,philips",
+    "images": [
+      "https://source.unsplash.com/1200x800/?air,fryer,kitchen,cooking",
+      "https://source.unsplash.com/1200x800/?philips,airfryer,food,crispy",
+      "https://source.unsplash.com/1200x800/?kitchen,appliance,fryer",
+      "https://source.unsplash.com/1200x800/?healthy,cooking,airfry,food"
+    ]
+  },
+  {
+    "id": "hk1002",
+    "title": "Prestige Iris 750W Mixer Grinder",
+    "description": "A powerful and versatile kitchen companion — the Prestige Iris features a 750W motor, 3 stainless steel jars, and 5-speed control with pulse function for seamless grinding, blending, and chutney making.",
+    "category": "Home & Kitchen",
+    "brand": "Prestige",
+    "catalogSegments": [
+      "Trending",
+      "Home & Kitchen"
+    ],
+    "stock": 63,
+    "price": 3299,
+    "originalPrice": 4499,
+    "rating": 4.5,
+    "reviewCount": 18740,
+    "badge": "KITCHEN HERO",
+    "specs": {
+      "power": "750W",
+      "jars": "3 stainless steel jars (1.5L, 1L, 0.3L)",
+      "speeds": "5-speed control + pulse",
+      "bladeType": "Stainless steel blades",
+      "motorProtection": "Overload protector",
+      "warranty": "2 years on product, 5 years on motor",
+      "color": "White/Black"
+    },
+    "image": "https://source.unsplash.com/600x400/?mixer,grinder,kitchen,blender",
+    "images": [
+      "https://source.unsplash.com/1200x800/?mixer,grinder,kitchen",
+      "https://source.unsplash.com/1200x800/?blender,kitchen,appliance",
+      "https://source.unsplash.com/1200x800/?grinder,food,cooking,kitchen",
+      "https://source.unsplash.com/1200x800/?kitchen,blender,countertop"
+    ]
+  },
+  {
+    "id": "hk1003",
+    "title": "LG 28L Convection Microwave MC2846BG",
+    "description": "Versatile 28-litre convection microwave with LG's CharcoalHealth heater for crispy, healthier cooking. Bake, grill, steam, and reheat with pre-set auto-cook menus and smart inverter technology.",
+    "category": "Home & Kitchen",
+    "brand": "LG",
+    "catalogSegments": [
+      "AI Picks",
+      "Home & Kitchen"
+    ],
+    "stock": 24,
+    "price": 18999,
+    "originalPrice": 23999,
+    "rating": 4.6,
+    "reviewCount": 7210,
+    "badge": "MULTI COOK",
+    "specs": {
+      "capacity": "28 Litres",
+      "type": "Convection + Grill + Microwave",
+      "power": "900W microwave / 2300W convection",
+      "heater": "CharcoalHealth Heater",
+      "autoCookMenus": "301 auto-cook + 211 diet menus",
+      "interior": "Stainless steel cavity",
+      "warranty": "1 year on product, 3 years on cavity"
+    },
+    "image": "https://source.unsplash.com/600x400/?lg,microwave,convection,kitchen",
+    "images": [
+      "https://source.unsplash.com/1200x800/?microwave,convection,kitchen",
+      "https://source.unsplash.com/1200x800/?microwave,oven,cooking,baking",
+      "https://source.unsplash.com/1200x800/?kitchen,microwave,appliance",
+      "https://source.unsplash.com/1200x800/?baking,oven,kitchen,food"
+    ]
+  },
+  {
+    "id": "hk1004",
+    "title": "Dyson V15 Detect Vacuum Cleaner",
+    "description": "The most powerful and intelligent Dyson cordless vacuum — with laser dust detection that reveals invisible dust on floors and a piezo sensor that scientifically proves every particle has been removed.",
+    "category": "Home & Kitchen",
+    "brand": "Dyson",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Home & Kitchen"
+    ],
+    "stock": 16,
+    "price": 62999,
+    "originalPrice": 72999,
+    "rating": 4.9,
+    "reviewCount": 5430,
+    "badge": "PREMIUM CLEAN",
+    "specs": {
+      "suctionPower": "240 AW",
+      "motorSpeed": "125,000 RPM",
+      "battery": "Up to 60 minutes run time",
+      "dustbin": "0.77 litre",
+      "filtration": "HEPA whole-machine filtration",
+      "laserDetection": "Green diode laser dust detection",
+      "weight": "3.1 kg"
+    },
+    "image": "https://source.unsplash.com/600x400/?dyson,vacuum,cordless,cleaner",
+    "images": [
+      "https://source.unsplash.com/1200x800/?dyson,vacuum,cleaner,floor",
+      "https://source.unsplash.com/1200x800/?cordless,vacuum,home,clean",
+      "https://source.unsplash.com/1200x800/?vacuum,cleaner,suction,floor",
+      "https://source.unsplash.com/1200x800/?cleaning,home,vacuum,dust"
+    ]
+  },
+  {
+    "id": "hk1005",
+    "title": "Kent Supreme Water Purifier",
+    "description": "Award-winning RO+UV+UF+TDS water purifier with multiple purification stages, a 9-litre storage tank, and KENT's patented mineral RO technology that retains essential natural minerals for healthy drinking water.",
+    "category": "Home & Kitchen",
+    "brand": "Kent",
+    "catalogSegments": [
+      "Trending",
+      "Home & Kitchen"
+    ],
+    "stock": 31,
+    "price": 14999,
+    "originalPrice": 18999,
+    "rating": 4.7,
+    "reviewCount": 12840,
+    "badge": "PURE WATER",
+    "specs": {
+      "purificationTechnology": "RO + UV + UF + TDS Control",
+      "storageTank": "9 Litres",
+      "purificationCapacity": "20 Litres/hour",
+      "inputWaterTDS": "Up to 2000 ppm",
+      "waterSaving": "50% water recovery",
+      "alerts": "Filter change & UV fail alerts",
+      "warranty": "1 year + 4 years free service"
+    },
+    "image": "https://source.unsplash.com/600x400/?kent,water,purifier,kitchen",
+    "images": [
+      "https://source.unsplash.com/1200x800/?water,purifier,ro,kitchen",
+      "https://source.unsplash.com/1200x800/?drinking,water,purifier,home",
+      "https://source.unsplash.com/1200x800/?water,filter,clean,healthy",
+      "https://source.unsplash.com/1200x800/?water,purification,kitchen"
+    ]
+  },
+  {
+    "id": "hk1006",
+    "title": "Nespresso Vertuo Next Coffee Machine",
+    "description": "Brew barista-quality coffee at home in seconds — the Nespresso Vertuo Next uses Centrifusion technology to spin capsules at 7000 RPM, extracting rich crema-topped coffees from espresso to alto sizes.",
+    "category": "Home & Kitchen",
+    "brand": "Nespresso",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Home & Kitchen"
+    ],
+    "stock": 28,
+    "price": 19999,
+    "originalPrice": 24999,
+    "rating": 4.8,
+    "reviewCount": 8920,
+    "badge": "BARISTA AT HOME",
+    "specs": {
+      "technology": "Centrifusion brewing at 7000 RPM",
+      "capsuleSystem": "Nespresso Vertuo capsules",
+      "brewSizes": "Espresso (40ml) to Alto (414ml) – 5 sizes",
+      "heatUpTime": "30 seconds",
+      "waterTank": "1.1 Litres (removable)",
+      "connectivity": "Bluetooth + Wi-Fi (App control)",
+      "warranty": "2 years"
+    },
+    "image": "https://source.unsplash.com/600x400/?nespresso,coffee,machine,espresso",
+    "images": [
+      "https://source.unsplash.com/1200x800/?nespresso,coffee,maker,capsule",
+      "https://source.unsplash.com/1200x800/?coffee,machine,espresso,crema",
+      "https://source.unsplash.com/1200x800/?coffee,maker,kitchen,morning",
+      "https://source.unsplash.com/1200x800/?espresso,coffee,brew,cup"
+    ]
+  },
+  {
+    "id": "hk1007",
+    "title": "Instant Pot Duo 7-in-1 Electric Cooker",
+    "description": "The world's most popular multi-cooker — the Instant Pot Duo replaces 7 kitchen appliances including pressure cooker, slow cooker, rice cooker, steamer, sauté pan, yogurt maker, and food warmer.",
+    "category": "Home & Kitchen",
+    "brand": "Instant Pot",
+    "catalogSegments": [
+      "AI Picks",
+      "Home & Kitchen"
+    ],
+    "stock": 39,
+    "price": 10999,
+    "originalPrice": 13499,
+    "rating": 4.8,
+    "reviewCount": 21340,
+    "badge": "7-IN-1 MAGIC",
+    "specs": {
+      "functions": "Pressure Cook, Slow Cook, Rice, Steam, Sauté, Yogurt, Warm",
+      "capacity": "5.7 Litres (6 Quart)",
+      "power": "1000W",
+      "pressureSettings": "High & Low pressure",
+      "safetyFeatures": "10 safety mechanisms",
+      "innerPot": "Stainless steel, dishwasher safe",
+      "programs": "13 smart cooking programs"
+    },
+    "image": "https://source.unsplash.com/600x400/?instant,pot,pressure,cooker,kitchen",
+    "images": [
+      "https://source.unsplash.com/1200x800/?instant,pot,multicooker",
+      "https://source.unsplash.com/1200x800/?pressure,cooker,electric,kitchen",
+      "https://source.unsplash.com/1200x800/?multicooker,kitchen,cooking",
+      "https://source.unsplash.com/1200x800/?electric,cooker,stainless,food"
+    ]
+  },
+  {
+    "id": "hk1008",
+    "title": "Hawkins Nonstick Cookware Set",
+    "description": "Complete 5-piece nonstick cookware set from Hawkins featuring thick hard-anodized aluminium construction, multi-layer nonstick coating, and cool-touch handles — everything you need for everyday Indian cooking.",
+    "category": "Home & Kitchen",
+    "brand": "Hawkins",
+    "catalogSegments": [
+      "Home & Kitchen"
+    ],
+    "stock": 54,
+    "price": 4999,
+    "originalPrice": 6499,
+    "rating": 4.6,
+    "reviewCount": 9870,
+    "badge": "COMPLETE SET",
+    "specs": {
+      "pieces": "5-piece set (Kadai, Tawa, Fry Pan, Saucepan, Glass Lid)",
+      "material": "Hard-anodized aluminium",
+      "coating": "3-layer PTFE nonstick",
+      "base": "Induction compatible thick base",
+      "handles": "Cool-touch riveted handles",
+      "dishwasherSafe": "Hand wash recommended",
+      "warranty": "5 years"
+    },
+    "image": "https://source.unsplash.com/600x400/?cookware,nonstick,pan,kitchen,set",
+    "images": [
+      "https://source.unsplash.com/1200x800/?nonstick,cookware,set,kitchen",
+      "https://source.unsplash.com/1200x800/?pans,pots,kitchen,cooking,set",
+      "https://source.unsplash.com/1200x800/?cookware,pan,tawa,indian,cooking",
+      "https://source.unsplash.com/1200x800/?kitchen,cookware,nonstick,frying"
+    ]
+  },
+  {
+    "id": "hk1009",
+    "title": "Xiaomi Smart LED Bulb (Color)",
+    "description": "Transform your home lighting with 16 million colors, warm-to-cool white tuning, and voice control via Alexa and Google Assistant — all in an energy-efficient smart bulb controlled from your phone.",
+    "category": "Home & Kitchen",
+    "brand": "Xiaomi",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Home & Kitchen"
+    ],
+    "stock": 156,
+    "price": 1299,
+    "originalPrice": 1799,
+    "rating": 4.6,
+    "reviewCount": 24510,
+    "badge": "SMART HOME",
+    "specs": {
+      "power": "10W (equivalent to 60W incandescent)",
+      "brightness": "810 Lumens",
+      "colorRange": "16 million colors + warm/cool white",
+      "colorTemperature": "1700K – 6500K",
+      "connectivity": "Wi-Fi 2.4GHz + Bluetooth mesh",
+      "voiceControl": "Alexa, Google Assistant, Siri",
+      "lifespan": "25,000 hours"
+    },
+    "image": "https://source.unsplash.com/600x400/?xiaomi,smart,led,bulb,color",
+    "images": [
+      "https://source.unsplash.com/1200x800/?smart,led,bulb,color,light",
+      "https://source.unsplash.com/1200x800/?smart,home,light,rgb,bulb",
+      "https://source.unsplash.com/1200x800/?led,bulb,color,smart,room",
+      "https://source.unsplash.com/1200x800/?smart,lighting,home,colorful"
+    ]
+  },
+  {
+    "id": "hk1010",
+    "title": "Havells Aqua Plus Electric Kettle",
+    "description": "Stylish and efficient 1.5-litre electric kettle from Havells with a 1500W concealed heating element, 360° swivel base, auto shut-off, boil-dry protection, and food-grade stainless steel interior.",
+    "category": "Home & Kitchen",
+    "brand": "Havells",
+    "catalogSegments": [
+      "Home & Kitchen"
+    ],
+    "stock": 82,
+    "price": 1499,
+    "originalPrice": 2199,
+    "rating": 4.5,
+    "reviewCount": 16430,
+    "badge": "QUICK BOIL",
+    "specs": {
+      "capacity": "1.5 Litres",
+      "power": "1500W",
+      "heatingElement": "Concealed stainless steel",
+      "boilTime": "Boils 1L in under 5 minutes",
+      "safety": "Auto shut-off + boil-dry protection",
+      "base": "360° cordless swivel base",
+      "warranty": "2 years"
+    },
+    "image": "https://source.unsplash.com/600x400/?electric,kettle,kitchen,havells",
+    "images": [
+      "https://source.unsplash.com/1200x800/?electric,kettle,kitchen,stainless",
+      "https://source.unsplash.com/1200x800/?kettle,boil,hot,water,kitchen",
+      "https://source.unsplash.com/1200x800/?kettle,tea,coffee,morning",
+      "https://source.unsplash.com/1200x800/?kitchen,kettle,countertop,appliance"
+    ]
+  },
+  {
+    "id": "hk1011",
+    "title": "Dyson Cool Air Purifier TP10",
+    "description": "Purify and cool your entire room simultaneously — the Dyson TP10 captures 99.97% of particles as small as 0.3 microns including allergens, pollutants, and bacteria, while projecting purified air across the room.",
+    "category": "Home & Kitchen",
+    "brand": "Dyson",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Home & Kitchen"
+    ],
+    "stock": 19,
+    "price": 37999,
+    "originalPrice": 44999,
+    "rating": 4.8,
+    "reviewCount": 4210,
+    "badge": "PURE AIR",
+    "specs": {
+      "filtration": "HEPA H13 + activated carbon filter",
+      "particleCaptureRate": "99.97% of particles ≥0.3 microns",
+      "airflowProjection": "360° purified airflow",
+      "modes": "Fan + Auto + Night mode",
+      "noiseLevels": "As low as 43 dB",
+      "connectivity": "Wi-Fi + Dyson Link App",
+      "roomSize": "Up to 600 sq ft"
+    },
+    "image": "https://source.unsplash.com/600x400/?dyson,air,purifier,fan,home",
+    "images": [
+      "https://source.unsplash.com/1200x800/?dyson,purifier,fan,room",
+      "https://source.unsplash.com/1200x800/?air,purifier,hepa,living,room",
+      "https://source.unsplash.com/1200x800/?air,purifier,clean,bedroom",
+      "https://source.unsplash.com/1200x800/?dyson,bladeless,fan,modern"
+    ]
+  },
+  {
+    "id": "hk1012",
+    "title": "Milton Microwow Storage Container Set",
+    "description": "Airtight, leak-proof, and microwave-safe storage containers from Milton — this 18-piece set keeps food fresh longer with a superior locking mechanism, BPA-free material, and crystal-clear lids for easy identification.",
+    "category": "Home & Kitchen",
+    "brand": "Milton",
+    "catalogSegments": [
+      "Home & Kitchen"
+    ],
+    "stock": 93,
+    "price": 1299,
+    "originalPrice": 1899,
+    "rating": 4.5,
+    "reviewCount": 19870,
+    "badge": "FRESHNESS LOCK",
+    "specs": {
+      "pieces": "18-piece set (various sizes)",
+      "material": "BPA-free polypropylene",
+      "microwaveSafe": "Yes",
+      "freezerSafe": "Yes",
+      "dishwasherSafe": "Yes",
+      "closure": "4-latch airtight locking lid",
+      "sizes": "200ml to 2000ml"
+    },
+    "image": "https://source.unsplash.com/600x400/?storage,container,kitchen,food",
+    "images": [
+      "https://source.unsplash.com/1200x800/?food,storage,container,set,kitchen",
+      "https://source.unsplash.com/1200x800/?airtight,container,meal,prep",
+      "https://source.unsplash.com/1200x800/?kitchen,container,transparent,storage",
+      "https://source.unsplash.com/1200x800/?food,prep,container,organize"
+    ]
+  },
+  {
+    "id": "hk1013",
+    "title": "IKEA EKEDALEN Dining Table Set",
+    "description": "Scandinavian simplicity meets functional design — the IKEA EKEDALEN extendable dining table with 4 chairs features solid wood legs, a clean white finish, and an extension leaf that expands seating from 4 to 6 people.",
+    "category": "Home & Kitchen",
+    "brand": "IKEA",
+    "catalogSegments": [
+      "AI Picks",
+      "Trending",
+      "Home & Kitchen"
+    ],
+    "stock": 12,
+    "price": 34999,
+    "originalPrice": 42999,
+    "rating": 4.6,
+    "reviewCount": 6320,
+    "badge": "SCANDI STYLE",
+    "specs": {
+      "set": "1 extendable table + 4 chairs",
+      "tableDimensions": "120/180 x 80 x 75cm",
+      "tableTop": "MDF with melamine foil",
+      "legs": "Solid beech wood",
+      "chairSeat": "Padded with fabric cover",
+      "maxCapacity": "6 persons (extended)",
+      "assembly": "Self-assembly with tools included"
+    },
+    "image": "https://source.unsplash.com/600x400/?ikea,dining,table,set,kitchen",
+    "images": [
+      "https://source.unsplash.com/1200x800/?dining,table,chairs,scandinavian",
+      "https://source.unsplash.com/1200x800/?ikea,table,white,dining,room",
+      "https://source.unsplash.com/1200x800/?dining,room,table,interior",
+      "https://source.unsplash.com/1200x800/?kitchen,table,minimalist,home"
+    ]
+  },
+  {
+    "id": "hk1014",
+    "title": "Samsung 253L Double Door Refrigerator",
+    "description": "Keep food fresher for longer with Samsung's Twin Cooling Plus technology that maintains optimal humidity levels independently in both compartments, with Digital Inverter compressor for silent, energy-efficient operation.",
+    "category": "Home & Kitchen",
+    "brand": "Samsung",
+    "catalogSegments": [
+      "Trending",
+      "Home & Kitchen"
+    ],
+    "stock": 14,
+    "price": 29999,
+    "originalPrice": 35999,
+    "rating": 4.7,
+    "reviewCount": 8140,
+    "badge": "ENERGY STAR",
+    "specs": {
+      "capacity": "253 Litres (185L + 68L)",
+      "type": "Double Door (Frost Free)",
+      "technology": "Twin Cooling Plus",
+      "compressor": "Digital Inverter (10-year warranty)",
+      "energyRating": "3 Star (BEE)",
+      "iceMaker": "Auto ice maker",
+      "warranty": "1 year comprehensive + 10 years compressor"
+    },
+    "image": "https://source.unsplash.com/600x400/?samsung,refrigerator,double,door,kitchen",
+    "images": [
+      "https://source.unsplash.com/1200x800/?samsung,fridge,double,door",
+      "https://source.unsplash.com/1200x800/?refrigerator,kitchen,appliance,modern",
+      "https://source.unsplash.com/1200x800/?fridge,double,door,stainless",
+      "https://source.unsplash.com/1200x800/?refrigerator,home,food,fresh"
+    ]
+  },
+  {
+    "id": "hk1015",
+    "title": "Crompton SilentPro Enso Ceiling Fan",
+    "description": "India's quietest ceiling fan — Crompton SilentPro Enso uses BLDC motor technology for whisper-silent operation, consuming just 35W while delivering powerful air delivery with a remote and 5-speed control.",
+    "category": "Home & Kitchen",
+    "brand": "Crompton",
+    "catalogSegments": [
+      "AI Picks",
+      "Home & Kitchen"
+    ],
+    "stock": 46,
+    "price": 4299,
+    "originalPrice": 5499,
+    "rating": 4.7,
+    "reviewCount": 11240,
+    "badge": "SILENT COOL",
+    "specs": {
+      "motorType": "BLDC (Brushless DC)",
+      "power": "35W (saves up to 65% energy vs standard fans)",
+      "sweepSize": "1200mm (48 inches)",
+      "speeds": "5-speed remote control",
+      "airDelivery": "230 CMM",
+      "noiseLevel": "Ultra-silent operation",
+      "warranty": "2 years"
+    },
+    "image": "https://source.unsplash.com/600x400/?ceiling,fan,crompton,home,bldc",
+    "images": [
+      "https://source.unsplash.com/1200x800/?ceiling,fan,modern,home,interior",
+      "https://source.unsplash.com/1200x800/?fan,ceiling,room,decor",
+      "https://source.unsplash.com/1200x800/?ceiling,fan,bldc,white,room",
+      "https://source.unsplash.com/1200x800/?home,ceiling,fan,living,room"
+    ]
+  }
+]
