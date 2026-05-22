@@ -27,40 +27,13 @@ import ReviewModal from "./ReviewModal";
 import ProductDetailSkeleton from "./ProductDetailSkeleton";
 // import { estimateDelivery, formatDeliveryWindow } from "../../utils/delivery"; // BACKEND: product.delivery
 import { formatMoney } from "../../utils/money";
+import { reviewCountLabel, starsFromRating } from "../../utils/ratings";
 import "./ProductDetail.css";
 
-const GALLERY_FALLBACKS = [
-  "https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=1400&q=80",
-  "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&q=80",
-];
-
-/**
- * Static "seed" reviews shown on products that don't yet have any user-submitted
- * reviews so the panel never looks empty. As soon as a real review lands, the
- * API list takes over.
- */
 /** Free shipping badge when product price is at or above this amount (INR). */
 const FREE_SHIPPING_MIN_PRICE = 500;
 
 const BENEFIT_ICONS = { warranty: "✅", returns: "↩" };
-
-const FALLBACK_REVIEWS = [
-  {
-    id: "seed-ms",
-    userName: "Marcus Sterling",
-    rating: 5,
-    text:
-      "Thermal management is incredible. I rendered 4K footage for hours and fan noise stayed very low.",
-  },
-  {
-    id: "seed-al",
-    userName: "Anna Liang",
-    rating: 4,
-    text:
-      "Excellent keyboard and screen quality. Great for development and long productivity sessions.",
-  },
-];
 
 function getInitials(name) {
   if (!name) return "?";
@@ -157,6 +130,10 @@ function ProductDetail() {
   const product = data?.product;
   const similar = data?.similar || [];
 
+  useEffect(() => {
+    setActiveImageIdx(0);
+  }, [product?.id]);
+
   const productBreadcrumbItems = useMemo(() => {
     if (!product) {
       return [
@@ -176,7 +153,7 @@ function ProductDetail() {
     return items;
   }, [product, activeSegment, qRaw]);
 
-  const visibleReviews = reviews.length > 0 ? reviews : FALLBACK_REVIEWS;
+  const visibleReviews = reviews;
 
   /** Up to 3 highlight specs from `product.specs` (name → value). */
   const highlightSpecs = useMemo(() => {
@@ -259,6 +236,8 @@ function ProductDetail() {
     const ratings = visibleReviews
       .map((r) => Number(r.rating))
       .filter((n) => Number.isFinite(n) && n > 0);
+    const productRating = Number(product.rating);
+    const productReviewCount = Number(product.reviewCount);
     const aggregateRating =
       ratings.length > 0
         ? {
@@ -268,11 +247,14 @@ function ProductDetail() {
             ).toFixed(2),
             reviewCount: ratings.length,
           }
-        : product.rating
+        : Number.isFinite(productRating) && productRating > 0
         ? {
             "@type": "AggregateRating",
-            ratingValue: Number(product.rating).toFixed(2),
-            reviewCount: product.reviewCount || 1,
+            ratingValue: productRating.toFixed(2),
+            reviewCount:
+              Number.isFinite(productReviewCount) && productReviewCount > 0
+                ? productReviewCount
+                : ratings.length,
           }
         : null;
 
@@ -329,9 +311,15 @@ function ProductDetail() {
   };
 
   const gallery = useMemo(() => {
-    const list = [product?.image, ...GALLERY_FALLBACKS].filter(Boolean);
-    return Array.from(new Set(list));
-  }, [product?.image]);
+    const fromApi = Array.isArray(product?.images)
+      ? product.images.map((u) => String(u).trim()).filter(Boolean)
+      : [];
+    const primary = product?.image ? String(product.image).trim() : "";
+    const merged = primary
+      ? [primary, ...fromApi.filter((u) => u !== primary)]
+      : fromApi;
+    return Array.from(new Set(merged));
+  }, [product?.image, product?.images]);
 
   const activeImage = gallery[activeImageIdx] || gallery[0];
 
@@ -411,21 +399,20 @@ function ProductDetail() {
               </button>
             </div>
 
-            <div className="product-thumbs">
-              {gallery.slice(0, 4).map((img, idx) => (
-                <button
-                  key={img}
-                  type="button"
-                  className={idx === activeImageIdx ? "thumb active" : "thumb"}
-                  onClick={() => setActiveImageIdx(idx)}
-                >
-                  <img src={img} alt="" />
-                </button>
-              ))}
-              <button type="button" className="thumb more">
-                +4
-              </button>
-            </div>
+            {gallery.length > 1 ? (
+              <div className="product-thumbs">
+                {gallery.map((img, idx) => (
+                  <button
+                    key={`${img}-${idx}`}
+                    type="button"
+                    className={idx === activeImageIdx ? "thumb active" : "thumb"}
+                    onClick={() => setActiveImageIdx(idx)}
+                  >
+                    <img src={img} alt="" />
+                  </button>
+                ))}
+              </div>
+            ) : null}
           </div>
 
           <div className="product-buy">
@@ -436,10 +423,16 @@ function ProductDetail() {
 
             <h1>{product.title}</h1>
 
-            <div className="product-rating-line">
-              <span className="stars">★★★★☆</span>
-              <span>({product.reviewCount ?? 1248} reviews)</span>
-            </div>
+            {starsFromRating(product.rating) || reviewCountLabel(product.reviewCount) ? (
+              <div className="product-rating-line">
+                {starsFromRating(product.rating) ? (
+                  <span className="stars">{starsFromRating(product.rating)}</span>
+                ) : null}
+                {reviewCountLabel(product.reviewCount) ? (
+                  <span>{reviewCountLabel(product.reviewCount)}</span>
+                ) : null}
+              </div>
+            ) : null}
 
             {product && product.stock != null ? (
               <div className="product-stock-row">
@@ -563,6 +556,11 @@ function ProductDetail() {
                 </button>
               </div>
               <div className="review-list">
+                {visibleReviews.length === 0 ? (
+                  <p className="review-empty">
+                    No reviews yet. Be the first to share your experience.
+                  </p>
+                ) : null}
                 {visibleReviews.map((review) => {
                   const initials = getInitials(review.userName);
                   const ratingValue = Math.max(0, Math.min(5, Number(review.rating) || 0));

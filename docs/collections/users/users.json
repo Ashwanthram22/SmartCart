@@ -1,0 +1,159 @@
+[
+  {
+    "id": "u-admin",
+    "name": "SmartCart Admin",
+    "email": "admin@aicart.com",
+    "password": "admin123",
+    "role": "admin",
+    "isAdmin": true,
+    "provider": null,
+    "cart": { "items": [], "updatedAt": "2026-05-01T08:00:00.000Z" },
+    "savedItems": { "items": [], "updatedAt": "2026-05-01T08:00:00.000Z" },
+    "preferences": {
+      "currency": "INR",
+      "theme": "system",
+      "notifications": {
+        "orderUpdates": true,
+        "dealAlerts": true,
+        "backInStock": true,
+        "priceDrops": true,
+        "weeklyDigest": false
+      },
+      "marketingEmails": false,
+      "updatedAt": "2026-05-01T08:00:00.000Z"
+    },
+    "addresses": [],
+    "stockAlerts": [],
+    "priceAlerts": []
+  },
+  {
+    "id": "u-seed-01",
+    "name": "Priya Sharma",
+    "email": "priya@gmail.com",
+    "password": "123456",
+    "role": "customer",
+    "provider": null,
+    "cart": { "items": [], "updatedAt": "2026-05-01T08:00:00.000Z" },
+    "savedItems": { "items": [], "updatedAt": "2026-05-01T08:00:00.000Z" },
+    "preferences": {
+      "currency": "INR",
+      "theme": "system",
+      "notifications": {
+        "orderUpdates": true,
+        "dealAlerts": true,
+        "backInStock": true,
+        "priceDrops": true,
+        "weeklyDigest": false
+      },
+      "marketingEmails": false,
+      "updatedAt": "2026-05-01T08:00:00.000Z"
+    },
+    "addresses": [],
+    "stockAlerts": [],
+    "priceAlerts": []
+  },
+  {
+    "id": "u-seed-02",
+    "name": "Rahul Mehta",
+    "email": "rahul@gmail.com",
+    "password": "123456",
+    "role": "customer",
+    "provider": null,
+    "cart": { "items": [], "updatedAt": "2026-05-01T08:00:00.000Z" },
+    "savedItems": { "items": [], "updatedAt": "2026-05-01T08:00:00.000Z" },
+    "preferences": {
+      "currency": "INR",
+      "theme": "system",
+      "notifications": {
+        "orderUpdates": true,
+        "dealAlerts": true,
+        "backInStock": true,
+        "priceDrops": true,
+        "weeklyDigest": false
+      },
+      "marketingEmails": false,
+      "updatedAt": "2026-05-01T08:00:00.000Z"
+    },
+    "addresses": [],
+    "stockAlerts": [],
+    "priceAlerts": []
+  },
+  {
+    "id": "u-seed-03",
+    "name": "Ananya Iyer",
+    "email": "ananya@gmail.com",
+    "password": "123456",
+    "role": "customer",
+    "provider": null,
+    "cart": { "items": [], "updatedAt": "2026-05-01T08:00:00.000Z" },
+    "savedItems": { "items": [], "updatedAt": "2026-05-01T08:00:00.000Z" },
+    "preferences": {
+      "currency": "INR",
+      "theme": "system",
+      "notifications": {
+        "orderUpdates": true,
+        "dealAlerts": true,
+        "backInStock": true,
+        "priceDrops": true,
+        "weeklyDigest": false
+      },
+      "marketingEmails": false,
+      "updatedAt": "2026-05-01T08:00:00.000Z"
+    },
+    "addresses": [],
+    "stockAlerts": [],
+    "priceAlerts": []
+  },
+  {
+    "id": "u-seed-04",
+    "name": "Vikram Singh",
+    "email": "vikram@gmail.com",
+    "password": "123456",
+    "role": "customer",
+    "provider": null,
+    "cart": { "items": [], "updatedAt": "2026-05-01T08:00:00.000Z" },
+    "savedItems": { "items": [], "updatedAt": "2026-05-01T08:00:00.000Z" },
+    "preferences": {
+      "currency": "INR",
+      "theme": "system",
+      "notifications": {
+        "orderUpdates": true,
+        "dealAlerts": true,
+        "backInStock": true,
+        "priceDrops": true,
+        "weeklyDigest": false
+      },
+      "marketingEmails": false,
+      "updatedAt": "2026-05-01T08:00:00.000Z"
+    },
+    "addresses": [],
+    "stockAlerts": [],
+    "priceAlerts": []
+  },
+  {
+    "id": "u-seed-05",
+    "name": "Sneha Kapoor",
+    "email": "sneha@gmail.com",
+    "password": "123456",
+    "role": "customer",
+    "provider": null,
+    "cart": { "items": [], "updatedAt": "2026-05-01T08:00:00.000Z" },
+    "savedItems": { "items": [], "updatedAt": "2026-05-01T08:00:00.000Z" },
+    "preferences": {
+      "currency": "INR",
+      "theme": "system",
+      "notifications": {
+        "orderUpdates": true,
+        "dealAlerts": true,
+        "backInStock": true,
+        "priceDrops": true,
+        "weeklyDigest": false
+      },
+      "marketingEmails": false,
+      "updatedAt": "2026-05-01T08:00:00.000Z"
+    },
+    "addresses": [],
+    "stockAlerts": [],
+    "priceAlerts": []
+  }
+]

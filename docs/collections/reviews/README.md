@@ -136,6 +136,14 @@ Newest `createdAt` first.
 
 ---
 
+## Seed import
+
+- **135 reviews** (one per product): [reviews.json](./reviews.json) — see [MONGO_IMPORT.md](./MONGO_IMPORT.md)
+- **5 seed reviewers**: [../users/seed-reviewers.json](../users/seed-reviewers.json) — import into `users` before reviews
+- Regenerate: `node scripts/generate-reviews-seed.js`
+
+---
+
 ## Code
 
 - `Backend/src/routes/products.routes.js`

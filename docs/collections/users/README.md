@@ -443,6 +443,19 @@ Response: same shape as `GET /cart` above.
 
 ---
 
+## Seed import (`seed-reviewers.json`)
+
+Mongo import array: [seed-reviewers.json](./seed-reviewers.json) — **6 users** (1 admin + 5 demo customers for reviews).
+
+| Account | Email | Password | Role |
+|---------|-------|----------|------|
+| Admin | `admin@aicart.com` | `admin123` | `admin` (`isAdmin: true`) |
+| Reviewers | `priya@gmail.com`, … | `123456` (plaintext in file; hashed on file-db startup) | `customer` |
+
+Admin password in JSON is **bcrypt** so Mongo import works without running migrations. Change credentials after first login in production.
+
+---
+
 ## Code
 
 - `Backend/src/lib/user-profile.js`

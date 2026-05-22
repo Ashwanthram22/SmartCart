@@ -33,6 +33,10 @@ function actor(req) {
  * Helpers
  * ----------------------------------------------------------------*/
 
+function orderTotal(order) {
+  return safeNumber(order?.total ?? order?.totals?.total);
+}
+
 function safeNumber(value, fallback = 0) {
   const n = Number(value);
   return Number.isFinite(n) ? n : fallback;
@@ -139,7 +143,7 @@ router.get("/stats", async (req, res) => {
   const orders = db.orders || [];
   const users = db.users || [];
 
-  const totalRevenue = orders.reduce((sum, o) => sum + safeNumber(o.totals?.total), 0);
+  const totalRevenue = orders.reduce((sum, o) => sum + orderTotal(o), 0);
   const previousRevenue = orders
     .filter((o) => {
       const ts = Date.parse(o.createdAt);
@@ -147,7 +151,7 @@ router.get("/stats", async (req, res) => {
       const ageDays = (Date.now() - ts) / (1000 * 60 * 60 * 24);
       return ageDays > 30 && ageDays <= 60;
     })
-    .reduce((sum, o) => sum + safeNumber(o.totals?.total), 0);
+    .reduce((sum, o) => sum + orderTotal(o), 0);
 
   const last30 = orders.filter((o) => {
     const ts = Date.parse(o.createdAt);
@@ -210,7 +214,7 @@ router.get("/sales-chart", async (req, res) => {
     day.setHours(0, 0, 0, 0);
     const idx = days - 1 - Math.round((today.getTime() - day.getTime()) / 86400000);
     if (idx >= 0 && idx < days) {
-      buckets[idx] += safeNumber(order.totals?.total);
+      buckets[idx] += orderTotal(order);
     }
   }
 
@@ -232,7 +236,7 @@ router.get("/recent-activity", async (req, res) => {
       type: "order",
       id: o.id,
       title: `New order #${o.id}`,
-      detail: `Customer: ${o.userEmail || o.userId} • $${safeNumber(o.totals?.total).toFixed(2)}`,
+      detail: `Customer: ${o.userEmail || o.userId} • ₹${orderTotal(o).toFixed(2)}`,
       timestamp: o.createdAt,
     }));
 

@@ -446,6 +446,14 @@
   background: rgba(107, 56, 212, 0.08);
 }
 
+.settings-activity-empty {
+  margin: 0;
+  padding: 12px 0 4px;
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
 /* AI banner */
 .settings-ai-banner {
   position: relative;

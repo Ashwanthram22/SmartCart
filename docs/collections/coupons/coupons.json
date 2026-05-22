@@ -1,0 +1,32 @@
+[
+  {
+    "code": "WELCOME10",
+    "type": "percent",
+    "value": 10,
+    "label": "10% off your first order",
+    "description": "Save 10% on any order — no minimum.",
+    "minOrder": 0,
+    "active": true,
+    "expiresAt": null
+  },
+  {
+    "code": "SAVE25",
+    "type": "flat",
+    "value": 2000,
+    "label": "₹2,000 off orders over ₹16,000",
+    "description": "Take ₹2,000 off when your subtotal is at least ₹16,000.",
+    "minOrder": 16000,
+    "active": true,
+    "expiresAt": null
+  },
+  {
+    "code": "AICART",
+    "type": "percent",
+    "value": 15,
+    "label": "15% off — AI-curated picks",
+    "description": "Use code AICART for 15% off any order over ₹4,000.",
+    "minOrder": 4000,
+    "active": true,
+    "expiresAt": null
+  }
+]

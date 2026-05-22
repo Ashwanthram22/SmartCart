@@ -19,6 +19,7 @@ import { useToast } from "../../hooks/useToast";
 import usePageMeta from "../../hooks/usePageMeta";
 import Skeleton from "../../components/Skeleton";
 import { formatMoney } from "../../utils/money";
+import { computeInsights } from "../../utils/orderInsights";
 import "./OrderHistory.css";
 
 function StatusBadge({ status }) {
@@ -218,6 +219,8 @@ export default function OrderHistory() {
       cancelled = true;
     };
   }, []);
+
+  const orderInsightSummary = useMemo(() => computeInsights(orders), [orders]);
 
   const filteredOrders = useMemo(
     () =>
@@ -558,11 +561,28 @@ export default function OrderHistory() {
                 Smart Insight: Spending Pattern
               </h3>
               <p className="oh-insight-text">
-                Based on your history, your shopping efficiency has improved by{" "}
-                <strong className="oh-insight-highlight">14%</strong> this
-                month. You&apos;ve saved an average of{" "}
-                <strong className="oh-insight-highlight">₹2,499</strong> per order
-                using AI-negotiated deals.
+                {orderInsightSummary.total > 0 ? (
+                  <>
+                    You&apos;ve placed{" "}
+                    <strong className="oh-insight-highlight">
+                      {orderInsightSummary.total}
+                    </strong>{" "}
+                    {orderInsightSummary.total === 1 ? "order" : "orders"}
+                    {orderInsightSummary.avgOrder > 0 ? (
+                      <>
+                        {" "}
+                        with an average of{" "}
+                        <strong className="oh-insight-highlight">
+                          {formatMoney(Math.round(orderInsightSummary.avgOrder))}
+                        </strong>{" "}
+                        per order
+                      </>
+                    ) : null}
+                    .
+                  </>
+                ) : (
+                  "Place your first order to unlock spending insights."
+                )}
               </p>
             </div>
             <button

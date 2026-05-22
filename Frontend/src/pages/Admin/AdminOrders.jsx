@@ -44,6 +44,25 @@ const STATUS_META = {
   cancelled: { label: "Cancelled", icon: XCircle, tone: "danger" },
 };
 
+/** API stores subtotal/discount/tax/total on the order root; legacy rows may use `totals`. */
+function orderAmounts(order) {
+  const nested = order?.totals || {};
+  const items = Array.isArray(order?.items) ? order.items : [];
+  const fromLines = items.reduce((sum, it) => {
+    if (it.lineTotal != null) return sum + Number(it.lineTotal);
+    const qty = Number(it.quantity || 1);
+    const price = Number(it.unitPrice ?? it.priceAtPurchase ?? it.price ?? 0);
+    return sum + price * qty;
+  }, 0);
+  return {
+    subtotal: Number(order?.subtotal ?? nested.subtotal ?? fromLines),
+    discount: Number(order?.discount ?? nested.discount ?? 0),
+    tax: Number(order?.tax ?? nested.tax ?? 0),
+    shipping: Number(nested.shipping ?? 0),
+    total: Number(order?.total ?? nested.total ?? nested.grandTotal ?? fromLines),
+  };
+}
+
 const DATE_RANGES = [
   { value: "all", label: "All time" },
   { value: "7", label: "Last 7 days" },
@@ -225,15 +244,7 @@ function loadPdfMake() {
  */
 function buildInvoiceDocDefinition(order) {
   const items = Array.isArray(order.items) ? order.items : [];
-  const subtotal = items.reduce(
-    (sum, it) => sum + Number(it.priceAtPurchase ?? it.price ?? 0) * Number(it.quantity || 1),
-    0
-  );
-  const totals = order.totals || {};
-  const total = Number(totals.total ?? totals.grandTotal ?? subtotal);
-  const tax = Number(totals.tax || 0);
-  const shipping = Number(totals.shipping || 0);
-  const discount = Number(totals.discount || 0);
+  const { subtotal, discount, tax, shipping, total } = orderAmounts(order);
 
   const itemsHeader = [
     { text: "Item", style: "th" },
@@ -493,11 +504,7 @@ function OrderDrawer({ order, onClose, onStatusChange }) {
   if (!order) return null;
   const status = order.status || "processing";
   const items = Array.isArray(order.items) ? order.items : [];
-  const subtotal = items.reduce(
-    (sum, it) => sum + Number(it.priceAtPurchase ?? it.price ?? 0) * Number(it.quantity || 1),
-    0
-  );
-  const total = Number(order.totals?.total || subtotal);
+  const amounts = orderAmounts(order);
 
   return (
     <>
@@ -559,7 +566,7 @@ function OrderDrawer({ order, onClose, onStatusChange }) {
               ) : (
                 items.map((it, i) => {
                   const qty = Number(it.quantity || 1);
-                  const price = Number(it.priceAtPurchase ?? it.price ?? 0);
+                  const price = Number(it.unitPrice ?? it.priceAtPurchase ?? it.price ?? 0);
                   return (
                     <li key={`${it.id || it.title}-${i}`} className="ao-line">
                       <span className="ao-line-thumb" aria-hidden="true">
@@ -584,26 +591,26 @@ function OrderDrawer({ order, onClose, onStatusChange }) {
           <section className="adm-drawer-section">
             <h4>Totals</h4>
             <dl className="adm-drawer-grid">
-              <dt>Subtotal</dt><dd>{formatMoney(subtotal)}</dd>
-              {Number(order.totals?.discount) ? (
+              <dt>Subtotal</dt><dd>{formatMoney(amounts.subtotal)}</dd>
+              {amounts.discount > 0 ? (
                 <>
                   <dt>Discount</dt>
-                  <dd>−{formatMoney(Number(order.totals.discount))}</dd>
+                  <dd>−{formatMoney(amounts.discount)}</dd>
                 </>
               ) : null}
-              {Number(order.totals?.shipping) ? (
+              {amounts.shipping > 0 ? (
                 <>
                   <dt>Shipping</dt>
-                  <dd>{formatMoney(Number(order.totals.shipping))}</dd>
+                  <dd>{formatMoney(amounts.shipping)}</dd>
                 </>
               ) : null}
-              {Number(order.totals?.tax) ? (
+              {amounts.tax > 0 ? (
                 <>
                   <dt>Tax</dt>
-                  <dd>{formatMoney(Number(order.totals.tax))}</dd>
+                  <dd>{formatMoney(amounts.tax)}</dd>
                 </>
               ) : null}
-              <dt>Total</dt><dd><strong>{formatMoney(total)}</strong></dd>
+              <dt>Total</dt><dd><strong>{formatMoney(amounts.total)}</strong></dd>
             </dl>
           </section>
 
@@ -1169,7 +1176,7 @@ export default function AdminOrders() {
                         </span>
                       </td>
                       <td className="ao-items">{summariseItems(o.items)}</td>
-                      <td>{formatMoney(o.totals?.total || 0)}</td>
+                      <td>{formatMoney(orderAmounts(o).total)}</td>
                       <td>{formatDate(o.createdAt)}</td>
                       <td>
                         <StatusBadge status={status} />

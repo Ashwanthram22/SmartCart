@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
 import { formatMoney } from "../../utils/money";
+import { computeInsights } from "../../utils/orderInsights";
 import "./OrderInsightsDialog.css";
 
 function formatDate(iso) {
@@ -20,62 +21,6 @@ const STATUS_LABEL = {
   delivered: "Delivered",
   cancelled: "Cancelled",
 };
-
-/**
- * Compute insights from the user's actual order history. Everything is
- * derived client-side from the orders the page already has, so the report
- * stays consistent with what's visible on the cards above and we don't
- * need a new backend route.
- */
-function computeInsights(orders) {
-  const total = orders.length;
-  const validForSpend = orders.filter((o) => o.status !== "cancelled");
-  const totalSpent = validForSpend.reduce((s, o) => s + Number(o.total || 0), 0);
-  const itemsPurchased = validForSpend.reduce(
-    (s, o) => s + (o.items || []).reduce((ss, it) => ss + Number(it.quantity || 0), 0),
-    0
-  );
-  const avgOrder = validForSpend.length ? totalSpent / validForSpend.length : 0;
-
-  const byStatus = orders.reduce((acc, o) => {
-    const key = o.status || "processing";
-    acc[key] = (acc[key] || 0) + 1;
-    return acc;
-  }, {});
-
-  // Top products by quantity bought across all orders.
-  const productCounts = new Map();
-  for (const order of validForSpend) {
-    for (const item of order.items || []) {
-      const key = item.title || item.productId;
-      if (!key) continue;
-      const prior = productCounts.get(key) || { title: key, qty: 0, total: 0 };
-      prior.qty += Number(item.quantity || 0);
-      prior.total += Number(item.lineTotal || 0);
-      productCounts.set(key, prior);
-    }
-  }
-  const topProducts = Array.from(productCounts.values())
-    .sort((a, b) => b.qty - a.qty || b.total - a.total)
-    .slice(0, 5);
-
-  const sortedByDate = [...orders].sort(
-    (a, b) => (Date.parse(a.createdAt) || 0) - (Date.parse(b.createdAt) || 0)
-  );
-  const firstOrder = sortedByDate[0] || null;
-  const lastOrder = sortedByDate[sortedByDate.length - 1] || null;
-
-  return {
-    total,
-    totalSpent,
-    itemsPurchased,
-    avgOrder,
-    byStatus,
-    topProducts,
-    firstOrder,
-    lastOrder,
-  };
-}
 
 /**
  * Modal that summarises the user's actual order history into a few useful

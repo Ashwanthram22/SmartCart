@@ -282,6 +282,12 @@ No body.
 
 ---
 
+## Mongo import
+
+**12** seed orders (5 customers, shared products e.g. `el1001`): [orders.json](./orders.json) — see [MONGO_IMPORT.md](./MONGO_IMPORT.md).
+
+Regenerate: `node scripts/generate-orders-seed.js`
+
 ## Code
 
 - `Backend/src/routes/orders.routes.js`

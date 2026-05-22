@@ -1,13 +1,10 @@
 import { useState } from "react";
 import {
-  ArrowRight,
   Laptop,
   Lock,
   Shield,
   ShieldCheck,
-  Smartphone,
   Sparkles,
-  Tablet,
   UserCheck,
 } from "lucide-react";
 import { ProfileLayout } from "./ProfileLayout";
@@ -16,39 +13,6 @@ import { changePassword } from "../../api/client";
 import { useToast } from "../../hooks/useToast";
 import usePageMeta from "../../hooks/usePageMeta";
 import "./SettingsSecurity.css";
-
-const LOGIN_SESSIONS = [
-  {
-    id: "s1",
-    title: 'MacBook Pro 16"',
-    current: true,
-    detail: "San Francisco, USA • Chrome • IP: 192.168.1.45",
-    timeLabel: "Just now",
-    kind: "desktop",
-  },
-  {
-    id: "s2",
-    title: "iPhone 15 Pro",
-    current: false,
-    detail: "San Francisco, USA • SmartCart iOS App",
-    timeLabel: "2 hours ago",
-    kind: "phone",
-  },
-  {
-    id: "s3",
-    title: "iPad Air",
-    current: false,
-    detail: "Austin, USA • Safari",
-    timeLabel: "Oct 24, 2023",
-    kind: "tablet",
-  },
-];
-
-function SessionIcon({ kind }) {
-  if (kind === "phone") return <Smartphone size={22} aria-hidden="true" />;
-  if (kind === "tablet") return <Tablet size={22} aria-hidden="true" />;
-  return <Laptop size={22} aria-hidden="true" />;
-}
 
 const INITIAL_FORM = {
   currentPassword: "",
@@ -62,7 +26,7 @@ export default function SettingsSecurity() {
     description: "Manage your password, two-factor authentication and active sessions.",
   });
 
-  const [twoFactorEnabled, setTwoFactorEnabled] = useState(true);
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
   const [pwForm, setPwForm] = useState(INITIAL_FORM);
   const [pwError, setPwError] = useState("");
   const [pwSubmitting, setPwSubmitting] = useState(false);
@@ -224,35 +188,9 @@ export default function SettingsSecurity() {
                 Login Activity
               </h2>
             </div>
-            <ul className="settings-activity-list">
-              {LOGIN_SESSIONS.map((session) => (
-                <li key={session.id} className="settings-activity-row">
-                  <div className="settings-activity-main">
-                    <div className="settings-activity-device-icon" aria-hidden="true">
-                      <SessionIcon kind={session.kind} />
-                    </div>
-                    <div>
-                      <h3 className="settings-activity-title">
-                        {session.title}
-                        {session.current ? (
-                          <span className="settings-activity-badge">Current</span>
-                        ) : null}
-                      </h3>
-                      <p className="settings-activity-meta">{session.detail}</p>
-                    </div>
-                  </div>
-                  <span className="settings-activity-time">{session.timeLabel}</span>
-                </li>
-              ))}
-            </ul>
-            <button
-              type="button"
-              className="settings-activity-view-all"
-              onClick={() => toast.info("Detailed activity log coming soon.")}
-            >
-              View All Activity
-              <ArrowRight size={16} aria-hidden="true" />
-            </button>
+            <p className="settings-activity-empty">
+              Session history is not available yet. Only this browser session is active.
+            </p>
           </section>
 
           <section className="settings-ai-banner" aria-labelledby="settings-ai-heading">

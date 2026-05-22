@@ -1,0 +1,1217 @@
+[
+  {
+    "id": "r-seed-el1001",
+    "productId": "el1001",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "Works exactly as described. Setup was quick and the build quality feels premium.",
+    "createdAt": "2026-04-01T10:00:00.000Z"
+  },
+  {
+    "id": "r-seed-el1002",
+    "productId": "el1002",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 4,
+    "text": "Solid performance for the price. Would buy again for daily use.",
+    "createdAt": "2026-04-01T11:00:00.000Z"
+  },
+  {
+    "id": "r-seed-el1003",
+    "productId": "el1003",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "Happy with the purchase — battery life and features match what I expected.",
+    "createdAt": "2026-04-01T12:00:00.000Z"
+  },
+  {
+    "id": "r-seed-el1004",
+    "productId": "el1004",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "Works exactly as described. Setup was quick and the build quality feels premium.",
+    "createdAt": "2026-04-01T13:00:00.000Z"
+  },
+  {
+    "id": "r-seed-el1005",
+    "productId": "el1005",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 4,
+    "text": "Solid performance for the price. Would buy again for daily use.",
+    "createdAt": "2026-04-01T14:00:00.000Z"
+  },
+  {
+    "id": "r-seed-el1006",
+    "productId": "el1006",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "Happy with the purchase — battery life and features match what I expected.",
+    "createdAt": "2026-04-01T15:00:00.000Z"
+  },
+  {
+    "id": "r-seed-el1007",
+    "productId": "el1007",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "Works exactly as described. Setup was quick and the build quality feels premium.",
+    "createdAt": "2026-04-01T16:00:00.000Z"
+  },
+  {
+    "id": "r-seed-el1008",
+    "productId": "el1008",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 4,
+    "text": "Solid performance for the price. Would buy again for daily use.",
+    "createdAt": "2026-04-01T17:00:00.000Z"
+  },
+  {
+    "id": "r-seed-el1009",
+    "productId": "el1009",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "Happy with the purchase — battery life and features match what I expected.",
+    "createdAt": "2026-04-01T18:00:00.000Z"
+  },
+  {
+    "id": "r-seed-el1010",
+    "productId": "el1010",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "Works exactly as described. Setup was quick and the build quality feels premium.",
+    "createdAt": "2026-04-01T19:00:00.000Z"
+  },
+  {
+    "id": "r-seed-el1011",
+    "productId": "el1011",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 4,
+    "text": "Solid performance for the price. Would buy again for daily use.",
+    "createdAt": "2026-04-01T20:00:00.000Z"
+  },
+  {
+    "id": "r-seed-el1012",
+    "productId": "el1012",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "Happy with the purchase — battery life and features match what I expected.",
+    "createdAt": "2026-04-01T21:00:00.000Z"
+  },
+  {
+    "id": "r-seed-el1013",
+    "productId": "el1013",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "Works exactly as described. Setup was quick and the build quality feels premium.",
+    "createdAt": "2026-04-01T22:00:00.000Z"
+  },
+  {
+    "id": "r-seed-el1014",
+    "productId": "el1014",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 4,
+    "text": "Solid performance for the price. Would buy again for daily use.",
+    "createdAt": "2026-04-01T23:00:00.000Z"
+  },
+  {
+    "id": "r-seed-el1015",
+    "productId": "el1015",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "Happy with the purchase — battery life and features match what I expected.",
+    "createdAt": "2026-04-02T00:00:00.000Z"
+  },
+  {
+    "id": "r-seed-mb1001",
+    "productId": "mb1001",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "Camera and display are excellent. Battery easily lasts a full day.",
+    "createdAt": "2026-04-02T01:00:00.000Z"
+  },
+  {
+    "id": "r-seed-mb1002",
+    "productId": "mb1002",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 4,
+    "text": "Smooth performance and fast charging. Great value in this range.",
+    "createdAt": "2026-04-02T02:00:00.000Z"
+  },
+  {
+    "id": "r-seed-mb1003",
+    "productId": "mb1003",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "No regrets — calls, gaming, and photos all feel top-tier.",
+    "createdAt": "2026-04-02T03:00:00.000Z"
+  },
+  {
+    "id": "r-seed-mb1004",
+    "productId": "mb1004",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "Camera and display are excellent. Battery easily lasts a full day.",
+    "createdAt": "2026-04-02T04:00:00.000Z"
+  },
+  {
+    "id": "r-seed-mb1005",
+    "productId": "mb1005",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 4,
+    "text": "Smooth performance and fast charging. Great value in this range.",
+    "createdAt": "2026-04-02T05:00:00.000Z"
+  },
+  {
+    "id": "r-seed-mb1006",
+    "productId": "mb1006",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "No regrets — calls, gaming, and photos all feel top-tier.",
+    "createdAt": "2026-04-02T06:00:00.000Z"
+  },
+  {
+    "id": "r-seed-mb1007",
+    "productId": "mb1007",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "Camera and display are excellent. Battery easily lasts a full day.",
+    "createdAt": "2026-04-02T07:00:00.000Z"
+  },
+  {
+    "id": "r-seed-mb1008",
+    "productId": "mb1008",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 4,
+    "text": "Smooth performance and fast charging. Great value in this range.",
+    "createdAt": "2026-04-02T08:00:00.000Z"
+  },
+  {
+    "id": "r-seed-mb1009",
+    "productId": "mb1009",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "No regrets — calls, gaming, and photos all feel top-tier.",
+    "createdAt": "2026-04-02T09:00:00.000Z"
+  },
+  {
+    "id": "r-seed-mb1010",
+    "productId": "mb1010",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "Camera and display are excellent. Battery easily lasts a full day.",
+    "createdAt": "2026-04-02T10:00:00.000Z"
+  },
+  {
+    "id": "r-seed-mb1011",
+    "productId": "mb1011",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 4,
+    "text": "Smooth performance and fast charging. Great value in this range.",
+    "createdAt": "2026-04-02T11:00:00.000Z"
+  },
+  {
+    "id": "r-seed-mb1012",
+    "productId": "mb1012",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "No regrets — calls, gaming, and photos all feel top-tier.",
+    "createdAt": "2026-04-02T12:00:00.000Z"
+  },
+  {
+    "id": "r-seed-mb1013",
+    "productId": "mb1013",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "Camera and display are excellent. Battery easily lasts a full day.",
+    "createdAt": "2026-04-02T13:00:00.000Z"
+  },
+  {
+    "id": "r-seed-mb1014",
+    "productId": "mb1014",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 4,
+    "text": "Smooth performance and fast charging. Great value in this range.",
+    "createdAt": "2026-04-02T14:00:00.000Z"
+  },
+  {
+    "id": "r-seed-mb1015",
+    "productId": "mb1015",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "No regrets — calls, gaming, and photos all feel top-tier.",
+    "createdAt": "2026-04-02T15:00:00.000Z"
+  },
+  {
+    "id": "r-seed-lp1001",
+    "productId": "lp1001",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "Fast for work and light gaming. Keyboard and screen are comfortable for long sessions.",
+    "createdAt": "2026-04-02T16:00:00.000Z"
+  },
+  {
+    "id": "r-seed-lp1002",
+    "productId": "lp1002",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 4,
+    "text": "Boots quickly and stays quiet. Perfect for office and travel.",
+    "createdAt": "2026-04-02T17:00:00.000Z"
+  },
+  {
+    "id": "r-seed-lp1003",
+    "productId": "lp1003",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "Build feels sturdy and the display is sharp. Highly recommend.",
+    "createdAt": "2026-04-02T18:00:00.000Z"
+  },
+  {
+    "id": "r-seed-lp1004",
+    "productId": "lp1004",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "Fast for work and light gaming. Keyboard and screen are comfortable for long sessions.",
+    "createdAt": "2026-04-02T19:00:00.000Z"
+  },
+  {
+    "id": "r-seed-lp1005",
+    "productId": "lp1005",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 4,
+    "text": "Boots quickly and stays quiet. Perfect for office and travel.",
+    "createdAt": "2026-04-02T20:00:00.000Z"
+  },
+  {
+    "id": "r-seed-lp1006",
+    "productId": "lp1006",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "Build feels sturdy and the display is sharp. Highly recommend.",
+    "createdAt": "2026-04-02T21:00:00.000Z"
+  },
+  {
+    "id": "r-seed-lp1007",
+    "productId": "lp1007",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "Fast for work and light gaming. Keyboard and screen are comfortable for long sessions.",
+    "createdAt": "2026-04-02T22:00:00.000Z"
+  },
+  {
+    "id": "r-seed-lp1008",
+    "productId": "lp1008",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 4,
+    "text": "Boots quickly and stays quiet. Perfect for office and travel.",
+    "createdAt": "2026-04-02T23:00:00.000Z"
+  },
+  {
+    "id": "r-seed-lp1009",
+    "productId": "lp1009",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "Build feels sturdy and the display is sharp. Highly recommend.",
+    "createdAt": "2026-04-03T00:00:00.000Z"
+  },
+  {
+    "id": "r-seed-lp1010",
+    "productId": "lp1010",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 4,
+    "text": "Fast for work and light gaming. Keyboard and screen are comfortable for long sessions.",
+    "createdAt": "2026-04-03T01:00:00.000Z"
+  },
+  {
+    "id": "r-seed-lp1011",
+    "productId": "lp1011",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 4,
+    "text": "Boots quickly and stays quiet. Perfect for office and travel.",
+    "createdAt": "2026-04-03T02:00:00.000Z"
+  },
+  {
+    "id": "r-seed-lp1012",
+    "productId": "lp1012",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "Build feels sturdy and the display is sharp. Highly recommend.",
+    "createdAt": "2026-04-03T03:00:00.000Z"
+  },
+  {
+    "id": "r-seed-lp1013",
+    "productId": "lp1013",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "Fast for work and light gaming. Keyboard and screen are comfortable for long sessions.",
+    "createdAt": "2026-04-03T04:00:00.000Z"
+  },
+  {
+    "id": "r-seed-lp1014",
+    "productId": "lp1014",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 4,
+    "text": "Boots quickly and stays quiet. Perfect for office and travel.",
+    "createdAt": "2026-04-03T05:00:00.000Z"
+  },
+  {
+    "id": "r-seed-lp1015",
+    "productId": "lp1015",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "Build feels sturdy and the display is sharp. Highly recommend.",
+    "createdAt": "2026-04-03T06:00:00.000Z"
+  },
+  {
+    "id": "r-seed-ac1001",
+    "productId": "ac1001",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "Fits my setup perfectly. Quality is better than I expected at this price.",
+    "createdAt": "2026-04-03T07:00:00.000Z"
+  },
+  {
+    "id": "r-seed-ac1002",
+    "productId": "ac1002",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 4,
+    "text": "Daily driver now — comfortable and reliable.",
+    "createdAt": "2026-04-03T08:00:00.000Z"
+  },
+  {
+    "id": "r-seed-ac1003",
+    "productId": "ac1003",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "Small upgrade that made a big difference. Worth it.",
+    "createdAt": "2026-04-03T09:00:00.000Z"
+  },
+  {
+    "id": "r-seed-ac1004",
+    "productId": "ac1004",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "Fits my setup perfectly. Quality is better than I expected at this price.",
+    "createdAt": "2026-04-03T10:00:00.000Z"
+  },
+  {
+    "id": "r-seed-ac1005",
+    "productId": "ac1005",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 4,
+    "text": "Daily driver now — comfortable and reliable.",
+    "createdAt": "2026-04-03T11:00:00.000Z"
+  },
+  {
+    "id": "r-seed-ac1006",
+    "productId": "ac1006",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "Small upgrade that made a big difference. Worth it.",
+    "createdAt": "2026-04-03T12:00:00.000Z"
+  },
+  {
+    "id": "r-seed-ac1007",
+    "productId": "ac1007",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "Fits my setup perfectly. Quality is better than I expected at this price.",
+    "createdAt": "2026-04-03T13:00:00.000Z"
+  },
+  {
+    "id": "r-seed-ac1008",
+    "productId": "ac1008",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 4,
+    "text": "Daily driver now — comfortable and reliable.",
+    "createdAt": "2026-04-03T14:00:00.000Z"
+  },
+  {
+    "id": "r-seed-ac1009",
+    "productId": "ac1009",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "Small upgrade that made a big difference. Worth it.",
+    "createdAt": "2026-04-03T15:00:00.000Z"
+  },
+  {
+    "id": "r-seed-ac1010",
+    "productId": "ac1010",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "Fits my setup perfectly. Quality is better than I expected at this price.",
+    "createdAt": "2026-04-03T16:00:00.000Z"
+  },
+  {
+    "id": "r-seed-ac1011",
+    "productId": "ac1011",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 4,
+    "text": "Daily driver now — comfortable and reliable.",
+    "createdAt": "2026-04-03T17:00:00.000Z"
+  },
+  {
+    "id": "r-seed-ac1012",
+    "productId": "ac1012",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "Small upgrade that made a big difference. Worth it.",
+    "createdAt": "2026-04-03T18:00:00.000Z"
+  },
+  {
+    "id": "r-seed-ac1013",
+    "productId": "ac1013",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "Fits my setup perfectly. Quality is better than I expected at this price.",
+    "createdAt": "2026-04-03T19:00:00.000Z"
+  },
+  {
+    "id": "r-seed-ac1014",
+    "productId": "ac1014",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 4,
+    "text": "Daily driver now — comfortable and reliable.",
+    "createdAt": "2026-04-03T20:00:00.000Z"
+  },
+  {
+    "id": "r-seed-ac1015",
+    "productId": "ac1015",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "Small upgrade that made a big difference. Worth it.",
+    "createdAt": "2026-04-03T21:00:00.000Z"
+  },
+  {
+    "id": "r-seed-fa1001",
+    "productId": "fa1001",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "True to size and looks great. Fabric quality is on point.",
+    "createdAt": "2026-04-03T22:00:00.000Z"
+  },
+  {
+    "id": "r-seed-fa1002",
+    "productId": "fa1002",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 4,
+    "text": "Comfortable all day. Got compliments the first time I wore it.",
+    "createdAt": "2026-04-03T23:00:00.000Z"
+  },
+  {
+    "id": "r-seed-fa1003",
+    "productId": "fa1003",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "Stylish and well made — matches the photos.",
+    "createdAt": "2026-04-04T00:00:00.000Z"
+  },
+  {
+    "id": "r-seed-fa1004",
+    "productId": "fa1004",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "True to size and looks great. Fabric quality is on point.",
+    "createdAt": "2026-04-04T01:00:00.000Z"
+  },
+  {
+    "id": "r-seed-fa1005",
+    "productId": "fa1005",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 4,
+    "text": "Comfortable all day. Got compliments the first time I wore it.",
+    "createdAt": "2026-04-04T02:00:00.000Z"
+  },
+  {
+    "id": "r-seed-fa1006",
+    "productId": "fa1006",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "Stylish and well made — matches the photos.",
+    "createdAt": "2026-04-04T03:00:00.000Z"
+  },
+  {
+    "id": "r-seed-fa1007",
+    "productId": "fa1007",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "True to size and looks great. Fabric quality is on point.",
+    "createdAt": "2026-04-04T04:00:00.000Z"
+  },
+  {
+    "id": "r-seed-fa1008",
+    "productId": "fa1008",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 4,
+    "text": "Comfortable all day. Got compliments the first time I wore it.",
+    "createdAt": "2026-04-04T05:00:00.000Z"
+  },
+  {
+    "id": "r-seed-fa1009",
+    "productId": "fa1009",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "Stylish and well made — matches the photos.",
+    "createdAt": "2026-04-04T06:00:00.000Z"
+  },
+  {
+    "id": "r-seed-fa1010",
+    "productId": "fa1010",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "True to size and looks great. Fabric quality is on point.",
+    "createdAt": "2026-04-04T07:00:00.000Z"
+  },
+  {
+    "id": "r-seed-fa1011",
+    "productId": "fa1011",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 4,
+    "text": "Comfortable all day. Got compliments the first time I wore it.",
+    "createdAt": "2026-04-04T08:00:00.000Z"
+  },
+  {
+    "id": "r-seed-fa1012",
+    "productId": "fa1012",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "Stylish and well made — matches the photos.",
+    "createdAt": "2026-04-04T09:00:00.000Z"
+  },
+  {
+    "id": "r-seed-fa1013",
+    "productId": "fa1013",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "True to size and looks great. Fabric quality is on point.",
+    "createdAt": "2026-04-04T10:00:00.000Z"
+  },
+  {
+    "id": "r-seed-fa1014",
+    "productId": "fa1014",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 4,
+    "text": "Comfortable all day. Got compliments the first time I wore it.",
+    "createdAt": "2026-04-04T11:00:00.000Z"
+  },
+  {
+    "id": "r-seed-fa1015",
+    "productId": "fa1015",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "Stylish and well made — matches the photos.",
+    "createdAt": "2026-04-04T12:00:00.000Z"
+  },
+  {
+    "id": "r-seed-hk1001",
+    "productId": "hk1001",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "Makes everyday cooking easier. Easy to clean and store.",
+    "createdAt": "2026-04-04T13:00:00.000Z"
+  },
+  {
+    "id": "r-seed-hk1002",
+    "productId": "hk1002",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 4,
+    "text": "Works well and feels durable. Good addition to the kitchen.",
+    "createdAt": "2026-04-04T14:00:00.000Z"
+  },
+  {
+    "id": "r-seed-hk1003",
+    "productId": "hk1003",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "Does the job reliably — happy with how it performs.",
+    "createdAt": "2026-04-04T15:00:00.000Z"
+  },
+  {
+    "id": "r-seed-hk1004",
+    "productId": "hk1004",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "Makes everyday cooking easier. Easy to clean and store.",
+    "createdAt": "2026-04-04T16:00:00.000Z"
+  },
+  {
+    "id": "r-seed-hk1005",
+    "productId": "hk1005",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 4,
+    "text": "Works well and feels durable. Good addition to the kitchen.",
+    "createdAt": "2026-04-04T17:00:00.000Z"
+  },
+  {
+    "id": "r-seed-hk1006",
+    "productId": "hk1006",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "Does the job reliably — happy with how it performs.",
+    "createdAt": "2026-04-04T18:00:00.000Z"
+  },
+  {
+    "id": "r-seed-hk1007",
+    "productId": "hk1007",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "Makes everyday cooking easier. Easy to clean and store.",
+    "createdAt": "2026-04-04T19:00:00.000Z"
+  },
+  {
+    "id": "r-seed-hk1008",
+    "productId": "hk1008",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 4,
+    "text": "Works well and feels durable. Good addition to the kitchen.",
+    "createdAt": "2026-04-04T20:00:00.000Z"
+  },
+  {
+    "id": "r-seed-hk1009",
+    "productId": "hk1009",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "Does the job reliably — happy with how it performs.",
+    "createdAt": "2026-04-04T21:00:00.000Z"
+  },
+  {
+    "id": "r-seed-hk1010",
+    "productId": "hk1010",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "Makes everyday cooking easier. Easy to clean and store.",
+    "createdAt": "2026-04-04T22:00:00.000Z"
+  },
+  {
+    "id": "r-seed-hk1011",
+    "productId": "hk1011",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 4,
+    "text": "Works well and feels durable. Good addition to the kitchen.",
+    "createdAt": "2026-04-04T23:00:00.000Z"
+  },
+  {
+    "id": "r-seed-hk1012",
+    "productId": "hk1012",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "Does the job reliably — happy with how it performs.",
+    "createdAt": "2026-04-05T00:00:00.000Z"
+  },
+  {
+    "id": "r-seed-hk1013",
+    "productId": "hk1013",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "Makes everyday cooking easier. Easy to clean and store.",
+    "createdAt": "2026-04-05T01:00:00.000Z"
+  },
+  {
+    "id": "r-seed-hk1014",
+    "productId": "hk1014",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 4,
+    "text": "Works well and feels durable. Good addition to the kitchen.",
+    "createdAt": "2026-04-05T02:00:00.000Z"
+  },
+  {
+    "id": "r-seed-hk1015",
+    "productId": "hk1015",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "Does the job reliably — happy with how it performs.",
+    "createdAt": "2026-04-05T03:00:00.000Z"
+  },
+  {
+    "id": "r-seed-sp1001",
+    "productId": "sp1001",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "Good grip and build for training. Using it every week.",
+    "createdAt": "2026-04-05T04:00:00.000Z"
+  },
+  {
+    "id": "r-seed-sp1002",
+    "productId": "sp1002",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 4,
+    "text": "Comfortable and durable — exactly what I needed for workouts.",
+    "createdAt": "2026-04-05T05:00:00.000Z"
+  },
+  {
+    "id": "r-seed-sp1003",
+    "productId": "sp1003",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "Great for home gym and outdoor sessions alike.",
+    "createdAt": "2026-04-05T06:00:00.000Z"
+  },
+  {
+    "id": "r-seed-sp1004",
+    "productId": "sp1004",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "Good grip and build for training. Using it every week.",
+    "createdAt": "2026-04-05T07:00:00.000Z"
+  },
+  {
+    "id": "r-seed-sp1005",
+    "productId": "sp1005",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 4,
+    "text": "Comfortable and durable — exactly what I needed for workouts.",
+    "createdAt": "2026-04-05T08:00:00.000Z"
+  },
+  {
+    "id": "r-seed-sp1006",
+    "productId": "sp1006",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "Great for home gym and outdoor sessions alike.",
+    "createdAt": "2026-04-05T09:00:00.000Z"
+  },
+  {
+    "id": "r-seed-sp1007",
+    "productId": "sp1007",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "Good grip and build for training. Using it every week.",
+    "createdAt": "2026-04-05T10:00:00.000Z"
+  },
+  {
+    "id": "r-seed-sp1008",
+    "productId": "sp1008",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 4,
+    "text": "Comfortable and durable — exactly what I needed for workouts.",
+    "createdAt": "2026-04-05T11:00:00.000Z"
+  },
+  {
+    "id": "r-seed-sp1009",
+    "productId": "sp1009",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "Great for home gym and outdoor sessions alike.",
+    "createdAt": "2026-04-05T12:00:00.000Z"
+  },
+  {
+    "id": "r-seed-sp1010",
+    "productId": "sp1010",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "Good grip and build for training. Using it every week.",
+    "createdAt": "2026-04-05T13:00:00.000Z"
+  },
+  {
+    "id": "r-seed-sp1011",
+    "productId": "sp1011",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 4,
+    "text": "Comfortable and durable — exactly what I needed for workouts.",
+    "createdAt": "2026-04-05T14:00:00.000Z"
+  },
+  {
+    "id": "r-seed-sp1012",
+    "productId": "sp1012",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "Great for home gym and outdoor sessions alike.",
+    "createdAt": "2026-04-05T15:00:00.000Z"
+  },
+  {
+    "id": "r-seed-sp1013",
+    "productId": "sp1013",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "Good grip and build for training. Using it every week.",
+    "createdAt": "2026-04-05T16:00:00.000Z"
+  },
+  {
+    "id": "r-seed-sp1014",
+    "productId": "sp1014",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 4,
+    "text": "Comfortable and durable — exactly what I needed for workouts.",
+    "createdAt": "2026-04-05T17:00:00.000Z"
+  },
+  {
+    "id": "r-seed-sp1015",
+    "productId": "sp1015",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "Great for home gym and outdoor sessions alike.",
+    "createdAt": "2026-04-05T18:00:00.000Z"
+  },
+  {
+    "id": "r-seed-bk1001",
+    "productId": "bk1001",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "Engaging read from start to finish. Already recommended to friends.",
+    "createdAt": "2026-04-05T19:00:00.000Z"
+  },
+  {
+    "id": "r-seed-bk1002",
+    "productId": "bk1002",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 4,
+    "text": "Clear writing and practical takeaways. Worth every rupee.",
+    "createdAt": "2026-04-05T20:00:00.000Z"
+  },
+  {
+    "id": "r-seed-bk1003",
+    "productId": "bk1003",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "One of the best books I've picked up this year.",
+    "createdAt": "2026-04-05T21:00:00.000Z"
+  },
+  {
+    "id": "r-seed-bk1004",
+    "productId": "bk1004",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "Engaging read from start to finish. Already recommended to friends.",
+    "createdAt": "2026-04-05T22:00:00.000Z"
+  },
+  {
+    "id": "r-seed-bk1005",
+    "productId": "bk1005",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 4,
+    "text": "Clear writing and practical takeaways. Worth every rupee.",
+    "createdAt": "2026-04-05T23:00:00.000Z"
+  },
+  {
+    "id": "r-seed-bk1006",
+    "productId": "bk1006",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "One of the best books I've picked up this year.",
+    "createdAt": "2026-04-06T00:00:00.000Z"
+  },
+  {
+    "id": "r-seed-bk1007",
+    "productId": "bk1007",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "Engaging read from start to finish. Already recommended to friends.",
+    "createdAt": "2026-04-06T01:00:00.000Z"
+  },
+  {
+    "id": "r-seed-bk1008",
+    "productId": "bk1008",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 4,
+    "text": "Clear writing and practical takeaways. Worth every rupee.",
+    "createdAt": "2026-04-06T02:00:00.000Z"
+  },
+  {
+    "id": "r-seed-bk1009",
+    "productId": "bk1009",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "One of the best books I've picked up this year.",
+    "createdAt": "2026-04-06T03:00:00.000Z"
+  },
+  {
+    "id": "r-seed-bk1010",
+    "productId": "bk1010",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "Engaging read from start to finish. Already recommended to friends.",
+    "createdAt": "2026-04-06T04:00:00.000Z"
+  },
+  {
+    "id": "r-seed-bk1011",
+    "productId": "bk1011",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 4,
+    "text": "Clear writing and practical takeaways. Worth every rupee.",
+    "createdAt": "2026-04-06T05:00:00.000Z"
+  },
+  {
+    "id": "r-seed-bk1012",
+    "productId": "bk1012",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "One of the best books I've picked up this year.",
+    "createdAt": "2026-04-06T06:00:00.000Z"
+  },
+  {
+    "id": "r-seed-bk1013",
+    "productId": "bk1013",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "Engaging read from start to finish. Already recommended to friends.",
+    "createdAt": "2026-04-06T07:00:00.000Z"
+  },
+  {
+    "id": "r-seed-bk1014",
+    "productId": "bk1014",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 4,
+    "text": "Clear writing and practical takeaways. Worth every rupee.",
+    "createdAt": "2026-04-06T08:00:00.000Z"
+  },
+  {
+    "id": "r-seed-bk1015",
+    "productId": "bk1015",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "One of the best books I've picked up this year.",
+    "createdAt": "2026-04-06T09:00:00.000Z"
+  },
+  {
+    "id": "r-seed-gr1001",
+    "productId": "gr1001",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "Fresh taste and good packaging. Reordering regularly.",
+    "createdAt": "2026-04-06T10:00:00.000Z"
+  },
+  {
+    "id": "r-seed-gr1002",
+    "productId": "gr1002",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 4,
+    "text": "Quality is consistent — family liked it.",
+    "createdAt": "2026-04-06T11:00:00.000Z"
+  },
+  {
+    "id": "r-seed-gr1003",
+    "productId": "gr1003",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "Good value pack. Arrived in perfect condition.",
+    "createdAt": "2026-04-06T12:00:00.000Z"
+  },
+  {
+    "id": "r-seed-gr1004",
+    "productId": "gr1004",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "Fresh taste and good packaging. Reordering regularly.",
+    "createdAt": "2026-04-06T13:00:00.000Z"
+  },
+  {
+    "id": "r-seed-gr1005",
+    "productId": "gr1005",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 4,
+    "text": "Quality is consistent — family liked it.",
+    "createdAt": "2026-04-06T14:00:00.000Z"
+  },
+  {
+    "id": "r-seed-gr1006",
+    "productId": "gr1006",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 5,
+    "text": "Good value pack. Arrived in perfect condition.",
+    "createdAt": "2026-04-06T15:00:00.000Z"
+  },
+  {
+    "id": "r-seed-gr1007",
+    "productId": "gr1007",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "Fresh taste and good packaging. Reordering regularly.",
+    "createdAt": "2026-04-06T16:00:00.000Z"
+  },
+  {
+    "id": "r-seed-gr1008",
+    "productId": "gr1008",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 4,
+    "text": "Quality is consistent — family liked it.",
+    "createdAt": "2026-04-06T17:00:00.000Z"
+  },
+  {
+    "id": "r-seed-gr1009",
+    "productId": "gr1009",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 5,
+    "text": "Good value pack. Arrived in perfect condition.",
+    "createdAt": "2026-04-06T18:00:00.000Z"
+  },
+  {
+    "id": "r-seed-gr1010",
+    "productId": "gr1010",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "Fresh taste and good packaging. Reordering regularly.",
+    "createdAt": "2026-04-06T19:00:00.000Z"
+  },
+  {
+    "id": "r-seed-gr1011",
+    "productId": "gr1011",
+    "userId": "u-seed-01",
+    "userName": "Priya Sharma",
+    "rating": 4,
+    "text": "Quality is consistent — family liked it.",
+    "createdAt": "2026-04-06T20:00:00.000Z"
+  },
+  {
+    "id": "r-seed-gr1012",
+    "productId": "gr1012",
+    "userId": "u-seed-02",
+    "userName": "Rahul Mehta",
+    "rating": 5,
+    "text": "Good value pack. Arrived in perfect condition.",
+    "createdAt": "2026-04-06T21:00:00.000Z"
+  },
+  {
+    "id": "r-seed-gr1013",
+    "productId": "gr1013",
+    "userId": "u-seed-03",
+    "userName": "Ananya Iyer",
+    "rating": 5,
+    "text": "Fresh taste and good packaging. Reordering regularly.",
+    "createdAt": "2026-04-06T22:00:00.000Z"
+  },
+  {
+    "id": "r-seed-gr1014",
+    "productId": "gr1014",
+    "userId": "u-seed-04",
+    "userName": "Vikram Singh",
+    "rating": 4,
+    "text": "Quality is consistent — family liked it.",
+    "createdAt": "2026-04-06T23:00:00.000Z"
+  },
+  {
+    "id": "r-seed-gr1015",
+    "productId": "gr1015",
+    "userId": "u-seed-05",
+    "userName": "Sneha Kapoor",
+    "rating": 5,
+    "text": "Good value pack. Arrived in perfect condition.",
+    "createdAt": "2026-04-07T00:00:00.000Z"
+  }
+]

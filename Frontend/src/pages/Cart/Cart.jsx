@@ -20,22 +20,6 @@ import {
 import "./Cart.css";
 
 const TAX_RATE = 0.08;
-const UPSLEEVE_ID = "ai-upsell-sleeve-13";
-const UPSLEEVE_PRODUCT = {
-  id: UPSLEEVE_ID,
-  title: "SmartSleeve 13",
-  description: "Premium felt sleeve designed for 13-inch laptops and tablets.",
-  category: "Accessories",
-  brand: "SmartCart",
-  catalogSegments: ["Accessories"],
-  stock: 200,
-  price: 3259,
-  originalPrice: 3999,
-  rating: 4.7,
-  reviewCount: 412,
-  image:
-    "https://images.unsplash.com/photo-1544816155-12df96455549?auto=format&fit=crop&w=600&q=80",
-};
 
 function Cart() {
   const navigate = useNavigate();
@@ -95,17 +79,6 @@ function Cart() {
     navigate("/checkout", {
       state: applied ? { couponCode: applied.code } : undefined,
     });
-  };
-
-  const hasUpsell = items.some((i) => i.productId === UPSLEEVE_ID);
-  const firstCartProductTitle = items.find(
-    (i) => i.productId !== UPSLEEVE_ID
-  )?.product?.title;
-
-  const addSleeveUpsell = () => {
-    if (hasUpsell) return;
-    addItem(UPSLEEVE_PRODUCT);
-    toast.success("SmartSleeve 13 added to your cart.");
   };
 
   const handleRemove = (line) => {
@@ -211,32 +184,6 @@ function Cart() {
                 </article>
               );
               })}
-
-              {!hasUpsell ? (
-                <div className="cart-ai-suggestion">
-                  <div className="cart-ai-glow" aria-hidden="true" />
-                  <div className="cart-ai-inner">
-                    <div className="cart-ai-thumb">
-                      <img src={UPSLEEVE_PRODUCT.image} alt="" />
-                    </div>
-                    <div className="cart-ai-copy">
-                      <div className="cart-ai-badge">
-                        <span aria-hidden="true">✨</span>
-                        AI Optimization Suggestion
-                      </div>
-                      <h3>Add this to complete your setup</h3>
-                      <p>
-                        The SmartSleeve 13 is specifically designed
-                        {firstCartProductTitle ? ` for your ${firstCartProductTitle}` : " for your setup"}.
-                        Get it now for 20% off with your current order.
-                      </p>
-                    </div>
-                    <button type="button" className="cart-ai-add-btn" onClick={addSleeveUpsell}>
-                      Add for {formatMoney(UPSLEEVE_PRODUCT.price)}
-                    </button>
-                  </div>
-                </div>
-              ) : null}
             </div>
 
             <aside className="cart-col cart-col--summary">

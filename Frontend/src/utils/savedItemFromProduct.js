@@ -1,22 +1,7 @@
-/**
- * Maps catalog API product → Saved Items page category chips (electronics | home | apparel).
- * @param {Record<string, unknown>} product
- */
+/** Product `category` as stored in the catalog (e.g. Electronics, Fashion). */
 export function getSavedCategory(product) {
-  const segs = (product.catalogSegments || []).map((s) => String(s).toLowerCase());
-  const cat = String(product.category || "").toLowerCase();
-  if (segs.some((s) => s.includes("fashion")) || cat === "sports") {
-    return "apparel";
-  }
-  if (
-    segs.some((s) => s.includes("home & kitchen")) ||
-    cat === "home" ||
-    cat === "smart home" ||
-    cat === "groceries"
-  ) {
-    return "home";
-  }
-  return "electronics";
+  const cat = String(product?.category || "").trim();
+  return cat || "Uncategorized";
 }
 
 import { buildSavedLine } from "./savedLine";

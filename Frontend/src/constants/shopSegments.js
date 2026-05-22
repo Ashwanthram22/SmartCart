@@ -17,6 +17,11 @@ export function isValidSegment(value) {
   return typeof value === "string" && SHOP_SEGMENTS.includes(value);
 }
 
+/** Shop tabs that map to `product.category` (excludes virtual segments). */
+export const PRODUCT_CATALOG_CATEGORIES = SHOP_SEGMENTS.filter(
+  (s) => s !== "AI Picks" && s !== "Trending"
+);
+
 /**
  * Maps backend `category` (and optional `catalogSegments` on a product) to tabs.
  * Extend `catalogSegments` on products in JSON/API for Books, Groceries, etc.

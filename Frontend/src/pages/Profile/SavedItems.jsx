@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { CATALOG_LIST_BASE } from "../../constants/shopRoutes";
+import { PRODUCT_CATALOG_CATEGORIES } from "../../constants/shopSegments";
+import AdmDropdown from "../../components/AdmDropdown";
 import { ProfileLayout } from "./ProfileLayout";
 import { useCart } from "../../hooks/useCart";
 import { useSaved } from "../../hooks/useSaved";
@@ -18,11 +20,12 @@ import {
 } from "../../utils/savedLine";
 import "./SavedItems.css";
 
-const CATEGORIES = [
-  { id: "all", label: "All Categories" },
-  { id: "electronics", label: "Electronics" },
-  { id: "home", label: "Home Decor" },
-  { id: "apparel", label: "Apparel" },
+const CATEGORY_FILTER_OPTIONS = [
+  { value: "all", label: "All Categories" },
+  ...PRODUCT_CATALOG_CATEGORIES.map((name) => ({
+    value: name,
+    label: name,
+  })),
 ];
 
 function IconSearch() {
@@ -87,7 +90,8 @@ export default function SavedItems() {
     const q = query.trim().toLowerCase();
     return items.filter((line) => {
       const catOk =
-        activeCategory === "all" || savedLineCategory(line) === activeCategory;
+        activeCategory === "all" ||
+        savedLineCategory(line) === activeCategory;
       const title = savedLineTitle(line).toLowerCase();
       const sub = savedLineSubtitle(line.product).toLowerCase();
       const textOk = !q || title.includes(q) || sub.includes(q);
@@ -124,26 +128,15 @@ export default function SavedItems() {
               Curated by your AI shopping assistant based on your preferences.
             </p>
           </div>
-          <div className="saved-chips" role="tablist" aria-label="Category filters">
-            {CATEGORIES.map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                role="tab"
-                aria-selected={activeCategory === c.id}
-                className={`saved-chip${activeCategory === c.id ? " saved-chip--active" : ""}`}
-                onClick={() => setActiveCategory(c.id)}
-              >
-                {c.id === "all" ? (
-                  <>
-                    <IconSparkle />
-                    {c.label}
-                  </>
-                ) : (
-                  c.label
-                )}
-              </button>
-            ))}
+          <div className="saved-category-filter">
+            <AdmDropdown
+              className="saved-category-dd"
+              value={activeCategory}
+              options={CATEGORY_FILTER_OPTIONS}
+              onChange={setActiveCategory}
+              ariaLabel="Filter saved items by category"
+              menuAlign="right"
+            />
           </div>
         </header>
 

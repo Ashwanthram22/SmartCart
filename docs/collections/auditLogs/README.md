@@ -148,6 +148,14 @@ GET /api/admin/audit?action=product&actor=admin@aicart.com&q=p15&limit=20&offset
 
 ---
 
+## Mongo import
+
+**16** seed rows for Admin → Activity: [auditLogs.json](./auditLogs.json) — see [MONGO_IMPORT.md](./MONGO_IMPORT.md).
+
+Regenerate: `node scripts/generate-audit-logs-seed.js`
+
+---
+
 ## Code
 
 - `Backend/src/routes/admin.routes.js`

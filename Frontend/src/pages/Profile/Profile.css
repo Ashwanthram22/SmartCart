@@ -1,4 +1,10 @@
 .profile-page {
+  --profile-header-h: 64px;
+  --profile-sidebar-w: 256px;
+  --profile-layout-gap: 24px;
+  --profile-edge-pad: 48px;
+  /* Fixed shop header (64px) + spacing below it */
+  --profile-sticky-top: calc(var(--profile-header-h) + 16px);
   min-height: 100vh;
   background: #f9f9ff;
   color: #141b2b;
@@ -6,22 +12,20 @@
 }
 
 .profile-main {
-  /* Must match .profile-sidebar sticky `top` so the sidebar doesn’t drift before sticking */
-  --profile-main-pad-top: 96px;
   max-width: 1280px;
   margin: 0 auto;
-  padding: var(--profile-main-pad-top) 16px 48px;
+  padding: var(--profile-sticky-top) 16px 48px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--profile-layout-gap);
 }
 
 @media (min-width: 768px) {
   .profile-main {
     flex-direction: row;
     align-items: flex-start;
-    padding: 96px 48px 64px;
-    gap: 24px;
+    padding: var(--profile-sticky-top) var(--profile-edge-pad) 64px;
+    gap: var(--profile-layout-gap);
   }
 }
 
@@ -38,13 +42,12 @@
 
 @media (min-width: 768px) {
   .profile-sidebar {
-    width: 256px;
+    width: var(--profile-sidebar-w);
     align-self: flex-start;
     position: sticky;
-    /* Same as .profile-main padding-top: sidebar already sits here at scroll 0, so no “slide then stick” */
-    top: var(--profile-main-pad-top, 96px);
+    top: var(--profile-sticky-top);
     z-index: 10;
-    max-height: calc(100vh - var(--profile-main-pad-top, 96px));
+    max-height: calc(100vh - var(--profile-sticky-top) - 16px);
     overflow-y: auto;
     overscroll-behavior: contain;
   }
@@ -145,7 +148,7 @@
 }
 
 .profile-breadcrumb {
-  margin: -4px 0 0;
+  /* margin: -4px 0 0; */
 }
 
 .profile-breadcrumb-list {
@@ -423,6 +426,19 @@
 }
 
 .profile-view-all:hover {
+  text-decoration: underline;
+}
+
+.profile-field-link {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b38d4;
+  text-decoration: none;
+}
+
+.profile-field-link:hover {
   text-decoration: underline;
 }
 

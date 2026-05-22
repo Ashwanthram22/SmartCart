@@ -30,7 +30,6 @@ function TrendingSection({ products, loading, error }) {
                 key={product.id ?? index}
                 index={index}
                 product={product}
-                badgeOverride="TRENDING"
               />
             ))
           ) : (

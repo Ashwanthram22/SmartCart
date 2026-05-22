@@ -485,6 +485,13 @@
   text-align: right;
 }
 
+.review-empty {
+  margin: 0;
+  padding: 1rem 0;
+  color: var(--muted, #64748b);
+  font-size: 0.95rem;
+}
+
 .spec-empty {
   grid-column: 1 / -1;
   margin: 0;

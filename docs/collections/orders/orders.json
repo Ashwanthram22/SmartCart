@@ -1,0 +1,432 @@
+[
+  {
+    "id": "o-seed-priya-001",
+    "userId": "u-seed-01",
+    "items": [
+      {
+        "productId": "el1001",
+        "title": "Sony WH-1000XM5 Headphones",
+        "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80",
+        "subtitle": "Electronics • 4.8★ rated",
+        "unitPrice": 29999,
+        "quantity": 1,
+        "lineTotal": 29999
+      }
+    ],
+    "subtotal": 29999,
+    "discount": 2999.9,
+    "tax": 2159.93,
+    "total": 29159.03,
+    "address": {
+      "fullName": "Priya Sharma",
+      "line1": "12 MG Road, Koramangala",
+      "city": "Bengaluru",
+      "postal": "560034"
+    },
+    "status": "processing",
+    "createdAt": "2026-04-01T10:00:00.000Z",
+    "updatedAt": "2026-04-01T10:00:00.000Z",
+    "coupon": {
+      "code": "WELCOME10",
+      "type": "percent",
+      "value": 10,
+      "label": "10% off your first order",
+      "description": "Save 10% on any order — no minimum.",
+      "minOrder": 0
+    }
+  },
+  {
+    "id": "o-seed-rahul-001",
+    "userId": "u-seed-02",
+    "items": [
+      {
+        "productId": "el1001",
+        "title": "Sony WH-1000XM5 Headphones",
+        "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80",
+        "subtitle": "Electronics • 4.8★ rated",
+        "unitPrice": 29999,
+        "quantity": 1,
+        "lineTotal": 29999
+      }
+    ],
+    "subtotal": 29999,
+    "discount": 0,
+    "tax": 2399.92,
+    "total": 32398.92,
+    "address": {
+      "fullName": "Rahul Mehta",
+      "line1": "88 Linking Road, Bandra",
+      "city": "Mumbai",
+      "postal": "400050"
+    },
+    "status": "processing",
+    "createdAt": "2026-04-15T14:30:00.000Z",
+    "updatedAt": "2026-04-15T14:30:00.000Z"
+  },
+  {
+    "id": "o-seed-priya-002",
+    "userId": "u-seed-01",
+    "items": [
+      {
+        "productId": "el1003",
+        "title": "Apple AirPods Pro 2",
+        "image": "https://media-ik.croma.com/prod/https://media.tatacroma.com/301165_1_ctimht.png",
+        "subtitle": "Electronics • 4.9★ rated",
+        "unitPrice": 24999,
+        "quantity": 1,
+        "lineTotal": 24999
+      },
+      {
+        "productId": "fa1001",
+        "title": "Nike Air Force 1 '07",
+        "image": "https://source.unsplash.com/600x400/?nike,air,force,sneaker,white",
+        "subtitle": "Fashion • 4.9★ rated",
+        "unitPrice": 8995,
+        "quantity": 1,
+        "lineTotal": 8995
+      }
+    ],
+    "subtotal": 33994,
+    "discount": 5099.1,
+    "tax": 2311.59,
+    "total": 31206.49,
+    "address": {
+      "fullName": "Priya Sharma",
+      "line1": "12 MG Road, Koramangala",
+      "city": "Bengaluru",
+      "postal": "560034"
+    },
+    "status": "processing",
+    "createdAt": "2026-05-05T09:15:00.000Z",
+    "updatedAt": "2026-05-05T09:15:00.000Z",
+    "coupon": {
+      "code": "AICART",
+      "type": "percent",
+      "value": 15,
+      "label": "15% off — AI-curated picks",
+      "description": "Use code AICART for 15% off any order over ₹4,000.",
+      "minOrder": 4000
+    }
+  },
+  {
+    "id": "o-seed-ananya-001",
+    "userId": "u-seed-03",
+    "items": [
+      {
+        "productId": "mb1001",
+        "title": "iPhone 16 Pro Max",
+        "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80",
+        "subtitle": "Mobiles • 4.9★ rated",
+        "unitPrice": 149999,
+        "quantity": 1,
+        "lineTotal": 149999
+      }
+    ],
+    "subtotal": 149999,
+    "discount": 0,
+    "tax": 11999.92,
+    "total": 161998.92,
+    "address": {
+      "fullName": "Ananya Iyer",
+      "line1": "5 Cathedral Road",
+      "city": "Chennai",
+      "postal": "600086"
+    },
+    "status": "processing",
+    "createdAt": "2026-05-10T11:00:00.000Z",
+    "updatedAt": "2026-05-10T11:00:00.000Z"
+  },
+  {
+    "id": "o-seed-vikram-001",
+    "userId": "u-seed-04",
+    "items": [
+      {
+        "productId": "lp1001",
+        "title": "Apple MacBook Pro M4",
+        "image": "https://source.unsplash.com/600x400/?macbook,apple,laptop",
+        "subtitle": "Laptops • 4.9★ rated",
+        "unitPrice": 199999,
+        "quantity": 1,
+        "lineTotal": 199999
+      }
+    ],
+    "subtotal": 199999,
+    "discount": 2000,
+    "tax": 15839.92,
+    "total": 213838.92,
+    "address": {
+      "fullName": "Vikram Singh",
+      "line1": "22 Connaught Place",
+      "city": "New Delhi",
+      "postal": "110001"
+    },
+    "status": "processing",
+    "createdAt": "2026-03-20T16:45:00.000Z",
+    "updatedAt": "2026-03-20T16:45:00.000Z",
+    "coupon": {
+      "code": "SAVE25",
+      "type": "flat",
+      "value": 2000,
+      "label": "₹2,000 off orders over ₹16,000",
+      "description": "Take ₹2,000 off when your subtotal is at least ₹16,000.",
+      "minOrder": 16000
+    }
+  },
+  {
+    "id": "o-seed-sneha-001",
+    "userId": "u-seed-05",
+    "items": [
+      {
+        "productId": "hk1001",
+        "title": "Philips Air Fryer HD9252",
+        "image": "https://source.unsplash.com/600x400/?air,fryer,kitchen,philips",
+        "subtitle": "Home & Kitchen • 4.8★ rated",
+        "unitPrice": 8499,
+        "quantity": 1,
+        "lineTotal": 8499
+      },
+      {
+        "productId": "gr1001",
+        "title": "India Gate Basmati Rice",
+        "image": "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80",
+        "subtitle": "Groceries • 4.8★ rated",
+        "unitPrice": 899,
+        "quantity": 2,
+        "lineTotal": 1798
+      }
+    ],
+    "subtotal": 10297,
+    "discount": 1029.7,
+    "tax": 741.38,
+    "total": 10008.68,
+    "address": {
+      "fullName": "Sneha Kapoor",
+      "line1": "14 FC Road",
+      "city": "Pune",
+      "postal": "411004"
+    },
+    "status": "cancelled",
+    "createdAt": "2026-05-12T08:20:00.000Z",
+    "updatedAt": "2026-05-12T18:00:00.000Z",
+    "coupon": {
+      "code": "WELCOME10",
+      "type": "percent",
+      "value": 10,
+      "label": "10% off your first order",
+      "description": "Save 10% on any order — no minimum.",
+      "minOrder": 0
+    },
+    "cancelledAt": "2026-05-12T18:00:00.000Z"
+  },
+  {
+    "id": "o-seed-rahul-002",
+    "userId": "u-seed-02",
+    "items": [
+      {
+        "productId": "mb1002",
+        "title": "Samsung Galaxy S25 Ultra",
+        "image": "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=600&q=80",
+        "subtitle": "Mobiles • 4.8★ rated",
+        "unitPrice": 139999,
+        "quantity": 1,
+        "lineTotal": 139999
+      }
+    ],
+    "subtotal": 139999,
+    "discount": 20999.85,
+    "tax": 9519.93,
+    "total": 128519.08,
+    "address": {
+      "fullName": "Rahul Mehta",
+      "line1": "88 Linking Road, Bandra",
+      "city": "Mumbai",
+      "postal": "400050"
+    },
+    "status": "processing",
+    "createdAt": "2026-05-08T13:00:00.000Z",
+    "updatedAt": "2026-05-08T13:00:00.000Z",
+    "coupon": {
+      "code": "AICART",
+      "type": "percent",
+      "value": 15,
+      "label": "15% off — AI-curated picks",
+      "description": "Use code AICART for 15% off any order over ₹4,000.",
+      "minOrder": 4000
+    }
+  },
+  {
+    "id": "o-seed-ananya-002",
+    "userId": "u-seed-03",
+    "items": [
+      {
+        "productId": "el1001",
+        "title": "Sony WH-1000XM5 Headphones",
+        "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80",
+        "subtitle": "Electronics • 4.8★ rated",
+        "unitPrice": 29999,
+        "quantity": 1,
+        "lineTotal": 29999
+      }
+    ],
+    "subtotal": 29999,
+    "discount": 2999.9,
+    "tax": 2159.93,
+    "total": 29159.03,
+    "address": {
+      "fullName": "Ananya Iyer",
+      "line1": "5 Cathedral Road",
+      "city": "Chennai",
+      "postal": "600086"
+    },
+    "status": "processing",
+    "createdAt": "2026-05-01T07:30:00.000Z",
+    "updatedAt": "2026-05-01T07:30:00.000Z",
+    "coupon": {
+      "code": "WELCOME10",
+      "type": "percent",
+      "value": 10,
+      "label": "10% off your first order",
+      "description": "Save 10% on any order — no minimum.",
+      "minOrder": 0
+    }
+  },
+  {
+    "id": "o-seed-vikram-002",
+    "userId": "u-seed-04",
+    "items": [
+      {
+        "productId": "fa1001",
+        "title": "Nike Air Force 1 '07",
+        "image": "https://source.unsplash.com/600x400/?nike,air,force,sneaker,white",
+        "subtitle": "Fashion • 4.9★ rated",
+        "unitPrice": 8995,
+        "quantity": 1,
+        "lineTotal": 8995
+      },
+      {
+        "productId": "hk1001",
+        "title": "Philips Air Fryer HD9252",
+        "image": "https://source.unsplash.com/600x400/?air,fryer,kitchen,philips",
+        "subtitle": "Home & Kitchen • 4.8★ rated",
+        "unitPrice": 8499,
+        "quantity": 1,
+        "lineTotal": 8499
+      }
+    ],
+    "subtotal": 17494,
+    "discount": 0,
+    "tax": 1399.52,
+    "total": 18893.52,
+    "address": {
+      "fullName": "Vikram Singh",
+      "line1": "22 Connaught Place",
+      "city": "New Delhi",
+      "postal": "110001"
+    },
+    "status": "processing",
+    "createdAt": "2026-04-25T12:00:00.000Z",
+    "updatedAt": "2026-04-25T12:00:00.000Z"
+  },
+  {
+    "id": "o-seed-sneha-002",
+    "userId": "u-seed-05",
+    "items": [
+      {
+        "productId": "el1002",
+        "title": "JBL Flip 6 Speaker",
+        "image": "https://images.unsplash.com/photo-1589003077984-894e133dabab?auto=format&fit=crop&w=600&q=80",
+        "subtitle": "Electronics • 4.7★ rated",
+        "unitPrice": 11999,
+        "quantity": 1,
+        "lineTotal": 11999
+      }
+    ],
+    "subtotal": 11999,
+    "discount": 0,
+    "tax": 959.92,
+    "total": 12958.92,
+    "address": {
+      "fullName": "Sneha Kapoor",
+      "line1": "14 FC Road",
+      "city": "Pune",
+      "postal": "411004"
+    },
+    "status": "processing",
+    "createdAt": "2026-05-15T10:00:00.000Z",
+    "updatedAt": "2026-05-15T10:00:00.000Z"
+  },
+  {
+    "id": "o-seed-priya-003",
+    "userId": "u-seed-01",
+    "items": [
+      {
+        "productId": "gr1001",
+        "title": "India Gate Basmati Rice",
+        "image": "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80",
+        "subtitle": "Groceries • 4.8★ rated",
+        "unitPrice": 899,
+        "quantity": 3,
+        "lineTotal": 2697
+      }
+    ],
+    "subtotal": 2697,
+    "discount": 0,
+    "tax": 215.76,
+    "total": 2912.76,
+    "address": {
+      "fullName": "Priya Sharma",
+      "line1": "12 MG Road, Koramangala",
+      "city": "Bengaluru",
+      "postal": "560034"
+    },
+    "status": "cancelled",
+    "createdAt": "2026-03-28T09:00:00.000Z",
+    "updatedAt": "2026-03-29T11:00:00.000Z",
+    "cancelledAt": "2026-03-29T11:00:00.000Z"
+  },
+  {
+    "id": "o-seed-rahul-003",
+    "userId": "u-seed-02",
+    "items": [
+      {
+        "productId": "el1001",
+        "title": "Sony WH-1000XM5 Headphones",
+        "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80",
+        "subtitle": "Electronics • 4.8★ rated",
+        "unitPrice": 29999,
+        "quantity": 1,
+        "lineTotal": 29999
+      },
+      {
+        "productId": "el1003",
+        "title": "Apple AirPods Pro 2",
+        "image": "https://media-ik.croma.com/prod/https://media.tatacroma.com/301165_1_ctimht.png",
+        "subtitle": "Electronics • 4.9★ rated",
+        "unitPrice": 24999,
+        "quantity": 1,
+        "lineTotal": 24999
+      }
+    ],
+    "subtotal": 54998,
+    "discount": 2000,
+    "tax": 4239.84,
+    "total": 57237.84,
+    "address": {
+      "fullName": "Rahul Mehta",
+      "line1": "88 Linking Road, Bandra",
+      "city": "Mumbai",
+      "postal": "400050"
+    },
+    "status": "processing",
+    "createdAt": "2026-05-18T17:00:00.000Z",
+    "updatedAt": "2026-05-18T17:00:00.000Z",
+    "coupon": {
+      "code": "SAVE25",
+      "type": "flat",
+      "value": 2000,
+      "label": "₹2,000 off orders over ₹16,000",
+      "description": "Take ₹2,000 off when your subtotal is at least ₹16,000.",
+      "minOrder": 16000
+    }
+  }
+]

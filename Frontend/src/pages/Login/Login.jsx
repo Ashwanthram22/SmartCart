@@ -22,8 +22,8 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const [form, setForm] = useState({
-    email: "demo@aicart.com",
-    password: "demo123",
+    email: import.meta.env.DEV ? "demo@aicart.com" : "",
+    password: import.meta.env.DEV ? "demo123" : "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);

@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { CATALOG_LIST_BASE } from "../../constants/shopRoutes";
-import { getCurrentUser, getOrders, updateCurrentUser } from "../../api/client";
-import {
-  DEFAULT_PROFILE_AVATAR,
-  MOCK_PROFILE_EXTRA,
-} from "../../data/profileDisplay";
+import { getAddresses, getCurrentUser, getOrders, updateCurrentUser } from "../../api/client";
+import { DEFAULT_PROFILE_AVATAR } from "../../data/profileDisplay";
 import { useToast } from "../../hooks/useToast";
 import usePageMeta from "../../hooks/usePageMeta";
 import EditProfileDialog from "./EditProfileDialog";
@@ -42,6 +39,7 @@ function Profile() {
   const [orders, setOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [editOpen, setEditOpen] = useState(false);
+  const [primaryAddress, setPrimaryAddress] = useState(null);
   const toast = useToast();
 
   useEffect(() => {
@@ -82,6 +80,27 @@ function Profile() {
     };
   }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+    async function loadAddresses() {
+      try {
+        const data = await getAddresses();
+        const list = Array.isArray(data?.addresses) ? data.addresses : [];
+        if (!cancelled) {
+          const preferred =
+            list.find((a) => a.isDefault) || list[0] || null;
+          setPrimaryAddress(preferred);
+        }
+      } catch {
+        if (!cancelled) setPrimaryAddress(null);
+      }
+    }
+    loadAddresses();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const displayName = user?.name || "SmartCart member";
   const email = user?.email || "—";
 
@@ -103,31 +122,13 @@ function Profile() {
               <>
                 <h1>{displayName}</h1>
                 <p className="profile-hero-status">
-                  {MOCK_PROFILE_EXTRA.memberSinceLabel}
+                  {user?.role === "admin" ? "Administrator" : "SmartCart member"}
                 </p>
-                <div className="profile-badges">
-                  <span className="profile-badge">Smart Shopper</span>
-                  <span className="profile-badge profile-badge--alt">Early Adopter</span>
-                </div>
               </>
             )}
           </div>
         </div>
 
-        <div className="profile-loyalty-card">
-          <span className="profile-loyalty-watermark" aria-hidden="true">✓</span>
-          <div>
-            <p className="profile-loyalty-label">Loyalty Points</p>
-            <p className="profile-loyalty-value">{MOCK_PROFILE_EXTRA.loyaltyPoints}</p>
-          </div>
-          <button
-            type="button"
-            className="profile-loyalty-btn"
-            onClick={() => toast.info("Rewards redemption launches soon.")}
-          >
-            Redeem Rewards
-          </button>
-        </div>
       </div>
 
       <div className="profile-panel">
@@ -151,12 +152,24 @@ function Profile() {
             <p className="profile-field-value">{loadingUser ? "…" : email}</p>
           </div>
           <div>
-            <p className="profile-field-label">Phone Number</p>
-            <p className="profile-field-value">{MOCK_PROFILE_EXTRA.phone}</p>
-          </div>
-          <div>
             <p className="profile-field-label">Primary Address</p>
-            <p className="profile-field-value">{MOCK_PROFILE_EXTRA.address}</p>
+            <p className="profile-field-value">
+              {primaryAddress
+                ? [
+                    primaryAddress.line1,
+                    primaryAddress.line2,
+                    primaryAddress.city,
+                    primaryAddress.postal,
+                  ]
+                    .filter(Boolean)
+                    .join(", ")
+                : "—"}
+            </p>
+            {!primaryAddress ? (
+              <Link to="/profile/addresses" className="profile-field-link">
+                Add an address
+              </Link>
+            ) : null}
           </div>
         </div>
       </div>

@@ -33,6 +33,7 @@ import { useToast } from "../../hooks/useToast";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
 import usePageMeta from "../../hooks/usePageMeta";
 import { formatMoney } from "../../utils/money";
+import { SHOP_SEGMENTS } from "../../constants/shopSegments";
 import "./AdminInventory.css";
 
 const INV_COLS_STORAGE_KEY = "smartcart_admin_inventory_columns";
@@ -59,18 +60,7 @@ function formatEditedRelative(iso) {
   return `${months}mo ago`;
 }
 
-const SEGMENT_OPTIONS = [
-  "AI Picks",
-  "Trending",
-  "Smartphones",
-  "Computers",
-  "Audio",
-  "Wearables",
-  "Smart Home",
-  "Cameras",
-  "Gaming",
-  "Accessories",
-];
+const SEGMENT_OPTIONS = SHOP_SEGMENTS;
 
 function emptyProduct() {
   return {

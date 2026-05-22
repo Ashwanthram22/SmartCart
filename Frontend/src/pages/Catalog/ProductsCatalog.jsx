@@ -17,6 +17,7 @@ import {
   parseProductsListResponse,
 } from "../../api/client";
 import { formatMoney, formatMoneyShort } from "../../utils/money";
+import { reviewCountLabel, starsFromRating } from "../../utils/ratings";
 import { getCatalogGridImageProps } from "../../utils/catalogImage";
 import "./ProductsCatalog.css";
 import AdmDropdown from "../../components/AdmDropdown";
@@ -58,13 +59,6 @@ function stockCap(product) {
   const n = Number(product?.stock);
   return Number.isFinite(n) ? n : Infinity;
 }
-
-const PRODUCT_INSIGHTS = [
-  "Top-tier performance for creative workloads. Price matches historical lows.",
-  "Best battery-to-weight ratio in its class. Perfect for executive travel.",
-  "Unmatched thermal efficiency. Ideal for high-refresh-rate gaming.",
-  "Highest-rated model for students. Great for notes and media.",
-];
 
 function ratingTierLabel(tier) {
   const filled = Math.floor(tier);
@@ -531,15 +525,22 @@ function ProductsCatalog() {
                       </div>
                       <div className="catalog-card-body">
                         <h2>{product.title}</h2>
-                        <p className="product-rating">
-                          <span className="star">★</span> {product.rating ?? 4.7} (
-                          {product.reviewCount ?? 128} reviews)
-                        </p>
+                        {Number(product.rating) > 0 || Number(product.reviewCount) > 0 ? (
+                          <p className="product-rating">
+                            {starsFromRating(product.rating) ? (
+                              <span className="star">{starsFromRating(product.rating)}</span>
+                            ) : (
+                              <span className="star">★</span>
+                            )}{" "}
+                            {Number.isFinite(Number(product.rating)) && Number(product.rating) > 0
+                              ? Number(product.rating).toFixed(1)
+                              : null}
+                            {reviewCountLabel(product.reviewCount)
+                              ? ` ${reviewCountLabel(product.reviewCount)}`
+                              : null}
+                          </p>
+                        ) : null}
                         <StockBadge stock={product.stock} compact />
-                        <div className="insight-box">
-                          <p className="insight-head">✦ AI Insight</p>
-                          <p className="insight-text">{PRODUCT_INSIGHTS[index % PRODUCT_INSIGHTS.length]}</p>
-                        </div>
                       </div>
                       <div className="catalog-card-foot">
                         <strong>{formatMoney(product.price || 0)}</strong>

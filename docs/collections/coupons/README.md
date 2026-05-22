@@ -151,6 +151,8 @@ When checkout succeeds with a coupon:
 | `SAVE25` | flat | 2000 | 16000 |
 | `AICART` | percent | 15% | 4000 |
 
+**Mongo import:** all three codes in [coupons.json](./coupons.json) — see [MONGO_IMPORT.md](./MONGO_IMPORT.md).
+
 ---
 
 ## Code
