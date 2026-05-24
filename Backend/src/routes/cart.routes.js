@@ -40,10 +40,13 @@ function persistItems(rawItems) {
 router.get("/", async (req, res) => {
   const result = await withDb(async (db) => {
     const cart = requireCart(db, req.user.sub);
-    if (!cart) return { error: "User not found" };
+    if (!cart) return { notFound: true };
     cart.items = persistItems(cart.items);
     return buildCartResponse(db, cart);
   });
+  if (result.notFound) {
+    return res.status(404).json({ message: "User not found" });
+  }
   return res.json(result);
 });
 

@@ -1,11 +1,10 @@
 /**
  * Order status helpers.
  *
- * Stored orders only ever live in the file db with `status: "processing"`
- * (or `"cancelled"` after a successful cancel). The visible status that the
- * UI shows is computed from `createdAt` — orders progress on a fixed
- * timeline so the demo feels alive without a real fulfilment system. A
- * cancelled order is sticky and never advances.
+ * - `order.status` in the database is the source of truth when an admin (or
+ *   cancel flow) sets `transit`, `delivered`, or `cancelled`.
+ * - While status stays `processing`, the visible status auto-advances on a
+ *   fixed timeline (demo fulfilment) so older orders feel alive.
  */
 
 const HOURS = 60 * 60 * 1000;
@@ -16,12 +15,15 @@ const PROGRESSION = [
   { status: "delivered", afterMs: 72 * HOURS },
 ];
 
-function effectiveStatus(order) {
-  if (!order || typeof order !== "object") return "processing";
-  if (order.status === "cancelled") return "cancelled";
+const STICKY_STATUSES = new Set(["cancelled", "transit", "delivered"]);
 
+function storedStatus(order) {
+  return String(order?.status || "processing").toLowerCase();
+}
+
+function autoStatusFromAge(order) {
   const created = Date.parse(order.createdAt);
-  if (!Number.isFinite(created)) return order.status || "processing";
+  if (!Number.isFinite(created)) return "processing";
 
   const age = Date.now() - created;
   let current = "processing";
@@ -29,6 +31,16 @@ function effectiveStatus(order) {
     if (age >= stage.afterMs) current = stage.status;
   }
   return current;
+}
+
+function effectiveStatus(order) {
+  if (!order || typeof order !== "object") return "processing";
+
+  const stored = storedStatus(order);
+  if (STICKY_STATUSES.has(stored)) return stored;
+
+  // Only auto-progress orders still marked processing in the DB.
+  return autoStatusFromAge(order);
 }
 
 /**
@@ -45,19 +57,35 @@ function trackingTimeline(order) {
     { label: "Order placed", at: new Date(created).toISOString() },
     { label: "Preparing for shipment", at: new Date(created + 6 * HOURS).toISOString() },
     { label: "Out for delivery", at: new Date(created + 24 * HOURS).toISOString() },
-    { label: "Delivered", at: new Date(created + 72 * HOURS).toISOString() },
+    {
+      label: "Delivered",
+      at: order.deliveredAt || new Date(created + 72 * HOURS).toISOString(),
+    },
   ];
 
-  if (order.status === "cancelled") {
+  const live = effectiveStatus(order);
+
+  if (live === "cancelled") {
     return [
       stages[0],
       {
         label: "Cancelled",
-        at: order.updatedAt || stages[0].at,
+        at: order.cancelledAt || order.updatedAt || stages[0].at,
         done: true,
         cancelled: true,
       },
     ];
+  }
+
+  if (live === "delivered") {
+    return stages.map((stage) => ({ ...stage, done: true }));
+  }
+
+  if (live === "transit") {
+    return stages.map((stage, index) => ({
+      ...stage,
+      done: index < 3,
+    }));
   }
 
   const now = Date.now();

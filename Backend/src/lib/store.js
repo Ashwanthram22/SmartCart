@@ -1,7 +1,9 @@
 /**
  * Persistence façade — import from here in routes and services, not from
- * `./data-store` directly. The implementation stays in `data-store.js` today
- * (JSON file); swapping to Mongo-backed repos later can re-export from here
- * without touching every caller.
+ * `data-store` or `mongo-store` directly.
  */
-module.exports = require("./data-store");
+const { USE_MONGO } = require("../config/env");
+
+module.exports = USE_MONGO
+  ? require("./mongo-store")
+  : require("./data-store");

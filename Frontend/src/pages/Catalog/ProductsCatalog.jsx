@@ -396,17 +396,19 @@ function ProductsCatalog() {
           {filterOptions.brands.length > 0 ? (
             <section>
               <h3>Brands</h3>
-              {filterOptions.brands.map((brand) => (
-                <label key={brand} className="filter-check">
-                  <input
-                    type="checkbox"
-                    checked={selectedBrands.includes(brand)}
-                    onChange={() => toggleBrand(brand)}
-                    disabled={filtersLoading}
-                  />
-                  <span>{brand}</span>
-                </label>
-              ))}
+              <div className="brand-filter-scroll" role="group" aria-label="Filter by brand">
+                {filterOptions.brands.map((brand) => (
+                  <label key={brand} className="filter-check">
+                    <input
+                      type="checkbox"
+                      checked={selectedBrands.includes(brand)}
+                      onChange={() => toggleBrand(brand)}
+                      disabled={filtersLoading}
+                    />
+                    <span>{brand}</span>
+                  </label>
+                ))}
+              </div>
             </section>
           ) : null}
 
@@ -432,7 +434,7 @@ function ProductsCatalog() {
             </section>
           ) : null}
 
-          {Object.keys(filterOptions.specifications).length > 0 ? (
+          {/* {Object.keys(filterOptions.specifications).length > 0 ? (
             <section>
               <h3>Specifications</h3>
               {Object.entries(filterOptions.specifications).map(([group, values]) => (
@@ -446,7 +448,7 @@ function ProductsCatalog() {
                 </div>
               ))}
             </section>
-          ) : null}
+          ) : null} */}
 
           {!filtersLoading &&
           priceMax === 0 &&

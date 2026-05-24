@@ -69,6 +69,40 @@
   accent-color: #6b38d4;
 }
 
+/* ~5 brand rows visible; scroll for the rest */
+.brand-filter-scroll {
+  max-height: 10.75rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 6px 8px 10px;
+  border: 1px solid #ececf2;
+  border-radius: 10px;
+  background: #fff;
+  scrollbar-width: thin;
+  scrollbar-color: #c4b5fd transparent;
+}
+
+.brand-filter-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.brand-filter-scroll::-webkit-scrollbar-thumb {
+  background: #c4b5fd;
+  border-radius: 999px;
+}
+
+.brand-filter-scroll .filter-check {
+  margin: 5px 0;
+}
+
+.brand-filter-scroll .filter-check:first-child {
+  margin-top: 0;
+}
+
+.brand-filter-scroll .filter-check:last-child {
+  margin-bottom: 0;
+}
+
 .rating-filter-list {
   display: flex;
   flex-direction: column;

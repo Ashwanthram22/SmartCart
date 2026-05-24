@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 
-const { CORS_ORIGINS } = require("./config/env");
+const { CORS_ORIGINS, USE_MONGO } = require("./config/env");
 const { readDb } = require("./lib/store");
 const { getMongoHealth } = require("./lib/mongo/connection");
 const logger = require("./lib/logger");
@@ -46,27 +46,30 @@ app.use("/api", apiLimiter);
 app.get("/api/health", async (req, res) => {
   const started = Date.now();
   const mongo = getMongoHealth();
-  let fileStore = "unknown";
+  const storeTimeoutMs = USE_MONGO ? 8000 : 2000;
+  let dataStore = "unknown";
   try {
     await Promise.race([
       readDb(),
       new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("readDb timeout")), 2000)
+        setTimeout(() => reject(new Error("readDb timeout")), storeTimeoutMs)
       ),
     ]);
-    fileStore = "ok";
+    dataStore = "ok";
   } catch (e) {
-    fileStore = "error";
-    logger.warn("[health] file store check failed", { message: e.message });
+    dataStore = "error";
+    logger.warn("[health] data store check failed", { message: e.message });
   }
 
-  const ok = fileStore === "ok";
+  const ok =
+    dataStore === "ok" && (!USE_MONGO || mongo.ready === true);
   res.status(ok ? 200 : 503).json({
     status: ok ? "ok" : "degraded",
     uptime: Math.round(process.uptime()),
     node: process.version,
     env: process.env.NODE_ENV || "development",
-    fileStore,
+    dataStore,
+    fileStore: dataStore,
     mongo,
     tookMs: Date.now() - started,
   });

@@ -6,6 +6,7 @@ const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, "..", ".env") });
 
 const mongoose = require("mongoose");
+const { configureMongoDns } = require("../src/lib/mongo/dns");
 
 const uri = process.env.MONGODB_URI && String(process.env.MONGODB_URI).trim();
 
@@ -13,6 +14,8 @@ if (!uri) {
   console.error("MONGODB_URI is not set (check Backend/.env)");
   process.exit(1);
 }
+
+configureMongoDns();
 
 mongoose
   .connect(uri, { serverSelectionTimeoutMS: 5000 })

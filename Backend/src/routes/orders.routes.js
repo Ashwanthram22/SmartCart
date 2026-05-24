@@ -5,6 +5,7 @@ const { writeLimiter } = require("../middleware/rateLimits");
 const { decorateOrder, effectiveStatus } = require("../lib/order-lifecycle");
 const { resolveCoupon } = require("./coupons.routes");
 const { withUserProfile, touchCart } = require("../lib/user-profile");
+const { normaliseStoredLine } = require("../lib/cart-lines");
 
 const router = express.Router();
 
@@ -61,6 +62,11 @@ function summarise(items, discountAmount = 0) {
   };
 }
 
+function cartLinesFromUser(user) {
+  const raw = Array.isArray(user?.cart?.items) ? user.cart.items : [];
+  return raw.map((line) => normaliseStoredLine(line)).filter(Boolean);
+}
+
 function validateAddress(addr) {
   if (!addr || typeof addr !== "object") return "Shipping address is required";
   const required = ["fullName", "line1", "city", "postal"];
@@ -84,7 +90,8 @@ router.post("/", writeLimiter, async (req, res) => {
   // re-validate the coupon before we touch the cart/orders collections.
   const previewSubtotalResult = await withDb(async (db) => {
     const user = withUserProfile(db, req.user.sub);
-    const sourceItems = Array.isArray(user?.cart?.items) ? user.cart.items : [];
+    if (!user) return { error: "User not found", status: 404 };
+    const sourceItems = cartLinesFromUser(user);
     if (sourceItems.length === 0) return { error: "Cart is empty" };
     if (sourceItems.length > MAX_ORDER_LINES) {
       return { error: `Order cannot exceed ${MAX_ORDER_LINES} items` };
@@ -96,7 +103,8 @@ router.post("/", writeLimiter, async (req, res) => {
   });
 
   if (previewSubtotalResult.error) {
-    return res.status(400).json({ message: previewSubtotalResult.error });
+    const status = previewSubtotalResult.status || 400;
+    return res.status(status).json({ message: previewSubtotalResult.error });
   }
 
   let resolvedCoupon = null;
@@ -114,8 +122,9 @@ router.post("/", writeLimiter, async (req, res) => {
     if (!Array.isArray(db.orders)) db.orders = [];
 
     const user = withUserProfile(db, req.user.sub);
-    const cart = user?.cart;
-    const sourceItems = Array.isArray(cart?.items) ? cart.items : [];
+    if (!user) return { error: "User not found", status: 404 };
+    const cart = user.cart;
+    const sourceItems = cartLinesFromUser(user);
     if (sourceItems.length === 0) {
       return { error: "Cart is empty" };
     }
@@ -152,7 +161,10 @@ router.post("/", writeLimiter, async (req, res) => {
     return { order };
   });
 
-  if (result.error) return res.status(400).json({ message: result.error });
+  if (result.error) {
+    const status = result.status || 400;
+    return res.status(status).json({ message: result.error });
+  }
   return res
     .status(201)
     .json({ message: "Order placed", order: decorateOrder(result.order) });

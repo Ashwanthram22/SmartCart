@@ -38,7 +38,7 @@ function isValidForm(form) {
 }
 
 export default function Checkout() {
-  const { items, clearCart } = useCart();
+  const { items, clearCart, syncCartToServer } = useCart();
   const location = useLocation();
 
   usePageMeta({
@@ -192,6 +192,7 @@ export default function Checkout() {
       return;
     }
     try {
+      await syncCartToServer();
       const response = await createOrder({
         address: {
           fullName: address.fullName,
@@ -207,6 +208,7 @@ export default function Checkout() {
     } catch (err) {
       setError(
         err.response?.data?.message ||
+          err.message ||
           "Could not place your order. Please try again."
       );
     } finally {

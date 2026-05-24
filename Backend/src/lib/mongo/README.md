@@ -1,44 +1,66 @@
-# MongoDB scaffold (dormant)
+# MongoDB
 
-This folder is the staging area for tomorrow's MongoDB integration. Nothing in
-it executes today — the app continues to read/write `src/data/db.json` via
-`src/lib/data-store.js`.
+When `USE_MONGO=true` and `MONGODB_URI` are set in `Backend/.env`, the API reads
+and writes through Mongoose (`lib/mongo-store.js`) instead of `src/data/db.json`.
 
-## What's here
+## Collections
 
-| File | Purpose |
-|---|---|
-| `connection.js` | `connectMongo()` / `disconnectMongo()` helpers, fully commented out. |
-| `models/User.js` | Mongoose schema mirroring the current `users[]` shape. |
-| `models/Product.js` | Mongoose schema mirroring the current `products[]` shape. |
-| `models/Review.js` | Mongoose schema mirroring `reviews[]` (+ unique `(productId, userId)` index). |
-| `models/Cart.js` | Deprecated — cart lives on `User.cart` (see `User.js`). |
-| `models/Order.js` | Order schema with the `cancelled` status added. |
-| `models/index.js` | Convenience barrel re-export. |
+| Collection | Model | Business key |
+|---|---|---|
+| `users` | `User` | `id` (cart + saved embedded on user) |
+| `products` | `Product` | `id` |
+| `reviews` | `Review` | `id` |
+| `orders` | `Order` | `id` |
+| `coupons` | `Coupon` | `code` |
+| `auditLogs` | `AuditLog` | `id` |
+| `passwordResets` | `PasswordReset` | `id` |
 
-Every model file currently exports `null`. Once you uncomment the schema body
-the export becomes the real Mongoose model.
+Import seed arrays from `docs/collections/*/*.json` (see each folder’s
+`MONGO_IMPORT.md`).
 
-## Switch-on checklist (for tomorrow)
+## Enable
 
-1. Add real values to `.env`:
-   ```env
-   MONGODB_URI=mongodb+srv://...
-   USE_MONGO=true
-   ```
-2. Uncomment the bodies of `connection.js` and the model files.
-3. In `src/server.js`, uncomment the `connectMongo()` line in `bootstrap()`.
-4. Cut routes over from `lib/data-store.js` to the model imports one at a
-   time. Keep `data-store.js` intact while you migrate so the file db can
-   serve the rest.
-5. Write a one-shot script (e.g. `scripts/seed-from-json.js`) that reads
-   `db.json` and `insertMany`s each collection — preserve `legacyId` so
-   foreign keys (cart.userId, order.userId) keep matching while the cutover
-   is in progress.
+```env
+USE_MONGO=true
+MONGODB_URI=mongodb+srv://USER:PASS@cluster.mongodb.net/smartcart?retryWrites=true&w=majority
+```
 
-## Why a scaffold and not a real connection today?
+Restart the backend. Startup migrations still run (bcrypt-hash plaintext
+passwords in imported users, ensure profile shape, seed admin if missing).
 
-The user (Ashwanth) asked for the wiring laid out in advance so the actual
-switch is a small, mechanical, no-debugging change. None of the data in
-`db.json` is touched. None of the API surface changes. The chatbot, cart,
-orders and reviews keep working exactly as they do now.
+Verify:
+
+```bash
+cd Backend
+npm run mongo:ping
+npm run dev
+curl http://localhost:5000/api/health
+```
+
+### `querySrv ECONNREFUSED` (Windows)
+
+Node’s DNS resolver often cannot resolve `mongodb+srv://` on Windows even when
+`nslookup` works. The backend sets Google DNS (`8.8.8.8`, `8.8.4.4`) automatically
+on Windows before connecting.
+
+Override in `.env`:
+
+```env
+# Use system DNS instead of 8.8.8.8 (only if you know SRV works in Node)
+# MONGODB_DNS_SERVERS=system
+
+# Or pick resolvers explicitly:
+# MONGODB_DNS_SERVERS=8.8.8.8,8.8.4.4
+```
+
+If it still fails, replace `mongodb+srv://…` with Atlas’s **standard** connection
+string (`mongodb://host1:27017,host2:27017/...`) from **Connect → Drivers**.
+
+## Architecture
+
+- `server.js` → `connectMongo()` then `runStartupMigrations()`
+- Routes → `lib/store.js` → `mongo-store` or `data-store`
+- `mongo-store` loads all collections into one in-memory snapshot per
+  `readDb()` / `withDb()` — same pattern as the JSON file, so no route changes
+
+To stay on the file DB, omit `USE_MONGO` or set `USE_MONGO=false`.

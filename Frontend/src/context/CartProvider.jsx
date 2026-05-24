@@ -34,17 +34,25 @@ function adoptServerCart(data) {
   return Array.isArray(data?.items) ? data.items : [];
 }
 
+function initialCartItems() {
+  return isAuthenticated() ? [] : readStoredItems();
+}
+
 export function CartProvider({ children }) {
-  const [items, setItems] = useState(readStoredItems);
+  const [items, setItems] = useState(initialCartItems);
   const [authed, setAuthed] = useState(isAuthenticated);
   const syncGenRef = useRef(0);
-  const isSyncingRef = useRef(false);
+  const itemsRef = useRef(items);
   /** True only right after login — used to merge guest localStorage once, not on refresh. */
   const mergeGuestOnLoadRef = useRef(false);
 
+  itemsRef.current = items;
+
+  // Guest-only cache — logged-in carts live on the server.
   useEffect(() => {
+    if (authed) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ items }));
-  }, [items]);
+  }, [items, authed]);
 
   useEffect(() => {
     return onAuthChange(({ authenticated }) => {
@@ -53,6 +61,7 @@ export function CartProvider({ children }) {
         mergeGuestOnLoadRef.current = true;
       } else {
         mergeGuestOnLoadRef.current = false;
+        setItems(readStoredItems());
         try {
           localStorage.removeItem(STORAGE_KEY);
         } catch {
@@ -72,7 +81,6 @@ export function CartProvider({ children }) {
     mergeGuestOnLoadRef.current = false;
 
     let cancelled = false;
-    isSyncingRef.current = true;
     const myGen = ++syncGenRef.current;
 
     (async () => {
@@ -82,13 +90,11 @@ export function CartProvider({ children }) {
 
         const serverItems = adoptServerCart(server);
 
-        // Normal page load / refresh: server is the only source of truth.
         if (!shouldMergeGuest) {
           setItems(serverItems);
           return;
         }
 
-        // Login only: fold guest localStorage cart into the server cart once.
         const localItems = readStoredItems();
         if (localItems.length === 0) {
           setItems(serverItems);
@@ -98,10 +104,15 @@ export function CartProvider({ children }) {
         const pushed = await replaceCart(storedCartLines(merged));
         if (cancelled || myGen !== syncGenRef.current) return;
         setItems(adoptServerCart(pushed));
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch {
+          /* ignore */
+        }
       } catch {
-        // network failure: keep using local cache silently
-      } finally {
-        if (!cancelled) isSyncingRef.current = false;
+        if (cancelled || myGen !== syncGenRef.current) return;
+        // Do not show a stale localStorage cart while logged in — it breaks checkout.
+        setItems([]);
       }
     })();
 
@@ -129,6 +140,29 @@ export function CartProvider({ children }) {
       }
       if (fallbackOptimistic) fallbackOptimistic();
     }
+  }, []);
+
+  /**
+   * Push the current UI cart to the server (used before checkout).
+   * Throws if the server rejects or drops every line.
+   */
+  const syncCartToServer = useCallback(async () => {
+    if (!isAuthenticated()) {
+      throw new Error("Sign in to continue checkout");
+    }
+    const snapshot = itemsRef.current;
+    if (snapshot.length === 0) {
+      throw new Error("Your cart is empty");
+    }
+    const res = await replaceCart(storedCartLines(snapshot));
+    const serverItems = adoptServerCart(res);
+    setItems(serverItems);
+    if (serverItems.length === 0) {
+      throw new Error(
+        "Your cart could not be saved. The items may no longer be available — go back to the cart and try again."
+      );
+    }
+    return serverItems;
   }, []);
 
   const addItem = useCallback(
@@ -239,9 +273,17 @@ export function CartProvider({ children }) {
   );
 
   const value = useMemo(
-    () => ({ items, addItem, setQuantity, removeItem, clearCart, itemCount }),
-    [items, addItem, setQuantity, removeItem, clearCart, itemCount]
+    () => ({
+      items,
+      addItem,
+      setQuantity,
+      removeItem,
+      clearCart,
+      syncCartToServer,
+      itemCount,
+    }),
+    [items, addItem, setQuantity, removeItem, clearCart, syncCartToServer, itemCount]
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
-};
+}

@@ -41,8 +41,8 @@ const CORS_ORIGINS = (process.env.CORS_ORIGINS || FRONTEND_URL)
   .filter(Boolean);
 
 /**
- * MongoDB toggle. Connection is established in `lib/mongo/connection.js`
- * when `USE_MONGO=true`. Routes still use the JSON file store until migrated.
+ * MongoDB toggle. When `USE_MONGO=true`, `lib/store.js` uses `mongo-store.js`
+ * (Mongoose) instead of `data-store.js` (JSON file).
  */
 const USE_MONGO =
   String(process.env.USE_MONGO || "").toLowerCase() === "true";

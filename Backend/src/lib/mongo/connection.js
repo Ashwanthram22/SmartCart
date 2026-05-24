@@ -1,13 +1,12 @@
 /**
  * MongoDB connection — used when `USE_MONGO=true` and `MONGODB_URI` is set.
- * Routes still read/write via `lib/store.js` (JSON) until you migrate them to
- * Mongoose models; this connection is mainly for health checks and upcoming
- * repository work.
+ * Routes read/write via `lib/mongo-store.js` once the toggle is on.
  */
 
 const mongoose = require("mongoose");
 const { USE_MONGO, MONGODB_URI, IS_PROD } = require("../../config/env");
 const logger = require("../logger");
+const { configureMongoDns } = require("./dns");
 
 let connectionPromise = null;
 
@@ -25,6 +24,7 @@ async function connectMongo() {
   }
   if (connectionPromise) return connectionPromise;
 
+  configureMongoDns();
   mongoose.set("strictQuery", true);
 
   connectionPromise = mongoose
@@ -41,7 +41,15 @@ async function connectMongo() {
     })
     .catch((err) => {
       connectionPromise = null;
-      logger.error("[mongo] connection failed", { message: err.message });
+      const msg = err.message || "";
+      if (/querySrv\s+ECONNREFUSED/i.test(msg)) {
+        logger.error(
+          "[mongo] SRV DNS lookup failed (common on Windows). " +
+            "Restart after this fix, or set MONGODB_URI to the non-SRV string from Atlas " +
+            "(Connect → Drivers → “Standard connection string”), or set MONGODB_DNS_SERVERS=8.8.8.8,8.8.4.4"
+        );
+      }
+      logger.error("[mongo] connection failed", { message: msg });
       throw err;
     });
 
