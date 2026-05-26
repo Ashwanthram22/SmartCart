@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CATALOG_LIST_BASE } from "../../constants/shopRoutes";
+import { SHOP_SEGMENTS } from "../../constants/shopSegments";
+import { CATALOG_LIST_BASE, productDetailUrl } from "../../constants/shopRoutes";
 import {
   AlertCircle,
   BarChart3,
@@ -138,6 +139,21 @@ function downloadOrdersCsv(orders) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+/** Map order line subtitle category (e.g. "Electronics") to catalog segment. */
+function segmentForOrderLine(line) {
+  const raw = line?.subtitle?.split("•")[0]?.trim();
+  if (!raw) return "AI Picks";
+  const match = SHOP_SEGMENTS.find(
+    (seg) => seg.toLowerCase() === raw.toLowerCase()
+  );
+  return match || "AI Picks";
+}
+
+function productDetailHref(line) {
+  if (!line?.productId) return null;
+  return productDetailUrl(segmentForOrderLine(line), line.productId);
+}
+
 function actionsFor(status) {
   if (status === "cancelled") {
     return [{ id: "details", label: "View Details", variant: "outline" }];
@@ -240,6 +256,7 @@ export default function OrderHistory() {
         return {
           ...order,
           headline,
+          productHref: productDetailHref(headline),
           extraLine:
             restCount > 0
               ? `+ ${restCount} more item${restCount > 1 ? "s" : ""} in this order`
@@ -499,15 +516,40 @@ export default function OrderHistory() {
                 </div>
 
                 <div className="oh-order-body">
-                  <div className="oh-order-thumb">
-                    {order.headline?.image ? (
-                      <img src={order.headline.image} alt="" loading="lazy" />
-                    ) : null}
-                  </div>
+                  {order.productHref ? (
+                    <Link
+                      to={order.productHref}
+                      className="oh-order-thumb oh-order-product-link"
+                      aria-label={`View ${order.headline?.title || "product"}`}
+                    >
+                      {order.headline?.image ? (
+                        <img
+                          src={order.headline.image}
+                          alt=""
+                          loading="lazy"
+                        />
+                      ) : null}
+                    </Link>
+                  ) : (
+                    <div className="oh-order-thumb">
+                      {order.headline?.image ? (
+                        <img src={order.headline.image} alt="" loading="lazy" />
+                      ) : null}
+                    </div>
+                  )}
                   <div className="oh-order-main">
                     <div>
                       <h2 className="oh-product-title">
-                        {order.headline?.title || "Order"}
+                        {order.productHref ? (
+                          <Link
+                            to={order.productHref}
+                            className="oh-product-title-link"
+                          >
+                            {order.headline?.title || "Order"}
+                          </Link>
+                        ) : (
+                          order.headline?.title || "Order"
+                        )}
                       </h2>
                       <p className="oh-product-sub">
                         {order.headline?.subtitle || ""}

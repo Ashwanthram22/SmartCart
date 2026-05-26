@@ -28,7 +28,7 @@
   align-items: flex-start;
   justify-content: space-between;
   padding: 22px 24px 14px;
-  border-bottom: 1px solid #f1f1f4;
+  border-bottom: 1px solid var(--sc-border);
   gap: 12px;
 }
 
@@ -82,8 +82,8 @@
   gap: 4px;
   padding: 14px 16px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
-  border: 1px solid #e9d5ff;
+  background: var(--sc-insight-card-bg);
+  border: 1px solid var(--sc-card-border);
 }
 
 .oid-stat-label {
@@ -166,8 +166,8 @@
   align-items: center;
   padding: 10px 12px;
   border-radius: 10px;
-  background: var(--sc-bg);
-  border: 1px solid #f1f1f4;
+  background: var(--sc-surface-muted);
+  border: 1px solid var(--sc-card-border);
 }
 
 .oid-rank-num {
@@ -188,7 +188,7 @@
 
 /* ---- Meta rows ---- */
 .oid-section--meta {
-  border-top: 1px solid #f1f1f4;
+  border-top: 1px solid var(--sc-border);
   padding-top: 16px;
 }
 
@@ -214,4 +214,28 @@
 
 @media (prefers-reduced-motion: reduce) {
   .oid-overlay, .oid-dialog { animation: none; }
+}
+
+[data-theme="dark"] .oid-status-item--processing {
+  background: rgba(148, 163, 184, 0.2);
+  color: var(--sc-text-muted);
+}
+
+[data-theme="dark"] .oid-status-item--transit {
+  background: rgba(129, 140, 248, 0.2);
+  color: #a5b4fc;
+}
+
+[data-theme="dark"] .oid-status-item--delivered {
+  background: var(--sc-success-soft);
+  color: var(--sc-success);
+}
+
+[data-theme="dark"] .oid-status-item--cancelled {
+  background: var(--sc-danger-soft);
+  color: var(--sc-danger);
+}
+
+[data-theme="dark"] .oid-status-count {
+  background: rgba(0, 0, 0, 0.2);
 }

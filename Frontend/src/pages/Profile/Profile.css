@@ -94,11 +94,12 @@
 }
 
 .profile-side-link--logout {
-  color: #ba1a1a;
+  color: var(--sc-danger);
 }
 
 .profile-side-link--logout:hover {
   background: var(--sc-danger-soft);
+  color: var(--sc-danger);
 }
 
 .profile-side-icon {
@@ -109,7 +110,7 @@
 
 .profile-side-rule {
   border: none;
-  border-top: 1px solid rgba(203, 195, 215, 0.35);
+  border-top: 1px solid var(--sc-border);
   margin: 8px 0;
 }
 

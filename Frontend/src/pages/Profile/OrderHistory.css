@@ -315,6 +315,38 @@
   object-fit: cover;
 }
 
+.oh-order-product-link {
+  display: block;
+  text-decoration: none;
+  transition: box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.oh-order-product-link:hover {
+  opacity: 0.92;
+  box-shadow: 0 0 0 2px var(--sc-accent-soft-border);
+}
+
+.oh-order-product-link:focus-visible {
+  outline: 2px solid var(--sc-accent-ring);
+  outline-offset: 2px;
+}
+
+.oh-product-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.oh-product-title-link:hover {
+  color: var(--sc-accent);
+  text-decoration: underline;
+}
+
+.oh-product-title-link:focus-visible {
+  outline: 2px solid var(--sc-accent-ring);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 .oh-order-main {
   flex: 1;
   min-width: 0;

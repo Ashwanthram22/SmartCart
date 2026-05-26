@@ -184,21 +184,51 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  color: #494454;
+  color: var(--sc-text-secondary);
   font-size: 13px;
   line-height: 1.45;
+  cursor: pointer;
 }
 
 .register-terms span {
-  color: #4b5563;
+  color: var(--sc-text-muted);
 }
 
-.register-terms input {
+.register-terms input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
   margin-top: 3px;
   width: 18px;
   height: 18px;
-  accent-color: var(--sc-accent);
+  flex-shrink: 0;
+  border: 2px solid var(--sc-outline);
+  border-radius: 4px;
+  background: var(--sc-input-bg);
   cursor: pointer;
+  position: relative;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.register-terms input[type="checkbox"]:checked {
+  background: var(--sc-accent);
+  border-color: var(--sc-accent);
+}
+
+.register-terms input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--sc-text-on-accent);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.register-terms input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--sc-accent-ring);
+  outline-offset: 2px;
 }
 
 .register-legal-link {
@@ -291,4 +321,75 @@
   .register-password-grid {
     grid-template-columns: 1fr;
   }
+}
+
+[data-theme="dark"] .register-page {
+  background: var(--sc-page-bg);
+}
+
+[data-theme="dark"] .register-left-panel {
+  background: linear-gradient(
+    165deg,
+    var(--sc-surface-low) 0%,
+    var(--sc-page-bg) 55%,
+    var(--sc-page-bg) 100%
+  );
+}
+
+[data-theme="dark"] .register-left-lead,
+[data-theme="dark"] .register-features p,
+[data-theme="dark"] .register-form-wrap > p,
+[data-theme="dark"] .register-login-link {
+  color: var(--sc-text-muted);
+}
+
+[data-theme="dark"] .register-terms,
+[data-theme="dark"] .register-terms span {
+  color: var(--sc-text-muted);
+}
+
+[data-theme="dark"] .register-terms input[type="checkbox"] {
+  background: var(--sc-surface-muted);
+  border-color: var(--sc-border-strong);
+}
+
+[data-theme="dark"] .register-terms input[type="checkbox"]:checked {
+  background: var(--sc-accent);
+  border-color: var(--sc-accent);
+}
+
+[data-theme="dark"] .register-legal-link {
+  color: var(--sc-accent);
+}
+
+[data-theme="dark"] .register-legal-link:hover {
+  color: var(--sc-accent-hover);
+}
+
+[data-theme="dark"] .register-features article {
+  background: var(--sc-surface);
+  border-color: var(--sc-card-border);
+  box-shadow: var(--sc-shadow-sm);
+}
+
+[data-theme="dark"] .register-right-panel {
+  background: var(--sc-surface);
+}
+
+[data-theme="dark"] .register-login-link {
+  border-top-color: var(--sc-border);
+}
+
+[data-theme="dark"] .register-badges span {
+  background: var(--sc-surface-muted);
+  color: var(--sc-text-muted);
+}
+
+[data-theme="dark"] .register-message {
+  background: var(--sc-accent-soft);
+  color: var(--sc-accent);
+}
+
+[data-theme="dark"] .register-eye-toggle:hover {
+  background: var(--sc-accent-soft);
 }

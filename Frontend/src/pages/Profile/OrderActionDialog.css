@@ -29,7 +29,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 18px 22px 14px;
-  border-bottom: 1px solid #f1f1f4;
+  border-bottom: 1px solid var(--sc-border);
 }
 
 .oad-title {
@@ -206,7 +206,7 @@
   padding: 14px 16px;
   border-radius: 12px;
   background: var(--sc-surface-high);
-  border: 1px solid #eef2f7;
+  border: 1px solid var(--sc-card-border);
 }
 
 .oad-total-row {
@@ -216,7 +216,7 @@
   color: var(--sc-text-faint);
 }
 .oad-total-row--grand {
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--sc-border-strong);
   padding-top: 8px;
   font-weight: 700;
   color: var(--sc-text);
@@ -256,16 +256,18 @@
   gap: 6px;
   padding: 6px 12px;
   border-radius: 8px;
-  border: 1px solid #d1d5db;
-  background: var(--sc-surface);
-  color: #374151;
+  border: 1px solid var(--sc-border-strong);
+  background: var(--sc-surface-muted);
+  color: var(--sc-text-secondary);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
 }
 
 .oad-print:hover {
-  background: var(--sc-bg);
+  background: var(--sc-accent-soft);
+  border-color: var(--sc-accent-soft-border);
+  color: var(--sc-accent);
 }
 
 .oad-receipt-head {

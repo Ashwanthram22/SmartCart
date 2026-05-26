@@ -61,16 +61,16 @@
   gap: 6px;
   padding: 10px 18px;
   border-radius: 10px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--sc-border-strong);
   background: var(--sc-surface);
-  color: #374151;
+  color: var(--sc-text-secondary);
   font-weight: 600;
   font-size: 0.92rem;
   cursor: pointer;
 }
 
 .ab-btn-secondary:hover {
-  background: var(--sc-bg);
+  background: var(--sc-surface-muted);
 }
 
 .ab-error {
@@ -160,7 +160,7 @@
   gap: 6px;
   font-size: 13px;
   font-weight: 600;
-  color: #374151;
+  color: var(--sc-text-muted);
 }
 
 .ab-field--full {
@@ -169,23 +169,28 @@
 
 .ab-field-opt {
   font-weight: 400;
-  color: #9ca3af;
+  color: var(--sc-text-faint);
 }
 
 .ab-field input {
   height: 42px;
   border-radius: 10px;
-  border: 1px solid var(--sc-border-strong);
+  border: 1px solid var(--sc-input-border);
   padding: 0 12px;
   font-size: 15px;
   font-family: inherit;
-  background: var(--sc-surface);
+  background: var(--sc-input-bg);
+  color: var(--sc-text);
+}
+
+.ab-field input::placeholder {
+  color: var(--sc-text-faint);
 }
 
 .ab-field input:focus {
   outline: none;
-  border-color: var(--sc-accent-ring);
-  box-shadow: 0 0 0 2px rgba(107, 56, 212, 0.15);
+  border-color: var(--sc-input-focus-border);
+  box-shadow: 0 0 0 2px var(--sc-input-focus-ring);
 }
 
 .ab-checkbox {
@@ -193,7 +198,7 @@
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: #4b5563;
+  color: var(--sc-text-muted);
   font-weight: 500;
 }
 
@@ -271,7 +276,7 @@
 
 .ab-card-line {
   margin: 0;
-  color: #4b5563;
+  color: var(--sc-text-muted);
   font-size: 14px;
   line-height: 1.45;
 }
@@ -290,23 +295,42 @@
   padding: 6px 10px;
   border-radius: 8px;
   border: 1px solid transparent;
-  background: rgba(15, 23, 42, 0.04);
-  color: #374151;
+  background: var(--sc-surface-muted);
+  color: var(--sc-text-secondary);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
 }
 
 .ab-card-btn:hover {
-  background: rgba(15, 23, 42, 0.08);
+  background: var(--sc-accent-soft);
 }
 
 .ab-card-btn--danger {
-  color: #b91c1c;
+  color: var(--sc-danger);
 }
 
 .ab-card-btn--danger:hover {
-  background: rgba(220, 38, 38, 0.08);
+  background: var(--sc-danger-soft);
+}
+
+[data-theme="dark"] .ab-form {
+  background: var(--sc-surface-muted);
+  border-color: var(--sc-card-border);
+}
+
+[data-theme="dark"] .ab-empty-card {
+  border-color: var(--sc-border-strong);
+}
+
+[data-theme="dark"] .ab-card--default {
+  background: var(--sc-accent-soft);
+  border-color: var(--sc-accent-soft-border);
+}
+
+[data-theme="dark"] .ab-card-default {
+  background: var(--sc-success-soft);
+  color: var(--sc-success);
 }
 
 @media (max-width: 540px) {

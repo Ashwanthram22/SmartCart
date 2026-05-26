@@ -104,3 +104,23 @@
     font-size: 32px;
   }
 }
+
+[data-theme="dark"] .login-page {
+  background: radial-gradient(
+    circle at top right,
+    rgba(167, 139, 250, 0.14) 0%,
+    var(--sc-page-bg) 45%,
+    var(--sc-page-bg) 100%
+  );
+}
+
+[data-theme="dark"] .login-card {
+  background: var(--sc-surface);
+  border-color: var(--sc-card-border);
+  box-shadow: var(--sc-shadow-lg);
+}
+
+[data-theme="dark"] .login-password-row label,
+[data-theme="dark"] .login-register-note {
+  color: var(--sc-text-muted);
+}
