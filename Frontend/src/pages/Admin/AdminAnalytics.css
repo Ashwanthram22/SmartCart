@@ -34,7 +34,7 @@
 .aa-empty {
   margin: 8px 0;
   font-size: 13px;
-  color: #64748b;
+  color: var(--sc-text-muted);
 }
 
 .aa-stock-card {
@@ -55,7 +55,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 6px;
-  background: #f7f8fc;
+  background: var(--sc-bg);
   border-radius: 12px;
   padding: 14px;
 }
@@ -63,12 +63,12 @@
 .aa-health strong {
   font-size: 22px;
   font-weight: 800;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 .aa-health span {
   font-size: 12px;
-  color: #64748b;
+  color: var(--sc-text-muted);
   font-weight: 600;
 }
 
@@ -80,15 +80,15 @@
 }
 
 .aa-dot--ok {
-  background: #16a34a;
+  background: var(--sc-success);
 }
 
 .aa-dot--warn {
-  background: #f59e0b;
+  background: var(--sc-warning);
 }
 
 .aa-dot--danger {
-  background: #dc2626;
+  background: var(--sc-danger);
 }
 
 .aa-bars {
@@ -109,7 +109,7 @@
 
 .aa-bar-label {
   font-size: 13px;
-  color: #475569;
+  color: var(--sc-text-faint);
   font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
@@ -126,15 +126,15 @@
   text-align: left;
   cursor: pointer;
   font: inherit;
-  color: #475569;
+  color: var(--sc-text-faint);
   font-weight: 600;
   border-bottom: 1px dashed transparent;
   transition: color 140ms ease, border-color 140ms ease;
 }
 
 .aa-bar-label--btn:hover {
-  color: #5527b6;
-  border-bottom-color: rgba(107, 56, 212, 0.55);
+  color: var(--sc-accent-strong);
+  border-bottom-color: var(--sc-input-focus-border);
 }
 
 .aa-bar-label--btn:focus {
@@ -143,7 +143,7 @@
 
 .aa-bar-label--btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(107, 56, 212, 0.55);
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--sc-input-focus-border);
   border-radius: 4px;
 }
 
@@ -157,13 +157,13 @@
 .aa-bar-fill {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, #6b38d4, #a78bfa);
+  background: linear-gradient(90deg, var(--sc-accent), #a78bfa);
   transition: width 280ms ease;
 }
 
 .aa-bar-value {
   font-size: 12px;
-  color: #141b2b;
+  color: var(--sc-text);
   font-weight: 700;
 }
 

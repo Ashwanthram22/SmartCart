@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Bell, Check } from "lucide-react";
 import {
   getStockAlerts,
@@ -7,6 +7,7 @@ import {
 } from "../api/client";
 import { useToast } from "../hooks/useToast";
 import { isAuthenticated, onAuthChange } from "../utils/authToken";
+import { onAlertsChanged } from "../utils/alertEvents";
 import "./StockAlertButton.css";
 
 /**
@@ -47,24 +48,38 @@ export default function StockAlertButton({ productId, variant = "inline", onChan
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => {
+  const refreshSubscription = useCallback(async () => {
     if (!productId || !isAuthenticated()) {
+      setSubscribed(false);
       setLoading(false);
-      return undefined;
+      return;
     }
+    setLoading(true);
+    invalidateAlertsCache();
+    const alerts = await loadAlertsOnce();
+    setSubscribed(alerts.some((a) => String(a.productId) === String(productId)));
+    setLoading(false);
+  }, [productId]);
+
+  useEffect(() => {
     let cancelled = false;
     (async () => {
-      const alerts = await loadAlertsOnce();
       if (cancelled) return;
-      setSubscribed(
-        alerts.some((a) => String(a.productId) === String(productId))
-      );
-      setLoading(false);
+      await refreshSubscription();
     })();
     return () => {
       cancelled = true;
     };
-  }, [productId]);
+  }, [refreshSubscription]);
+
+  useEffect(() => {
+    return onAlertsChanged((detail) => {
+      if (detail?.productId && String(detail.productId) !== String(productId)) {
+        return;
+      }
+      refreshSubscription();
+    });
+  }, [productId, refreshSubscription]);
 
   const handleClick = async (e) => {
     e.stopPropagation();
@@ -88,7 +103,7 @@ export default function StockAlertButton({ productId, variant = "inline", onChan
         invalidateAlertsCache();
         setSubscribed(true);
         onChange?.(true);
-        toast.success("We'll email you when this is back in stock.");
+        toast.success("Request sent. We'll notify you in your account when it's back in stock.");
       }
     } catch (err) {
       toast.error(

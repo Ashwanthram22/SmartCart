@@ -4,7 +4,11 @@ import { CATALOG_LIST_BASE, catalogListUrl } from "../constants/shopRoutes";
 import { DEFAULT_PROFILE_AVATAR } from "../data/profileDisplay";
 import { useCart } from "../hooks/useCart";
 import { CartIcon } from "./CartIcon";
+import { ShopNotificationBell } from "./ShopNotificationBell";
+import { ShopThemeToggle } from "./ShopThemeToggle";
 import "./ShopTopNav.css";
+import "./ShopNotificationBell.css";
+import "./ShopThemeToggle.css";
 
 function SearchGlyph() {
   return (
@@ -72,16 +76,20 @@ export function ShopTopNav({
             aria-label="Search"
           />
         </form>
+        <ShopNotificationBell classPrefix="shop" />
+        <ShopThemeToggle classPrefix="shop" />
         <Link
           to="/cart"
-          className={`shop-icon-btn shop-icon-btn--cart${cartActive ? " shop-icon-btn--cart-active" : ""}`}
-          aria-label="Cart"
+          className={`shop-icon-btn shop-icon-btn--cart${cartActive ? " shop-icon-btn--active" : ""}`}
+          aria-label={itemCount > 0 ? `Cart, ${itemCount} items` : "Cart"}
           {...(cartActive ? { "aria-current": "page" } : {})}
         >
-          <CartIcon />
-          {itemCount > 0 ? (
-            <span className="shop-cart-badge">{itemCount > 99 ? "99+" : itemCount}</span>
-          ) : null}
+          <span className="shop-cart-icon-wrap" aria-hidden="true">
+            <CartIcon size={22} />
+            {itemCount > 0 ? (
+              <span className="shop-cart-badge">{itemCount > 99 ? "99+" : itemCount}</span>
+            ) : null}
+          </span>
         </Link>
         <Link to="/profile" className="shop-icon-btn shop-profile-thumb" aria-label="Profile">
           <img src={DEFAULT_PROFILE_AVATAR} alt="" width={28} height={28} />

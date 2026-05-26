@@ -1,0 +1,84 @@
+/**
+ * Dark-mode fixes for gradients / auth pages that still use light-only stops.
+ */
+[data-theme="dark"] .register-page,
+[data-theme="dark"] .login-page {
+  background: var(--sc-page-bg);
+}
+
+[data-theme="dark"] .shop-notify-panel {
+  background: var(--sc-surface);
+  border-color: var(--sc-border);
+  box-shadow: var(--sc-shadow-lg);
+}
+
+[data-theme="dark"] .shop-notify-item--unread {
+  background: var(--sc-accent-soft);
+}
+
+[data-theme="dark"] .shop-notify-badge,
+[data-theme="dark"] .product-notify-badge {
+  border-color: var(--sc-nav-bg);
+}
+
+[data-theme="dark"] .shop-topnav-shell,
+[data-theme="dark"] .product-topnav,
+[data-theme="dark"] .home-header {
+  background: var(--sc-nav-bg);
+}
+
+[data-theme="dark"] .glass-card,
+[data-theme="dark"] .product-main-image-wrap {
+  background: var(--sc-glass-panel);
+  border-color: var(--sc-glass-border);
+}
+
+[data-theme="dark"] .home-header-segments {
+  background: var(--sc-surface-low);
+  border-bottom-color: var(--sc-nav-border);
+}
+
+[data-theme="dark"] .catalog-filter-drawer,
+[data-theme="dark"] .catalog-mobile-filter-bar {
+  background: var(--sc-nav-bg);
+}
+
+[data-theme="dark"] img[src*="avatar"],
+[data-theme="dark"] .shop-profile-thumb,
+[data-theme="dark"] .product-profile-thumb {
+  border-color: var(--sc-border-strong);
+}
+
+/* Unified card borders on shop pages */
+[data-theme="dark"] .cart-item-card,
+[data-theme="dark"] .cart-summary-card,
+[data-theme="dark"] .cart-guarantee-card,
+[data-theme="dark"] .checkout-summary,
+[data-theme="dark"] .checkout-card,
+[data-theme="dark"] .checkout-addr-card,
+[data-theme="dark"] .panel,
+[data-theme="dark"] .ai-panel,
+[data-theme="dark"] .config-box {
+  border-color: var(--sc-card-border);
+}
+
+[data-theme="dark"] .profile-side-card,
+[data-theme="dark"] .profile-hero-card,
+[data-theme="dark"] .profile-panel,
+[data-theme="dark"] .profile-order-row,
+[data-theme="dark"] .oh-order-card,
+[data-theme="dark"] .settings-card,
+[data-theme="dark"] .oh-insight {
+  border-color: var(--sc-card-border);
+}
+
+[data-theme="dark"] .profile-panel-head,
+[data-theme="dark"] .oh-order-meta-bar {
+  background: var(--sc-profile-elevated-bg);
+  border-color: var(--sc-card-border);
+}
+
+[data-theme="dark"] .profile-insight-card,
+[data-theme="dark"] .oh-insight {
+  background: var(--sc-insight-card-bg);
+}

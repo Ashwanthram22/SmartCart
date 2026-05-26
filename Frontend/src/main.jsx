@@ -8,7 +8,10 @@ import { ToastProvider } from "./context/ToastProvider";
 import { onAuthChange } from "./utils/authToken";
 import { clearRecentlyViewed } from "./utils/recentlyViewed";
 import ErrorBoundary from "./components/ErrorBoundary";
+import "./styles/theme.css";
+import "./styles/theme-surfaces.css";
 import "./index.css";
+import { ThemeProvider } from "./context/ThemeProvider";
 import App from "./App.jsx";
 
 /**
@@ -27,13 +30,15 @@ createRoot(document.getElementById("root")).render(
     <ErrorBoundary>
       <BrowserRouter>
         <ToastProvider>
-          <CartProvider>
-            <SavedProvider>
-              <AssistantProvider>
-                <App />
-              </AssistantProvider>
-            </SavedProvider>
-          </CartProvider>
+          <ThemeProvider>
+            <CartProvider>
+              <SavedProvider>
+                <AssistantProvider>
+                  <App />
+                </AssistantProvider>
+              </SavedProvider>
+            </CartProvider>
+          </ThemeProvider>
         </ToastProvider>
       </BrowserRouter>
     </ErrorBoundary>

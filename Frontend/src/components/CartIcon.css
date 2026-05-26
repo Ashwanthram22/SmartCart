@@ -1,8 +1,6 @@
-.cart-icon-img {
-  display: block;
+.cart-icon {
+  display: inline-block;
   flex-shrink: 0;
-  object-fit: contain;
-  object-position: center;
-  margin: 0;
-  padding: 0;
+  color: inherit;
+  vertical-align: middle;
 }

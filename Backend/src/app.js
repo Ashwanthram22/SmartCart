@@ -18,6 +18,7 @@ const addressesRouter = require("./routes/addresses.routes");
 const stockAlertsRouter = require("./routes/stockAlerts.routes");
 const preferencesRouter = require("./routes/preferences.routes");
 const priceAlertsRouter = require("./routes/priceAlerts.routes");
+const notificationsRouter = require("./routes/notifications.routes");
 const adminRouter = require("./routes/admin.routes");
 
 const app = express();
@@ -85,6 +86,7 @@ app.use("/api/addresses", addressesRouter);
 app.use("/api/stock-alerts", stockAlertsRouter);
 app.use("/api/preferences", preferencesRouter);
 app.use("/api/price-alerts", priceAlertsRouter);
+app.use("/api/notifications", notificationsRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/assistant", assistantRouter);
 

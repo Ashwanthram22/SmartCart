@@ -15,9 +15,9 @@
   min-width: 150px;
   padding: 8px 12px;
   border-radius: 10px;
-  border: 1px solid var(--adm-border, #e6e6ee);
-  background: #fff;
-  color: var(--adm-text, #141b2b);
+  border: 1px solid var(--adm-border, var(--sc-border));
+  background: var(--sc-surface);
+  color: var(--adm-text, var(--sc-text));
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
@@ -29,9 +29,9 @@
 }
 
 .adm-dd-trigger:hover:not(:disabled) {
-  background: #faf7ff;
-  border-color: rgba(107, 56, 212, 0.45);
-  color: var(--adm-accent, #6b38d4);
+  background: var(--sc-control-hover-bg);
+  border-color: var(--sc-control-hover-border);
+  color: var(--adm-accent, var(--sc-accent));
 }
 
 .adm-dd-trigger:disabled {
@@ -45,13 +45,13 @@
 
 .adm-dd-trigger:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(107, 56, 212, 0.55);
+  box-shadow: 0 0 0 2px var(--sc-surface), 0 0 0 4px var(--sc-input-focus-border);
 }
 
 .adm-dd--open .adm-dd-trigger {
-  border-color: var(--adm-accent, #6b38d4);
-  color: var(--adm-accent, #6b38d4);
-  background: #faf7ff;
+  border-color: var(--adm-accent, var(--sc-accent));
+  color: var(--adm-accent, var(--sc-accent));
+  background: var(--sc-control-hover-bg);
 }
 
 .adm-dd-label {
@@ -79,10 +79,10 @@
   padding: 6px;
   width: max-content;
   max-width: 280px;
-  background: #fff;
-  border: 1px solid var(--adm-border, #e6e6ee);
+  background: var(--sc-surface);
+  border: 1px solid var(--adm-border, var(--sc-border));
   border-radius: 12px;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
+  box-shadow: var(--sc-shadow-lg);
 }
 
 .adm-dd-menu--bottom {
@@ -129,14 +129,14 @@
   font-size: 13px;
   font-weight: 500;
   font-family: inherit;
-  color: #475569;
+  color: var(--sc-text-muted);
   cursor: pointer;
   transition: background 120ms ease, color 120ms ease;
 }
 
 .adm-dd-option:hover {
-  background: #ede9fe;
-  color: #0f172a;
+  background: var(--sc-menu-option-hover-bg);
+  color: var(--sc-text);
 }
 
 .adm-dd-option:focus {
@@ -144,19 +144,19 @@
 }
 
 .adm-dd-option:focus-visible {
-  outline: 2px solid rgba(107, 56, 212, 0.55);
+  outline: 2px solid var(--sc-input-focus-border);
   outline-offset: 2px;
 }
 
 .adm-dd-option--active {
-  color: #5527b6;
+  color: var(--sc-menu-option-active-text);
   font-weight: 700;
-  background: #f5f3ff;
+  background: var(--sc-menu-option-active-bg);
 }
 
 .adm-dd-option--active:hover {
-  background: #ddd6fe;
-  color: #1e1b4b;
+  background: var(--sc-menu-option-active-hover-bg);
+  color: var(--sc-text);
 }
 
 @media (prefers-reduced-motion: reduce) {

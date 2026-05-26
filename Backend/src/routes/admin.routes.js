@@ -12,6 +12,10 @@ const {
 } = require("../config/env");
 const { effectiveStatus } = require("../lib/order-lifecycle");
 const { appendAudit, diffShallow, PRODUCT_TRACK_FIELDS } = require("../lib/audit");
+const {
+  listPendingCustomerAlerts,
+  fulfillCustomerAlert,
+} = require("../lib/customer-alerts-admin");
 
 const router = express.Router();
 
@@ -654,6 +658,47 @@ router.post("/orders/bulk-status", writeLimiter, async (req, res) => {
     updatedCount: result.updated.length,
     missing: result.missing,
     orders: result.updated,
+  });
+});
+
+/* ------------------------------------------------------------------
+ * Customer alert requests (stock / price notify)
+ * ----------------------------------------------------------------*/
+
+router.get("/customer-alerts", async (req, res) => {
+  const db = await readDb();
+  const alerts = listPendingCustomerAlerts(db);
+  return res.json({ alerts, total: alerts.length });
+});
+
+router.post("/customer-alerts/fulfill", writeLimiter, async (req, res) => {
+  const kind = String(req.body?.kind || "").toLowerCase();
+  const userId = String(req.body?.userId || "").trim();
+  const alertId = String(req.body?.alertId || "").trim();
+
+  if (!userId || !alertId) {
+    return res.status(400).json({ message: "userId and alertId are required" });
+  }
+  if (kind !== "stock" && kind !== "price") {
+    return res.status(400).json({ message: "kind must be stock or price" });
+  }
+
+  const result = await withDb(async (db) =>
+    fulfillCustomerAlert(db, {
+      actor: actor(req),
+      kind,
+      userId,
+      alertId,
+      newPrice: req.body?.newPrice,
+      newStock: req.body?.newStock,
+    })
+  );
+
+  if (result.error) return res.status(400).json({ message: result.error });
+  return res.json({
+    message: "Customer notified",
+    product: result.product,
+    notification: result.notification,
   });
 });
 

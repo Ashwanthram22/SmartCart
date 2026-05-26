@@ -18,14 +18,14 @@
 .review-modal {
   width: 100%;
   max-width: 520px;
-  background: #ffffff;
+  background: var(--sc-surface);
   border-radius: 16px;
   box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--sc-border-strong);
   overflow: hidden;
   animation: review-modal-pop 0.2s ease-out;
   font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 @keyframes review-modal-pop {
@@ -52,7 +52,7 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: #6b38d4;
+  color: var(--sc-accent);
   text-transform: uppercase;
 }
 
@@ -61,13 +61,13 @@
   font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.01em;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 .review-modal-subtitle {
   margin: 6px 0 0;
   font-size: 13px;
-  color: #64748b;
+  color: var(--sc-text-muted);
 }
 
 .review-modal-close {
@@ -78,7 +78,7 @@
   width: 36px;
   height: 36px;
   border-radius: 999px;
-  color: #64748b;
+  color: var(--sc-text-muted);
   cursor: pointer;
   display: grid;
   place-items: center;
@@ -86,8 +86,8 @@
 }
 
 .review-modal-close:hover {
-  background: #f1f5f9;
-  color: #141b2b;
+  background: var(--sc-border-subtle);
+  color: var(--sc-text);
 }
 
 .review-modal-form {
@@ -106,7 +106,7 @@
 .review-modal-label {
   font-size: 13px;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--sc-scrollbar-thumb-hover);
 }
 
 .review-modal-stars {
@@ -136,14 +136,14 @@
 }
 
 .review-modal-star--filled {
-  color: #f59e0b;
+  color: var(--sc-warning);
 }
 
 .review-modal-rating-label {
   margin-left: 8px;
   font-size: 13px;
   font-weight: 600;
-  color: #64748b;
+  color: var(--sc-text-muted);
 }
 
 .review-modal-textarea {
@@ -156,7 +156,7 @@
   font-size: 14px;
   line-height: 1.5;
   font-family: inherit;
-  color: #141b2b;
+  color: var(--sc-text);
   background: #fafafa;
   box-sizing: border-box;
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
@@ -164,8 +164,8 @@
 
 .review-modal-textarea:focus {
   outline: none;
-  border-color: #6b38d4;
-  background: #ffffff;
+  border-color: var(--sc-accent);
+  background: var(--sc-surface);
   box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.16);
 }
 
@@ -189,7 +189,7 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid var(--sc-border-subtle);
   padding-top: 16px;
 }
 
@@ -204,23 +204,23 @@
 }
 
 .review-modal-btn--ghost {
-  background: #ffffff;
-  color: #475569;
-  border-color: #e5e7eb;
+  background: var(--sc-surface);
+  color: var(--sc-text-faint);
+  border-color: var(--sc-border-strong);
 }
 
 .review-modal-btn--ghost:hover:not(:disabled) {
-  background: #f8fafc;
-  color: #141b2b;
+  background: var(--sc-surface-high);
+  color: var(--sc-text);
 }
 
 .review-modal-btn--primary {
-  background: #6b38d4;
-  color: #ffffff;
+  background: var(--sc-accent);
+  color: var(--sc-surface);
 }
 
 .review-modal-btn--primary:hover:not(:disabled) {
-  background: #8455ef;
+  background: var(--sc-accent-strong);
 }
 
 .review-modal-btn:disabled {

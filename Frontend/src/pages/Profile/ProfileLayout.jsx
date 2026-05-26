@@ -27,7 +27,9 @@ export function ProfileLayout({ children }) {
         ? "saved"
         : path.startsWith("/profile/addresses")
           ? "addresses"
-          : "profile";
+          : path.startsWith("/profile/notifications")
+            ? "notifications"
+            : "profile";
 
   const isOrdersRoute = path.startsWith("/profile/orders");
   const profileTabActive =
@@ -35,7 +37,8 @@ export function ProfileLayout({ children }) {
     (path === "/profile" ||
       path.startsWith("/profile/settings") ||
       path.startsWith("/profile/saved") ||
-      path.startsWith("/profile/addresses"));
+      path.startsWith("/profile/addresses") ||
+      path.startsWith("/profile/notifications"));
 
   const pageTitle = useMemo(() => {
     if (path.startsWith("/profile/orders")) return "Order history";
@@ -43,6 +46,7 @@ export function ProfileLayout({ children }) {
     if (path.startsWith("/profile/settings")) return "Security";
     if (path.startsWith("/profile/saved")) return "Saved items";
     if (path.startsWith("/profile/addresses")) return "Addresses";
+    if (path.startsWith("/profile/notifications")) return "Notifications";
     return "My profile";
   }, [path]);
 
@@ -133,6 +137,20 @@ export function ProfileLayout({ children }) {
                 </svg>
               </span>
               Addresses
+            </Link>
+            <Link to="/profile/notifications" className={sidebarClass(sidebarActive, "notifications")}>
+              <span className="profile-side-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 0 0-4.5-5.8V4a1.5 1.5 0 0 0-3 0v1.2A6 6 0 0 0 6 11v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 0 1-6 0"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+              Notifications
             </Link>
             <hr className="profile-side-rule" />
             <button type="button" className="profile-side-link profile-side-link--logout" onClick={() => setLogoutConfirmOpen(true)}>

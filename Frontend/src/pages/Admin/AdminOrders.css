@@ -32,9 +32,9 @@
   /* Match `.adm-btn` (10px) so the toolbar reads as one row of consistent
    * rounded-rectangle controls (search + date dropdown + status filter). */
   border-radius: 10px;
-  border: 1px solid #e6e6ee;
-  background: #fff;
-  color: #64748b;
+  border: 1px solid var(--sc-border);
+  background: var(--sc-surface);
+  color: var(--sc-text-muted);
   max-width: 540px;
   transition: border-color 120ms ease, box-shadow 120ms ease;
 }
@@ -46,11 +46,11 @@
   background: transparent;
   font-size: 14px;
   font-family: inherit;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 .ao-search:focus-within {
-  border-color: #6b38d4;
+  border-color: var(--sc-accent);
   box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.15);
 }
 
@@ -67,17 +67,17 @@
 .adm-btn.ao-filter-trigger:focus-visible,
 .adm-btn-primary.ao-filter-trigger:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(107, 56, 212, 0.55);
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--sc-input-focus-border);
 }
 
 .adm-btn-primary.ao-filter-trigger:focus-visible {
-  box-shadow: 0 6px 16px rgba(107, 56, 212, 0.28), 0 0 0 2px #fff,
-    0 0 0 4px rgba(107, 56, 212, 0.55);
+  box-shadow: 0 6px 16px var(--sc-input-border), 0 0 0 2px #fff,
+    0 0 0 4px var(--sc-input-focus-border);
 }
 
 .adm-btn-primary.ao-filter-trigger:hover:focus-visible {
   box-shadow: 0 12px 26px rgba(107, 56, 212, 0.36), 0 0 0 2px #fff,
-    0 0 0 4px rgba(107, 56, 212, 0.55);
+    0 0 0 4px var(--sc-input-focus-border);
 }
 
 .ao-filter-menu {
@@ -88,8 +88,8 @@
   list-style: none;
   margin: 0;
   padding: 6px;
-  background: #fff;
-  border: 1px solid #e6e6ee;
+  background: var(--sc-surface);
+  border: 1px solid var(--sc-border);
   border-radius: 10px;
   box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
   min-width: 200px;
@@ -107,7 +107,7 @@
   padding: 8px 10px;
   border-radius: 8px;
   font-size: 13px;
-  color: #475569;
+  color: var(--sc-text-faint);
   cursor: pointer;
   transition: background 120ms ease, color 120ms ease;
 }
@@ -117,18 +117,18 @@
 }
 
 .ao-filter-option:focus-visible {
-  outline: 2px solid rgba(107, 56, 212, 0.55);
+  outline: 2px solid var(--sc-input-focus-border);
   outline-offset: 2px;
 }
 
 .ao-filter-option--active {
-  color: #5527b6;
+  color: var(--sc-accent-strong);
   font-weight: 700;
 }
 
 .ao-filter-option:hover {
   background: #ede9fe;
-  color: #0f172a;
+  color: var(--sc-text);
 }
 
 /* Selected row + hover: keep text/icon clearly visible (purple-on-lavender
@@ -139,7 +139,7 @@
 }
 
 .ao-filter-option--active:hover :is(svg) {
-  color: #5527b6;
+  color: var(--sc-accent-strong);
 }
 
 /* ----- Table ---------------------------------------------------------------*/
@@ -171,9 +171,9 @@
   font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--sc-text-muted);
   font-weight: 700;
-  border-bottom: 1px solid #e6e6ee;
+  border-bottom: 1px solid var(--sc-border);
 }
 
 .ao-table tbody tr:nth-child(even):not(.ao-row--selected) td {
@@ -181,7 +181,7 @@
 }
 
 .ao-table tbody tr:nth-child(odd):not(.ao-row--selected) td {
-  background: #fff;
+  background: var(--sc-surface);
 }
 
 .ao-table tbody tr.ao-row--selected td {
@@ -205,13 +205,13 @@
 .ao-empty {
   text-align: center;
   padding: 28px 16px;
-  color: #64748b;
+  color: var(--sc-text-muted);
   font-size: 14px;
 }
 
 .ao-customer {
   font-size: 13px;
-  color: #475569;
+  color: var(--sc-text-faint);
 }
 
 .ao-items {
@@ -254,7 +254,7 @@
 
 .ao-badge--muted {
   background: #f1f0fa;
-  color: #64748b;
+  color: var(--sc-text-muted);
 }
 
 /* Per-row status updater. Uses the shared `<AdmDropdown />` component
@@ -281,10 +281,10 @@
   border-bottom: 1px dashed transparent;
   transition: border-color 140ms ease, color 140ms ease;
 }
-.ao-id-btn:hover { color: #5527b6; border-bottom-color: rgba(107, 56, 212, 0.6); }
+.ao-id-btn:hover { color: var(--sc-accent-strong); border-bottom-color: rgba(107, 56, 212, 0.6); }
 .ao-id-btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(107, 56, 212, 0.55);
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--sc-input-focus-border);
   border-radius: 4px;
 }
 
@@ -314,7 +314,7 @@
   padding: 10px;
   border: 1px solid #f1f0fa;
   border-radius: 12px;
-  background: #fff;
+  background: var(--sc-surface);
 }
 
 .ao-line-thumb {
@@ -326,20 +326,20 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  color: #94a3b8;
+  color: var(--sc-text-faint);
   font-weight: 700;
 }
 .ao-line-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
 .ao-line-meta { display: flex; flex-direction: column; gap: 2px; }
 .ao-line-meta strong { font-size: 13px; }
-.ao-line-meta small { color: #64748b; font-size: 12px; }
+.ao-line-meta small { color: var(--sc-text-muted); font-size: 12px; }
 
 .ao-line-total { font-size: 13px; }
 
 .ao-line-empty {
   font-size: 13px;
-  color: #64748b;
+  color: var(--sc-text-muted);
   padding: 10px 0;
 }
 
@@ -351,7 +351,7 @@
   flex-direction: column;
   gap: 8px;
   font-size: 13px;
-  color: #475569;
+  color: var(--sc-text-faint);
 }
 
 .ao-tl-dot {
@@ -360,11 +360,11 @@
   height: 8px;
   border-radius: 999px;
   margin-right: 8px;
-  background: #94a3b8;
+  background: var(--sc-text-faint);
 }
 .ao-tl-dot--info   { background: #3b82f6; }
-.ao-tl-dot--ok     { background: #16a34a; }
-.ao-tl-dot--danger { background: #dc2626; }
+.ao-tl-dot--ok     { background: var(--sc-success); }
+.ao-tl-dot--danger { background: var(--sc-danger); }
 
 /* ----- Responsive ----------------------------------------------------------*/
 

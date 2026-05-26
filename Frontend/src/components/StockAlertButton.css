@@ -4,8 +4,8 @@
   gap: 6px;
   border-radius: 10px;
   border: 1px solid rgba(107, 56, 212, 0.45);
-  background: #fff;
-  color: #5527b6;
+  background: var(--sc-surface);
+  color: var(--sc-accent-strong);
   font-weight: 600;
   cursor: pointer;
   transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
@@ -33,11 +33,11 @@
 }
 
 .stock-alert-btn--on {
-  background: rgba(16, 185, 129, 0.1);
-  border-color: rgba(16, 185, 129, 0.45);
-  color: #047857;
+  background: var(--sc-success-action-on-bg);
+  border-color: var(--sc-success-action-border);
+  color: var(--sc-success-action);
 }
 
 .stock-alert-btn--on:hover:not(:disabled) {
-  background: rgba(16, 185, 129, 0.16);
+  background: var(--sc-success-action-soft);
 }

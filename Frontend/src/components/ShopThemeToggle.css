@@ -1,0 +1,19 @@
+.sc-theme-toggle {
+  color: var(--sc-text-muted);
+  flex-shrink: 0;
+}
+
+.sc-theme-toggle:hover {
+  color: var(--sc-accent);
+  background: var(--sc-surface-muted);
+}
+
+.sc-theme-toggle:focus-visible {
+  outline: 2px solid var(--sc-accent-ring);
+  outline-offset: 2px;
+}
+
+.shop-icon-btn--theme,
+.product-icon-btn--theme {
+  overflow: visible;
+}

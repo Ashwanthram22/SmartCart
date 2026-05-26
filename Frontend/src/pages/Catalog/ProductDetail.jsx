@@ -19,6 +19,8 @@ import { CartIcon } from "../../components/CartIcon";
 import RecentlyViewedStrip from "../../components/RecentlyViewedStrip";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import StockBadge from "../../components/StockBadge";
+import { ShopNotificationBell } from "../../components/ShopNotificationBell";
+import { ShopThemeToggle } from "../../components/ShopThemeToggle";
 import StockAlertButton from "../../components/StockAlertButton";
 import PriceDropAlertButton from "../../components/PriceDropAlertButton";
 import usePageMeta from "../../hooks/usePageMeta";
@@ -28,6 +30,9 @@ import ProductDetailSkeleton from "./ProductDetailSkeleton";
 // import { estimateDelivery, formatDeliveryWindow } from "../../utils/delivery"; // BACKEND: product.delivery
 import { formatMoney } from "../../utils/money";
 import { reviewCountLabel, starsFromRating } from "../../utils/ratings";
+import "../../components/ShopNotificationBell.css";
+import "../../components/ShopThemeToggle.css";
+import "../../components/ShopTopNav.css";
 import "./ProductDetail.css";
 
 /** Free shipping badge when product price is at or above this amount (INR). */
@@ -366,11 +371,21 @@ function ProductDetail() {
             SmartCart AI
           </Link>
           <div className="product-actions">
-            <Link to="/cart" className="product-icon-btn product-icon-btn--cart" aria-label="Cart">
-              <CartIcon size={22} />
-              {itemCount > 0 ? (
-                <span className="product-cart-badge">{itemCount > 99 ? "99+" : itemCount}</span>
-              ) : null}
+            <ShopNotificationBell classPrefix="product" />
+            <ShopThemeToggle classPrefix="product" />
+            <Link
+              to="/cart"
+              className="product-icon-btn product-icon-btn--cart"
+              aria-label={itemCount > 0 ? `Cart, ${itemCount} items` : "Cart"}
+            >
+              <span className="shop-cart-icon-wrap" aria-hidden="true">
+                <CartIcon size={22} />
+                {itemCount > 0 ? (
+                  <span className="shop-cart-badge product-cart-badge">
+                    {itemCount > 99 ? "99+" : itemCount}
+                  </span>
+                ) : null}
+              </span>
             </Link>
             <Link to="/profile" className="product-icon-btn product-profile-thumb" aria-label="Profile">
               <img src={DEFAULT_PROFILE_AVATAR} alt="" width={28} height={28} />

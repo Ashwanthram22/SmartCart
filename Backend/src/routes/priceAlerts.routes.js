@@ -29,7 +29,9 @@ function publicShape(alert) {
 router.get("/", async (req, res) => {
   const list = await withDb(async (db) => {
     const user = withUserProfile(db, req.user.sub);
-    return (user?.priceAlerts || []).map(publicShape);
+    return (user?.priceAlerts || [])
+      .filter((a) => a && a.fulfilled !== true)
+      .map(publicShape);
   });
   return res.json({ alerts: list });
 });
@@ -82,6 +84,7 @@ router.post("/", async (req, res) => {
       referencePrice,
       createdAt: new Date().toISOString(),
       triggered: false,
+      fulfilled: false,
     };
     own.push(alert);
     return { alert, created: true };

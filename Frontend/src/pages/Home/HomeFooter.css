@@ -2,17 +2,18 @@
 
 .home-footer {
   margin-top: 24px;
-  background: #ffffff;
-  color: #e7e8ea;
+  background: var(--sc-footer-main);
+  color: var(--sc-footer-link);
   font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  border-top: 1px solid var(--sc-footer-border);
 }
 
 .home-footer-back-to-top {
   display: block;
   width: 100%;
   border: 0;
-  background: #2c3a4f;
-  color: #ffffff;
+  background: var(--sc-footer-top);
+  color: var(--sc-footer-heading);
   padding: 14px 24px;
   font-size: 13px;
   font-weight: 600;
@@ -23,16 +24,16 @@
 }
 
 .home-footer-back-to-top:hover {
-  background: #38475e;
+  background: var(--sc-footer-top-hover);
 }
 
 .home-footer-back-to-top:focus-visible {
-  outline: 2px solid #c4b5fd;
+  outline: 2px solid var(--sc-accent-ring);
   outline-offset: -2px;
 }
 
 .home-footer-main {
-  background: #232f3e;
+  background: var(--sc-footer-main);
   padding: 44px 24px 36px;
 }
 
@@ -53,7 +54,7 @@
   margin: 0 0 14px;
   font-size: 15px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--sc-footer-heading);
 }
 
 .home-footer-col-list {
@@ -67,25 +68,25 @@
 
 .home-footer-col-list a {
   font-size: 13px;
-  color: #d5d9dd;
+  color: var(--sc-footer-link);
   text-decoration: none;
   line-height: 1.5;
 }
 
 .home-footer-col-list a:hover {
   text-decoration: underline;
-  color: #ffffff;
+  color: var(--sc-footer-link-hover);
 }
 
 .home-footer-col-list a:focus-visible {
-  outline: 2px solid #c4b5fd;
+  outline: 2px solid var(--sc-accent-ring);
   outline-offset: 2px;
   border-radius: 2px;
 }
 
 .home-footer-band {
-  background: #232f3e;
-  border-top: 1px solid #3a4a5e;
+  background: var(--sc-footer-band);
+  border-top: 1px solid var(--sc-footer-border);
   padding: 22px 24px;
 }
 
@@ -102,7 +103,7 @@
 .home-footer-logo {
   font-size: 20px;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--sc-footer-heading);
   letter-spacing: -0.01em;
   display: inline-flex;
   align-items: center;
@@ -110,7 +111,7 @@
 }
 
 .home-footer-logo span[aria-hidden] {
-  color: #c4b5fd;
+  color: var(--sc-accent);
   font-size: 18px;
 }
 
@@ -120,9 +121,9 @@
   gap: 8px;
   padding: 8px 14px;
   border-radius: 8px;
-  border: 1px solid #5a6878;
-  background: #232f3e;
-  color: #e7e8ea;
+  border: 1px solid var(--sc-footer-pill-border);
+  background: var(--sc-surface-muted);
+  color: var(--sc-footer-heading);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -130,19 +131,19 @@
 }
 
 .home-footer-pill:hover {
-  border-color: #c4b5fd;
-  color: #ffffff;
+  border-color: var(--sc-accent);
+  color: var(--sc-footer-link-hover);
 }
 
 .home-footer-pill:focus-visible {
-  outline: 2px solid #c4b5fd;
+  outline: 2px solid var(--sc-accent-ring);
   outline-offset: 2px;
 }
 
 .home-footer-bottom {
-  background: #131a23;
+  background: var(--sc-footer-bottom);
   padding: 30px 24px 32px;
-  color: #a7adb4;
+  color: var(--sc-footer-muted);
 }
 
 .home-footer-bottom-inner {
@@ -154,7 +155,7 @@
   list-style: none;
   margin: 0 0 22px;
   padding: 0 0 22px;
-  border-bottom: 1px solid #2c3a4f;
+  border-bottom: 1px solid var(--sc-footer-border);
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px 24px;
@@ -169,12 +170,12 @@
 .home-footer-service-name {
   font-size: 13px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--sc-footer-heading);
 }
 
 .home-footer-service-desc {
   font-size: 12px;
-  color: #8d949c;
+  color: var(--sc-footer-muted);
   line-height: 1.45;
   white-space: pre-line;
 }
@@ -189,17 +190,17 @@
 
 .home-footer-legal a {
   font-size: 12px;
-  color: #c0c5cb;
+  color: var(--sc-footer-link);
   text-decoration: none;
 }
 
 .home-footer-legal a:hover {
-  color: #ffffff;
+  color: var(--sc-footer-link-hover);
   text-decoration: underline;
 }
 
 .home-footer-legal a:focus-visible {
-  outline: 2px solid #c4b5fd;
+  outline: 2px solid var(--sc-accent-ring);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -207,7 +208,7 @@
 .home-footer-copy {
   text-align: center;
   font-size: 12px;
-  color: #8d949c;
+  color: var(--sc-footer-muted);
   margin: 0;
 }
 

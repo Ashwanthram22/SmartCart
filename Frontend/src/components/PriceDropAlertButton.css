@@ -3,16 +3,16 @@
   align-items: center;
   gap: 6px;
   border-radius: 10px;
-  border: 1px solid rgba(15, 118, 110, 0.45);
-  background: #fff;
-  color: #0f766e;
+  border: 1px solid var(--sc-success-action-border);
+  background: var(--sc-surface);
+  color: var(--sc-success-action);
   font-weight: 600;
   cursor: pointer;
   transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
 }
 
 .pda-btn:hover:not(:disabled) {
-  background: rgba(15, 118, 110, 0.08);
+  background: var(--sc-success-action-soft);
 }
 
 .pda-btn:disabled {
@@ -21,7 +21,7 @@
 }
 
 .pda-btn:focus-visible {
-  outline: 2px solid #0f766e;
+  outline: 2px solid var(--sc-success-action);
   outline-offset: 2px;
 }
 
@@ -38,13 +38,13 @@
 }
 
 .pda-btn--on {
-  background: rgba(15, 118, 110, 0.12);
-  border-color: rgba(15, 118, 110, 0.55);
-  color: #0f766e;
+  background: var(--sc-success-action-on-bg);
+  border-color: var(--sc-success-action-border);
+  color: var(--sc-success-action);
 }
 
 .pda-btn--on:hover:not(:disabled) {
-  background: rgba(15, 118, 110, 0.2);
+  background: var(--sc-success-action-soft);
 }
 
 .pda-btn-remove {
@@ -54,7 +54,7 @@
   width: 18px;
   height: 18px;
   border-radius: 999px;
-  background: rgba(15, 118, 110, 0.16);
+  background: var(--sc-success-action-soft);
   margin-left: 4px;
   cursor: pointer;
   color: inherit;
@@ -62,11 +62,11 @@
 }
 
 .pda-btn-remove:hover {
-  background: rgba(15, 118, 110, 0.28);
+  background: var(--sc-success-action-on-bg);
 }
 
 .pda-btn-remove:focus-visible {
-  outline: 2px solid #0f766e;
+  outline: 2px solid var(--sc-success-action);
   outline-offset: 1px;
 }
 
@@ -84,9 +84,9 @@
 }
 
 .pda-dialog {
-  background: #fff;
+  background: var(--sc-surface);
   border-radius: 14px;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
+  box-shadow: var(--sc-shadow-lg);
   padding: 22px 24px 18px;
   width: min(100%, 420px);
   animation: pdaIn 180ms ease-out;
@@ -103,7 +103,7 @@
   margin: 0;
   font-size: 1.05rem;
   font-weight: 700;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 .pda-close {
@@ -116,24 +116,24 @@
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  color: #64748b;
+  color: var(--sc-text-muted);
   cursor: pointer;
   transition: background 120ms ease;
 }
 
 .pda-close:hover {
-  background: rgba(15, 23, 42, 0.06);
+  background: var(--sc-surface-muted);
 }
 
 .pda-close:focus-visible {
-  outline: 2px solid #6b38d4;
+  outline: 2px solid var(--sc-accent);
   outline-offset: 2px;
 }
 
 .pda-subtitle {
   margin: 8px 0 16px;
   font-size: 14px;
-  color: #475569;
+  color: var(--sc-text-faint);
   line-height: 1.5;
 }
 
@@ -149,7 +149,7 @@
   gap: 6px;
   font-size: 13px;
   font-weight: 600;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 .pda-input-wrap {
@@ -162,7 +162,7 @@
   position: absolute;
   left: 12px;
   font-weight: 600;
-  color: #64748b;
+  color: var(--sc-text-muted);
   pointer-events: none;
 }
 
@@ -171,9 +171,9 @@
   height: 42px;
   padding: 0 12px 0 24px;
   border-radius: 10px;
-  border: 1px solid rgba(15, 23, 42, 0.18);
-  background: #fff;
-  color: #141b2b;
+  border: 1px solid var(--sc-input-border);
+  background: var(--sc-input-bg);
+  color: var(--sc-text);
   font-size: 14px;
   font-family: inherit;
   outline: none;
@@ -182,14 +182,14 @@
 
 .pda-input-wrap input:focus,
 .pda-input-wrap input:focus-visible {
-  border-color: #6b38d4;
-  box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.18);
+  border-color: var(--sc-input-focus-border);
+  box-shadow: 0 0 0 3px var(--sc-input-focus-ring);
 }
 
 .pda-error {
   margin: 0;
   font-size: 13px;
-  color: #b91c1c;
+  color: var(--sc-error);
   font-weight: 500;
 }
 
@@ -213,23 +213,23 @@
 }
 
 .pda-secondary {
-  border: 1px solid rgba(15, 23, 42, 0.18);
-  background: #fff;
-  color: #141b2b;
+  border: 1px solid var(--sc-border-strong);
+  background: var(--sc-surface);
+  color: var(--sc-text);
 }
 
 .pda-secondary:hover:not(:disabled) {
-  background: #f5f4fb;
+  background: var(--sc-surface-muted);
 }
 
 .pda-primary {
   border: 0;
-  background: #6b38d4;
-  color: #fff;
+  background: var(--sc-accent-container);
+  color: var(--sc-text-on-accent-container);
 }
 
 .pda-primary:hover:not(:disabled) {
-  background: #5527b6;
+  background: var(--sc-accent-container-hover);
 }
 
 .pda-secondary:disabled,
@@ -240,7 +240,7 @@
 
 .pda-secondary:focus-visible,
 .pda-primary:focus-visible {
-  outline: 2px solid #6b38d4;
+  outline: 2px solid var(--sc-accent);
   outline-offset: 2px;
 }
 

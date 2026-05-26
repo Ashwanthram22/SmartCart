@@ -13,7 +13,7 @@
 
 .epd-dialog {
   width: min(460px, 100%);
-  background: #fff;
+  background: var(--sc-surface);
   border-radius: 18px;
   box-shadow: 0 28px 60px -20px rgba(15, 23, 42, 0.45);
   display: flex;
@@ -31,7 +31,7 @@
 .epd-title {
   margin: 0;
   font-size: 1.15rem;
-  color: #0f172a;
+  color: var(--sc-text);
   letter-spacing: -0.01em;
 }
 
@@ -44,12 +44,12 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  color: #475569;
+  color: var(--sc-text-faint);
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
-.epd-close:hover { background: #f1f5f9; color: #0f172a; }
+.epd-close:hover { background: var(--sc-border-subtle); color: var(--sc-text); }
 
 .epd-form {
   display: flex;
@@ -67,7 +67,7 @@
 .epd-label {
   font-size: 0.86rem;
   font-weight: 600;
-  color: #334155;
+  color: var(--sc-text-faint);
 }
 
 .epd-field input {
@@ -76,25 +76,25 @@
   border-radius: 10px;
   border: 1px solid #d1d5db;
   font-size: 0.95rem;
-  color: #0f172a;
-  background: #fff;
+  color: var(--sc-text);
+  background: var(--sc-surface);
   transition: border-color 120ms ease, box-shadow 120ms ease;
 }
 
 .epd-field input:focus {
   outline: none;
-  border-color: #6b38d4;
+  border-color: var(--sc-accent);
   box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.15);
 }
 
 .epd-field input:disabled {
-  background: #f8fafc;
-  color: #6b7280;
+  background: var(--sc-surface-high);
+  color: var(--sc-text-muted);
   cursor: not-allowed;
 }
 
 .epd-hint {
-  color: #6b7280;
+  color: var(--sc-text-muted);
   font-size: 0.78rem;
 }
 
@@ -129,17 +129,17 @@
 
 .epd-btn--ghost {
   background: transparent;
-  color: #475569;
+  color: var(--sc-text-faint);
   border-color: #e2e8f0;
 }
 .epd-btn--ghost:hover:not(:disabled) {
-  background: #f1f5f9;
-  color: #0f172a;
+  background: var(--sc-border-subtle);
+  color: var(--sc-text);
 }
 
 .epd-btn--primary {
-  background: linear-gradient(135deg, #7c3aed, #6b38d4);
-  color: #fff;
+  background: linear-gradient(135deg, #7c3aed, var(--sc-accent));
+  color: var(--sc-text-on-accent);
 }
 .epd-btn--primary:hover:not(:disabled) {
   filter: brightness(1.05);

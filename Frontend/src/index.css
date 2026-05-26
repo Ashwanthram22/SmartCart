@@ -1,8 +1,8 @@
 body {
   margin: 0;
   font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
-  background: #f9fafb;
-  color: #111827;
+  background: var(--sc-bg);
+  color: var(--sc-text);
 }
 
 /* ----- Focus rings -----
@@ -26,7 +26,7 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 summary:focus-visible {
-  outline: 2px solid #c4b5fd;
+  outline: 2px solid var(--sc-accent-ring);
   outline-offset: 2px;
 }
 
@@ -36,7 +36,7 @@ summary:focus-visible {
    matches the dark navy / lavender accent palette. */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #475569 #e9ecf2;
+  scrollbar-color: var(--sc-scrollbar-thumb) var(--sc-scrollbar-track);
 }
 
 ::-webkit-scrollbar {
@@ -45,24 +45,24 @@ summary:focus-visible {
 }
 
 ::-webkit-scrollbar-track {
-  background: #e9ecf2;
+  background: var(--sc-scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: var(--sc-scrollbar-thumb);
   border-radius: 999px;
-  border: 2px solid #e9ecf2;
+  border: 2px solid var(--sc-scrollbar-track);
   background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #1f2937;
+  background: var(--sc-scrollbar-thumb-hover);
   background-clip: padding-box;
-  border: 2px solid #e9ecf2;
+  border: 2px solid var(--sc-scrollbar-track);
 }
 
 ::-webkit-scrollbar-corner {
-  background: #e9ecf2;
+  background: var(--sc-scrollbar-track);
 }
 
 /* ----- Reduced motion ------------------------------------------------------

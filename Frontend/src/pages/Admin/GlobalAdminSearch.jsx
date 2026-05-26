@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import {
   Activity as ActivityIcon,
   ArrowRight,
+  Bell,
   Clock,
   LayoutGrid,
   Package,
@@ -61,6 +62,13 @@ const PAGE_TARGETS = [
   { id: "page-dashboard", label: "Dashboard", subtitle: "Real-time metrics and recent activity", to: "/admin", icon: LayoutGrid },
   { id: "page-inventory", label: "Inventory", subtitle: "Manage products, stock and pricing", to: "/admin/inventory", icon: Package },
   { id: "page-orders", label: "Orders", subtitle: "Review and update customer orders", to: "/admin/orders", icon: ShoppingCart },
+  {
+    id: "page-customer-alerts",
+    label: "Customer alerts",
+    subtitle: "Stock and price-drop requests from shoppers",
+    to: "/admin/customer-alerts",
+    icon: Bell,
+  },
   { id: "page-analytics", label: "Analytics", subtitle: "Revenue trends and category drill-downs", to: "/admin/analytics", icon: PieChart },
   { id: "page-activity", label: "Activity", subtitle: "Audit trail of every admin write", to: "/admin/activity", icon: ActivityIcon },
 ];

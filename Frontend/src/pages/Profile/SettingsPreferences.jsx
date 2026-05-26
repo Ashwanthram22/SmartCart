@@ -10,7 +10,9 @@ import {
 import { ProfileLayout } from "./ProfileLayout";
 import SettingsTabs from "./SettingsTabs";
 import { getPreferences, updatePreferences } from "../../api/client";
+import { useTheme } from "../../context/ThemeProvider";
 import { useToast } from "../../hooks/useToast";
+import { emitThemeChanged } from "../../utils/theme";
 import usePageMeta from "../../hooks/usePageMeta";
 import Skeleton from "../../components/Skeleton";
 import AdmDropdown from "../../components/AdmDropdown";
@@ -78,6 +80,7 @@ export default function SettingsPreferences() {
   });
 
   const toast = useToast();
+  const { setPreference } = useTheme();
   const [prefs, setPrefs] = useState(DEFAULTS);
   const [original, setOriginal] = useState(DEFAULTS);
   const [loading, setLoading] = useState(true);
@@ -154,6 +157,11 @@ export default function SettingsPreferences() {
       };
       setPrefs(merged);
       setOriginal(merged);
+      setPreference(merged.theme);
+      emitThemeChanged({
+        preference: merged.theme,
+        resolved: merged.theme === "system" ? undefined : merged.theme,
+      });
       toast.success("Preferences saved.");
     } catch (err) {
       const msg = err.response?.data?.message || "Couldn't save your preferences.";
@@ -166,6 +174,7 @@ export default function SettingsPreferences() {
 
   const handleReset = () => {
     setPrefs(original);
+    setPreference(original.theme);
     setError("");
   };
 
@@ -245,7 +254,10 @@ export default function SettingsPreferences() {
                   <AdmDropdown
                     value={prefs.theme}
                     options={THEMES}
-                    onChange={(next) => updateField({ theme: next })}
+                    onChange={(next) => {
+                      updateField({ theme: next });
+                      setPreference(next);
+                    }}
                     ariaLabel="Color theme"
                     className="sp-field-dd"
                   />

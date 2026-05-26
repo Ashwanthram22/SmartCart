@@ -1,0 +1,274 @@
+/**
+ * SmartCart design tokens — light (default) + dark (reference palette).
+ * Use var(--sc-*) in component CSS instead of hardcoded hex where possible.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* Page & surfaces */
+  --sc-bg: #f9fafb;
+  --sc-page-bg: #f9f9ff;
+  --sc-surface: #ffffff;
+  --sc-surface-muted: #f3f4f6;
+  --sc-surface-elevated: #ffffff;
+  --sc-surface-high: #f8fafc;
+  --sc-surface-low: #f1f5f9;
+  --sc-surface-lowest: #e9ecf2;
+
+  /* Text */
+  --sc-text: #141b2b;
+  --sc-text-secondary: #374151;
+  --sc-text-muted: #6b7280;
+  --sc-text-faint: #94a3b8;
+  --sc-text-on-accent: #ffffff;
+  --sc-text-on-accent-container: #ffffff;
+  --sc-chip-active-bg: #ede8ff;
+
+  /* Product card pills — glass like heart btn, neutral label text */
+  --sc-badge-bg: rgba(255, 255, 255, 0.88);
+  --sc-badge-text: #475569;
+  --sc-badge-border: rgba(15, 23, 42, 0.12);
+  --sc-fav-saved: #e11d48;
+
+  /* Brand / accent */
+  --sc-accent: #6b38d4;
+  --sc-accent-strong: #5527b6;
+  --sc-accent-hover: #5124c7;
+  --sc-accent-soft: rgba(107, 56, 212, 0.1);
+  --sc-accent-soft-border: rgba(107, 56, 212, 0.28);
+  --sc-accent-container: #6b38d4;
+  --sc-accent-container-hover: #5b2eb8;
+  --sc-accent-ring: #c4b5fd;
+  --sc-accent-glow: rgba(107, 56, 212, 0.2);
+
+  /* Borders & dividers */
+  --sc-border: #ececf2;
+  --sc-border-strong: #e5e7eb;
+  --sc-border-subtle: #f1f5f9;
+  --sc-outline: #d1d5db;
+
+  /* Nav / glass */
+  --sc-nav-bg: #ffffff;
+  --sc-nav-border: #ececf2;
+  --sc-glass-bg: rgba(255, 255, 255, 0.86);
+  --sc-glass-border: rgba(73, 69, 82, 0.12);
+  --sc-glass-panel: rgba(255, 255, 255, 0.92);
+
+  /* Semantic */
+  --sc-success: #16a34a;
+  --sc-success-soft: rgba(22, 163, 74, 0.12);
+  --sc-danger: #dc2626;
+  --sc-danger-soft: rgba(220, 38, 38, 0.1);
+  --sc-warning: #f59e0b;
+  --sc-error: #dc2626;
+  --sc-error-container: #fef2f2;
+  --sc-on-error-container: #991b1b;
+
+  /* Shadows */
+  --sc-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --sc-shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --sc-shadow-lg: 0 12px 40px rgba(15, 23, 42, 0.12);
+
+  /* Scrollbar */
+  --sc-scrollbar-track: #e9ecf2;
+  --sc-scrollbar-thumb: #475569;
+  --sc-scrollbar-thumb-hover: #1f2937;
+
+  /* Inputs */
+  --sc-input-bg: #ffffff;
+  --sc-input-border: rgba(107, 56, 212, 0.28);
+  --sc-input-focus-border: rgba(107, 56, 212, 0.55);
+  --sc-input-focus-ring: rgba(107, 56, 212, 0.08);
+
+  /* Inverse (tooltips, etc.) */
+  --sc-inverse-surface: #141b2b;
+  --sc-inverse-text: #f9fafb;
+
+  /* Text on photos / hero banners (always light) */
+  --sc-on-media: #ffffff;
+  --sc-on-media-muted: rgba(255, 255, 255, 0.88);
+  --sc-on-media-border: rgba(255, 255, 255, 0.85);
+  --sc-on-media-hover: rgba(255, 255, 255, 0.1);
+
+  /* Footer (Amazon-style in light; tokens keep sections consistent) */
+  --sc-footer-top: #2c3a4f;
+  --sc-footer-top-hover: #38475e;
+  --sc-footer-main: #232f3e;
+  --sc-footer-band: #232f3e;
+  --sc-footer-bottom: #131a23;
+  --sc-footer-heading: #ffffff;
+  --sc-footer-link: #d5d9dd;
+  --sc-footer-link-hover: #ffffff;
+  --sc-footer-muted: #8d949c;
+  --sc-footer-border: #3a4a5e;
+  --sc-footer-pill-border: #5a6878;
+
+  /* Menus, filters, controls (dropdown / sidebar) */
+  --sc-control-hover-bg: #faf7ff;
+  --sc-control-hover-border: rgba(107, 56, 212, 0.45);
+  --sc-menu-option-hover-bg: #ede9fe;
+  --sc-menu-option-active-bg: #f5f3ff;
+  --sc-menu-option-active-hover-bg: #ddd6fe;
+  --sc-menu-option-active-text: #5527b6;
+  --sc-filter-hover-bg: #f5f3ff;
+  --sc-filter-active-bg: #f5f3ff;
+  --sc-panel-border: #d7d9e0;
+  --sc-insight-card-bg: #f6f3ff;
+  --sc-delivery-bg: rgba(99, 102, 241, 0.07);
+  --sc-delivery-border: rgba(99, 102, 241, 0.18);
+  --sc-delivery-text: #4338ca;
+  --sc-success-action: #0f766e;
+  --sc-success-action-border: rgba(15, 118, 110, 0.45);
+  --sc-success-action-soft: rgba(15, 118, 110, 0.08);
+  --sc-success-action-on-bg: rgba(15, 118, 110, 0.12);
+  --sc-card-border: #cbc3d7;
+  --sc-qty-bg: #f1f3ff;
+  --sc-toast-fg: #f8fafc;
+  --sc-stock-low-text: #b45309;
+  --sc-stock-out-text: #b91c1c;
+  --sc-profile-elevated-bg: #f1f3ff;
+}
+
+/* Dark — Material-style tokens from reference mockups */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --sc-bg: #0b1326;
+  --sc-page-bg: #0b1326;
+  --sc-surface: #171f33;
+  --sc-surface-muted: #222a3d;
+  --sc-surface-elevated: #2d3449;
+  --sc-surface-high: #222a3d;
+  --sc-surface-low: #131b2e;
+  --sc-surface-lowest: #060e20;
+
+  --sc-text: #dae2fd;
+  --sc-text-secondary: #dae2fd;
+  --sc-text-muted: #cac4d4;
+  --sc-text-faint: #948e9d;
+  --sc-text-on-accent: #381385;
+  --sc-text-on-accent-container: #3c1989;
+  --sc-chip-active-bg: rgba(206, 189, 255, 0.15);
+
+  --sc-badge-bg: rgba(15, 23, 42, 0.72);
+  --sc-badge-text: #cac4d4;
+  --sc-badge-border: rgba(73, 69, 82, 0.45);
+  --sc-fav-saved: #fb7185;
+
+  --sc-accent: #cebdff;
+  --sc-accent-strong: #a78bfa;
+  --sc-accent-hover: #e8ddff;
+  --sc-accent-soft: rgba(206, 189, 255, 0.12);
+  --sc-accent-soft-border: rgba(206, 189, 255, 0.3);
+  --sc-accent-container: #a78bfa;
+  --sc-accent-container-hover: #b99bff;
+  --sc-accent-ring: #cebdff;
+  --sc-accent-glow: rgba(167, 139, 250, 0.3);
+
+  --sc-border: rgba(73, 69, 82, 0.35);
+  --sc-border-strong: #494552;
+  --sc-border-subtle: rgba(73, 69, 82, 0.2);
+  --sc-outline: #948e9d;
+
+  /* Solid nav — no transparency (icons stay readable over hero/images) */
+  --sc-nav-bg: #0b1326;
+  --sc-nav-border: rgba(73, 69, 82, 0.45);
+  --sc-glass-bg: rgba(11, 19, 38, 0.7);
+  --sc-glass-border: rgba(73, 69, 82, 0.3);
+  --sc-glass-panel: rgba(30, 41, 59, 0.7);
+
+  --sc-success: #4ade80;
+  --sc-success-soft: rgba(74, 222, 128, 0.12);
+  --sc-danger: #ffb4ab;
+  --sc-danger-soft: rgba(255, 180, 171, 0.12);
+  --sc-warning: #fbbf24;
+  --sc-error: #ffb4ab;
+  --sc-error-container: #93000a;
+  --sc-on-error-container: #ffdad6;
+
+  --sc-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --sc-shadow-md: 0 8px 28px rgba(0, 0, 0, 0.4);
+  --sc-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+
+  --sc-scrollbar-track: #0b1326;
+  --sc-scrollbar-thumb: #3c4a5e;
+  --sc-scrollbar-thumb-hover: #494552;
+
+  --sc-input-bg: #171f33;
+  --sc-input-border: rgba(73, 69, 82, 0.4);
+  --sc-input-focus-border: rgba(206, 189, 255, 0.55);
+  --sc-input-focus-ring: rgba(206, 189, 255, 0.12);
+
+  --sc-inverse-surface: #dae2fd;
+  --sc-inverse-text: #283044;
+
+  --sc-on-media: #ffffff;
+  --sc-on-media-muted: rgba(255, 255, 255, 0.88);
+  --sc-on-media-border: rgba(255, 255, 255, 0.85);
+  --sc-on-media-hover: rgba(255, 255, 255, 0.1);
+
+  /* Footer — same navy family as page (no grey slab) */
+  --sc-footer-top: #171f33;
+  --sc-footer-top-hover: #222a3d;
+  --sc-footer-main: #131b2e;
+  --sc-footer-band: #131b2e;
+  --sc-footer-bottom: #060e20;
+  --sc-footer-heading: #dae2fd;
+  --sc-footer-link: #cac4d4;
+  --sc-footer-link-hover: #cebdff;
+  --sc-footer-muted: #948e9d;
+  --sc-footer-border: rgba(73, 69, 82, 0.4);
+  --sc-footer-pill-border: rgba(73, 69, 82, 0.55);
+
+  --sc-control-hover-bg: rgba(206, 189, 255, 0.1);
+  --sc-control-hover-border: var(--sc-accent-soft-border);
+  --sc-menu-option-hover-bg: rgba(206, 189, 255, 0.14);
+  --sc-menu-option-active-bg: rgba(206, 189, 255, 0.2);
+  --sc-menu-option-active-hover-bg: rgba(206, 189, 255, 0.28);
+  --sc-menu-option-active-text: var(--sc-accent-hover);
+  --sc-filter-hover-bg: rgba(206, 189, 255, 0.12);
+  --sc-filter-active-bg: rgba(206, 189, 255, 0.16);
+  --sc-panel-border: var(--sc-border-strong);
+  --sc-insight-card-bg: rgba(206, 189, 255, 0.08);
+  --sc-delivery-bg: rgba(129, 140, 248, 0.12);
+  --sc-delivery-border: rgba(129, 140, 248, 0.28);
+  --sc-delivery-text: #a5b4fc;
+  --sc-success-action: #4ade80;
+  --sc-success-action-border: rgba(74, 222, 128, 0.45);
+  --sc-success-action-soft: rgba(74, 222, 128, 0.1);
+  --sc-success-action-on-bg: rgba(74, 222, 128, 0.16);
+  --sc-card-border: var(--sc-border-strong);
+  --sc-qty-bg: var(--sc-surface-muted);
+  --sc-toast-fg: #f1f5f9;
+  --sc-stock-low-text: #fbbf24;
+  --sc-stock-out-text: #ffb4ab;
+  --sc-profile-elevated-bg: var(--sc-surface-muted);
+}
+
+/* Admin console tokens */
+[data-theme="dark"] .adm-shell {
+  --adm-bg: #0b1326;
+  --adm-surface: #171f33;
+  --adm-text: #dae2fd;
+  --adm-muted: #cac4d4;
+  --adm-border: rgba(73, 69, 82, 0.35);
+  --adm-accent: #cebdff;
+  --adm-accent-strong: #a78bfa;
+  --adm-success: #4ade80;
+  --adm-danger: #ffb4ab;
+  --adm-warning: #fbbf24;
+}
+
+[data-theme="dark"] .adm-brand-mark {
+  background: linear-gradient(135deg, #a78bfa 0%, #8994ff 100%);
+  color: #3c1989;
+}
+
+[data-theme="dark"] .adm-icon-badge {
+  border-color: #0b1326;
+}
+
+[data-theme="dark"] .adm-icon-btn:hover .adm-icon-badge {
+  border-color: #171f33;
+}

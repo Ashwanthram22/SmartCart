@@ -5,8 +5,8 @@
 
 .dashboard-header {
   height: 64px;
-  border-bottom: 1px solid #e5e7eb;
-  background: #ffffff;
+  border-bottom: 1px solid var(--sc-border-strong);
+  background: var(--sc-surface);
   padding: 0 22px;
   display: flex;
   align-items: center;
@@ -16,7 +16,7 @@
 .dashboard-header h1 {
   margin: 0;
   font-size: 22px;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 .dashboard-header-actions {
@@ -28,7 +28,7 @@
 .dashboard-icon-btn {
   border: 0;
   background: transparent;
-  color: #64748b;
+  color: var(--sc-text-muted);
   padding: 8px;
   border-radius: 10px;
   cursor: pointer;
@@ -37,7 +37,7 @@
 }
 
 .dashboard-icon-btn:hover {
-  color: #6b38d4;
+  color: var(--sc-accent);
   background: rgba(107, 56, 212, 0.06);
 }
 
@@ -49,7 +49,7 @@
 
 .dashboard-main h2 {
   margin: 0;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 .dashboard-main > p {
@@ -72,9 +72,9 @@
 }
 
 .dashboard-products article {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--sc-border-strong);
   border-radius: 12px;
-  background: #ffffff;
+  background: var(--sc-surface);
   padding: 10px;
 }
 
@@ -88,11 +88,11 @@
 .dashboard-products h3 {
   margin: 10px 0 6px;
   font-size: 15px;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 .dashboard-products p {
   margin: 0;
-  color: #6b38d4;
+  color: var(--sc-accent);
   font-weight: 600;
 }

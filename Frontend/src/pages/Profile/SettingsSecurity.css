@@ -21,13 +21,13 @@
 .settings-subnav-link {
   font-size: 14px;
   font-weight: 500;
-  color: #64748b;
+  color: var(--sc-text-muted);
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .settings-subnav-link:hover {
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 /**
@@ -49,23 +49,23 @@
   padding: 10px 2px;
   font-size: 14px;
   font-weight: 600;
-  color: #64748b;
+  color: var(--sc-text-muted);
   text-decoration: none;
   border-bottom: 2px solid transparent;
   transition: color 0.18s ease, border-color 0.18s ease;
 }
 
 .settings-subnav-tab:hover {
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 .settings-subnav-tab--active {
-  color: #6b38d4;
-  border-bottom-color: #6b38d4;
+  color: var(--sc-accent);
+  border-bottom-color: var(--sc-accent);
 }
 
 .settings-subnav-tab:focus-visible {
-  outline: 2px solid #6b38d4;
+  outline: 2px solid var(--sc-accent);
   outline-offset: 4px;
   border-radius: 4px;
 }
@@ -83,7 +83,7 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #6b38d4;
+  color: var(--sc-accent);
 }
 
 .settings-security-title {
@@ -91,7 +91,7 @@
   font-size: clamp(1.75rem, 3vw, 1.875rem);
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 .settings-security-lede {
@@ -99,7 +99,7 @@
   max-width: 560px;
   font-size: 16px;
   line-height: 1.55;
-  color: #64748b;
+  color: var(--sc-text-muted);
 }
 
 .settings-stack {
@@ -111,16 +111,14 @@
 .settings-card {
   padding: 28px 32px;
   border-radius: 14px;
-  border: 1px solid rgba(229, 231, 235, 0.65);
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--sc-card-border);
+  background: var(--sc-surface);
   transition: box-shadow 0.25s, border-color 0.25s;
 }
 
 .settings-card:hover {
   box-shadow: 0 4px 12px rgba(139, 92, 246, 0.08);
-  border-color: #8455ef;
+  border-color: var(--sc-accent-strong);
 }
 
 .settings-card-head {
@@ -143,7 +141,7 @@
   place-items: center;
   border-radius: 10px;
   background: rgba(107, 56, 212, 0.12);
-  color: #6b38d4;
+  color: var(--sc-accent);
 }
 
 .settings-card-title {
@@ -151,13 +149,13 @@
   font-size: 1.25rem;
   font-weight: 600;
   letter-spacing: -0.01em;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 .settings-card-sub {
   margin: 6px 0 0;
   font-size: 14px;
-  color: #64748b;
+  color: var(--sc-text-muted);
   line-height: 1.45;
 }
 
@@ -187,30 +185,30 @@
 .settings-field label {
   font-size: 14px;
   font-weight: 500;
-  color: #494454;
+  color: var(--sc-text-secondary);
 }
 
 .settings-field input {
   height: 48px;
   padding: 0 16px;
   border-radius: 10px;
-  border: 1px solid #cbc3d7;
+  border: 1px solid var(--sc-input-border);
   font-size: 15px;
   font-family: inherit;
-  color: #141b2b;
-  background: #ffffff;
+  color: var(--sc-text);
+  background: var(--sc-input-bg);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .settings-field input::placeholder {
-  color: #94a3b8;
+  color: var(--sc-text-faint);
   letter-spacing: 0.12em;
 }
 
 .settings-field input:focus {
   outline: none;
-  border-color: #6b38d4;
-  box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.2);
+  border-color: var(--sc-input-focus-border);
+  box-shadow: 0 0 0 3px var(--sc-input-focus-ring);
 }
 
 .settings-form-actions {
@@ -225,8 +223,8 @@
   padding: 0 32px;
   border: none;
   border-radius: 10px;
-  background: #6b38d4;
-  color: #ffffff;
+  background: var(--sc-accent-container);
+  color: var(--sc-text-on-accent-container);
   font-size: 14px;
   font-weight: 600;
   font-family: inherit;
@@ -236,7 +234,7 @@
 }
 
 .settings-btn-primary:hover {
-  background: #8455ef;
+  background: var(--sc-accent-strong);
 }
 
 .settings-btn-primary:active {
@@ -313,18 +311,18 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #ffffff;
+  background: var(--sc-surface);
   border: 1px solid #cbd5e1;
   transition: transform 0.2s;
 }
 
 .settings-toggle-input:focus-visible + .settings-toggle-track {
-  outline: 2px solid #6b38d4;
+  outline: 2px solid var(--sc-accent);
   outline-offset: 2px;
 }
 
 .settings-toggle-input:checked + .settings-toggle-track {
-  background: #6b38d4;
+  background: var(--sc-accent);
 }
 
 .settings-toggle-input:checked + .settings-toggle-track::after {
@@ -335,7 +333,7 @@
 .settings-toggle-text {
   font-size: 14px;
   font-weight: 500;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 /* Login activity */
@@ -355,12 +353,12 @@
   gap: 16px;
   padding: 16px;
   border-radius: 10px;
-  border: 1px solid #f1f5f9;
+  border: 1px solid var(--sc-border-subtle);
   transition: background 0.15s;
 }
 
 .settings-activity-row:hover {
-  background: #f1f3ff;
+  background: var(--sc-profile-elevated-bg);
 }
 
 .settings-activity-main {
@@ -377,14 +375,14 @@
   border-radius: 999px;
   display: grid;
   place-items: center;
-  background: #f8fafc;
-  color: #94a3b8;
+  background: var(--sc-surface-high);
+  color: var(--sc-text-faint);
   transition: background 0.15s, color 0.15s;
 }
 
 .settings-activity-row:hover .settings-activity-device-icon {
-  background: #ffffff;
-  color: #6b38d4;
+  background: var(--sc-surface);
+  color: var(--sc-accent);
 }
 
 .settings-activity-title {
@@ -395,7 +393,7 @@
   gap: 8px;
   font-size: 15px;
   font-weight: 700;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 .settings-activity-badge {
@@ -405,14 +403,14 @@
   text-transform: uppercase;
   padding: 3px 8px;
   border-radius: 999px;
-  background: #dcfce7;
-  color: #15803d;
+  background: var(--sc-success-soft);
+  color: var(--sc-success-action);
 }
 
 .settings-activity-meta {
   margin: 0;
   font-size: 12px;
-  color: #64748b;
+  color: var(--sc-text-muted);
   line-height: 1.4;
 }
 
@@ -420,7 +418,7 @@
   flex-shrink: 0;
   font-size: 12px;
   font-weight: 500;
-  color: #94a3b8;
+  color: var(--sc-text-faint);
 }
 
 .settings-activity-view-all {
@@ -437,20 +435,20 @@
   font-size: 14px;
   font-weight: 600;
   font-family: inherit;
-  color: #6b38d4;
+  color: var(--sc-accent);
   cursor: pointer;
   transition: background 0.15s;
 }
 
 .settings-activity-view-all:hover {
-  background: rgba(107, 56, 212, 0.08);
+  background: var(--sc-input-focus-ring);
 }
 
 .settings-activity-empty {
   margin: 0;
   padding: 12px 0 4px;
   font-size: 14px;
-  color: #64748b;
+  color: var(--sc-text-muted);
   line-height: 1.5;
 }
 
@@ -461,7 +459,7 @@
   padding: 24px;
   overflow: hidden;
   background: linear-gradient(135deg, #7c3aed 0%, #4338ca 100%);
-  color: #ffffff;
+  color: var(--sc-surface);
   box-shadow: 0 10px 40px rgba(91, 33, 182, 0.35);
 }
 
@@ -504,7 +502,7 @@
   place-items: center;
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(8px);
-  color: #ffffff;
+  color: var(--sc-surface);
 }
 
 .settings-ai-banner-copy {
@@ -516,7 +514,7 @@
   margin: 0 0 6px;
   font-size: 1.25rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--sc-surface);
 }
 
 .settings-ai-banner-text {
@@ -531,7 +529,7 @@
   padding: 10px 22px;
   border: none;
   border-radius: 10px;
-  background: #ffffff;
+  background: var(--sc-surface);
   color: #6d28d9;
   font-size: 14px;
   font-weight: 700;
@@ -577,13 +575,13 @@
 .settings-footer-brand {
   font-weight: 800;
   font-size: 15px;
-  color: #0f172a;
+  color: var(--sc-text);
 }
 
 .settings-footer-copy {
   margin: 8px 0 0;
   font-size: 14px;
-  color: #64748b;
+  color: var(--sc-text-muted);
 }
 
 .settings-footer-links {
@@ -595,11 +593,11 @@
 
 .settings-footer-links a {
   font-size: 14px;
-  color: #64748b;
+  color: var(--sc-text-muted);
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .settings-footer-links a:hover {
-  color: #141b2b;
+  color: var(--sc-text);
 }

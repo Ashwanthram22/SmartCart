@@ -60,7 +60,7 @@
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: #fff;
+  color: var(--sc-text-on-accent);
 }
 
 .assist-header-context {
@@ -141,8 +141,8 @@
 }
 
 .assist-turn--user .assist-bubble {
-  background: linear-gradient(135deg, #6b38d4 0%, #8455ef 100%);
-  color: #fff;
+  background: linear-gradient(135deg, var(--sc-accent) 0%, var(--sc-accent-strong) 100%);
+  color: var(--sc-text-on-accent);
   border-color: transparent;
   border-bottom-right-radius: 6px;
 }
@@ -258,7 +258,7 @@
 
 .assist-product-price {
   font-weight: 700;
-  color: #fff;
+  color: var(--sc-text-on-accent);
 }
 
 .assist-product-rating {
@@ -298,13 +298,13 @@
 }
 
 .assist-action-btn--primary {
-  background: #6b38d4;
-  border-color: #6b38d4;
-  color: #fff;
+  background: var(--sc-accent);
+  border-color: var(--sc-accent);
+  color: var(--sc-text-on-accent);
 }
 
 .assist-action-btn--primary:hover {
-  background: #8455ef;
+  background: var(--sc-accent-strong);
 }
 
 .assist-suggestions {
@@ -330,7 +330,7 @@
 
 .assist-suggestion-chip:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  color: var(--sc-text-on-accent);
 }
 
 .assist-error-wrap {
@@ -387,7 +387,7 @@
 .assist-error-btn--primary {
   background: rgba(127, 29, 29, 0.55);
   border-color: rgba(248, 113, 113, 0.35);
-  color: #fff;
+  color: var(--sc-text-on-accent);
 }
 
 .assist-error-btn--primary:hover:not(:disabled) {
@@ -422,7 +422,7 @@
 }
 
 .assist-input-row input:focus {
-  border-color: #8455ef;
+  border-color: var(--sc-accent-strong);
   box-shadow: 0 0 0 2px rgba(132, 85, 239, 0.25);
 }
 
@@ -436,8 +436,8 @@
   height: 44px;
   border-radius: 999px;
   border: 0;
-  background: #6b38d4;
-  color: #fff;
+  background: var(--sc-accent);
+  color: var(--sc-text-on-accent);
   font-size: 18px;
   font-weight: 700;
   cursor: pointer;
@@ -445,7 +445,7 @@
 }
 
 .assist-send:hover:not(:disabled) {
-  background: #8455ef;
+  background: var(--sc-accent-strong);
 }
 
 .assist-send:disabled {

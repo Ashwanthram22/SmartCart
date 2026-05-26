@@ -14,7 +14,7 @@
 .oid-dialog {
   width: min(620px, 100%);
   max-height: min(85vh, 760px);
-  background: #fff;
+  background: var(--sc-surface);
   border-radius: 18px;
   box-shadow: 0 28px 60px -20px rgba(15, 23, 42, 0.45);
   display: flex;
@@ -37,14 +37,14 @@
   font-size: 0.74rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #6b38d4;
+  color: var(--sc-accent);
   font-weight: 600;
 }
 
 .oid-title {
   margin: 0;
   font-size: 1.2rem;
-  color: #0f172a;
+  color: var(--sc-text);
   letter-spacing: -0.01em;
 }
 
@@ -57,9 +57,9 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  color: #475569;
+  color: var(--sc-text-faint);
 }
-.oid-close:hover { background: #f1f5f9; color: #0f172a; }
+.oid-close:hover { background: var(--sc-border-subtle); color: var(--sc-text); }
 
 .oid-body {
   padding: 22px 24px 24px;
@@ -90,13 +90,13 @@
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #6b38d4;
+  color: var(--sc-accent);
   font-weight: 600;
 }
 
 .oid-stat-value {
   font-size: 1.35rem;
-  color: #0f172a;
+  color: var(--sc-text);
   font-weight: 700;
   letter-spacing: -0.01em;
 }
@@ -109,7 +109,7 @@
   font-size: 0.76rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--sc-text-muted);
   font-weight: 600;
 }
 
@@ -129,8 +129,8 @@
   gap: 8px;
   padding: 6px 12px;
   border-radius: 999px;
-  background: #f1f5f9;
-  color: #475569;
+  background: var(--sc-border-subtle);
+  color: var(--sc-text-faint);
   font-size: 0.86rem;
   font-weight: 500;
 }
@@ -166,7 +166,7 @@
   align-items: center;
   padding: 10px 12px;
   border-radius: 10px;
-  background: #f9fafb;
+  background: var(--sc-bg);
   border: 1px solid #f1f1f4;
 }
 
@@ -178,13 +178,13 @@
   justify-content: center;
   border-radius: 50%;
   background: rgba(124, 58, 237, 0.1);
-  color: #6b38d4;
+  color: var(--sc-accent);
   font-weight: 700;
   font-size: 0.86rem;
 }
 
-.oid-rank-label { color: #0f172a; font-weight: 500; }
-.oid-rank-meta { color: #64748b; font-size: 0.85rem; }
+.oid-rank-label { color: var(--sc-text); font-weight: 500; }
+.oid-rank-meta { color: var(--sc-text-muted); font-size: 0.85rem; }
 
 /* ---- Meta rows ---- */
 .oid-section--meta {
@@ -196,11 +196,11 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.92rem;
-  color: #475569;
+  color: var(--sc-text-faint);
   padding: 6px 0;
 }
 
-.oid-meta-row strong { color: #0f172a; }
+.oid-meta-row strong { color: var(--sc-text); }
 
 @keyframes oid-fade {
   from { opacity: 0; }

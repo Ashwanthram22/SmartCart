@@ -14,7 +14,7 @@
 .ks-dialog {
   width: min(520px, 100%);
   max-height: min(85vh, 640px);
-  background: #fff;
+  background: var(--sc-surface);
   border-radius: 18px;
   box-shadow: 0 28px 60px -20px rgba(15, 23, 42, 0.45);
   display: flex;
@@ -29,7 +29,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: 22px 24px 12px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--sc-border-subtle);
 }
 
 .ks-title {
@@ -42,11 +42,11 @@
 .ks-subtitle {
   margin: 0;
   font-size: 0.85rem;
-  color: #64748b;
+  color: var(--sc-text-muted);
 }
 
 .ks-subtitle kbd {
-  background: #f1f5f9;
+  background: var(--sc-border-subtle);
   border: 1px solid #e2e8f0;
   border-radius: 4px;
   padding: 1px 6px;
@@ -59,14 +59,14 @@
   border: 0;
   font-size: 1.4rem;
   line-height: 1;
-  color: #6b7280;
+  color: var(--sc-text-muted);
   cursor: pointer;
   padding: 4px 10px;
   border-radius: 6px;
 }
 
 .ks-close:hover {
-  background: #f1f5f9;
+  background: var(--sc-border-subtle);
 }
 
 .ks-list {
@@ -85,7 +85,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 10px 0;
-  border-bottom: 1px dashed #f1f5f9;
+  border-bottom: 1px dashed var(--sc-border-subtle);
 }
 
 .ks-row:last-child {
@@ -109,7 +109,7 @@
   display: inline-block;
   min-width: 22px;
   padding: 3px 8px;
-  background: #f8fafc;
+  background: var(--sc-surface-high);
   border: 1px solid #e2e8f0;
   border-bottom-width: 2px;
   border-radius: 6px;
@@ -117,19 +117,19 @@
   font-size: 0.78rem;
   font-weight: 600;
   text-align: center;
-  color: #1f2937;
+  color: var(--sc-scrollbar-thumb-hover);
 }
 
 .ks-combo-then {
   font-size: 0.7rem;
-  color: #94a3b8;
+  color: var(--sc-text-faint);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
 .ks-desc {
   font-size: 0.9rem;
-  color: #334155;
+  color: var(--sc-text-faint);
   text-align: right;
 }
 

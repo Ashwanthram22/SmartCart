@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { TrendingDown, Check, X } from "lucide-react";
 import {
   getPriceAlerts,
@@ -8,6 +8,7 @@ import {
 import { useToast } from "../hooks/useToast";
 import { useFocusTrap } from "../hooks/useFocusTrap";
 import { isAuthenticated, onAuthChange } from "../utils/authToken";
+import { onAlertsChanged } from "../utils/alertEvents";
 import { formatMoney, CURRENCY_SYMBOL } from "../utils/money";
 import "./PriceDropAlertButton.css";
 
@@ -157,24 +158,41 @@ export default function PriceDropAlertButton({
   const [busy, setBusy] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  useEffect(() => {
+  const refreshSubscription = useCallback(async () => {
     if (!productId || !isAuthenticated()) {
+      setSubscribed(false);
+      setActiveTarget(null);
       setLoading(false);
-      return undefined;
+      return;
     }
+    setLoading(true);
+    invalidateAlertsCache();
+    const alerts = await loadAlertsOnce();
+    const own = alerts.find((a) => String(a.productId) === String(productId));
+    setSubscribed(Boolean(own));
+    setActiveTarget(own?.targetPrice ?? null);
+    setLoading(false);
+  }, [productId]);
+
+  useEffect(() => {
     let cancelled = false;
     (async () => {
-      const alerts = await loadAlertsOnce();
       if (cancelled) return;
-      const own = alerts.find((a) => String(a.productId) === String(productId));
-      setSubscribed(Boolean(own));
-      setActiveTarget(own?.targetPrice ?? null);
-      setLoading(false);
+      await refreshSubscription();
     })();
     return () => {
       cancelled = true;
     };
-  }, [productId]);
+  }, [refreshSubscription]);
+
+  useEffect(() => {
+    return onAlertsChanged((detail) => {
+      if (detail?.productId && String(detail.productId) !== String(productId)) {
+        return;
+      }
+      refreshSubscription();
+    });
+  }, [productId, refreshSubscription]);
 
   const openDialog = () => {
     if (!isAuthenticated()) {
@@ -213,9 +231,9 @@ export default function PriceDropAlertButton({
       setActiveTarget(alert?.targetPrice ?? target);
       setDialogOpen(false);
       toast.success(
-        `We'll alert you when this drops to ${formatMoney(
+        `Request sent. We'll notify you in your account when the price drops to ${formatMoney(
           alert?.targetPrice ?? target
-        )}.`
+        )} or below.`
       );
     } catch (err) {
       toast.error(err.response?.data?.message || "Couldn't set the alert.");

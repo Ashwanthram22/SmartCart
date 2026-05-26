@@ -297,6 +297,35 @@ export async function unsubscribePriceAlert(productId) {
   return data;
 }
 
+/* ---------- In-app notifications (customer inbox) ---------- */
+
+export async function getNotifications() {
+  const { data } = await api.get("/notifications");
+  return data;
+}
+
+export async function markNotificationRead(id) {
+  const { data } = await api.patch(`/notifications/${encodeURIComponent(id)}/read`);
+  return data;
+}
+
+export async function markAllNotificationsRead() {
+  const { data } = await api.post("/notifications/read-all");
+  return data;
+}
+
+/* ---------- Admin customer alerts ---------- */
+
+export async function adminListCustomerAlerts() {
+  const { data } = await api.get("/admin/customer-alerts");
+  return data;
+}
+
+export async function adminFulfillCustomerAlert(payload) {
+  const { data } = await api.post("/admin/customer-alerts/fulfill", payload);
+  return data;
+}
+
 /* ---------- Saved Items ---------- */
 
 export async function getSavedItems() {

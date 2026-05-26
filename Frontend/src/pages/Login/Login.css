@@ -2,7 +2,7 @@
   min-height: 100vh;
   padding: 24px;
   box-sizing: border-box;
-  background: radial-gradient(circle at top right, #f5f3ff 0%, #ffffff 40%, #f9f9ff 100%);
+  background: radial-gradient(circle at top right, #f5f3ff 0%, var(--sc-surface) 40%, var(--sc-page-bg) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26,7 +26,7 @@
 
 .login-card h2 {
   margin: 0 0 20px;
-  color: #141b2b;
+  color: var(--sc-text);
   font-size: 40px;
 }
 
@@ -60,14 +60,14 @@
 .link-button {
   border: 0;
   background: transparent;
-  color: #6b38d4;
+  color: var(--sc-accent);
   cursor: pointer;
   font-size: 14px;
   padding: 0;
 }
 
 .link-button:hover {
-  color: #8455ef;
+  color: var(--sc-accent-strong);
 }
 
 .login-register-note {
@@ -77,7 +77,7 @@
 }
 
 .login-register-note a {
-  color: #6b38d4;
+  color: var(--sc-accent);
   font-weight: 600;
   text-decoration: none;
 }

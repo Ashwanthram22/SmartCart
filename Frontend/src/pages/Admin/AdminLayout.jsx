@@ -37,6 +37,7 @@ const ROUTE_LABELS = [
   { match: /^\/admin\/orders/, label: "Orders" },
   { match: /^\/admin\/analytics/, label: "Analytics" },
   { match: /^\/admin\/activity/, label: "Activity" },
+  { match: /^\/admin\/customer-alerts/, label: "Customer alerts" },
   { match: /^\/admin/, label: "Dashboard" },
 ];
 
@@ -46,6 +47,7 @@ const NAV_ITEMS = [
   { to: "/admin/orders", label: "Orders", icon: ShoppingCart, end: false },
   { to: "/admin/analytics", label: "Analytics", icon: PieChart, end: false },
   { to: "/admin/activity", label: "Activity", icon: ActivityIcon, end: false },
+  { to: "/admin/customer-alerts", label: "Customer alerts", icon: Bell, end: false },
 ];
 
 function pageLabelForPath(pathname) {
@@ -90,6 +92,10 @@ function AdminBreadcrumbs() {
       if (act) parts.push(`Action: ${act}`);
       if (q) parts.push(`Search: ${q}`);
       if (parts.length) crumbs.push({ label: parts.join(" · ") });
+      return crumbs;
+    }
+    if (pathname.startsWith("/admin/customer-alerts")) {
+      crumbs.push({ label: "Customer alerts", to: "/admin/customer-alerts" });
       return crumbs;
     }
     return crumbs;

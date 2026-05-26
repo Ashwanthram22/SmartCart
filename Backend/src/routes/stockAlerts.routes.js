@@ -12,7 +12,9 @@ const MAX_PER_USER = 50;
 router.get("/", async (req, res) => {
   const list = await withDb(async (db) => {
     const user = withUserProfile(db, req.user.sub);
-    return (user?.stockAlerts || []).map((a) => ({ ...a }));
+    return (user?.stockAlerts || [])
+      .filter((a) => a && a.fulfilled !== true)
+      .map((a) => ({ ...a }));
   });
   return res.json({ alerts: list });
 });
@@ -44,6 +46,7 @@ router.post("/", async (req, res) => {
       productTitle: product.title || productId,
       createdAt: new Date().toISOString(),
       notified: false,
+      fulfilled: false,
     };
     own.push(alert);
     return { alert };

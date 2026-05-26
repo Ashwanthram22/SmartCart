@@ -53,17 +53,17 @@
 }
 
 .pd-skel-section {
-  background: #fff;
-  border: 1px solid #ececf2;
+  background: var(--sc-surface);
+  border: 1px solid var(--sc-border);
   border-radius: 14px;
   padding: 24px;
 }
 
 .pd-skel-buy-spec-panel {
   padding: 20px;
-  border: 1px solid #ececf2;
+  border: 1px solid var(--sc-border);
   border-radius: 14px;
-  background: #fff;
+  background: var(--sc-surface);
 }
 
 .pd-skel-buy-spec-rows {
@@ -77,7 +77,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   padding-top: 14px;
-  border-top: 1px solid #ececf2;
+  border-top: 1px solid var(--sc-border);
 }
 
 .pd-skel-spec-grid {
@@ -100,7 +100,7 @@
 
 .pd-skel-review {
   padding: 14px;
-  border: 1px solid #ececf2;
+  border: 1px solid var(--sc-border);
   border-radius: 12px;
 }
 

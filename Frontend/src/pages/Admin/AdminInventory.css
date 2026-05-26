@@ -40,7 +40,7 @@
   gap: 8px;
   font-size: 12px;
   font-weight: 600;
-  color: #64748b;
+  color: var(--sc-text-muted);
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
@@ -49,7 +49,7 @@
 .ai-col-toggle input {
   width: 14px;
   height: 14px;
-  accent-color: #6b38d4;
+  accent-color: var(--sc-accent);
   cursor: pointer;
 }
 
@@ -62,9 +62,9 @@
   /* Match `.adm-btn` (10px) so the inventory toolbar's search blends with
    * the row of buttons + dropdowns next to it. */
   border-radius: 10px;
-  border: 1px solid #e6e6ee;
-  background: #fff;
-  color: #64748b;
+  border: 1px solid var(--sc-border);
+  background: var(--sc-surface);
+  color: var(--sc-text-muted);
   max-width: 540px;
   transition: border-color 120ms ease, box-shadow 120ms ease;
 }
@@ -76,17 +76,17 @@
   background: transparent;
   font-size: 14px;
   font-family: inherit;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 .ai-search:focus-within {
-  border-color: #6b38d4;
+  border-color: var(--sc-accent);
   box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.15);
 }
 
 .ai-count {
   font-size: 13px;
-  color: #64748b;
+  color: var(--sc-text-muted);
   font-weight: 600;
 }
 
@@ -100,17 +100,17 @@
 
 .ai-stock-step {
   display: inline-flex;
-  border: 1px solid #e6e6ee;
+  border: 1px solid var(--sc-border);
   border-radius: 999px;
   overflow: hidden;
-  background: #fff;
+  background: var(--sc-surface);
 }
 
 .ai-step-btn {
   appearance: none;
   border: 0;
-  background: #fff;
-  color: #475569;
+  background: var(--sc-surface);
+  color: var(--sc-text-faint);
   width: 24px;
   height: 24px;
   display: inline-flex;
@@ -126,7 +126,7 @@
 
 .ai-step-btn:hover:not(:disabled) {
   background: #f5f3ff;
-  color: #5527b6;
+  color: var(--sc-accent-strong);
 }
 
 .ai-step-btn:disabled {
@@ -168,9 +168,9 @@
   font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--sc-text-muted);
   font-weight: 700;
-  border-bottom: 1px solid #e6e6ee;
+  border-bottom: 1px solid var(--sc-border);
 }
 
 /* Sortable column header — a transparent button that aligns with the
@@ -196,11 +196,11 @@
 }
 
 .ai-sort:hover {
-  color: #6b38d4;
+  color: var(--sc-accent);
 }
 
 .ai-sort:focus-visible {
-  outline: 2px solid #6b38d4;
+  outline: 2px solid var(--sc-accent);
   outline-offset: 3px;
 }
 
@@ -214,12 +214,12 @@
 }
 
 .ai-sort--active {
-  color: #6b38d4;
+  color: var(--sc-accent);
 }
 
 .ai-sort--active .ai-sort-icon {
   opacity: 1;
-  color: #6b38d4;
+  color: var(--sc-accent);
 }
 
 .ai-table tbody tr:nth-child(even):not(.ai-row-selected) td {
@@ -227,7 +227,7 @@
 }
 
 .ai-table tbody tr:nth-child(odd):not(.ai-row-selected) td {
-  background: #fff;
+  background: var(--sc-surface);
 }
 
 .ai-table tbody tr.ai-row-selected td {
@@ -260,18 +260,18 @@
 }
 
 .ai-edited--empty {
-  color: var(--adm-muted, #64748b);
+  color: var(--adm-muted, var(--sc-text-muted));
   font-style: italic;
 }
 
 .ai-edited-time {
   font-weight: 600;
-  color: var(--adm-text, #141b2b);
+  color: var(--adm-text, var(--sc-text));
 }
 
 .ai-edited-by {
   font-size: 11.5px;
-  color: var(--adm-muted, #64748b);
+  color: var(--adm-muted, var(--sc-text-muted));
   max-width: 180px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -287,7 +287,7 @@
 .ai-empty {
   text-align: center;
   padding: 28px 16px;
-  color: #64748b;
+  color: var(--sc-text-muted);
   font-size: 14px;
 }
 
@@ -307,7 +307,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #6b38d4;
+  color: var(--sc-accent);
   font-weight: 700;
   flex-shrink: 0;
 }
@@ -327,12 +327,12 @@
 .ai-prod-meta strong {
   font-size: 14px;
   font-weight: 700;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 .ai-prod-meta span {
   font-size: 12px;
-  color: #64748b;
+  color: var(--sc-text-muted);
 }
 
 .ai-stock {
@@ -362,7 +362,7 @@
 
 .ai-stock--muted {
   background: #f1f0fa;
-  color: #64748b;
+  color: var(--sc-text-muted);
 }
 
 .ai-row-actions {
@@ -376,9 +376,9 @@
   width: 34px;
   height: 34px;
   border-radius: 9px;
-  border: 1px solid #e6e6ee;
-  background: #fff;
-  color: #475569;
+  border: 1px solid var(--sc-border);
+  background: var(--sc-surface);
+  color: var(--sc-text-faint);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -389,7 +389,7 @@
 
 .ai-row-btn:hover:not(:disabled) {
   background: #f5f3fc;
-  color: #6b38d4;
+  color: var(--sc-accent);
   border-color: rgba(107, 56, 212, 0.45);
   box-shadow: 0 4px 10px rgba(107, 56, 212, 0.18);
   transform: translateY(-1px);
@@ -408,7 +408,7 @@
 }
 
 .ai-row-btn:focus-visible {
-  outline: 2px solid #6b38d4;
+  outline: 2px solid var(--sc-accent);
   outline-offset: 2px;
 }
 
@@ -432,7 +432,7 @@
 }
 
 .ai-dialog {
-  background: #fff;
+  background: var(--sc-surface);
   width: min(100%, 760px);
   max-height: calc(100vh - 48px);
   /* Hide overflow on the *dialog* itself so a scrollbar can never bleed
@@ -465,7 +465,7 @@
 .ai-dialog-head p {
   margin: 0;
   font-size: 13px;
-  color: #64748b;
+  color: var(--sc-text-muted);
 }
 
 .ai-dialog-close {
@@ -475,7 +475,7 @@
   border-radius: 999px;
   border: 0;
   background: #f1f0fa;
-  color: #475569;
+  color: var(--sc-text-faint);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -484,11 +484,11 @@
 
 .ai-dialog-close:hover {
   background: #ece5fd;
-  color: #6b38d4;
+  color: var(--sc-accent);
 }
 
 .ai-dialog-close:focus-visible {
-  outline: 2px solid #6b38d4;
+  outline: 2px solid var(--sc-accent);
   outline-offset: 2px;
 }
 
@@ -522,7 +522,7 @@
 }
 
 .ai-form::-webkit-scrollbar-thumb {
-  background: rgba(107, 56, 212, 0.28);
+  background: var(--sc-input-border);
   border-radius: 999px;
   border: 2px solid #fff;
 }
@@ -550,18 +550,18 @@
 
 .ai-field span {
   font-weight: 600;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 .ai-field input,
 .ai-field textarea {
-  border: 1px solid #e6e6ee;
-  background: #fff;
+  border: 1px solid var(--sc-border);
+  background: var(--sc-surface);
   border-radius: 10px;
   padding: 10px 12px;
   font-size: 14px;
   font-family: inherit;
-  color: #141b2b;
+  color: var(--sc-text);
   outline: none;
   transition: border-color 120ms ease, box-shadow 120ms ease;
   /* width: 100%; */
@@ -574,7 +574,7 @@
 
 .ai-field input:focus,
 .ai-field textarea:focus {
-  border-color: #6b38d4;
+  border-color: var(--sc-accent);
   box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.15);
 }
 
@@ -586,9 +586,9 @@
 
 .ai-seg {
   appearance: none;
-  border: 1px solid #e6e6ee;
-  background: #fff;
-  color: #475569;
+  border: 1px solid var(--sc-border);
+  background: var(--sc-surface);
+  color: var(--sc-text-faint);
   border-radius: 999px;
   padding: 6px 12px;
   font-size: 12px;
@@ -602,13 +602,13 @@
 }
 
 .ai-seg--active {
-  background: #6b38d4;
-  border-color: #6b38d4;
-  color: #fff;
+  background: var(--sc-accent);
+  border-color: var(--sc-accent);
+  color: var(--sc-text-on-accent);
 }
 
 .ai-seg:focus-visible {
-  outline: 2px solid #6b38d4;
+  outline: 2px solid var(--sc-accent);
   outline-offset: 2px;
 }
 
@@ -625,17 +625,17 @@
 }
 
 .ai-spec-row input {
-  border: 1px solid #e6e6ee;
-  background: #fff;
+  border: 1px solid var(--sc-border);
+  background: var(--sc-surface);
   border-radius: 10px;
   padding: 9px 12px;
   font-size: 13px;
-  color: #141b2b;
+  color: var(--sc-text);
   outline: none;
 }
 
 .ai-spec-row input:focus {
-  border-color: #6b38d4;
+  border-color: var(--sc-accent);
   box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.15);
 }
 
@@ -644,9 +644,9 @@
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  border: 1px solid #e6e6ee;
-  background: #fff;
-  color: #64748b;
+  border: 1px solid var(--sc-border);
+  background: var(--sc-surface);
+  color: var(--sc-text-muted);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -700,7 +700,7 @@
   padding: 0;
   margin: 0;
   font: inherit;
-  color: #6b38d4;
+  color: var(--sc-accent);
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
@@ -708,7 +708,7 @@
 }
 
 .ai-form-summary-link:hover {
-  color: #5527b6;
+  color: var(--sc-accent-strong);
 }
 
 .ai-dialog-foot {
@@ -720,14 +720,14 @@
   gap: 10px;
   flex-shrink: 0;
   border-top: 1px solid #f1f0fa;
-  background: #fff;
+  background: var(--sc-surface);
   padding: 16px 24px;
 }
 
 /* ----- Confirm dialog ------------------------------------------------------*/
 
 .ai-confirm {
-  background: #fff;
+  background: var(--sc-surface);
   width: min(100%, 420px);
   border-radius: 14px;
   padding: 22px 24px;
@@ -746,7 +746,7 @@
 .ai-confirm p {
   margin: 0 0 18px;
   font-size: 14px;
-  color: #475569;
+  color: var(--sc-text-faint);
 }
 
 .ai-confirm-actions {

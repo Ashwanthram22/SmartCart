@@ -20,8 +20,8 @@
 }
 
 .ad-stat {
-  background: #fff;
-  border: 1px solid #e6e6ee;
+  background: var(--sc-surface);
+  border: 1px solid var(--sc-border);
   border-radius: 14px;
   padding: 18px;
   display: flex;
@@ -39,7 +39,7 @@
 
 .ad-stat-title {
   font-size: 13px;
-  color: #64748b;
+  color: var(--sc-text-muted);
   font-weight: 600;
 }
 
@@ -48,7 +48,7 @@
   height: 30px;
   border-radius: 8px;
   background: #ece5fd;
-  color: #6b38d4;
+  color: var(--sc-accent);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -57,7 +57,7 @@
 .ad-stat-value {
   font-size: 24px;
   font-weight: 800;
-  color: #141b2b;
+  color: var(--sc-text);
   letter-spacing: -0.01em;
 }
 
@@ -79,7 +79,7 @@
 }
 
 .ad-stat-helper--muted {
-  color: #64748b;
+  color: var(--sc-text-muted);
 }
 
 /* Row that holds the optional delta pill + helper text under each value. */
@@ -146,7 +146,7 @@
 .ad-chart-empty {
   margin: auto;
   font-size: 13px;
-  color: #64748b;
+  color: var(--sc-text-muted);
 }
 
 .ad-chart-skeleton {
@@ -186,7 +186,7 @@
   gap: 10px;
   padding: 10px 12px;
   border-radius: 10px;
-  background: #f7f8fc;
+  background: var(--sc-bg);
 }
 
 .ad-activity-icon {
@@ -194,7 +194,7 @@
   height: 36px;
   border-radius: 999px;
   background: #ece5fd;
-  color: #6b38d4;
+  color: var(--sc-accent);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -218,13 +218,13 @@
   margin: 0 0 2px;
   font-size: 13px;
   font-weight: 700;
-  color: #141b2b;
+  color: var(--sc-text);
 }
 
 .ad-activity-detail {
   margin: 0 0 4px;
   font-size: 12px;
-  color: #475569;
+  color: var(--sc-text-faint);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -235,14 +235,14 @@
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #94a3b8;
+  color: var(--sc-text-faint);
   font-weight: 700;
 }
 
 .ad-empty {
   margin: 0;
   font-size: 13px;
-  color: #64748b;
+  color: var(--sc-text-muted);
 }
 
 .ad-activity-cta {
@@ -265,8 +265,8 @@
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: #fff;
-  color: #6b38d4;
+  background: var(--sc-surface);
+  color: var(--sc-accent);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -277,13 +277,13 @@
   margin: 0 0 4px;
   font-size: 14px;
   font-weight: 700;
-  color: #5527b6;
+  color: var(--sc-accent-strong);
 }
 
 .ad-tips-text {
   margin: 0;
   font-size: 13px;
-  color: #475569;
+  color: var(--sc-text-faint);
 }
 
 /* ----- Responsive ----------------------------------------------------------*/

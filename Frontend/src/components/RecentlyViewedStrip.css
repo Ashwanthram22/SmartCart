@@ -18,7 +18,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #0f172a;
+  color: var(--sc-text);
 }
 
 .rv-strip-title h2 {
@@ -30,7 +30,7 @@
 
 .rv-strip-count {
   font-size: 0.82rem;
-  color: #64748b;
+  color: var(--sc-text-muted);
 }
 
 .rv-strip-rail {
@@ -54,8 +54,8 @@
 
 .rv-strip-card {
   display: block;
-  background: #fff;
-  border: 1px solid #ececf2;
+  background: var(--sc-surface);
+  border: 1px solid var(--sc-border);
   border-radius: 14px;
   overflow: hidden;
   text-decoration: none;
@@ -73,13 +73,13 @@
 .rv-strip-card:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.35);
-  border-color: #6b38d4;
+  border-color: var(--sc-accent);
 }
 
 .rv-strip-thumb {
   width: 100%;
   aspect-ratio: 4 / 3;
-  background: #f3f4f6;
+  background: var(--sc-surface-muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -101,7 +101,7 @@
   margin: 0;
   font-weight: 600;
   font-size: 0.92rem;
-  color: #0f172a;
+  color: var(--sc-text);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -115,11 +115,11 @@
   align-items: center;
   gap: 8px;
   font-size: 0.86rem;
-  color: #475569;
+  color: var(--sc-text-faint);
 }
 
 .rv-strip-product-meta strong {
-  color: #0f172a;
+  color: var(--sc-text);
   font-weight: 700;
 }
 
@@ -135,7 +135,7 @@
 .rv-strip-product-cat {
   margin: 6px 0 0;
   font-size: 0.78rem;
-  color: #6b7280;
+  color: var(--sc-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }

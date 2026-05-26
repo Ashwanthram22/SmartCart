@@ -25,11 +25,13 @@ const SavedItems = lazy(() => import("./pages/Profile/SavedItems"));
 const AddressBook = lazy(() => import("./pages/Profile/AddressBook"));
 const SettingsSecurity = lazy(() => import("./pages/Profile/SettingsSecurity"));
 const SettingsPreferences = lazy(() => import("./pages/Profile/SettingsPreferences"));
+const UserNotifications = lazy(() => import("./pages/Profile/UserNotifications"));
 const AdminDashboard = lazy(() => import("./pages/Admin/AdminDashboard"));
 const AdminInventory = lazy(() => import("./pages/Admin/AdminInventory"));
 const AdminOrders = lazy(() => import("./pages/Admin/AdminOrders"));
 const AdminAnalytics = lazy(() => import("./pages/Admin/AdminAnalytics"));
 const AdminActivity = lazy(() => import("./pages/Admin/AdminActivity"));
+const AdminCustomerAlerts = lazy(() => import("./pages/Admin/AdminCustomerAlerts"));
 
 function RootRedirect() {
   if (!isAuthenticated()) return <Navigate to="/login" replace />;
@@ -165,6 +167,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/profile/notifications"
+              element={
+                <ProtectedRoute>
+                  <UserNotifications />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/dashboard" element={<Navigate to="/home" replace />} />
 
             {/* ----- Admin console (separate lazy chunks) ----- */}
@@ -205,6 +215,14 @@ function App() {
               element={
                 <AdminRoute>
                   <AdminActivity />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/customer-alerts"
+              element={
+                <AdminRoute>
+                  <AdminCustomerAlerts />
                 </AdminRoute>
               }
             />

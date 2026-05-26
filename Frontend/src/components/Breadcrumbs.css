@@ -1,6 +1,6 @@
 .breadcrumbs {
   font-size: 0.85rem;
-  color: #6b7280;
+  color: var(--sc-text-muted);
 }
 
 .breadcrumbs-list {
@@ -23,7 +23,7 @@
 }
 
 .breadcrumbs-link {
-  color: #6b7280;
+  color: var(--sc-text-muted);
   text-decoration: none;
   border-radius: 4px;
   padding: 2px 4px;
@@ -33,13 +33,13 @@
 
 .breadcrumbs-link:hover,
 .breadcrumbs-link:focus-visible {
-  color: #6b38d4;
+  color: var(--sc-accent);
   background: rgba(107, 56, 212, 0.06);
   outline: none;
 }
 
 .breadcrumbs-current {
-  color: #141b2b;
+  color: var(--sc-text);
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -61,6 +61,7 @@ function ensureUserProfile(user) {
   if (!Array.isArray(user.addresses)) user.addresses = [];
   if (!Array.isArray(user.stockAlerts)) user.stockAlerts = [];
   if (!Array.isArray(user.priceAlerts)) user.priceAlerts = [];
+  if (!Array.isArray(user.inbox)) user.inbox = [];
 
   return user;
 }

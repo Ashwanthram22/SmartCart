@@ -17,8 +17,8 @@
 }
 
 .nf-card {
-  background: #fff;
-  border: 1px solid #ececf2;
+  background: var(--sc-surface);
+  border: 1px solid var(--sc-border);
   border-radius: 22px;
   padding: 36px 32px 32px;
   box-shadow: 0 24px 60px -28px rgba(15, 23, 42, 0.25);
@@ -32,7 +32,7 @@
   padding: 6px 12px;
   border-radius: 999px;
   background: rgba(124, 58, 237, 0.08);
-  color: #6b38d4;
+  color: var(--sc-accent);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -45,7 +45,7 @@
   font-size: 4.5rem;
   font-weight: 800;
   letter-spacing: -0.05em;
-  background: linear-gradient(135deg, #7c3aed, #6b38d4);
+  background: linear-gradient(135deg, #7c3aed, var(--sc-accent));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -55,21 +55,21 @@
 .nf-title {
   margin: 6px 0 12px;
   font-size: 1.6rem;
-  color: #0f172a;
+  color: var(--sc-text);
   letter-spacing: -0.02em;
 }
 
 .nf-lede {
   margin: 0 auto 24px;
   max-width: 520px;
-  color: #475569;
+  color: var(--sc-text-faint);
   font-size: 0.96rem;
   line-height: 1.55;
 }
 
 .nf-url {
-  background: #f1f5f9;
-  color: #0f172a;
+  background: var(--sc-border-subtle);
+  color: var(--sc-text);
   padding: 2px 8px;
   border-radius: 6px;
   font-size: 0.86rem;
@@ -80,7 +80,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #f8fafc;
+  background: var(--sc-surface-high);
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   padding: 6px 6px 6px 14px;
@@ -89,12 +89,12 @@
 }
 
 .nf-search:focus-within {
-  border-color: #6b38d4;
+  border-color: var(--sc-accent);
   box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.15);
 }
 
 .nf-search-icon {
-  color: #64748b;
+  color: var(--sc-text-muted);
   flex-shrink: 0;
 }
 
@@ -103,7 +103,7 @@
   border: none;
   background: transparent;
   font-size: 0.95rem;
-  color: #0f172a;
+  color: var(--sc-text);
   padding: 10px 0;
   min-width: 0;
 }
@@ -111,8 +111,8 @@
 
 .nf-search-submit {
   flex-shrink: 0;
-  background: linear-gradient(135deg, #7c3aed, #6b38d4);
-  color: #fff;
+  background: linear-gradient(135deg, #7c3aed, var(--sc-accent));
+  color: var(--sc-text-on-accent);
   border: none;
   border-radius: 9px;
   padding: 9px 18px;
@@ -146,24 +146,24 @@
 
 .nf-btn--ghost {
   background: transparent;
-  color: #475569;
+  color: var(--sc-text-faint);
   border-color: #e2e8f0;
 }
 .nf-btn--ghost:hover {
-  background: #f1f5f9;
-  color: #0f172a;
+  background: var(--sc-border-subtle);
+  color: var(--sc-text);
 }
 
 .nf-btn--primary {
-  background: linear-gradient(135deg, #7c3aed, #6b38d4);
-  color: #fff;
+  background: linear-gradient(135deg, #7c3aed, var(--sc-accent));
+  color: var(--sc-text-on-accent);
 }
 .nf-btn--primary:hover { filter: brightness(1.05); }
 
 /* ---------- Popular categories ---------- */
 .nf-popular {
   background: rgba(255, 255, 255, 0.7);
-  border: 1px solid #ececf2;
+  border: 1px solid var(--sc-border);
   border-radius: 22px;
   padding: 22px 24px 24px;
   backdrop-filter: blur(6px);
@@ -174,7 +174,7 @@
   font-size: 0.86rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #6b38d4;
+  color: var(--sc-accent);
   font-weight: 600;
 }
 
@@ -191,9 +191,9 @@
   text-decoration: none;
   padding: 10px 14px;
   border-radius: 12px;
-  background: #fff;
-  border: 1px solid #ececf2;
-  color: #0f172a;
+  background: var(--sc-surface);
+  border: 1px solid var(--sc-border);
+  color: var(--sc-text);
   font-weight: 500;
   font-size: 0.92rem;
   transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
@@ -201,7 +201,7 @@
 
 .nf-popular-card:hover {
   transform: translateY(-2px);
-  border-color: #c4b5fd;
+  border-color: var(--sc-accent-ring);
   box-shadow: 0 14px 28px -16px rgba(107, 56, 212, 0.25);
 }
 
@@ -213,7 +213,7 @@
   height: 36px;
   border-radius: 10px;
   background: rgba(124, 58, 237, 0.08);
-  color: #6b38d4;
+  color: var(--sc-accent);
   flex-shrink: 0;
 }
 
