@@ -8,6 +8,15 @@
   z-index: 1100;
   pointer-events: none;
   max-width: min(380px, calc(100vw - 32px));
+  transition: left 0.28s ease, right 0.28s ease;
+}
+
+/* Assistant drawer (≈420px) sits on the right — keep toasts visible on the left */
+html[data-assistant-open="true"] .toast-stack {
+  right: auto;
+  left: 24px;
+  bottom: 24px;
+  max-width: min(380px, calc(100vw - 460px));
 }
 
 .toast {
@@ -131,6 +140,14 @@
     left: 12px;
     bottom: auto;
     top: 16px;
+    max-width: none;
+  }
+
+  html[data-assistant-open="true"] .toast-stack {
+    top: auto;
+    bottom: 24px;
+    left: 12px;
+    right: 12px;
     max-width: none;
   }
 

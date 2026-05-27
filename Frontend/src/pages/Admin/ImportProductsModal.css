@@ -19,7 +19,7 @@
   flex-direction: column;
   gap: 18px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(107, 56, 212, 0.35) transparent;
+  scrollbar-color: var(--sc-input-border) transparent;
 }
 
 .ai-import-body::-webkit-scrollbar {
@@ -29,7 +29,7 @@
 .ai-import-body::-webkit-scrollbar-thumb {
   background: var(--sc-input-border);
   border-radius: 999px;
-  border: 2px solid #fff;
+  border: 2px solid var(--sc-surface);
 }
 
 /* ----- Drop zone (step "pick") --------------------------------------------*/
@@ -40,9 +40,9 @@
   align-items: center;
   gap: 10px;
   padding: 56px 24px;
-  border: 2px dashed #d4d4eb;
+  border: 2px dashed var(--sc-border-strong);
   border-radius: 16px;
-  background: #fafafe;
+  background: var(--sc-surface-muted);
   color: var(--adm-muted, var(--sc-text-muted));
   text-align: center;
   transition: border-color 140ms ease, background 140ms ease, color 140ms ease;
@@ -50,7 +50,7 @@
 
 .ai-import-drop--active {
   border-color: var(--adm-accent, var(--sc-accent));
-  background: rgba(107, 56, 212, 0.06);
+  background: var(--sc-accent-soft);
   color: var(--adm-accent, var(--sc-accent));
 }
 
@@ -87,7 +87,7 @@
 
 .ai-import-error {
   margin: 12px 0 0;
-  color: #b91c1c;
+  color: var(--sc-danger);
   font-size: 13px;
   font-weight: 600;
 }
@@ -109,7 +109,7 @@
   gap: 12px;
   padding: 10px 14px;
   border-radius: 12px;
-  background: #f7f7fb;
+  background: var(--sc-surface-muted);
   border: 1px solid var(--adm-border, var(--sc-border));
 }
 
@@ -144,15 +144,15 @@
 }
 
 .ai-import-stat--ok {
-  background: #dcfce7;
-  color: #15803d;
-  border-color: #bbf7d0;
+  background: var(--sc-success-soft);
+  color: var(--sc-success-action);
+  border-color: color-mix(in srgb, var(--sc-success-action) 35%, transparent);
 }
 
 .ai-import-stat--bad {
-  background: #fee2e2;
-  color: #b91c1c;
-  border-color: #fecaca;
+  background: var(--sc-danger-soft);
+  color: var(--sc-danger);
+  border-color: color-mix(in srgb, var(--sc-danger) 35%, transparent);
 }
 
 .ai-import-stat--muted {
@@ -174,9 +174,9 @@
   gap: 8px;
   padding: 10px 12px;
   border-radius: 10px;
-  background: #fef3c7;
-  border: 1px solid #fde68a;
-  color: #92400e;
+  background: var(--sc-warning-soft, rgba(245, 158, 11, 0.12));
+  border: 1px solid color-mix(in srgb, var(--sc-warning, #d97706) 35%, transparent);
+  color: var(--sc-warning, #92400e);
   font-size: 13px;
 }
 
@@ -204,7 +204,7 @@
 .ai-import-table-wrap::-webkit-scrollbar-thumb {
   background: var(--sc-input-border);
   border-radius: 999px;
-  border: 2px solid #fff;
+  border: 2px solid var(--sc-surface);
 }
 
 .ai-import-table {
@@ -217,7 +217,7 @@
   position: sticky;
   top: 0;
   z-index: 1;
-  background: #f7f7fb;
+  background: var(--sc-surface-muted);
   text-align: left;
   font-weight: 700;
   font-size: 11.5px;
@@ -230,7 +230,7 @@
 
 .ai-import-table tbody td {
   padding: 9px 12px;
-  border-bottom: 1px solid #f2f2f8;
+  border-bottom: 1px solid var(--sc-border-subtle);
   vertical-align: middle;
 }
 
@@ -239,11 +239,11 @@
 }
 
 .ai-import-row--error {
-  background: rgba(254, 226, 226, 0.45);
+  background: var(--sc-danger-soft);
 }
 
 .ai-import-row--error:hover {
-  background: rgba(254, 226, 226, 0.7);
+  background: color-mix(in srgb, var(--sc-danger-soft) 70%, var(--sc-danger) 30%);
 }
 
 .ai-import-empty {
@@ -263,13 +263,13 @@
 }
 
 .ai-import-status--ok {
-  background: #dcfce7;
-  color: #15803d;
+  background: var(--sc-success-soft);
+  color: var(--sc-success-action);
 }
 
 .ai-import-status--bad {
-  background: #fee2e2;
-  color: #b91c1c;
+  background: var(--sc-danger-soft);
+  color: var(--sc-danger);
   max-width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -294,7 +294,7 @@
   width: 64px;
   height: 64px;
   border-radius: 999px;
-  background: rgba(22, 163, 74, 0.12);
+  background: var(--sc-success-soft);
   color: var(--sc-success);
   margin-bottom: 10px;
 }

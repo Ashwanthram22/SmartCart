@@ -21,7 +21,7 @@
 .aca-table td {
   padding: 0.75rem 0.85rem;
   text-align: left;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  border-bottom: 1px solid var(--sc-border-subtle);
   vertical-align: top;
 }
 
@@ -44,13 +44,13 @@
 }
 
 .aca-kind--stock {
-  background: #ecfdf5;
-  color: #047857;
+  background: var(--sc-success-soft);
+  color: var(--sc-success-action);
 }
 
 .aca-kind--price {
-  background: #eef2ff;
-  color: #4338ca;
+  background: var(--sc-accent-soft);
+  color: var(--sc-accent-strong);
 }
 
 .aca-customer {
@@ -81,7 +81,7 @@
 }
 
 .aca-error {
-  color: #b91c1c;
+  color: var(--sc-danger);
   margin: 0 0 1rem;
 }
 
@@ -130,8 +130,10 @@
 
 .aca-field input {
   padding: 0.5rem 0.65rem;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--sc-input-border);
   border-radius: 8px;
+  background: var(--sc-input-bg);
+  color: var(--sc-text);
 }
 
 .aca-field small {

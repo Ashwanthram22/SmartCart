@@ -20,6 +20,10 @@
   font-size: 0.9rem;
 }
 
+.un-mark-all:hover {
+  color: var(--sc-accent-strong);
+}
+
 .un-muted {
   color: var(--sc-text-muted);
   font-size: 0.9rem;
@@ -48,54 +52,180 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.85rem;
 }
 
 .un-item {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 1rem 1.1rem;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
+  align-items: stretch;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--sc-card-border, var(--sc-border-subtle, #e2e8f0));
   background: var(--sc-surface);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
 .un-item--unread {
-  border-color: var(--sc-accent-ring);
-  background: #faf5ff;
+  border-color: var(--sc-accent-soft-border);
+  background: linear-gradient(
+    135deg,
+    var(--sc-accent-soft) 0%,
+    var(--sc-surface) 55%
+  );
 }
 
-.un-item-body p {
-  margin: 0.35rem 0;
-  color: var(--sc-text-faint);
-  line-height: 1.45;
+.un-item-media {
+  flex-shrink: 0;
+  width: 88px;
+  height: 88px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--sc-border-subtle, #e2e8f0);
+  background: var(--sc-surface-raised, #f1f5f9);
 }
 
-.un-time {
-  font-size: 0.8rem;
-  color: var(--sc-text-faint);
+.un-item-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.un-item-actions {
+.un-item-content {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   gap: 0.35rem;
 }
 
-.un-view {
-  font-size: 0.85rem;
+.un-item-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--sc-text);
+  line-height: 1.35;
+}
+
+.un-item-product-name {
+  margin: 0;
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--sc-accent);
 }
 
-.un-read-btn {
-  font-size: 0.8rem;
-  border: 1px solid #cbd5e1;
-  background: var(--sc-surface);
-  border-radius: 6px;
-  padding: 0.25rem 0.55rem;
+.un-item-message {
+  margin: 0;
+  color: var(--sc-text-faint);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.un-time {
+  font-size: 0.78rem;
+  color: var(--sc-text-faint);
+  margin-top: auto;
+}
+
+.un-item-actions {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 108px;
+}
+
+.un-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: inherit;
+  text-decoration: none;
   cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+
+.un-btn--primary {
+  border: none;
+  background: var(--sc-accent-container, #6b38d4);
+  color: var(--sc-text-on-accent-container, #fff);
+  box-shadow: 0 2px 6px rgba(107, 56, 212, 0.22);
+}
+
+.un-btn--primary:hover {
+  background: var(--sc-accent-container-hover);
+  color: var(--sc-text-on-accent-container);
+}
+
+.un-btn--primary:active {
+  transform: scale(0.98);
+}
+
+.un-btn--ghost {
+  border: 1px solid var(--sc-border-strong, #cbd5e1);
+  background: var(--sc-surface);
+  color: var(--sc-text-faint);
+}
+
+.un-btn--ghost:hover {
+  border-color: var(--sc-input-focus-border, #94a3b8);
+  background: var(--sc-surface-hover, #f8fafc);
+}
+
+/* Dark mode — borders and surfaces match profile theme */
+[data-theme="dark"] .un-item {
+  border-color: var(--sc-card-border);
+  background: var(--sc-surface);
+  box-shadow: none;
+}
+
+[data-theme="dark"] .un-item--unread {
+  border-color: rgba(167, 139, 250, 0.35);
+  background: linear-gradient(
+    135deg,
+    rgba(91, 33, 182, 0.22) 0%,
+    var(--sc-surface) 60%
+  );
+}
+
+[data-theme="dark"] .un-item-media {
+  border-color: var(--sc-border-subtle);
+  background: rgba(15, 23, 42, 0.5);
+}
+
+[data-theme="dark"] .un-btn--ghost {
+  border-color: var(--sc-border-strong);
+  background: transparent;
+  color: var(--sc-text-muted);
+}
+
+[data-theme="dark"] .un-btn--ghost:hover {
+  border-color: rgba(167, 139, 250, 0.45);
+  background: rgba(139, 92, 246, 0.12);
+  color: var(--sc-text);
+}
+
+@media (max-width: 640px) {
+  .un-item {
+    flex-wrap: wrap;
+  }
+
+  .un-item-actions {
+    flex-direction: row;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .un-btn {
+    flex: 1;
+  }
 }

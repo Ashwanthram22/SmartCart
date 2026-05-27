@@ -13,8 +13,12 @@ import {
   emitNotificationsChanged,
 } from "../../utils/alertEvents";
 import usePageMeta from "../../hooks/usePageMeta";
+import CenteredLoader from "../../components/CenteredLoader";
 import { ProfileLayout } from "./ProfileLayout";
 import "./UserNotifications.css";
+
+const FALLBACK_PRODUCT_IMAGE =
+  "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=200&q=80";
 
 function formatWhen(iso) {
   const ts = Date.parse(iso);
@@ -25,6 +29,17 @@ function formatWhen(iso) {
     hour: "numeric",
     minute: "2-digit",
   });
+}
+
+function productImageForNotification(n) {
+  const url = n?.productImage;
+  return url && String(url).trim() ? String(url).trim() : FALLBACK_PRODUCT_IMAGE;
+}
+
+function productDetailLink(n) {
+  if (!n?.productId) return null;
+  const segment = n.productCategory || "AI Picks";
+  return productDetailUrl(segment, n.productId);
 }
 
 export default function UserNotifications() {
@@ -100,7 +115,7 @@ export default function UserNotifications() {
       </div>
 
       {loading ? (
-        <p className="un-muted">Loading…</p>
+        <CenteredLoader label="Loading notifications" compact />
       ) : items.length === 0 ? (
         <div className="un-empty">
           <Bell size={28} aria-hidden="true" />
@@ -115,35 +130,58 @@ export default function UserNotifications() {
         </div>
       ) : (
         <ul className="un-list">
-          {items.map((n) => (
-            <li
-              key={n.id}
-              className={"un-item" + (n.read ? "" : " un-item--unread")}
-            >
-              <div className="un-item-body">
-                <strong>{n.title}</strong>
-                <p>{n.message}</p>
-                <time className="un-time" dateTime={n.createdAt}>
-                  {formatWhen(n.createdAt)}
-                </time>
-              </div>
-              <div className="un-item-actions">
+          {items.map((n) => {
+            const detailTo = productDetailLink(n);
+            const imgAlt = n.productTitle
+              ? `${n.productTitle} product`
+              : "Product";
+
+            return (
+              <li
+                key={n.id}
+                className={"un-item" + (n.read ? "" : " un-item--unread")}
+              >
                 {n.productId ? (
-                  <Link
-                    to={productDetailUrl("AI Picks", n.productId)}
-                    className="un-view"
-                  >
-                    View product
-                  </Link>
+                  <div className="un-item-media">
+                    <img
+                      src={productImageForNotification(n)}
+                      alt={imgAlt}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
                 ) : null}
-                {!n.read ? (
-                  <button type="button" className="un-read-btn" onClick={() => markRead(n.id)}>
-                    Mark read
-                  </button>
-                ) : null}
-              </div>
-            </li>
-          ))}
+
+                <div className="un-item-content">
+                  <h2 className="un-item-title">{n.title}</h2>
+                  {n.productTitle ? (
+                    <p className="un-item-product-name">{n.productTitle}</p>
+                  ) : null}
+                  <p className="un-item-message">{n.message}</p>
+                  <time className="un-time" dateTime={n.createdAt}>
+                    {formatWhen(n.createdAt)}
+                  </time>
+                </div>
+
+                <div className="un-item-actions">
+                  {detailTo ? (
+                    <Link to={detailTo} className="un-btn un-btn--primary">
+                      View
+                    </Link>
+                  ) : null}
+                  {!n.read ? (
+                    <button
+                      type="button"
+                      className="un-btn un-btn--ghost"
+                      onClick={() => markRead(n.id)}
+                    >
+                      Mark read
+                    </button>
+                  ) : null}
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
     </ProfileLayout>

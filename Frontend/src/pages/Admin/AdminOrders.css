@@ -3,9 +3,9 @@
  * ===========================================================================*/
 
 .ao-error {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #b91c1c;
+  background: var(--sc-danger-soft);
+  border: 1px solid color-mix(in srgb, var(--sc-danger) 35%, transparent);
+  color: var(--sc-danger);
   border-radius: 10px;
   padding: 10px 14px;
   font-size: 13px;
@@ -32,8 +32,8 @@
   /* Match `.adm-btn` (10px) so the toolbar reads as one row of consistent
    * rounded-rectangle controls (search + date dropdown + status filter). */
   border-radius: 10px;
-  border: 1px solid var(--sc-border);
-  background: var(--sc-surface);
+  border: 1px solid var(--sc-border-strong);
+  background: var(--sc-input-bg);
   color: var(--sc-text-muted);
   max-width: 540px;
   transition: border-color 120ms ease, box-shadow 120ms ease;
@@ -50,8 +50,8 @@
 }
 
 .ao-search:focus-within {
-  border-color: var(--sc-accent);
-  box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.15);
+  border-color: var(--sc-input-focus-border);
+  box-shadow: 0 0 0 3px var(--sc-input-focus-ring);
 }
 
 .ao-filter {
@@ -67,17 +67,7 @@
 .adm-btn.ao-filter-trigger:focus-visible,
 .adm-btn-primary.ao-filter-trigger:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--sc-input-focus-border);
-}
-
-.adm-btn-primary.ao-filter-trigger:focus-visible {
-  box-shadow: 0 6px 16px var(--sc-input-border), 0 0 0 2px #fff,
-    0 0 0 4px var(--sc-input-focus-border);
-}
-
-.adm-btn-primary.ao-filter-trigger:hover:focus-visible {
-  box-shadow: 0 12px 26px rgba(107, 56, 212, 0.36), 0 0 0 2px #fff,
-    0 0 0 4px var(--sc-input-focus-border);
+  box-shadow: 0 0 0 2px var(--sc-surface), 0 0 0 4px var(--sc-input-focus-border);
 }
 
 .ao-filter-menu {
@@ -127,15 +117,13 @@
 }
 
 .ao-filter-option:hover {
-  background: #ede9fe;
+  background: var(--sc-menu-option-hover-bg);
   color: var(--sc-text);
 }
 
-/* Selected row + hover: keep text/icon clearly visible (purple-on-lavender
- * was washing out when `.ao-filter-option--active` alone fought hover). */
 .ao-filter-option--active:hover {
-  background: #ddd6fe;
-  color: #1e1b4b;
+  background: var(--sc-menu-option-active-hover-bg);
+  color: var(--sc-menu-option-active-text);
 }
 
 .ao-filter-option--active:hover :is(svg) {
@@ -163,11 +151,12 @@
 .ao-table td {
   padding: 14px 16px;
   text-align: left;
-  border-bottom: 1px solid #f1f0fa;
+  border-bottom: 1px solid var(--sc-border-subtle);
+  color: var(--sc-text);
 }
 
 .ao-table thead th {
-  background: #faf7ff;
+  background: var(--sc-surface-muted);
   font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -177,7 +166,7 @@
 }
 
 .ao-table tbody tr:nth-child(even):not(.ao-row--selected) td {
-  background: #fafbfc;
+  background: var(--sc-surface-muted);
 }
 
 .ao-table tbody tr:nth-child(odd):not(.ao-row--selected) td {
@@ -185,15 +174,20 @@
 }
 
 .ao-table tbody tr.ao-row--selected td {
-  background: #f5f3ff;
+  background: color-mix(in srgb, var(--sc-accent) 12%, var(--sc-surface));
+  box-shadow: inset 3px 0 0 var(--sc-accent-container);
 }
 
 .ao-table tbody tr:hover:not(.ao-row--selected) td {
-  background: #faf7ff;
+  background: var(--sc-surface-high);
 }
 
 .ao-table tbody tr.ao-row--selected:hover td {
-  background: #ede9fe;
+  background: color-mix(in srgb, var(--sc-accent) 16%, var(--sc-surface-high));
+}
+
+.ao-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .ao-th-actions {
@@ -233,27 +227,27 @@
 }
 
 .ao-badge--ok {
-  background: #dcfce7;
-  color: #166534;
+  background: var(--sc-success-soft);
+  color: var(--sc-success);
 }
 
 .ao-badge--info {
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: color-mix(in srgb, #3b82f6 18%, transparent);
+  color: #60a5fa;
 }
 
 .ao-badge--warn {
-  background: #fef3c7;
-  color: #92400e;
+  background: color-mix(in srgb, var(--sc-warning) 20%, transparent);
+  color: var(--sc-warning);
 }
 
 .ao-badge--danger {
-  background: #fee2e2;
-  color: #b91c1c;
+  background: var(--sc-danger-soft);
+  color: var(--sc-danger);
 }
 
 .ao-badge--muted {
-  background: #f1f0fa;
+  background: var(--sc-surface-muted);
   color: var(--sc-text-muted);
 }
 
@@ -275,16 +269,16 @@
   padding: 0;
   font: inherit;
   font-weight: 700;
-  color: var(--adm-accent);
+  color: var(--sc-accent);
   cursor: pointer;
   text-decoration: none;
   border-bottom: 1px dashed transparent;
   transition: border-color 140ms ease, color 140ms ease;
 }
-.ao-id-btn:hover { color: var(--sc-accent-strong); border-bottom-color: rgba(107, 56, 212, 0.6); }
+.ao-id-btn:hover { color: var(--sc-accent-hover); border-bottom-color: var(--sc-accent-soft-border); }
 .ao-id-btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--sc-input-focus-border);
+  box-shadow: 0 0 0 2px var(--sc-surface), 0 0 0 4px var(--sc-input-focus-border);
   border-radius: 4px;
 }
 
@@ -312,16 +306,16 @@
   align-items: center;
   gap: 12px;
   padding: 10px;
-  border: 1px solid #f1f0fa;
+  border: 1px solid var(--sc-border-strong);
   border-radius: 12px;
-  background: var(--sc-surface);
+  background: var(--sc-surface-muted);
 }
 
 .ao-line-thumb {
   width: 44px;
   height: 44px;
   border-radius: 8px;
-  background: #f1f0fa;
+  background: var(--sc-surface-elevated);
   display: inline-flex;
   align-items: center;
   justify-content: center;

@@ -81,6 +81,16 @@
   font-size: 14px;
 }
 
+.shop-notify-loading.centered-loader {
+  min-height: 120px;
+  padding: 28px 16px;
+  gap: 0;
+}
+
+.shop-notify-loading .centered-loader-spinner {
+  --loader-ring-size: 36px;
+}
+
 .shop-notify-list {
   list-style: none;
   margin: 0;

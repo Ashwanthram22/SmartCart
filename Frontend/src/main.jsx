@@ -10,6 +10,7 @@ import { clearRecentlyViewed } from "./utils/recentlyViewed";
 import ErrorBoundary from "./components/ErrorBoundary";
 import "./styles/theme.css";
 import "./styles/theme-surfaces.css";
+import "./components/Skeleton.css";
 import "./index.css";
 import { ThemeProvider } from "./context/ThemeProvider";
 import App from "./App.jsx";

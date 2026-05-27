@@ -85,7 +85,7 @@ export function ShopTopNav({
           {...(cartActive ? { "aria-current": "page" } : {})}
         >
           <span className="shop-cart-icon-wrap" aria-hidden="true">
-            <CartIcon size={22} />
+            <CartIcon size={20} wide />
             {itemCount > 0 ? (
               <span className="shop-cart-badge">{itemCount > 99 ? "99+" : itemCount}</span>
             ) : null}

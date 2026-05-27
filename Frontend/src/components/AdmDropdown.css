@@ -15,8 +15,8 @@
   min-width: 150px;
   padding: 8px 12px;
   border-radius: 10px;
-  border: 1px solid var(--adm-border, var(--sc-border));
-  background: var(--sc-surface);
+  border: 1px solid var(--sc-border-strong);
+  background: var(--sc-input-bg);
   color: var(--adm-text, var(--sc-text));
   font-size: 13px;
   font-weight: 600;
@@ -34,6 +34,12 @@
   color: var(--adm-accent, var(--sc-accent));
 }
 
+[data-theme="dark"] .adm-dd-trigger:hover:not(:disabled) {
+  background: var(--sc-surface-muted);
+  border-color: var(--sc-border-strong);
+  color: var(--sc-text);
+}
+
 .adm-dd-trigger:disabled {
   opacity: 0.55;
   cursor: not-allowed;
@@ -49,9 +55,15 @@
 }
 
 .adm-dd--open .adm-dd-trigger {
-  border-color: var(--adm-accent, var(--sc-accent));
+  border-color: var(--sc-accent-soft-border);
   color: var(--adm-accent, var(--sc-accent));
   background: var(--sc-control-hover-bg);
+}
+
+[data-theme="dark"] .adm-dd--open .adm-dd-trigger {
+  background: var(--sc-accent-soft);
+  border-color: var(--sc-accent-soft-border);
+  color: var(--sc-accent);
 }
 
 .adm-dd-label {
@@ -80,7 +92,7 @@
   width: max-content;
   max-width: 280px;
   background: var(--sc-surface);
-  border: 1px solid var(--adm-border, var(--sc-border));
+  border: 1px solid var(--adm-border, var(--sc-border-strong));
   border-radius: 12px;
   box-shadow: var(--sc-shadow-lg);
 }

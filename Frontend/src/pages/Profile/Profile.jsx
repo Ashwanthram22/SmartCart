@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { CATALOG_LIST_BASE } from "../../constants/shopRoutes";
+import { SHOP_SEGMENTS } from "../../constants/shopSegments";
+import { CATALOG_LIST_BASE, productDetailUrl } from "../../constants/shopRoutes";
 import { getAddresses, getCurrentUser, getOrders, updateCurrentUser } from "../../api/client";
 import { DEFAULT_PROFILE_AVATAR } from "../../data/profileDisplay";
 import { useToast } from "../../hooks/useToast";
 import usePageMeta from "../../hooks/usePageMeta";
+import Skeleton from "../../components/Skeleton";
 import EditProfileDialog from "./EditProfileDialog";
 import { ProfileLayout } from "./ProfileLayout";
 import { formatMoney } from "../../utils/money";
@@ -28,6 +30,20 @@ const STATUS_LABEL = {
   cancelled: "Cancelled",
 };
 
+function segmentForOrderLine(line) {
+  const raw = line?.subtitle?.split("•")[0]?.trim();
+  if (!raw) return "AI Picks";
+  const match = SHOP_SEGMENTS.find(
+    (seg) => seg.toLowerCase() === raw.toLowerCase()
+  );
+  return match || "AI Picks";
+}
+
+function productDetailHref(line) {
+  if (!line?.productId) return null;
+  return productDetailUrl(segmentForOrderLine(line), line.productId);
+}
+
 function Profile() {
   usePageMeta({
     title: "My profile",
@@ -40,6 +56,7 @@ function Profile() {
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [editOpen, setEditOpen] = useState(false);
   const [primaryAddress, setPrimaryAddress] = useState(null);
+  const [loadingAddresses, setLoadingAddresses] = useState(true);
   const toast = useToast();
 
   useEffect(() => {
@@ -93,6 +110,8 @@ function Profile() {
         }
       } catch {
         if (!cancelled) setPrimaryAddress(null);
+      } finally {
+        if (!cancelled) setLoadingAddresses(false);
       }
     }
     loadAddresses();
@@ -114,10 +133,23 @@ function Profile() {
     <ProfileLayout>
       <div className="profile-bento">
         <div className="profile-hero-card">
-          <img src={DEFAULT_PROFILE_AVATAR} alt="" className="profile-hero-avatar" />
+          {loadingUser ? (
+            <Skeleton
+              width={96}
+              height={96}
+              radius={999}
+              className="profile-hero-avatar-skel"
+              ariaLabel="Loading profile photo"
+            />
+          ) : (
+            <img src={DEFAULT_PROFILE_AVATAR} alt="" className="profile-hero-avatar" />
+          )}
           <div className="profile-hero-text">
             {loadingUser ? (
-              <div className="profile-skeleton profile-skeleton--title" />
+              <div className="profile-hero-skeleton" aria-busy="true" aria-label="Loading profile">
+                <Skeleton height={30} width={220} radius={8} />
+                <Skeleton height={18} width={150} radius={6} className="profile-hero-skeleton-role" />
+              </div>
             ) : (
               <>
                 <h1>{displayName}</h1>
@@ -145,31 +177,52 @@ function Profile() {
         <div className="profile-info-grid">
           <div>
             <p className="profile-field-label">Full Name</p>
-            <p className="profile-field-value">{loadingUser ? "…" : displayName}</p>
+            {loadingUser ? (
+              <Skeleton height={18} width="72%" radius={6} className="profile-field-skeleton" />
+            ) : (
+              <p className="profile-field-value">{displayName}</p>
+            )}
           </div>
           <div>
             <p className="profile-field-label">Email Address</p>
-            <p className="profile-field-value">{loadingUser ? "…" : email}</p>
+            {loadingUser ? (
+              <Skeleton height={18} width="85%" radius={6} className="profile-field-skeleton" />
+            ) : (
+              <p className="profile-field-value">{email}</p>
+            )}
           </div>
-          <div>
+          <div className="profile-field profile-field--address">
             <p className="profile-field-label">Primary Address</p>
-            <p className="profile-field-value">
-              {primaryAddress
-                ? [
-                    primaryAddress.line1,
-                    primaryAddress.line2,
-                    primaryAddress.city,
-                    primaryAddress.postal,
-                  ]
-                    .filter(Boolean)
-                    .join(", ")
-                : "—"}
-            </p>
-            {!primaryAddress ? (
-              <Link to="/profile/addresses" className="profile-field-link">
-                Add an address
-              </Link>
-            ) : null}
+            {loadingAddresses ? (
+              <div
+                className="profile-address-skeleton"
+                aria-busy="true"
+                aria-label="Loading address"
+              >
+                <Skeleton height={18} width="92%" radius={6} />
+                <Skeleton height={18} width="68%" radius={6} className="profile-address-skeleton-line" />
+              </div>
+            ) : (
+              <>
+                <p className="profile-field-value">
+                  {primaryAddress
+                    ? [
+                        primaryAddress.line1,
+                        primaryAddress.line2,
+                        primaryAddress.city,
+                        primaryAddress.postal,
+                      ]
+                        .filter(Boolean)
+                        .join(", ")
+                    : "No address saved yet"}
+                </p>
+                {!primaryAddress ? (
+                  <Link to="/profile/addresses" className="profile-field-link">
+                    Add an address
+                  </Link>
+                ) : null}
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -183,7 +236,7 @@ function Profile() {
         </div>
 
         {loadingOrders ? (
-          <p className="profile-skeleton profile-skeleton--title" />
+          <p className="profile-skeleton sc-skeleton-surface profile-skeleton--title" />
         ) : orders.length === 0 ? (
           <div className="profile-orders-empty">
             <p>You haven&apos;t placed any orders yet.</p>
@@ -195,18 +248,39 @@ function Profile() {
           <ul className="profile-order-list">
             {orders.map((order) => {
               const headline = order.items?.[0];
+              const productHref = productDetailHref(headline);
               return (
                 <li key={order.id} className="profile-order-row">
-                  <div className="profile-order-thumb">
-                    {headline?.image ? <img src={headline.image} alt="" /> : null}
-                  </div>
-                  <div className="profile-order-body">
-                    <div className="profile-order-top">
-                      <h3>{headline?.title || "Order"}</h3>
-                      <span className="profile-order-price">
-                        {formatMoney(order.total)}
-                      </span>
+                  {productHref ? (
+                    <Link
+                      to={productHref}
+                      className="profile-order-thumb profile-order-product-link"
+                      aria-label={`View ${headline?.title || "product"}`}
+                    >
+                      {headline?.image ? (
+                        <img src={headline.image} alt="" loading="lazy" />
+                      ) : null}
+                    </Link>
+                  ) : (
+                    <div className="profile-order-thumb">
+                      {headline?.image ? (
+                        <img src={headline.image} alt="" loading="lazy" />
+                      ) : null}
                     </div>
+                  )}
+                  <div className="profile-order-body">
+                    <h3>
+                      {productHref ? (
+                        <Link
+                          to={productHref}
+                          className="profile-order-title-link"
+                        >
+                          {headline?.title || "Order"}
+                        </Link>
+                      ) : (
+                        headline?.title || "Order"
+                      )}
+                    </h3>
                     <p className="profile-order-meta">
                       Order #{order.id} • {formatDate(order.createdAt)}
                     </p>
@@ -229,12 +303,14 @@ function Profile() {
                       </span>
                     </div>
                   </div>
-                  <Link
-                    to="/profile/orders"
-                    className="profile-track-btn"
-                  >
-                    View
-                  </Link>
+                  <div className="profile-order-aside">
+                    <span className="profile-order-price">
+                      {formatMoney(order.total)}
+                    </span>
+                    <Link to="/profile/orders" className="profile-track-btn">
+                      View
+                    </Link>
+                  </div>
                 </li>
               );
             })}

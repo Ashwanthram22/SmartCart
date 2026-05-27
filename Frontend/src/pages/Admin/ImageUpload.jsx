@@ -4,21 +4,14 @@ import {
   adminGetUploadConfig,
   adminGetUploadSignature,
 } from "../../api/client";
+import "./ImageUpload.css";
 
-/**
- * Cache the upload-config check across mounts. The endpoint is admin-
- * only and returns whether Cloudinary credentials are present on the
- * server, so it doesn't change between renders within a session.
- */
-let configPromise = null;
-function loadUploadConfigOnce() {
-  if (!configPromise) {
-    configPromise = adminGetUploadConfig().catch(() => ({
-      configured: false,
-      cloudName: null,
-    }));
+async function loadUploadConfig() {
+  try {
+    return await adminGetUploadConfig();
+  } catch {
+    return { configured: false, cloudName: null };
   }
-  return configPromise;
 }
 
 async function uploadToCloudinary(file) {
@@ -67,7 +60,7 @@ export default function ImageUpload({ value, onChange, label = "Product images" 
     let cancelled = false;
     (async () => {
       try {
-        const data = await loadUploadConfigOnce();
+        const data = await loadUploadConfig();
         if (cancelled) return;
         setConfig({ loaded: true, configured: Boolean(data?.configured) });
       } catch {
@@ -108,13 +101,13 @@ export default function ImageUpload({ value, onChange, label = "Product images" 
   };
 
   const addManualUrl = () => {
-    const value = urlInput.trim();
-    if (!value) return;
-    if (!/^https?:\/\//i.test(value)) {
+    const next = urlInput.trim();
+    if (!next) return;
+    if (!/^https?:\/\//i.test(next)) {
       setError("URL must start with http:// or https://");
       return;
     }
-    setList([...list, value]);
+    setList([...list, next]);
     setUrlInput("");
     setError("");
   };
@@ -134,6 +127,7 @@ export default function ImageUpload({ value, onChange, label = "Product images" 
   };
 
   const cloudinaryReady = config.configured;
+  const openFilePicker = () => fileRef.current?.click();
 
   return (
     <div className="iu-root">
@@ -183,7 +177,7 @@ export default function ImageUpload({ value, onChange, label = "Product images" 
         </ul>
       ) : null}
 
-      <div className="iu-controls">
+      <div className="iu-panel">
         {cloudinaryReady ? (
           <>
             <input
@@ -196,38 +190,47 @@ export default function ImageUpload({ value, onChange, label = "Product images" 
             />
             <button
               type="button"
-              className="iu-btn"
-              onClick={() => fileRef.current?.click()}
+              className="iu-dropzone"
+              onClick={openFilePicker}
               disabled={busy}
+              aria-busy={busy}
             >
               {busy ? (
-                <Loader2 size={16} className="iu-spin" aria-hidden="true" />
+                <Loader2 size={22} className="iu-spin" aria-hidden="true" />
               ) : (
-                <ImagePlus size={16} aria-hidden="true" />
+                <ImagePlus size={22} aria-hidden="true" />
               )}
-              <span>{busy ? "Uploading…" : "Upload image"}</span>
+              <span className="iu-dropzone-title">
+                {busy ? "Uploading…" : "Upload from device"}
+              </span>
+              <span className="iu-dropzone-hint">JPG, PNG, WebP · up to 10 MB each</span>
             </button>
-            <span className="iu-or">or</span>
+
+            <div className="iu-divider" aria-hidden="true">
+              <span>or paste a URL</span>
+            </div>
           </>
         ) : null}
 
-        <div className="iu-url">
-          <LinkIcon size={14} aria-hidden="true" />
-          <input
-            type="url"
-            placeholder="Paste an image URL"
-            value={urlInput}
-            onChange={(e) => setUrlInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                addManualUrl();
-              }
-            }}
-          />
+        <div className="iu-url-row">
+          <div className="iu-url">
+            <LinkIcon size={16} aria-hidden="true" className="iu-url-icon" />
+            <input
+              type="url"
+              placeholder="https://example.com/product.jpg"
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  addManualUrl();
+                }
+              }}
+            />
+          </div>
           <button
             type="button"
-            className="iu-btn iu-btn--ghost"
+            className="iu-btn iu-btn--add"
             onClick={addManualUrl}
             disabled={!urlInput.trim()}
           >
@@ -236,7 +239,11 @@ export default function ImageUpload({ value, onChange, label = "Product images" 
         </div>
       </div>
 
-      {error ? <p className="iu-error" role="alert">{error}</p> : null}
+      {error ? (
+        <p className="iu-error" role="alert">
+          {error}
+        </p>
+      ) : null}
       {!cloudinaryReady && config.loaded ? (
         <p className="iu-help">
           Set <code>CLOUDINARY_CLOUD_NAME</code>, <code>CLOUDINARY_API_KEY</code>{" "}

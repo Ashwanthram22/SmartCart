@@ -15,19 +15,32 @@
 }
 
 .assist-drawer {
+  /* Local tokens — drawer is always a dark panel; do not use --sc-text-on-accent on surfaces */
+  --assist-bg: #0b1326;
+  --assist-surface: #171f33;
+  --assist-surface-high: #222a3d;
+  --assist-border: rgba(92, 86, 104, 0.55);
+  --assist-fg: #dae2fd;
+  --assist-muted: #cac4d4;
+  --assist-faint: #948e9d;
+  --assist-bubble: #222a3d;
+  --assist-accent: #cebdff;
+  --assist-accent-fill: #6b38d4;
+  --assist-on-accent: #ffffff;
+
   position: fixed;
   top: 0;
   right: 0;
   z-index: 960;
   width: min(420px, 100vw);
   height: 100vh;
-  background: #0d1224;
-  color: #f4f4f9;
+  background: var(--assist-bg);
+  color: var(--assist-fg);
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
   transition: transform 0.28s ease;
-  box-shadow: -24px 0 60px rgba(0, 0, 0, 0.4);
+  box-shadow: -24px 0 60px rgba(0, 0, 0, 0.45);
   font-family: Inter, system-ui, sans-serif;
 }
 
@@ -42,8 +55,12 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(135deg, #1c1240 0%, #0d1224 100%);
+  border-bottom: 1px solid var(--assist-border);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--assist-accent-fill) 28%, var(--assist-bg)) 0%,
+    var(--assist-bg) 100%
+  );
 }
 
 .assist-header-eyebrow {
@@ -52,7 +69,7 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #b39bff;
+  color: var(--assist-accent);
 }
 
 .assist-header h2 {
@@ -60,31 +77,33 @@
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: var(--sc-text-on-accent);
+  color: var(--assist-fg);
 }
 
 .assist-header-context {
   margin: 6px 0 0;
   font-size: 12px;
-  color: #98a2c0;
+  color: var(--assist-muted);
 }
 
 .assist-close {
   appearance: none;
-  background: rgba(255, 255, 255, 0.06);
-  border: 0;
-  color: #f4f4f9;
+  background: var(--assist-surface-high);
+  border: 1px solid var(--assist-border);
+  color: var(--assist-fg);
   width: 32px;
   height: 32px;
   border-radius: 999px;
   font-size: 22px;
   line-height: 1;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .assist-close:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: color-mix(in srgb, var(--assist-accent) 14%, var(--assist-surface-high));
+  border-color: color-mix(in srgb, var(--assist-accent) 35%, transparent);
+  color: var(--assist-accent);
 }
 
 .assist-close:focus-visible,
@@ -92,7 +111,7 @@
 .assist-action-btn:focus-visible,
 .assist-suggestion-chip:focus-visible,
 .assist-send:focus-visible {
-  outline: 2px solid #b39bff;
+  outline: 2px solid var(--assist-accent);
   outline-offset: 2px;
 }
 
@@ -130,19 +149,23 @@
   max-width: 85%;
   border-radius: 16px;
   padding: 12px 14px;
-  background: #1a2040;
-  color: #e8eaf3;
+  background: var(--assist-bubble);
+  color: var(--assist-fg);
   font-size: 14px;
   line-height: 1.5;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--assist-border);
 }
 
 .assist-turn--user .assist-bubble {
-  background: linear-gradient(135deg, var(--sc-accent) 0%, var(--sc-accent-strong) 100%);
-  color: var(--sc-text-on-accent);
+  background: linear-gradient(
+    135deg,
+    var(--assist-accent-fill) 0%,
+    color-mix(in srgb, var(--assist-accent-fill) 75%, #8994ff) 100%
+  );
+  color: var(--assist-on-accent);
   border-color: transparent;
   border-bottom-right-radius: 6px;
 }
@@ -168,7 +191,7 @@
   width: 7px;
   height: 7px;
   border-radius: 999px;
-  background: #b39bff;
+  background: var(--assist-accent);
   animation: assistTyping 1.1s ease-in-out infinite both;
 }
 
@@ -198,9 +221,9 @@
 
 .assist-product-card {
   appearance: none;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #f4f4f9;
+  background: var(--assist-surface);
+  border: 1px solid var(--assist-border);
+  color: var(--assist-fg);
   padding: 10px;
   border-radius: 12px;
   display: grid;
@@ -212,7 +235,8 @@
 }
 
 .assist-product-card:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--assist-surface-high);
+  border-color: color-mix(in srgb, var(--assist-accent) 35%, transparent);
 }
 
 .assist-product-card:active {
@@ -224,7 +248,7 @@
   height: 56px;
   border-radius: 8px;
   object-fit: cover;
-  background: #20254a;
+  background: var(--assist-surface-high);
 }
 
 .assist-product-img--placeholder {
@@ -253,12 +277,12 @@
   align-items: baseline;
   gap: 10px;
   font-size: 13px;
-  color: #b8bdda;
+  color: var(--assist-muted);
 }
 
 .assist-product-price {
   font-weight: 700;
-  color: var(--sc-text-on-accent);
+  color: var(--assist-fg);
 }
 
 .assist-product-rating {
@@ -271,7 +295,7 @@
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #98a2c0;
+  color: var(--assist-faint);
 }
 
 .assist-action-row {
@@ -282,29 +306,31 @@
 
 .assist-action-btn {
   appearance: none;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: transparent;
-  color: #f4f4f9;
+  border: 1px solid var(--assist-border);
+  background: var(--assist-surface);
+  color: var(--assist-fg);
   padding: 8px 12px;
   border-radius: 999px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.1s ease;
+  transition: background 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
 }
 
 .assist-action-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--assist-surface-high);
+  border-color: color-mix(in srgb, var(--assist-accent) 35%, transparent);
 }
 
 .assist-action-btn--primary {
-  background: var(--sc-accent);
-  border-color: var(--sc-accent);
-  color: var(--sc-text-on-accent);
+  background: var(--assist-accent-fill);
+  border-color: var(--assist-accent-fill);
+  color: var(--assist-on-accent);
 }
 
 .assist-action-btn--primary:hover {
-  background: var(--sc-accent-strong);
+  background: color-mix(in srgb, var(--assist-accent-fill) 88%, #ffffff);
+  border-color: color-mix(in srgb, var(--assist-accent-fill) 88%, #ffffff);
 }
 
 .assist-suggestions {
@@ -317,20 +343,25 @@
 
 .assist-suggestion-chip {
   appearance: none;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.04);
-  color: #d6d9ed;
+  border: 1px solid var(--assist-border);
+  background: var(--assist-surface);
+  color: var(--assist-fg);
   padding: 7px 12px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .assist-suggestion-chip:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--sc-text-on-accent);
+  background: color-mix(in srgb, var(--assist-accent) 12%, var(--assist-surface-high));
+  border-color: color-mix(in srgb, var(--assist-accent) 40%, transparent);
+  color: var(--assist-fg);
+}
+
+.assist-suggestion-chip:active {
+  background: color-mix(in srgb, var(--assist-accent-fill) 22%, var(--assist-surface-high));
 }
 
 .assist-error-wrap {
@@ -387,7 +418,7 @@
 .assist-error-btn--primary {
   background: rgba(127, 29, 29, 0.55);
   border-color: rgba(248, 113, 113, 0.35);
-  color: var(--sc-text-on-accent);
+  color: #fecaca;
 }
 
 .assist-error-btn--primary:hover:not(:disabled) {
@@ -400,30 +431,31 @@
   align-items: center;
   gap: 10px;
   padding: 14px 18px 18px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  background: #0d1224;
+  border-top: 1px solid var(--assist-border);
+  background: var(--assist-bg);
 }
 
 .assist-input-row input {
   flex: 1;
   height: 44px;
   border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: #161c3a;
-  color: #f4f4f9;
+  border: 1px solid var(--assist-border);
+  background: var(--assist-surface);
+  color: var(--assist-fg);
   padding: 0 16px;
   font-size: 14px;
   font-family: inherit;
   outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .assist-input-row input::placeholder {
-  color: #6c7398;
+  color: var(--assist-faint);
 }
 
 .assist-input-row input:focus {
-  border-color: var(--sc-accent-strong);
-  box-shadow: 0 0 0 2px rgba(132, 85, 239, 0.25);
+  border-color: color-mix(in srgb, var(--assist-accent) 55%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--assist-accent-fill) 28%, transparent);
 }
 
 .assist-input-row input:disabled {
@@ -436,8 +468,8 @@
   height: 44px;
   border-radius: 999px;
   border: 0;
-  background: var(--sc-accent);
-  color: var(--sc-text-on-accent);
+  background: var(--assist-accent-fill);
+  color: var(--assist-on-accent);
   font-size: 18px;
   font-weight: 700;
   cursor: pointer;
@@ -445,7 +477,7 @@
 }
 
 .assist-send:hover:not(:disabled) {
-  background: var(--sc-accent-strong);
+  background: color-mix(in srgb, var(--assist-accent-fill) 88%, #ffffff);
 }
 
 .assist-send:disabled {

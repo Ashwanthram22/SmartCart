@@ -2,7 +2,10 @@ const express = require("express");
 const { withDb } = require("../lib/store");
 const authMiddleware = require("../middleware/auth");
 const { withUserProfile } = require("../lib/user-profile");
-const { publicNotification } = require("../lib/user-notifications");
+const {
+  publicNotification,
+  publicNotificationWithProduct,
+} = require("../lib/user-notifications");
 const { clearAlertsForNotification } = require("../lib/notification-dismiss");
 
 const router = express.Router();
@@ -13,7 +16,7 @@ router.get("/", async (req, res) => {
   const list = await withDb(async (db) => {
     const user = withUserProfile(db, req.user.sub);
     if (!user) return [];
-    return (user.inbox || []).map(publicNotification);
+    return (user.inbox || []).map((row) => publicNotificationWithProduct(db, row));
   });
   const unread = list.filter((n) => !n.read).length;
   return res.json({ notifications: list, unread });

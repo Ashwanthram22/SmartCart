@@ -564,26 +564,31 @@ export default function OrderHistory() {
                         </p>
                       ) : null}
                     </div>
-                    <div className="oh-order-actions">
-                      {order.actions.map((a) => (
-                        <button
-                          key={a.id}
-                          type="button"
-                          disabled={busyOrderId === order.id && a.id === "cancel"}
-                          className={
-                            a.variant === "primary"
-                              ? "oh-action-btn oh-action-btn--primary"
-                              : a.variant === "danger-outline"
-                                ? "oh-action-btn oh-action-btn--danger"
-                                : "oh-action-btn oh-action-btn--outline"
-                          }
-                          onClick={() => dispatch(a, order)}
-                        >
-                          {busyOrderId === order.id && a.id === "cancel"
-                            ? "Cancelling…"
-                            : a.label}
-                        </button>
-                      ))}
+                    <div className="oh-order-aside">
+                      <span className="oh-order-price">
+                        {formatMoney(order.total)}
+                      </span>
+                      <div className="oh-order-actions">
+                        {order.actions.map((a) => (
+                          <button
+                            key={a.id}
+                            type="button"
+                            disabled={busyOrderId === order.id && a.id === "cancel"}
+                            className={
+                              a.variant === "primary"
+                                ? "oh-action-btn oh-action-btn--primary"
+                                : a.variant === "danger-outline"
+                                  ? "oh-action-btn oh-action-btn--danger"
+                                  : "oh-action-btn oh-action-btn--outline"
+                            }
+                            onClick={() => dispatch(a, order)}
+                          >
+                            {busyOrderId === order.id && a.id === "cancel"
+                              ? "Cancelling…"
+                              : a.label}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>

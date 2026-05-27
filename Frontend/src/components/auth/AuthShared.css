@@ -37,7 +37,7 @@
 
 .auth-brand p {
   margin: 0;
-  color: #5c5f60;
+  color: var(--sc-text-muted);
   font-size: 20px;
 }
 
@@ -48,7 +48,7 @@
 }
 
 .auth-field label {
-  color: #494454;
+  color: var(--sc-text-secondary);
   font-size: 14px;
   font-weight: 500;
 }
@@ -59,7 +59,7 @@
   font-size: 13px;
   font-weight: 600;
   line-height: 1.35;
-  color: #b91c1c;
+  color: var(--sc-error);
 }
 
 .auth-field-input-wrap {
@@ -74,7 +74,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #7b7486;
+  color: var(--sc-text-faint);
   pointer-events: none;
   z-index: 1;
 }
@@ -82,12 +82,14 @@
 .auth-field input {
   width: 100%;
   height: 54px;
-  border: 1px solid #cbc3d7;
+  border: 1px solid var(--sc-input-border);
   border-radius: 12px;
   padding: 0 14px;
   font-size: 15px;
   box-sizing: border-box;
   outline: none;
+  background: var(--sc-input-bg);
+  color: var(--sc-text);
 }
 
 /* Must come after base `.auth-field input` — shorthand padding above resets sides */
@@ -120,8 +122,8 @@
   height: 56px;
   border-radius: 12px;
   border: 0;
-  background: var(--sc-accent);
-  color: var(--sc-surface);
+  background: var(--sc-accent-container);
+  color: var(--sc-text-on-accent-container);
   font-size: 18px;
   font-weight: 600;
   cursor: pointer;
@@ -132,7 +134,7 @@
 }
 
 .auth-primary-button:hover {
-  background: var(--sc-accent-strong);
+  background: var(--sc-accent-container-hover);
 }
 
 .auth-primary-button:disabled {
@@ -141,14 +143,14 @@
 }
 
 .auth-primary-button:disabled:hover {
-  background: var(--sc-accent);
+  background: var(--sc-accent-container);
 }
 
 .auth-divider {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #7b7486;
+  color: var(--sc-text-faint);
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -156,7 +158,7 @@
 
 .auth-divider div {
   flex: 1;
-  border-top: 1px solid #cbc3d7;
+  border-top: 1px solid var(--sc-border-strong);
 }
 
 .auth-social-single {
@@ -168,8 +170,8 @@
   height: 54px;
   width: min(360px, 100%);
   border-radius: 999px;
-  border: 1px solid #cbc3d7;
-  background: #edf2f7;
+  border: 1px solid var(--sc-border-strong);
+  background: var(--sc-surface-muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -201,7 +203,7 @@
   color: var(--sc-text);
   font-size: 13px;
   font-weight: 700;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--sc-border-strong);
 }
 
 .social-icon-google {
@@ -211,9 +213,9 @@
 .auth-tip {
   margin-top: 24px;
   padding: 14px;
-  border: 1px solid rgba(107, 56, 212, 0.2);
+  border: 1px solid var(--sc-accent-soft-border);
   border-radius: 16px;
-  background: rgba(241, 243, 255, 0.7);
+  background: var(--sc-insight-card-bg);
   display: flex;
   gap: 12px;
 }
@@ -224,7 +226,7 @@
   border-radius: 8px;
   display: grid;
   place-items: center;
-  background: #e9ddff;
+  background: var(--sc-accent-soft);
   color: var(--sc-accent);
   font-weight: 700;
 }
@@ -237,7 +239,7 @@
 
 .auth-tip p {
   margin: 0;
-  color: #5c5f60;
+  color: var(--sc-text-muted);
   font-size: 12px;
   line-height: 1.4;
 }

@@ -16,6 +16,7 @@ import {
   UserPlus,
 } from "lucide-react";
 import AdminLayout from "./AdminLayout";
+import { StatCardsSkeleton } from "./AdminSkeletons";
 import AdmDropdown from "../../components/AdmDropdown";
 import {
   adminGetRecentActivity,
@@ -176,12 +177,12 @@ function SalesChart({ data }) {
     >
       <defs>
         <linearGradient id="adChartFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#a78bfa" stopOpacity="0.55" />
-          <stop offset="100%" stopColor="#a78bfa" stopOpacity="0" />
+          <stop offset="0%" stopColor="var(--sc-accent-strong)" stopOpacity="0.55" />
+          <stop offset="100%" stopColor="var(--sc-accent-strong)" stopOpacity="0" />
         </linearGradient>
       </defs>
       <path d={chart.area} fill="url(#adChartFill)" />
-      <path d={chart.path} fill="none" stroke="#6b38d4" strokeWidth="2.4" />
+      <path d={chart.path} fill="none" stroke="var(--sc-accent-strong)" strokeWidth="2.4" />
       {tickIdx.map((i) => (
         <g key={`tick-${i}`}>
           <text
@@ -189,7 +190,7 @@ function SalesChart({ data }) {
             y={h + 14}
             textAnchor="middle"
             fontSize="11"
-            fill="#94a3b8"
+            fill="var(--sc-text-faint)"
             fontFamily="Inter, system-ui, sans-serif"
           >
             {labels[i] ? labels[i].slice(5) : ""}
@@ -372,54 +373,54 @@ export default function AdminDashboard() {
     >
       {error ? <p className="ad-error" role="alert">{error}</p> : null}
 
-      <section className="ad-stats-grid" aria-label="Key metrics">
-        <StatCard
-          icon={CreditCard}
-          title="Revenue"
-          value={loading ? "—" : formatMoney(periodMetrics.revenue)}
-          helper={loading ? "Loading…" : `vs previous ${range} days`}
-          helperTone="muted"
-          delta={loading ? null : periodMetrics.revenueDelta}
-          // spark={sparkSeries}
-        />
-        <StatCard
-          icon={ShoppingBag}
-          title="Orders"
-          value={loading ? "—" : (periodMetrics.ordersCount || 0).toLocaleString()}
-          helper={loading ? "Loading…" : `vs previous ${range} days`}
-          helperTone="muted"
-          delta={loading ? null : periodMetrics.ordersDelta}
-          // spark={sparkSeries}
-        />
-        {/* <StatCard
-          icon={Receipt}
-          title="Avg Order Value"
-          value={loading ? "—" : formatMoney(periodMetrics.aov)}
-          helper={loading ? "Loading…" : `vs previous ${range} days`}
-          helperTone="muted"
-          delta={loading ? null : periodMetrics.aovDelta}
-          spark={sparkSeries}
-        /> */}
-        <StatCard
-          icon={PackagePlus}
-          title="Active Products"
-          value={loading ? "—" : (totals.activeProducts || 0).toLocaleString()}
-          helper={loading ? "Loading…" : "Live in catalog"}
-        />
-        <StatCard
-          icon={AlertTriangle}
-          title="Inventory Alerts"
-          value={loading ? "—" : (totals.lowStock || 0).toLocaleString()}
-          helper={
-            loading
-              ? "Loading…"
-              : totals.outOfStock > 0
-              ? `${totals.outOfStock} out of stock`
-              : "Require attention"
-          }
-          helperTone="warn"
-          sparkTone="warn"
-        />
+      <section
+        className="ad-stats-grid"
+        aria-label="Key metrics"
+        aria-busy={loading || undefined}
+      >
+        {loading ? (
+          <>
+            <p className="adm-visually-hidden">Loading key metrics…</p>
+            <StatCardsSkeleton count={4} />
+          </>
+        ) : (
+          <>
+            <StatCard
+              icon={CreditCard}
+              title="Revenue"
+              value={formatMoney(periodMetrics.revenue)}
+              helper={`vs previous ${range} days`}
+              helperTone="muted"
+              delta={periodMetrics.revenueDelta}
+            />
+            <StatCard
+              icon={ShoppingBag}
+              title="Orders"
+              value={(periodMetrics.ordersCount || 0).toLocaleString()}
+              helper={`vs previous ${range} days`}
+              helperTone="muted"
+              delta={periodMetrics.ordersDelta}
+            />
+            <StatCard
+              icon={PackagePlus}
+              title="Active Products"
+              value={(totals.activeProducts || 0).toLocaleString()}
+              helper="Live in catalog"
+            />
+            <StatCard
+              icon={AlertTriangle}
+              title="Inventory Alerts"
+              value={(totals.lowStock || 0).toLocaleString()}
+              helper={
+                totals.outOfStock > 0
+                  ? `${totals.outOfStock} out of stock`
+                  : "Require attention"
+              }
+              helperTone="warn"
+              sparkTone="warn"
+            />
+          </>
+        )}
       </section>
 
       <section className="ad-grid">
@@ -432,9 +433,13 @@ export default function AdminDashboard() {
               </p>
             </div>
           </header>
-          <div className="ad-chart-wrap">
+          <div className="ad-chart-wrap" aria-busy={loading || chartLoading || undefined}>
             {loading || chartLoading ? (
-              <div className="ad-chart-skeleton" aria-hidden="true" />
+              <div
+                className="ad-chart-skeleton adm-skel"
+                role="status"
+                aria-label="Loading sales chart"
+              />
             ) : (
               <SalesChart data={chart} />
             )}

@@ -2,7 +2,12 @@
   min-height: 100vh;
   padding: 24px;
   box-sizing: border-box;
-  background: radial-gradient(circle at top right, #f5f3ff 0%, var(--sc-surface) 40%, var(--sc-page-bg) 100%);
+  background: radial-gradient(
+    circle at top right,
+    var(--sc-accent-soft) 0%,
+    var(--sc-surface) 40%,
+    var(--sc-page-bg) 100%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,10 +22,10 @@
   flex-direction: column;
   gap: 8px;
   margin-top: 30px;
-  background: rgba(255, 255, 255, 0.82);
-  border: 1px solid rgba(229, 231, 235, 0.8);
+  background: var(--sc-surface);
+  border: 1px solid var(--sc-card-border);
   border-radius: 32px;
-  box-shadow: 0 20px 48px rgba(107, 56, 212, 0.12);
+  box-shadow: var(--sc-shadow-lg);
   padding: 30px;
 }
 
@@ -42,7 +47,7 @@
   font-size: 14px;
   line-height: 1.45;
   font-weight: 600;
-  color: #b91c1c;
+  color: var(--sc-error);
 }
 
 .login-password-row {
@@ -54,7 +59,7 @@
 
 .login-password-row label {
   font-size: 14px;
-  color: #494454;
+  color: var(--sc-text-secondary);
 }
 
 .link-button {
@@ -73,7 +78,7 @@
 .login-register-note {
   margin: 20px 0 0;
   text-align: center;
-  color: #5c5f60;
+  color: var(--sc-text-muted);
 }
 
 .login-register-note a {

@@ -31,9 +31,9 @@ function pushUserNotification(user, payload) {
   return entry;
 }
 
-function publicNotification(row) {
+function publicNotification(row, product = null) {
   if (!row) return null;
-  return {
+  const out = {
     id: row.id,
     type: row.type,
     title: row.title,
@@ -42,10 +42,34 @@ function publicNotification(row) {
     read: Boolean(row.read),
     createdAt: row.createdAt,
   };
+  if (product) {
+    out.productTitle = product.title != null ? String(product.title) : null;
+    out.productCategory =
+      product.category != null ? String(product.category) : null;
+    const img =
+      product.image ||
+      (Array.isArray(product.images) && product.images.length > 0
+        ? product.images[0]
+        : null);
+    out.productImage = img != null ? String(img) : null;
+  }
+  return out;
+}
+
+function findProductById(db, productId) {
+  if (productId == null) return null;
+  return (db.products || []).find((p) => String(p.id) === String(productId)) || null;
+}
+
+function publicNotificationWithProduct(db, row) {
+  const product = row?.productId ? findProductById(db, row.productId) : null;
+  return publicNotification(row, product);
 }
 
 module.exports = {
   ensureInbox,
   pushUserNotification,
   publicNotification,
+  publicNotificationWithProduct,
+  findProductById,
 };

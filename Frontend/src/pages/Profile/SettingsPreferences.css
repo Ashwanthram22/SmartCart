@@ -53,6 +53,7 @@
   min-width: 0;
   height: 42px;
   box-sizing: border-box;
+  border-color: var(--sc-border-strong);
 }
 
 .sp-field-help {
@@ -74,7 +75,7 @@
   justify-content: space-between;
   gap: 16px;
   padding: 14px 0;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  border-bottom: 1px solid var(--sc-border-strong);
 }
 
 .sp-toggle-row:last-child {
@@ -107,23 +108,34 @@
   gap: 12px;
 }
 
+.sp-action-row .settings-btn-primary,
 .sp-secondary {
-  appearance: none;
-  height: 42px;
-  padding: 0 18px;
+  box-sizing: border-box;
+  height: 48px;
+  min-height: 48px;
+  padding: 0 32px;
   border-radius: 10px;
-  border: 1px solid rgba(15, 23, 42, 0.18);
-  background: var(--sc-surface);
-  color: var(--sc-text);
   font-size: 14px;
   font-weight: 600;
+  font-family: inherit;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sp-secondary {
+  appearance: none;
+  border: 1px solid var(--sc-border-strong);
+  background: var(--sc-surface-muted);
+  color: var(--sc-text);
   cursor: pointer;
   transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 .sp-secondary:hover:not(:disabled) {
-  background: #f5f4fb;
-  border-color: rgba(107, 56, 212, 0.45);
+  background: var(--sc-control-hover-bg);
+  border-color: var(--sc-control-hover-border);
 }
 
 .sp-secondary:disabled {

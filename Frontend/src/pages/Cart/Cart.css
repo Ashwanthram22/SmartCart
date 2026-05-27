@@ -209,13 +209,16 @@
   gap: 8px;
   border: none;
   background: none;
-  padding: 0;
-  color: #ba1a1a;
+  padding: 4px 8px;
+  margin: -4px -8px;
+  border-radius: 8px;
+  color: var(--sc-danger);
   font-size: 14px;
   font-weight: 500;
   font-family: inherit;
   cursor: pointer;
   text-decoration: none;
+  transition: color 140ms ease, background 140ms ease;
 }
 
 .cart-remove-icon {
@@ -230,7 +233,8 @@
 }
 
 .cart-remove:hover {
-  color: #93000a;
+  color: var(--sc-danger);
+  background: var(--sc-danger-soft);
 }
 
 .cart-remove:hover .cart-remove-label {
@@ -532,16 +536,17 @@
 .cart-coupon-remove {
   background: transparent;
   border: none;
-  color: #b91c1c;
+  color: var(--sc-danger);
   font-weight: 600;
   font-size: 0.82rem;
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 6px;
+  transition: background 140ms ease, color 140ms ease;
 }
 
 .cart-coupon-remove:hover {
-  background: rgba(220, 38, 38, 0.08);
+  background: var(--sc-danger-soft);
 }
 
 .cart-summary-total {
@@ -561,7 +566,7 @@
 .cart-summary-total strong {
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 800;
-  color: var(--sc-accent);
+  color: var(--sc-accent-strong);
   letter-spacing: -0.02em;
 }
 
@@ -570,8 +575,8 @@
   height: 56px;
   border: none;
   border-radius: 12px;
-  background: var(--sc-accent);
-  color: var(--sc-text-on-accent);
+  background: var(--sc-accent-container);
+  color: #ffffff;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -579,17 +584,20 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 10px 30px rgba(107, 56, 212, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
   margin-bottom: 16px;
-  transition: opacity 0.15s, transform 0.1s;
+  transition: background 140ms ease, transform 140ms ease, box-shadow 140ms ease;
 }
 
 .cart-checkout-btn:hover {
-  opacity: 0.92;
+  background: var(--sc-accent-container-hover);
+  box-shadow: 0 6px 20px rgba(107, 56, 212, 0.32);
+  transform: translateY(-1px);
 }
 
 .cart-checkout-btn:active {
-  transform: scale(0.99);
+  transform: translateY(0) scale(0.99);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.32);
 }
 
 .cart-summary-footnote {

@@ -4,10 +4,22 @@ import { useFocusTrap } from "../hooks/useFocusTrap";
 import "./LegalDocumentModal.css";
 
 /**
- * @param {{ open: boolean, documentId: "terms" | "privacy" | null, onClose: () => void }} props
+ * Scrollable document modal (terms, privacy, footer pages, etc.).
+ *
+ * @param {{
+ *   open: boolean,
+ *   documentId: string | null,
+ *   onClose: () => void,
+ *   documents?: Record<string, { title: string, lastUpdated: string, paragraphs: string[] }>,
+ * }} props
  */
-export default function LegalDocumentModal({ open, documentId, onClose }) {
-  const doc = documentId && LEGAL_DOCUMENTS[documentId] ? LEGAL_DOCUMENTS[documentId] : null;
+export default function LegalDocumentModal({
+  open,
+  documentId,
+  onClose,
+  documents = LEGAL_DOCUMENTS,
+}) {
+  const doc = documentId && documents[documentId] ? documents[documentId] : null;
   const dialogRef = useRef(null);
   useFocusTrap(dialogRef, open && Boolean(doc));
 

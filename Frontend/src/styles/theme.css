@@ -128,6 +128,10 @@
   --sc-stock-low-text: #b45309;
   --sc-stock-out-text: #b91c1c;
   --sc-profile-elevated-bg: #f1f3ff;
+
+  --sc-skeleton-base: #eef0f4;
+  --sc-skeleton-shine: rgba(255, 255, 255, 0);
+  --sc-skeleton-highlight: rgba(255, 255, 255, 0.55);
 }
 
 /* Dark — Material-style tokens from reference mockups */
@@ -148,7 +152,7 @@
   --sc-text-muted: #cac4d4;
   --sc-text-faint: #948e9d;
   --sc-text-on-accent: #381385;
-  --sc-text-on-accent-container: #3c1989;
+  --sc-text-on-accent-container: #ffffff;
   --sc-chip-active-bg: rgba(206, 189, 255, 0.15);
 
   --sc-badge-bg: rgba(15, 23, 42, 0.72);
@@ -161,14 +165,14 @@
   --sc-accent-hover: #e8ddff;
   --sc-accent-soft: rgba(206, 189, 255, 0.12);
   --sc-accent-soft-border: rgba(206, 189, 255, 0.3);
-  --sc-accent-container: #a78bfa;
-  --sc-accent-container-hover: #b99bff;
+  --sc-accent-container: #6b38d4;
+  --sc-accent-container-hover: #7c4bd4;
   --sc-accent-ring: #cebdff;
   --sc-accent-glow: rgba(167, 139, 250, 0.3);
 
-  --sc-border: rgba(73, 69, 82, 0.35);
-  --sc-border-strong: #494552;
-  --sc-border-subtle: rgba(73, 69, 82, 0.2);
+  --sc-border: rgba(92, 86, 104, 0.5);
+  --sc-border-strong: #5c5668;
+  --sc-border-subtle: rgba(92, 86, 104, 0.32);
   --sc-outline: #948e9d;
 
   /* Solid nav — no transparency (icons stay readable over hero/images) */
@@ -196,7 +200,7 @@
   --sc-scrollbar-thumb-hover: #494552;
 
   --sc-input-bg: #171f33;
-  --sc-input-border: rgba(73, 69, 82, 0.4);
+  --sc-input-border: #5c5668;
   --sc-input-focus-border: rgba(206, 189, 255, 0.55);
   --sc-input-focus-ring: rgba(206, 189, 255, 0.12);
 
@@ -244,6 +248,10 @@
   --sc-stock-low-text: #fbbf24;
   --sc-stock-out-text: #ffb4ab;
   --sc-profile-elevated-bg: var(--sc-surface-muted);
+
+  --sc-skeleton-base: #1e2840;
+  --sc-skeleton-shine: rgba(206, 189, 255, 0);
+  --sc-skeleton-highlight: rgba(206, 189, 255, 0.14);
 }
 
 /* Admin console tokens */
@@ -252,7 +260,7 @@
   --adm-surface: #171f33;
   --adm-text: #dae2fd;
   --adm-muted: #cac4d4;
-  --adm-border: rgba(73, 69, 82, 0.35);
+  --adm-border: var(--sc-input-border);
   --adm-accent: #cebdff;
   --adm-accent-strong: #a78bfa;
   --adm-success: #4ade80;

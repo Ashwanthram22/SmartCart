@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import ScrollToTop from "./components/ScrollToTop";
+import CenteredLoader from "./components/CenteredLoader";
 import ErrorBoundary from "./components/ErrorBoundary";
 import KeyboardShortcuts from "./components/KeyboardShortcuts";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -45,16 +46,7 @@ function RouteBoundary({ children }) {
 
 /** Shown while lazy route chunks load — keep markup/CSS tiny for first paint. */
 function RouteFallback() {
-  return (
-    <div className="route-fallback" role="status" aria-live="polite" aria-busy="true">
-      <div className="route-fallback-inner" aria-hidden="true">
-        <span className="route-fallback-dot" />
-        <span className="route-fallback-dot" />
-        <span className="route-fallback-dot" />
-      </div>
-      <span className="route-fallback-sr">Loading page</span>
-    </div>
-  );
+  return <CenteredLoader label="Loading page" />;
 }
 
 function App() {

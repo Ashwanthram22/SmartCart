@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { adminListOrders, adminListProducts } from "../../api/client";
 import { formatMoneyShort } from "../../utils/money";
+import { AdminSearchResultsSkeleton } from "./AdminSkeletons";
 
 /**
  * localStorage key for recent search picks. Stored per-browser, never
@@ -471,7 +472,7 @@ export default function GlobalAdminSearch({ placeholder = "Search orders, stock,
               }}
             />
           ) : loading && items.length === 0 ? (
-            <div className="adm-globalsearch-empty">Searching…</div>
+            <AdminSearchResultsSkeleton rows={4} />
           ) : items.length === 0 ? (
             <div className="adm-globalsearch-empty">
               No matches for <strong>“{debounced}”</strong>.
@@ -582,13 +583,28 @@ export default function GlobalAdminSearch({ placeholder = "Search orders, stock,
           )}
 
           <footer className="adm-globalsearch-foot">
-            <kbd>↑</kbd>
-            <kbd>↓</kbd> navigate
-            <kbd>↵</kbd> open
-            <kbd>Esc</kbd> close
-            <span className="adm-globalsearch-foot-spacer" aria-hidden="true" />
-            <kbd>⌘/Ctrl</kbd>
-            <kbd>K</kbd> anywhere
+            <div className="adm-globalsearch-foot-row">
+              <span className="adm-globalsearch-foot-group">
+                <kbd>↑</kbd>
+                <kbd>↓</kbd>
+                <span>navigate</span>
+              </span>
+              <span className="adm-globalsearch-foot-group">
+                <kbd>↵</kbd>
+                <span>open</span>
+              </span>
+              <span className="adm-globalsearch-foot-group">
+                <kbd>Esc</kbd>
+                <span>close</span>
+              </span>
+            </div>
+            <div className="adm-globalsearch-foot-row">
+              <span className="adm-globalsearch-foot-group">
+                <kbd>⌘/Ctrl</kbd>
+                <kbd>K</kbd>
+                <span>anywhere</span>
+              </span>
+            </div>
           </footer>
         </div>,
         document.body

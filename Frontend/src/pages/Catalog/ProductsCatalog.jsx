@@ -525,27 +525,29 @@ function ProductsCatalog() {
                           <HeartIcon filled={saved} size={16} />
                         </button>
                       </div>
-                      <div className="catalog-card-body">
+                      <div className="catalog-card-details">
                         <h2>{product.title}</h2>
-                        {Number(product.rating) > 0 || Number(product.reviewCount) > 0 ? (
-                          <p className="product-rating">
-                            {starsFromRating(product.rating) ? (
-                              <span className="star">{starsFromRating(product.rating)}</span>
-                            ) : (
-                              <span className="star">★</span>
-                            )}{" "}
-                            {Number.isFinite(Number(product.rating)) && Number(product.rating) > 0
-                              ? Number(product.rating).toFixed(1)
-                              : null}
-                            {reviewCountLabel(product.reviewCount)
-                              ? ` ${reviewCountLabel(product.reviewCount)}`
-                              : null}
-                          </p>
-                        ) : null}
                         <StockBadge stock={product.stock} compact />
                       </div>
                       <div className="catalog-card-foot">
-                        <strong>{formatMoney(product.price || 0)}</strong>
+                        <div className="catalog-card-foot-main">
+                          {Number(product.rating) > 0 || Number(product.reviewCount) > 0 ? (
+                            <p className="product-rating">
+                              {starsFromRating(product.rating) ? (
+                                <span className="star">{starsFromRating(product.rating)}</span>
+                              ) : (
+                                <span className="star">★</span>
+                              )}{" "}
+                              {Number.isFinite(Number(product.rating)) && Number(product.rating) > 0
+                                ? Number(product.rating).toFixed(1)
+                                : null}
+                              {reviewCountLabel(product.reviewCount)
+                                ? ` ${reviewCountLabel(product.reviewCount)}`
+                                : null}
+                            </p>
+                          ) : null}
+                          <strong>{formatMoney(product.price || 0)}</strong>
+                        </div>
                         {out ? (
                           <span onClick={(e) => e.stopPropagation()}>
                             <StockAlertButton productId={product.id} />

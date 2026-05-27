@@ -112,7 +112,6 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [errorRequestId, setErrorRequestId] = useState("");
-  const [toast, setToast] = useState("");
   const listRef = useRef(null);
   const inputRef = useRef(null);
   const drawerRef = useRef(null);
@@ -165,12 +164,6 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
   }, [open, onClose]);
 
   useEffect(() => {
-    if (!toast) return undefined;
-    const t = window.setTimeout(() => setToast(""), 2200);
-    return () => window.clearTimeout(t);
-  }, [toast]);
-
-  useEffect(() => {
     if (!listRef.current) return;
     listRef.current.scrollTop = listRef.current.scrollHeight;
   }, [turns, sending, open]);
@@ -181,13 +174,13 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
         .flatMap((t) => t.products || [])
         .find((p) => String(p.id) === String(action.productId));
       if (!productInfo) {
-        setToast("Couldn't add — product not in this conversation.");
+        toastApi.error("Couldn't add — product not in this conversation.");
         return;
       }
       addItem(productInfo);
-      setToast(`Added ${productInfo.title} to cart`);
+      toastApi.success(`Added ${productInfo.title} to cart`);
     },
-    [turns, addItem]
+    [turns, addItem, toastApi]
   );
 
   const handleNavigate = useCallback(
@@ -435,7 +428,6 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
           </button>
         </form>
 
-        {toast ? <div className="assist-toast">{toast}</div> : null}
       </aside>
     </>
   );

@@ -85,7 +85,7 @@ function ProductCard({ product, showAskAi = false, badgeOverride, index = 0 }) {
       onClick={openDetail}
       onKeyDown={handleCardKeyDown}
     >
-      <div className="home-product-card-image-wrap">
+      <div className="home-product-card-media">
         <img alt="" className="home-product-card-img" {...gridImg} />
         {displayBadge ? (
           <span
@@ -119,20 +119,24 @@ function ProductCard({ product, showAskAi = false, badgeOverride, index = 0 }) {
           </button>
         ) : null}
       </div>
-      <div className="home-product-card-body">
+      <div className="home-product-card-details">
         <p className="home-product-category">{category || "Electronics"}</p>
         <h3 className="home-product-title">{title}</h3>
-        <div className="home-product-price-row">
-          <span className="home-product-price">{formatMoney(price)}</span>
-          {originalPrice ? (
-            <span className="home-product-price-old">
-              {formatMoney(originalPrice)}
-            </span>
-          ) : null}
-        </div>
-        <div className="home-product-meta">
-          <span className="home-product-stars">★ {rating ?? "—"}</span>
-          <span className="home-product-reviews">({reviewsShort})</span>
+      </div>
+      <div className="home-product-card-foot">
+        <div className="home-product-foot-main">
+          <div className="home-product-price-row">
+            <span className="home-product-price">{formatMoney(price)}</span>
+            {originalPrice ? (
+              <span className="home-product-price-old">
+                {formatMoney(originalPrice)}
+              </span>
+            ) : null}
+          </div>
+          <div className="home-product-meta">
+            <span className="home-product-stars">★ {rating ?? "—"}</span>
+            <span className="home-product-reviews">({reviewsShort})</span>
+          </div>
         </div>
         <button
           type="button"

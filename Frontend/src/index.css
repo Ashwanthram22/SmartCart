@@ -6,11 +6,14 @@ body {
 }
 
 /* ----- Focus rings -----
-   Drop the browser's default dark outline (visible after any click), but keep
-   a soft purple ring for keyboard users via :focus-visible so a11y stays
-   intact. Component-level :focus-visible rules override this when defined. */
+   Buttons (and button-styled controls): no outline or focus box-shadow site-wide.
+   Plain links, inputs, selects, and textareas keep a soft keyboard ring. */
+
 button:focus,
 [role="button"]:focus,
+input[type="button"]:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
 a:focus,
 input:focus,
 select:focus,
@@ -19,8 +22,28 @@ summary:focus {
   outline: none;
 }
 
-button:focus-visible,
-[role="button"]:focus-visible,
+:is(
+  button,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  [class*="-btn"],
+  [class*="btn-"],
+  [class*="icon-btn"],
+  .config-btn,
+  .review-modal-star,
+  .home-product-card,
+  .catalog-card,
+  .rv-strip-card,
+  .register-legal-link,
+  .home-footer-col-link,
+  .home-footer-legal-link
+):is(:focus, :focus-visible, :active) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 a:focus-visible,
 input:focus-visible,
 select:focus-visible,

@@ -15,6 +15,7 @@ import {
   onNotificationsChanged,
 } from "../utils/alertEvents";
 import { isAuthenticated, onAuthChange } from "../utils/authToken";
+import CenteredLoader from "./CenteredLoader";
 import "./ShopNotificationBell.css";
 
 function formatWhen(iso) {
@@ -205,7 +206,12 @@ export function ShopNotificationBell({ classPrefix = "shop" }) {
               </header>
 
               {loading && recent.length === 0 ? (
-                <p className="shop-notify-muted">Loading…</p>
+                <CenteredLoader
+                  compact
+                  showLabel={false}
+                  label="Loading notifications"
+                  className="shop-notify-loading"
+                />
               ) : recent.length === 0 ? (
                 <p className="shop-notify-muted">{emptyDropdownMessage}</p>
               ) : (

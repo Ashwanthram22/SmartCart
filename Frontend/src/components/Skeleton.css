@@ -1,28 +1,30 @@
-/* Reusable shimmering skeleton block. Two background layers stack: a flat
-   neutral fill, plus a moving highlight that produces the shimmer. */
+/* Reusable shimmering skeleton — colors from --sc-skeleton-* in theme.css */
+
 .sc-skeleton {
-  background-color: #eef0f4;
+  background-color: var(--sc-skeleton-base);
   background-image: linear-gradient(
     100deg,
-    rgba(255, 255, 255, 0) 30%,
-    rgba(255, 255, 255, 0.6) 50%,
-    rgba(255, 255, 255, 0) 70%
+    var(--sc-skeleton-shine) 30%,
+    var(--sc-skeleton-highlight) 50%,
+    var(--sc-skeleton-shine) 70%
   );
   background-repeat: no-repeat;
   background-size: 200% 100%;
   background-position: 200% 0;
   animation: sc-skeleton-shimmer 1.4s ease-in-out infinite;
-  /* Avoid layout shift when used as inline-block. */
   vertical-align: middle;
-  /* Disable text selection on the placeholder. */
   user-select: none;
   pointer-events: none;
   color: transparent;
 }
 
 @keyframes sc-skeleton-shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -32,17 +34,16 @@
   }
 }
 
-/* Make existing pre-built skeleton hooks (e.g. .home-product-card--skeleton,
-   .catalog-card.skeleton) match the same shimmer treatment so the whole app
-   feels consistent. */
+/* Card-sized placeholders (home grid, catalog grid) */
 .home-product-card--skeleton,
 .catalog-card.skeleton {
-  background-color: #eef0f4 !important;
+  min-height: 340px;
+  background-color: var(--sc-skeleton-base) !important;
   background-image: linear-gradient(
     100deg,
-    rgba(255, 255, 255, 0) 30%,
-    rgba(255, 255, 255, 0.6) 50%,
-    rgba(255, 255, 255, 0) 70%
+    var(--sc-skeleton-shine) 30%,
+    var(--sc-skeleton-highlight) 50%,
+    var(--sc-skeleton-shine) 70%
   ) !important;
   background-repeat: no-repeat !important;
   background-size: 200% 100% !important;
@@ -51,10 +52,36 @@
   border-color: transparent !important;
 }
 
+.catalog-card.skeleton {
+  min-height: 360px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .home-product-card--skeleton,
   .catalog-card.skeleton {
     animation: none !important;
     background-image: none !important;
+  }
+}
+
+/* Shared skeleton surface for profile, admin, charts, etc. */
+.sc-skeleton-surface {
+  background-color: var(--sc-skeleton-base);
+  background-image: linear-gradient(
+    100deg,
+    var(--sc-skeleton-shine) 30%,
+    var(--sc-skeleton-highlight) 50%,
+    var(--sc-skeleton-shine) 70%
+  );
+  background-repeat: no-repeat;
+  background-size: 200% 100%;
+  background-position: 200% 0;
+  animation: sc-skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sc-skeleton-surface {
+    animation: none;
+    background-image: none;
   }
 }

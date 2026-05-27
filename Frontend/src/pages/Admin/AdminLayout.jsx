@@ -24,7 +24,10 @@ import {
 import { clearToken, getTokenClaims } from "../../utils/authToken";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
 import { adminGetStats, adminListProducts } from "../../api/client";
+import { ShopThemeToggle } from "../../components/ShopThemeToggle";
 import GlobalAdminSearch from "./GlobalAdminSearch";
+import { AdminAlertsListSkeleton } from "./AdminSkeletons";
+import "../../components/ShopThemeToggle.css";
 import "./AdminLayout.css";
 
 /**
@@ -379,6 +382,17 @@ function InventoryAlertsModal({ open, onClose }) {
 
   const total = alerts.out.length + alerts.low.length;
 
+  const openProductInInventory = (product, stockKind) => {
+    if (!product?.id) return;
+    onClose();
+    const params = new URLSearchParams();
+    params.set("q", product.id);
+    if (stockKind === "low" || stockKind === "out") {
+      params.set("chip", stockKind);
+    }
+    navigate(`/admin/inventory?${params.toString()}`);
+  };
+
   return (
     <div className="adm-alerts-overlay" role="presentation" onClick={onClose}>
       <div
@@ -397,7 +411,7 @@ function InventoryAlertsModal({ open, onClose }) {
             </h2>
             <p>
               {loading
-                ? "Loading the latest stock levels…"
+                ? "Checking stock levels…"
                 : total === 0
                 ? "Everything is well stocked."
                 : `${total} product${total === 1 ? "" : "s"} need attention.`}
@@ -421,7 +435,7 @@ function InventoryAlertsModal({ open, onClose }) {
           ) : null}
 
           {loading ? (
-            <p className="adm-alerts-empty">Fetching alerts…</p>
+            <AdminAlertsListSkeleton rows={5} />
           ) : total === 0 ? (
             <p className="adm-alerts-empty">
               All products have healthy stock levels. Nothing to do right now.
@@ -438,9 +452,14 @@ function InventoryAlertsModal({ open, onClose }) {
                   <ul className="adm-alerts-list">
                     {alerts.out.map((p) => (
                       <li key={p.id} className="adm-alerts-item">
-                        <span className="adm-alerts-thumb" aria-hidden="true">
+                        <button
+                          type="button"
+                          className="adm-alerts-thumb adm-alerts-thumb-btn"
+                          onClick={() => openProductInInventory(p, "out")}
+                          aria-label={`View ${p.title} in inventory`}
+                        >
                           {p.image ? <img src={p.image} alt="" /> : "—"}
-                        </span>
+                        </button>
                         <span className="adm-alerts-info">
                           <strong>{p.title}</strong>
                           <small>{p.brand || "—"} • {p.category || "—"}</small>
@@ -464,9 +483,14 @@ function InventoryAlertsModal({ open, onClose }) {
                   <ul className="adm-alerts-list">
                     {alerts.low.map((p) => (
                       <li key={p.id} className="adm-alerts-item">
-                        <span className="adm-alerts-thumb" aria-hidden="true">
+                        <button
+                          type="button"
+                          className="adm-alerts-thumb adm-alerts-thumb-btn"
+                          onClick={() => openProductInInventory(p, "low")}
+                          aria-label={`View ${p.title} in inventory`}
+                        >
                           {p.image ? <img src={p.image} alt="" /> : "—"}
-                        </span>
+                        </button>
                         <span className="adm-alerts-info">
                           <strong>{p.title}</strong>
                           <small>{p.brand || "—"} • {p.category || "—"}</small>
@@ -780,24 +804,17 @@ export default function AdminLayout({
           ))}
         </nav>
 
-        {/*
-         * Sidebar user pill is intentionally commented out for now — the
-         * signed-in admin is already visible (and signs out) from the
-         * Settings modal in the top bar. Restore by uncommenting the block
-         * below if we want the pill back at the bottom of the sidebar.
-         *
-         * <div className="adm-sidebar-foot">
-         *   <div className="adm-userpill">
-         *     <span className="adm-userpill-avatar" aria-hidden="true">
-         *       <UserRound size={20} />
-         *     </span>
-         *     <span className="adm-userpill-text">
-         *       <strong>{claims?.email?.split("@")[0] || "Admin"}</strong>
-         *       <small>System Administrator</small>
-         *     </span>
-         *   </div>
-         * </div>
-         */}
+        <div className="adm-sidebar-foot">
+          <div className="adm-userpill" title={claims?.email || undefined}>
+            <span className="adm-userpill-avatar" aria-hidden="true">
+              <UserRound size={20} />
+            </span>
+            <span className="adm-userpill-text">
+              <strong>{claims?.email?.split("@")[0] || "Admin"}</strong>
+              <small>System Administrator</small>
+            </span>
+          </div>
+        </div>
       </aside>
 
       <div className="adm-main-wrap">
@@ -807,6 +824,7 @@ export default function AdminLayout({
             <GlobalAdminSearch placeholder={searchPlaceholder} />
           </div>
           <div className="adm-topbar-right">
+            <ShopThemeToggle classPrefix="adm" />
             <button
               type="button"
               ref={bellRef}

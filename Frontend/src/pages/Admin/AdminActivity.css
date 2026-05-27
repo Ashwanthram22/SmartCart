@@ -29,8 +29,8 @@
   /* Match `.adm-btn` (10px) — the activity toolbar's two search inputs sit
    * next to a dropdown so they should share its rounded-rectangle silhouette. */
   border-radius: 10px;
-  border: 1px solid var(--adm-border);
-  background: var(--sc-surface);
+  border: 1px solid var(--sc-border-strong);
+  background: var(--sc-input-bg);
   color: var(--adm-muted);
   transition: border-color 120ms ease, box-shadow 120ms ease;
   min-width: 0;
@@ -50,17 +50,17 @@
 
 .aa-search:focus-within,
 .aa-actor-search:focus-within {
-  border-color: var(--adm-accent);
-  box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.12);
+  border-color: var(--sc-input-focus-border);
+  box-shadow: 0 0 0 3px var(--sc-input-focus-ring);
 }
 
 .aa-error {
   margin: 0;
   padding: 10px 12px;
   border-radius: 10px;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #b91c1c;
+  background: var(--sc-danger-soft);
+  border: 1px solid color-mix(in srgb, var(--sc-danger) 35%, transparent);
+  color: var(--sc-danger);
   font-size: 13px;
 }
 
@@ -81,15 +81,17 @@
   gap: 14px;
   align-items: flex-start;
   padding: 14px 16px;
-  border: 1px solid var(--adm-border);
+  border: 1px solid var(--sc-input-border);
   border-radius: 12px;
-  background: var(--sc-surface);
-  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+  background: var(--sc-surface-muted);
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease,
+    background 140ms ease;
 }
 
 .aa-row:hover {
-  border-color: rgba(107, 56, 212, 0.35);
-  box-shadow: 0 6px 18px -12px rgba(107, 56, 212, 0.3);
+  border-color: var(--sc-accent-soft-border);
+  background: var(--sc-surface-high);
+  box-shadow: 0 6px 18px -10px rgba(0, 0, 0, 0.45);
 }
 
 /* Tone hints — coloured left edge so admins can scan by category. */
@@ -97,12 +99,27 @@
   box-shadow: inset 3px 0 0 0 var(--sc-success);
 }
 
+.aa-row--create:hover {
+  box-shadow: inset 3px 0 0 0 var(--sc-success),
+    0 6px 18px -10px rgba(0, 0, 0, 0.45);
+}
+
 .aa-row--update {
-  box-shadow: inset 3px 0 0 0 var(--adm-accent);
+  box-shadow: inset 3px 0 0 0 var(--sc-accent-container);
+}
+
+.aa-row--update:hover {
+  box-shadow: inset 3px 0 0 0 var(--sc-accent-container),
+    0 6px 18px -10px rgba(0, 0, 0, 0.45);
 }
 
 .aa-row--danger {
   box-shadow: inset 3px 0 0 0 var(--sc-danger);
+}
+
+.aa-row--danger:hover {
+  box-shadow: inset 3px 0 0 0 var(--sc-danger),
+    0 6px 18px -10px rgba(0, 0, 0, 0.45);
 }
 
 .aa-row--skel {
@@ -123,12 +140,12 @@
 }
 
 .aa-row--create .aa-icon {
-  background: rgba(22, 163, 74, 0.12);
+  background: var(--sc-success-soft);
   color: var(--sc-success);
 }
 
 .aa-row--danger .aa-icon {
-  background: rgba(220, 38, 38, 0.12);
+  background: var(--sc-danger-soft);
   color: var(--sc-danger);
 }
 
@@ -160,9 +177,9 @@
   text-transform: uppercase;
   padding: 2px 7px;
   border-radius: 999px;
-  background: #f4f5fb;
-  border: 1px solid var(--adm-border);
-  color: var(--adm-muted);
+  background: var(--sc-surface-elevated);
+  border: 1px solid var(--sc-border-strong);
+  color: var(--sc-text-muted);
 }
 
 .aa-meta {
@@ -187,11 +204,11 @@
 .aa-target {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 11.5px;
-  background: #f7f7fb;
+  background: var(--sc-surface-elevated);
   padding: 1px 6px;
   border-radius: 6px;
-  border: 1px solid var(--adm-border);
-  color: var(--adm-text);
+  border: 1px solid var(--sc-border-strong);
+  color: var(--sc-text);
 }
 
 /* ----- Inline change diff --------------------------------------------------*/
@@ -211,8 +228,8 @@
   gap: 6px;
   padding: 3px 8px;
   border-radius: 999px;
-  background: #f7f7fb;
-  border: 1px solid var(--adm-border);
+  background: var(--sc-surface-elevated);
+  border: 1px solid var(--sc-border-strong);
   font-size: 11.5px;
 }
 
@@ -223,9 +240,9 @@
 }
 
 .aa-changes .aa-from {
-  color: #b91c1c;
+  color: var(--sc-danger);
   text-decoration: line-through;
-  text-decoration-color: rgba(185, 28, 28, 0.5);
+  text-decoration-color: color-mix(in srgb, var(--sc-danger) 55%, transparent);
   text-decoration-thickness: 1px;
   max-width: 110px;
   overflow: hidden;
@@ -256,17 +273,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #f4f5fb;
-  color: var(--adm-muted);
+  background: var(--sc-surface-elevated);
+  color: var(--sc-text-muted);
   text-decoration: none;
-  border: 1px solid transparent;
+  border: 1px solid var(--sc-input-border);
   transition: background 140ms ease, color 140ms ease, transform 140ms ease, border-color 140ms ease;
   flex-shrink: 0;
 }
 
 .aa-jump:hover {
-  background: var(--adm-accent);
-  color: var(--sc-text-on-accent);
+  background: var(--sc-accent-container);
+  border-color: var(--sc-accent-container);
+  color: #ffffff;
   transform: translateX(2px);
 }
 

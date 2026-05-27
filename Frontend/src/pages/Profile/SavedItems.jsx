@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import { CATALOG_LIST_BASE } from "../../constants/shopRoutes";
+import { Link, useNavigate } from "react-router-dom";
+import { CATALOG_LIST_BASE, productDetailUrl } from "../../constants/shopRoutes";
+import { isValidSegment } from "../../constants/shopSegments";
 import { PRODUCT_CATALOG_CATEGORIES } from "../../constants/shopSegments";
 import AdmDropdown from "../../components/AdmDropdown";
 import { ProfileLayout } from "./ProfileLayout";
@@ -27,6 +28,12 @@ const CATEGORY_FILTER_OPTIONS = [
     label: name,
   })),
 ];
+
+function segmentForSavedLine(line) {
+  const cat = line?.product?.category;
+  if (cat && isValidSegment(cat)) return cat;
+  return "AI Picks";
+}
 
 function IconSearch() {
   return (
@@ -81,6 +88,7 @@ export default function SavedItems() {
     description: "All the products you've saved for later on SmartCart AI.",
   });
 
+  const navigate = useNavigate();
   const { addItem } = useCart();
   const { items, removeSaved } = useSaved();
   const [activeCategory, setActiveCategory] = useState("all");
@@ -99,9 +107,23 @@ export default function SavedItems() {
     });
   }, [items, activeCategory, query]);
 
-  const handleAddToCart = (line) => {
+  const handleAddToCart = (line, event) => {
+    event?.stopPropagation();
     if (!line?.product) return;
     addItem(line.product);
+  };
+
+  const openProductDetail = (line) => {
+    const id = savedLineId(line);
+    if (!id) return;
+    navigate(productDetailUrl(segmentForSavedLine(line), id, ""));
+  };
+
+  const handleCardKeyDown = (line, event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openProductDetail(line);
+    }
   };
 
   return (
@@ -146,7 +168,14 @@ export default function SavedItems() {
             const title = savedLineTitle(line);
             const subtitle = savedLineSubtitle(line.product);
             return (
-              <article key={id} className="saved-card">
+              <article
+                key={id}
+                className="saved-card"
+                role="button"
+                tabIndex={0}
+                onClick={() => openProductDetail(line)}
+                onKeyDown={(event) => handleCardKeyDown(line, event)}
+              >
                 <div className="saved-card-media">
                   <img src={savedLineImage(line)} alt="" loading="lazy" />
                   <div className="saved-card-rating">
@@ -157,7 +186,10 @@ export default function SavedItems() {
                     type="button"
                     className="saved-card-remove"
                     aria-label={`Remove ${title} from saved`}
-                    onClick={() => removeSaved(id)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      removeSaved(id);
+                    }}
                   >
                     <IconTrash />
                   </button>
@@ -173,7 +205,7 @@ export default function SavedItems() {
                   <button
                     type="button"
                     className="saved-add-cart"
-                    onClick={() => handleAddToCart(line)}
+                    onClick={(event) => handleAddToCart(line, event)}
                   >
                     <CartIcon size={26} />
                     Add to Cart

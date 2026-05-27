@@ -62,6 +62,18 @@ export function AssistantProvider({ children }) {
 
   const close = useCallback(() => setIsOpen(false), []);
 
+  /** Shift global toasts to the bottom-left while the drawer covers the right. */
+  useEffect(() => {
+    if (isOpen) {
+      document.documentElement.dataset.assistantOpen = "true";
+    } else {
+      delete document.documentElement.dataset.assistantOpen;
+    }
+    return () => {
+      delete document.documentElement.dataset.assistantOpen;
+    };
+  }, [isOpen]);
+
   /** Reset the launcher position whenever the user logs out (or in, for
    *  symmetry — a fresh session starts at the default corner). */
   useEffect(() => {

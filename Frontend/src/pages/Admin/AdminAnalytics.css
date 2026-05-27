@@ -3,9 +3,9 @@
  * ===========================================================================*/
 
 .aa-error {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #b91c1c;
+  background: var(--sc-danger-soft);
+  border: 1px solid color-mix(in srgb, var(--sc-danger) 35%, transparent);
+  color: var(--sc-danger);
   border-radius: 10px;
   padding: 10px 14px;
   font-size: 13px;
@@ -29,6 +29,12 @@
 .aa-spark {
   width: 100%;
   height: 160px;
+}
+
+.aa-spark-skeleton {
+  width: 100%;
+  height: 160px;
+  border-radius: 10px;
 }
 
 .aa-empty {
@@ -55,7 +61,8 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 6px;
-  background: var(--sc-bg);
+  background: var(--sc-surface-muted);
+  border: 1px solid var(--sc-border-subtle);
   border-radius: 12px;
   padding: 14px;
 }
@@ -143,22 +150,28 @@
 
 .aa-bar-label--btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--sc-input-focus-border);
+  box-shadow: 0 0 0 2px var(--sc-surface), 0 0 0 4px var(--sc-input-focus-border);
   border-radius: 4px;
 }
 
 .aa-bar-track {
   height: 10px;
   border-radius: 999px;
-  background: #f1f0fa;
+  background: var(--sc-surface-muted);
+  border: 1px solid var(--sc-border-subtle);
   overflow: hidden;
 }
 
 .aa-bar-fill {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, var(--sc-accent), #a78bfa);
+  min-width: 0;
+  background: linear-gradient(90deg, var(--sc-accent-container), var(--sc-accent-strong));
   transition: width 280ms ease;
+}
+
+[data-theme="dark"] .aa-bar-fill {
+  background: linear-gradient(90deg, var(--sc-accent-container), var(--sc-accent));
 }
 
 .aa-bar-value {

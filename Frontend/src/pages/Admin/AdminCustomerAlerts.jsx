@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Bell, Package, TrendingDown } from "lucide-react";
 import AdminLayout from "./AdminLayout";
+import { AdminTableLoading } from "./AdminSkeletons";
 import {
   adminFulfillCustomerAlert,
   adminListCustomerAlerts,
@@ -222,9 +223,10 @@ export default function AdminCustomerAlerts() {
           </thead>
           <tbody>
             {loading ? (
-              <tr>
-                <td colSpan={6}>Loading…</td>
-              </tr>
+              <AdminTableLoading
+                colSpan={6}
+                label="Loading customer alerts…"
+              />
             ) : filtered.length === 0 ? (
               <tr>
                 <td colSpan={6} className="aca-empty">

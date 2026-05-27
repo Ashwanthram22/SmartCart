@@ -1,0 +1,71 @@
+.centered-loader {
+  --loader-ring-size: 48px;
+  --loader-ring-track: rgba(107, 56, 212, 0.2);
+  --loader-ring-active: #7c3aed;
+
+  position: relative;
+  min-height: 45vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 48px 24px;
+}
+
+[data-theme="dark"] .centered-loader {
+  --loader-ring-track: rgba(139, 92, 246, 0.2);
+  --loader-ring-active: #c4b5fd;
+}
+
+.centered-loader--compact {
+  min-height: 28vh;
+  padding: 32px 16px;
+  --loader-ring-size: 40px;
+}
+
+/*
+ * One accent segment on top; rotating the whole ring moves it around the circle.
+ * !important overrides index.css global reduce-motion cap (0.001ms) for this
+ * essential loading indicator only.
+ */
+.centered-loader-spinner {
+  width: var(--loader-ring-size);
+  height: var(--loader-ring-size);
+  border-radius: 50%;
+  box-sizing: border-box;
+  border: 4px solid var(--loader-ring-track);
+  border-top-color: var(--loader-ring-active);
+  animation: centered-loader-spin 0.7s linear infinite !important;
+  animation-play-state: running !important;
+  will-change: transform;
+}
+
+@keyframes centered-loader-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.centered-loader-label {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sc-text-muted);
+  letter-spacing: 0.02em;
+}
+
+.centered-loader-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

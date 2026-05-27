@@ -379,7 +379,7 @@ function ProductDetail() {
               aria-label={itemCount > 0 ? `Cart, ${itemCount} items` : "Cart"}
             >
               <span className="shop-cart-icon-wrap" aria-hidden="true">
-                <CartIcon size={22} />
+                <CartIcon size={20} wide />
                 {itemCount > 0 ? (
                   <span className="shop-cart-badge product-cart-badge">
                     {itemCount > 99 ? "99+" : itemCount}

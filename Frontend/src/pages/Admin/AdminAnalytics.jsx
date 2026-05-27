@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "./AdminLayout";
+import {
+  AdminBarChartSkeleton,
+  AdminHealthSkeleton,
+  AdminInlineSkeleton,
+} from "./AdminSkeletons";
 import AdmDropdown from "../../components/AdmDropdown";
 import {
   adminGetSalesChart,
@@ -250,47 +255,59 @@ export default function AdminAnalytics() {
     >
       {error ? <p className="aa-error" role="alert">{error}</p> : null}
 
-      <section className="aa-grid-top">
-        <article className="adm-card aa-summary">
+      <section className="aa-grid-top" aria-busy={loading || undefined}>
+        <article className="adm-card aa-summary" aria-busy={loading || chartLoading || undefined}>
           <header className="adm-card-head">
             <div>
               <h3 className="adm-card-title">Revenue · {rangeLabel.toLowerCase()}</h3>
               <p className="adm-card-sub">
-                {loading ? "Loading…" : `${formatMoney(rangeRevenue)} this period · ${formatMoney(stats?.revenue || 0)} all-time`}
+                {loading ? (
+                  <AdminInlineSkeleton width="85%" height={13} />
+                ) : (
+                  `${formatMoney(rangeRevenue)} this period · ${formatMoney(stats?.revenue || 0)} all-time`
+                )}
               </p>
             </div>
           </header>
-          {chartLoading ? (
-            <div className="adm-skel" style={{ width: "100%", height: 160 }} />
+          {chartLoading || loading ? (
+            <div
+              className="adm-skel aa-spark-skeleton"
+              role="status"
+              aria-label="Loading revenue chart"
+            />
           ) : (
             <SparkArea values={chart?.revenue || []} />
           )}
         </article>
 
-        <article className="adm-card aa-stock-card">
+        <article className="adm-card aa-stock-card" aria-busy={loading || undefined}>
           <header className="adm-card-head">
             <div>
               <h3 className="adm-card-title">Inventory health</h3>
               <p className="adm-card-sub">Stock status across the catalog</p>
             </div>
           </header>
-          <ul className="aa-health">
-            <li>
-              <span className="aa-dot aa-dot--ok" aria-hidden="true" />
-              <strong>{stockHealth.healthy}</strong>
-              <span>Healthy</span>
-            </li>
-            <li>
-              <span className="aa-dot aa-dot--warn" aria-hidden="true" />
-              <strong>{stockHealth.low}</strong>
-              <span>Low</span>
-            </li>
-            <li>
-              <span className="aa-dot aa-dot--danger" aria-hidden="true" />
-              <strong>{stockHealth.out}</strong>
-              <span>Out of stock</span>
-            </li>
-          </ul>
+          {loading ? (
+            <AdminHealthSkeleton />
+          ) : (
+            <ul className="aa-health">
+              <li>
+                <span className="aa-dot aa-dot--ok" aria-hidden="true" />
+                <strong>{stockHealth.healthy}</strong>
+                <span>Healthy</span>
+              </li>
+              <li>
+                <span className="aa-dot aa-dot--warn" aria-hidden="true" />
+                <strong>{stockHealth.low}</strong>
+                <span>Low</span>
+              </li>
+              <li>
+                <span className="aa-dot aa-dot--danger" aria-hidden="true" />
+                <strong>{stockHealth.out}</strong>
+                <span>Out of stock</span>
+              </li>
+            </ul>
+          )}
         </article>
       </section>
 
@@ -303,11 +320,7 @@ export default function AdminAnalytics() {
             </div>
           </header>
           {loading ? (
-            <div className="adm-skel-stack" style={{ gap: 10 }}>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <span key={i} className="adm-skel adm-skel-line" style={{ width: `${60 + (i * 7) % 35}%` }} />
-              ))}
-            </div>
+            <AdminBarChartSkeleton rows={5} />
           ) : (
             <BarChart
               data={topCategories}
@@ -325,11 +338,7 @@ export default function AdminAnalytics() {
             </div>
           </header>
           {loading ? (
-            <div className="adm-skel-stack" style={{ gap: 10 }}>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <span key={i} className="adm-skel adm-skel-line" style={{ width: `${50 + (i * 11) % 45}%` }} />
-              ))}
-            </div>
+            <AdminBarChartSkeleton rows={5} />
           ) : (
             <BarChart data={revenueByProduct} valueFormat={(v) => formatMoney(v)} />
           )}

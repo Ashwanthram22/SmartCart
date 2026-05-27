@@ -623,9 +623,25 @@ function ConfirmDialog({
 function StockBadge({ stock }) {
   const n = Number(stock);
   if (!Number.isFinite(n)) return <span className="ai-stock ai-stock--muted">—</span>;
-  if (n === 0) return <span className="ai-stock ai-stock--out">Out of stock</span>;
-  if (n <= 10) return <span className="ai-stock ai-stock--low">{n} left</span>;
-  return <span className="ai-stock ai-stock--ok">{n} in stock</span>;
+  if (n === 0) {
+    return (
+      <span className="ai-stock ai-stock--out" title="Out of stock" aria-label="Out of stock">
+        0
+      </span>
+    );
+  }
+  if (n <= 10) {
+    return (
+      <span className="ai-stock ai-stock--low" title={`${n} left`} aria-label={`${n} left`}>
+        {n}
+      </span>
+    );
+  }
+  return (
+    <span className="ai-stock ai-stock--ok" title={`${n} in stock`} aria-label={`${n} in stock`}>
+      {n}
+    </span>
+  );
 }
 
 /*
@@ -794,6 +810,7 @@ export default function AdminInventory() {
   const bulkBusy = false;
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
+  const [highlightId, setHighlightId] = useState(null);
   const [showEditedColumn, setShowEditedColumn] = useState(() => {
     try {
       const raw = localStorage.getItem(INV_COLS_STORAGE_KEY);
@@ -886,25 +903,58 @@ export default function AdminInventory() {
     };
   }, []);
 
-  // Honour `?new=1` (open create form) and `?q=...` (analytics drill-down).
+  // Honour `?new=1`, `?q=...` (search / product id), and `?chip=low|out` (from alerts).
   useEffect(() => {
     const wantsNew = searchParams.get("new") === "1";
     const initialQ = searchParams.get("q");
-    if (!wantsNew && initialQ == null) return undefined;
+    const initialChip = searchParams.get("chip");
+    if (!wantsNew && initialQ == null && initialChip == null) return undefined;
     const handle = setTimeout(() => {
       if (wantsNew && !formOpen) {
         setEditTarget(null);
         setFormOpen(true);
       }
-      if (initialQ != null) setSearch(initialQ);
+      if (initialChip === "low" || initialChip === "out") {
+        setChip(initialChip);
+      }
+      if (initialQ != null) {
+        setSearch(initialQ);
+        setHighlightId(initialQ);
+      }
       const next = new URLSearchParams(searchParams);
       if (wantsNew) next.delete("new");
       if (initialQ != null) next.delete("q");
+      if (initialChip != null) next.delete("chip");
       setSearchParams(next, { replace: true });
     }, 0);
     return () => clearTimeout(handle);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
+
+  // Scroll to and briefly highlight a row opened from inventory alerts (or deep links).
+  useEffect(() => {
+    if (!highlightId || loading) return undefined;
+    const idx = filtered.findIndex((p) => p.id === highlightId);
+    if (idx < 0) {
+      const missTimer = setTimeout(() => setHighlightId(null), 2000);
+      return () => clearTimeout(missTimer);
+    }
+    const needPage = Math.floor(idx / pageSize) + 1;
+    if (needPage !== page) {
+      setPage(needPage);
+      return undefined;
+    }
+    const scrollTimer = requestAnimationFrame(() => {
+      document
+        .getElementById(`ai-product-row-${highlightId}`)
+        ?.scrollIntoView({ block: "center", behavior: "smooth" });
+    });
+    const clearTimer = setTimeout(() => setHighlightId(null), 3500);
+    return () => {
+      cancelAnimationFrame(scrollTimer);
+      clearTimeout(clearTimer);
+    };
+  }, [highlightId, filtered, page, pageSize, loading]);
 
   // Keyboard shortcuts: `n` opens new product. The `/` shortcut for search
   // is owned by the global topbar omnisearch (GlobalAdminSearch) so we
@@ -1367,7 +1417,13 @@ export default function AdminInventory() {
                 pageRows.map((p) => (
                   <tr
                     key={p.id}
-                    className={selected.has(p.id) ? "ai-row-selected" : ""}
+                    id={`ai-product-row-${p.id}`}
+                    className={[
+                      selected.has(p.id) ? "ai-row-selected" : "",
+                      highlightId === p.id ? "ai-row-highlight" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
                   >
                     <td className="adm-td-check">
                       <input
