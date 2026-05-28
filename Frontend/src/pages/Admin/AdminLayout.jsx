@@ -10,6 +10,7 @@ import {
   Keyboard,
   LayoutGrid,
   LogOut,
+  Menu,
   Package,
   PackageX,
   PieChart,
@@ -691,6 +692,52 @@ function AboutAdminModal({ open, onClose }) {
   );
 }
 
+/** Sidebar brand, section links, and user pill — shared by desktop + mobile drawer. */
+function AdminSidebarNav({ claims, onNavigate }) {
+  return (
+    <>
+      <div className="adm-sidebar-head">
+        <Link to="/admin" className="adm-brand" onClick={onNavigate}>
+          <span className="adm-brand-mark" aria-hidden="true">SC</span>
+          <span className="adm-brand-text">
+            <strong>SmartCart AI</strong>
+            <small>Enterprise Console</small>
+          </span>
+        </Link>
+      </div>
+
+      <nav className="adm-nav" aria-label="Sections">
+        {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={end}
+            className={({ isActive }) =>
+              "adm-nav-link" + (isActive ? " adm-nav-link--active" : "")
+            }
+            onClick={onNavigate}
+          >
+            <Icon size={18} aria-hidden="true" />
+            <span>{label}</span>
+          </NavLink>
+        ))}
+      </nav>
+
+      <div className="adm-sidebar-foot">
+        <div className="adm-userpill" title={claims?.email || undefined}>
+          <span className="adm-userpill-avatar" aria-hidden="true">
+            <UserRound size={20} />
+          </span>
+          <span className="adm-userpill-text">
+            <strong>{claims?.email?.split("@")[0] || "Admin"}</strong>
+            <small>System Administrator</small>
+          </span>
+        </div>
+      </div>
+    </>
+  );
+}
+
 /* ============================================================================
  * AdminLayout
  * ==========================================================================*/
@@ -711,8 +758,11 @@ export default function AdminLayout({
   const [alertsOpen, setAlertsOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
   const [alertCount, setAlertCount] = useState(null);
   const bellRef = useRef(null);
+  const sidebarRef = useRef(null);
+  useFocusTrap(sidebarRef, navOpen);
 
   const resolvedTitle = title || pageLabelForPath(location.pathname);
 
@@ -766,6 +816,25 @@ export default function AdminLayout({
     };
   }, [refreshAlertCount]);
 
+  useEffect(() => {
+    setNavOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!navOpen) return undefined;
+    const onKey = (e) => {
+      if (e.key === "Escape") setNavOpen(false);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [navOpen]);
+
+  const closeNav = useCallback(() => setNavOpen(false), []);
+
   const handleLogout = () => {
     clearToken();
     navigate("/login", { replace: true });
@@ -779,42 +848,22 @@ export default function AdminLayout({
 
   return (
     <div className="adm-shell">
-      <aside className="adm-sidebar" aria-label="Admin navigation">
-        <Link to="/admin" className="adm-brand">
-          <span className="adm-brand-mark" aria-hidden="true">SC</span>
-          <span className="adm-brand-text">
-            <strong>SmartCart AI</strong>
-            <small>Enterprise Console</small>
-          </span>
-        </Link>
+      {navOpen ? (
+        <button
+          type="button"
+          className="adm-nav-backdrop"
+          aria-label="Close navigation menu"
+          onClick={closeNav}
+        />
+      ) : null}
 
-        <nav className="adm-nav" aria-label="Sections">
-          {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              className={({ isActive }) =>
-                "adm-nav-link" + (isActive ? " adm-nav-link--active" : "")
-              }
-            >
-              <Icon size={18} aria-hidden="true" />
-              <span>{label}</span>
-            </NavLink>
-          ))}
-        </nav>
-
-        <div className="adm-sidebar-foot">
-          <div className="adm-userpill" title={claims?.email || undefined}>
-            <span className="adm-userpill-avatar" aria-hidden="true">
-              <UserRound size={20} />
-            </span>
-            <span className="adm-userpill-text">
-              <strong>{claims?.email?.split("@")[0] || "Admin"}</strong>
-              <small>System Administrator</small>
-            </span>
-          </div>
-        </div>
+      <aside
+        ref={sidebarRef}
+        id="admin-sidebar-nav"
+        className={"adm-sidebar" + (navOpen ? " adm-sidebar--open" : "")}
+        aria-label="Admin navigation"
+      >
+        <AdminSidebarNav claims={claims} onNavigate={closeNav} />
       </aside>
 
       <div className="adm-main-wrap">
@@ -870,6 +919,21 @@ export default function AdminLayout({
               onClick={() => setSettingsOpen(true)}
             >
               <SettingsIcon size={18} aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              className="adm-icon-btn adm-nav-toggle"
+              aria-label={navOpen ? "Close menu" : "Open menu"}
+              aria-expanded={navOpen}
+              aria-controls="admin-sidebar-nav"
+              title={navOpen ? "Close menu" : "Menu"}
+              onClick={() => setNavOpen((open) => !open)}
+            >
+              {navOpen ? (
+                <X size={20} aria-hidden="true" />
+              ) : (
+                <Menu size={20} aria-hidden="true" />
+              )}
             </button>
           </div>
         </header>

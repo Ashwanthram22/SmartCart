@@ -21,6 +21,7 @@ import usePageMeta from "../../hooks/usePageMeta";
 import Skeleton from "../../components/Skeleton";
 import { formatMoney } from "../../utils/money";
 import { computeInsights } from "../../utils/orderInsights";
+import { downloadOrdersPdf } from "../../utils/pdfExports";
 import "./OrderHistory.css";
 
 function StatusBadge({ status }) {
@@ -74,70 +75,6 @@ const FILTER_OPTIONS = [
   { value: "delivered", label: "Delivered" },
   { value: "cancelled", label: "Cancelled" },
 ];
-
-/** RFC 4180-ish CSV escape: wrap in quotes and double up internal quotes. */
-function csvCell(value) {
-  if (value == null) return "";
-  const s = String(value).replace(/"/g, '""');
-  if (/[",\n\r]/.test(s)) return `"${s}"`;
-  return s;
-}
-
-/**
- * Build a CSV blob of the user's orders (one row per line item, so the
- * download is useful for spreadsheets / accounting). Triggers the browser
- * download via an anchor click — purely client-side, no backend needed.
- */
-function downloadOrdersCsv(orders) {
-  const header = [
-    "Order ID",
-    "Order Date",
-    "Status",
-    "Product",
-    "Quantity",
-    "Unit Price (INR)",
-    "Line Total (INR)",
-    "Order Subtotal",
-    "Order Tax",
-    "Order Total",
-    "Ship To",
-    "City",
-    "Postal",
-  ];
-
-  const rows = [header];
-  for (const order of orders) {
-    const items = order.items?.length ? order.items : [{}];
-    for (const item of items) {
-      rows.push([
-        order.id,
-        order.createdAt,
-        order.status,
-        item.title || "",
-        item.quantity ?? "",
-        item.unitPrice ?? "",
-        item.lineTotal ?? "",
-        order.subtotal,
-        order.tax,
-        order.total,
-        order.address?.fullName || "",
-        order.address?.city || "",
-        order.address?.postal || "",
-      ]);
-    }
-  }
-
-  const csv = rows.map((r) => r.map(csvCell).join(",")).join("\r\n");
-  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `smartcart-orders-${new Date().toISOString().slice(0, 10)}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
 
 /** Map order line subtitle category (e.g. "Electronics") to catalog segment. */
 function segmentForOrderLine(line) {
@@ -270,13 +207,17 @@ export default function OrderHistory() {
   const activeFilterLabel =
     FILTER_OPTIONS.find((o) => o.value === statusFilter)?.label || "All statuses";
 
-  const handleExport = () => {
+  const handleExport = async () => {
     if (orders.length === 0) {
       toast.info("No orders to export yet.");
       return;
     }
-    downloadOrdersCsv(orders);
-    toast.success(`Exported ${orders.length} order${orders.length === 1 ? "" : "s"} to CSV.`);
+    try {
+      await downloadOrdersPdf(orders);
+      toast.success(`Downloaded ${orders.length} order${orders.length === 1 ? "" : "s"} as PDF.`);
+    } catch (err) {
+      toast.error(err?.message || "Couldn't generate orders PDF.");
+    }
   };
 
   /**
@@ -418,7 +359,7 @@ export default function OrderHistory() {
               className="oh-tool-btn"
               onClick={handleExport}
               disabled={orders.length === 0}
-              title={orders.length === 0 ? "No orders to export yet" : "Download as CSV"}
+              title={orders.length === 0 ? "No orders to export yet" : "Download as PDF"}
             >
               <Download size={18} aria-hidden="true" className="oh-btn-icon" />
               Export

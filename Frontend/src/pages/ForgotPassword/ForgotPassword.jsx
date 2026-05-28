@@ -20,6 +20,7 @@ function ForgotPassword() {
   const [emailFieldError, setEmailFieldError] = useState("");
   const [devResetUrl, setDevResetUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const canSubmit = email.trim().length > 0 && isWellFormedEmail(email.trim()) && !isSubmitting;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -116,7 +117,7 @@ function ForgotPassword() {
                 placeholder="name@example.com"
               />
 
-              <AuthPrimaryButton type="submit" disabled={isSubmitting}>
+              <AuthPrimaryButton type="submit" disabled={!canSubmit}>
                 {isSubmitting ? "Sending..." : "Send Reset Link"}
               </AuthPrimaryButton>
             </form>

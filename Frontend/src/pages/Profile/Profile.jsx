@@ -1,8 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { SHOP_SEGMENTS } from "../../constants/shopSegments";
 import { CATALOG_LIST_BASE, productDetailUrl } from "../../constants/shopRoutes";
-import { getAddresses, getCurrentUser, getOrders, updateCurrentUser } from "../../api/client";
+import {
+  getAddresses,
+  getCurrentUser,
+  getOrders,
+  updateCurrentUser,
+  userGetUploadSignature,
+} from "../../api/client";
 import { DEFAULT_PROFILE_AVATAR } from "../../data/profileDisplay";
 import { useToast } from "../../hooks/useToast";
 import usePageMeta from "../../hooks/usePageMeta";
@@ -11,6 +17,9 @@ import EditProfileDialog from "./EditProfileDialog";
 import { ProfileLayout } from "./ProfileLayout";
 import { formatMoney } from "../../utils/money";
 import "./Profile.css";
+
+const PROFILE_MAX_UPLOAD_MB = 5;
+const PROFILE_MAX_UPLOAD_BYTES = PROFILE_MAX_UPLOAD_MB * 1024 * 1024;
 
 function formatDate(iso) {
   if (!iso) return "—";
@@ -57,6 +66,8 @@ function Profile() {
   const [editOpen, setEditOpen] = useState(false);
   const [primaryAddress, setPrimaryAddress] = useState(null);
   const [loadingAddresses, setLoadingAddresses] = useState(true);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const avatarInputRef = useRef(null);
   const toast = useToast();
 
   useEffect(() => {
@@ -122,11 +133,64 @@ function Profile() {
 
   const displayName = user?.name || "SmartCart member";
   const email = user?.email || "—";
+  const avatarSrc = user?.avatar || DEFAULT_PROFILE_AVATAR;
 
   const handleProfileSave = async ({ name }) => {
     const res = await updateCurrentUser({ name });
     if (res?.user) setUser(res.user);
     toast.success("Profile updated.");
+  };
+
+  const openAvatarPicker = () => {
+    if (avatarUploading) return;
+    avatarInputRef.current?.click();
+  };
+
+  const handleAvatarSelected = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose an image file.");
+      event.target.value = "";
+      return;
+    }
+    if (file.size > PROFILE_MAX_UPLOAD_BYTES) {
+      toast.error(`Image must be ${PROFILE_MAX_UPLOAD_MB} MB or smaller.`);
+      event.target.value = "";
+      return;
+    }
+
+    setAvatarUploading(true);
+    try {
+      const sig = await userGetUploadSignature();
+      if (!sig?.signature || !sig?.uploadUrl || !sig?.apiKey) {
+        throw new Error("Upload is not configured on backend.");
+      }
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("api_key", sig.apiKey);
+      fd.append("timestamp", String(sig.timestamp));
+      fd.append("signature", sig.signature);
+      if (sig.folder) fd.append("folder", sig.folder);
+
+      const response = await fetch(sig.uploadUrl, { method: "POST", body: fd });
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err?.error?.message || "Cloudinary rejected the upload.");
+      }
+      const json = await response.json();
+      const nextAvatar = String(json?.secure_url || "").trim();
+      if (!nextAvatar) throw new Error("Cloudinary did not return an image URL.");
+
+      const updated = await updateCurrentUser({ avatar: nextAvatar });
+      if (updated?.user) setUser(updated.user);
+      toast.success("Profile photo updated.");
+    } catch (err) {
+      toast.error(err?.message || "Could not upload profile photo.");
+    } finally {
+      setAvatarUploading(false);
+      event.target.value = "";
+    }
   };
 
   return (
@@ -142,7 +206,26 @@ function Profile() {
               ariaLabel="Loading profile photo"
             />
           ) : (
-            <img src={DEFAULT_PROFILE_AVATAR} alt="" className="profile-hero-avatar" />
+            <div className="profile-hero-avatar-wrap">
+              <img src={avatarSrc} alt="" className="profile-hero-avatar" />
+              <input
+                ref={avatarInputRef}
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={handleAvatarSelected}
+              />
+              <button
+                type="button"
+                className="profile-hero-avatar-edit"
+                onClick={openAvatarPicker}
+                disabled={avatarUploading}
+                title={avatarUploading ? "Uploading…" : "Change photo"}
+                aria-label={avatarUploading ? "Uploading profile photo" : "Change profile photo"}
+              >
+                {avatarUploading ? "…" : "Edit"}
+              </button>
+            </div>
           )}
           <div className="profile-hero-text">
             {loadingUser ? (

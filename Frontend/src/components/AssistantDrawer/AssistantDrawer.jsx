@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { chatWithAssistant } from "../../api/client";
+import { chatWithAssistant, getAssistantInfo } from "../../api/client";
 import { productDetailUrl } from "../../constants/shopRoutes";
 import { useCart } from "../../hooks/useCart";
 import { useToast } from "../../hooks/useToast";
@@ -112,6 +112,7 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [errorRequestId, setErrorRequestId] = useState("");
+  const [providerLabel, setProviderLabel] = useState("Rule-based");
   const listRef = useRef(null);
   const inputRef = useRef(null);
   const drawerRef = useRef(null);
@@ -138,6 +139,28 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
       lastContextKeyRef.current = contextKey;
     }
   }, [open, contextKey, initialContext]);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!open) return () => {};
+    getAssistantInfo()
+      .then((info) => {
+        if (cancelled) return;
+        const provider = String(info?.provider || "rule-based");
+        const model = String(info?.model || "").trim();
+        const prettyProvider = provider
+          .split("-")
+          .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+          .join(" ");
+        setProviderLabel(model ? `${prettyProvider} (${model})` : prettyProvider);
+      })
+      .catch(() => {
+        if (!cancelled) setProviderLabel("Rule-based");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [open]);
 
   /** Quick-context line shown at the top when the drawer was opened from a
    *  product page; the model also receives it explicitly via the request
@@ -297,6 +320,7 @@ export default function AssistantDrawer({ open, onClose, initialContext }) {
           <div className="assist-header-text">
             <p className="assist-header-eyebrow">SmartCart AI</p>
             <h2 id="assist-drawer-title">Shopping assistant</h2>
+            <p className="assist-provider-badge">Powered by {providerLabel}</p>
             {contextLabel ? <p className="assist-header-context">{contextLabel}</p> : null}
           </div>
           <button

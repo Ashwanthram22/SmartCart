@@ -3,7 +3,7 @@ const express = require("express");
 const { readDb } = require("../lib/store");
 const authMiddleware = require("../middleware/auth");
 const { writeLimiter } = require("../middleware/rateLimits");
-const { generate, PROVIDER } = require("../lib/assistant/provider");
+const { generate, providerInfo } = require("../lib/assistant/provider");
 const { ASSISTANT_GENERATION_TIMEOUT_MS } = require("../config/env");
 const logger = require("../lib/logger");
 
@@ -21,7 +21,7 @@ const router = express.Router();
 router.use(authMiddleware);
 
 router.get("/info", (req, res) => {
-  res.json({ provider: PROVIDER });
+  res.json(providerInfo());
 });
 
 /**

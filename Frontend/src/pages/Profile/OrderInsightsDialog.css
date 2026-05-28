@@ -135,14 +135,26 @@
   font-weight: 500;
 }
 
-.oid-status-item--processing { background: #dce2f7; color: #494454; }
-.oid-status-item--transit { background: #e1e0ff; color: #2f2ebe; }
-.oid-status-item--delivered { background: #dcfce7; color: #15803d; }
-.oid-status-item--cancelled { background: #fee2e2; color: #b91c1c; }
+.oid-status-item--processing {
+  background: color-mix(in srgb, var(--sc-text-muted) 18%, var(--sc-surface));
+  color: var(--sc-text-muted);
+}
+.oid-status-item--transit {
+  background: color-mix(in srgb, var(--sc-accent) 20%, var(--sc-surface));
+  color: var(--sc-accent-strong);
+}
+.oid-status-item--delivered {
+  background: var(--sc-success-soft);
+  color: var(--sc-success);
+}
+.oid-status-item--cancelled {
+  background: var(--sc-danger-soft);
+  color: var(--sc-danger);
+}
 
 .oid-status-count {
   font-weight: 700;
-  background: rgba(255, 255, 255, 0.7);
+  background: color-mix(in srgb, var(--sc-surface) 70%, transparent);
   padding: 1px 8px;
   border-radius: 999px;
   font-size: 0.78rem;

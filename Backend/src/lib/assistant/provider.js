@@ -63,6 +63,7 @@ function buildPageContext(db, context) {
   );
   if (!product) {
     return {
+      inCatalog: false,
       productId: context.productId,
       title: context.productTitle || context.productId,
       category: context.productCategory || "",
@@ -72,6 +73,7 @@ function buildPageContext(db, context) {
     };
   }
   return {
+    inCatalog: true,
     productId: product.id,
     title: product.title,
     category: product.category,
@@ -79,6 +81,8 @@ function buildPageContext(db, context) {
     priceUsd: Math.round((Number(product.price) || 0) / 2.8),
     rating: product.rating,
     stock: product.stock,
+    warranty: typeof product.warranty === "string" ? product.warranty : "",
+    returns: typeof product.returns === "string" ? product.returns : "",
     specs: product.specs && typeof product.specs === "object" ? product.specs : null,
   };
 }
@@ -86,6 +90,13 @@ function buildPageContext(db, context) {
 async function generate({ db, message, history, userId, context }) {
   const pageContext = buildPageContext(db, context);
   const base = ruleBased.buildReply(db, { message, userId, pageContext });
+  // Keep deterministic "no matches" guidance intact. Rewriting this branch
+  // can produce vague partial text and hides the explicit recovery hints.
+  const shouldKeepBaseReply =
+    !Array.isArray(base.products) &&
+    !Array.isArray(base.actions) &&
+    /couldn'?t find anything matching/i.test(String(base.reply || ""));
+  if (shouldKeepBaseReply) return base;
   if (!ACTIVE_ADAPTER) return base;
 
   try {
@@ -109,4 +120,11 @@ async function generate({ db, message, history, userId, context }) {
   }
 }
 
-module.exports = { generate, PROVIDER };
+function providerInfo() {
+  return {
+    provider: PROVIDER,
+    model: ACTIVE_ADAPTER?.model || null,
+  };
+}
+
+module.exports = { generate, PROVIDER, providerInfo };

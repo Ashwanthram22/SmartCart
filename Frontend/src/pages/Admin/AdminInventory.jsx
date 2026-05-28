@@ -22,7 +22,7 @@ import AdminLayout from "./AdminLayout";
 import AdmDropdown from "../../components/AdmDropdown";
 import ImageUpload from "./ImageUpload";
 import ImportProductsModal from "./ImportProductsModal";
-import { exportProductsCsv } from "./csvExport";
+import { downloadProductsPdf } from "../../utils/pdfExports";
 import {
   adminCreateProduct,
   adminDeleteProduct,
@@ -61,6 +61,67 @@ function formatEditedRelative(iso) {
 }
 
 const SEGMENT_OPTIONS = SHOP_SEGMENTS;
+const KEYWORD_SUGGEST_STOPWORDS = new Set([
+  "the", "and", "for", "with", "from", "this", "that", "your", "into", "only",
+  "easy", "best", "made", "built", "new", "pro", "plus",
+]);
+
+function benefitToText(value) {
+  if (typeof value === "string") return value;
+  if (value && typeof value === "object") return String(value.label || "");
+  return "";
+}
+
+function tokenizeKeywordSource(text) {
+  return String(text || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]+/g, " ")
+    .split(/\s+/)
+    .map((token) => token.trim())
+    .filter(
+      (token) =>
+        token &&
+        token.length >= 3 &&
+        !KEYWORD_SUGGEST_STOPWORDS.has(token) &&
+        !/^\d+$/.test(token)
+    );
+}
+
+function parseKeywordInput(value) {
+  return String(value || "")
+    .split(",")
+    .map((part) => part.trim().toLowerCase())
+    .filter(Boolean);
+}
+
+function buildSuggestedKeywords(form) {
+  const out = [];
+  const seen = new Set();
+  const push = (raw) => {
+    const value = String(raw || "").trim().toLowerCase();
+    if (!value || seen.has(value)) return;
+    seen.add(value);
+    out.push(value);
+  };
+
+  // Keep high-signal phrases first.
+  push(form.title);
+  push(form.category);
+  push(form.brand);
+
+  // Then add compact tokens from key fields + specs.
+  [
+    form.title,
+    form.category,
+    form.brand,
+    form.description,
+    ...(form.specsList || []).flatMap((row) => [row?.key, row?.value]),
+  ].forEach((source) => {
+    tokenizeKeywordSource(source).forEach(push);
+  });
+
+  return out.slice(0, 25);
+}
 
 function emptyProduct() {
   return {
@@ -76,7 +137,10 @@ function emptyProduct() {
     reviewCount: 0,
     image: "",
     images: [],
+    searchKeywords: "",
     catalogSegments: ["AI Picks"],
+    warranty: "",
+    returns: "",
     specsList: [{ key: "", value: "" }],
   };
 }
@@ -103,7 +167,10 @@ function fromProduct(p) {
       : p.image
       ? [p.image]
       : [],
+    searchKeywords: Array.isArray(p.searchKeywords) ? p.searchKeywords.join(", ") : "",
     catalogSegments: Array.isArray(p.catalogSegments) ? p.catalogSegments : ["AI Picks"],
+    warranty: benefitToText(p.warranty),
+    returns: benefitToText(p.returns),
     specsList,
   };
 }
@@ -125,7 +192,13 @@ function toPayload(form) {
     reviewCount: Number(form.reviewCount || 0),
     image: form.images?.[0] || form.image || "",
     images: form.images || [],
+    searchKeywords: String(form.searchKeywords || "")
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean),
     catalogSegments: form.catalogSegments || [],
+    warranty: form.warranty.trim() || null,
+    returns: form.returns.trim() || null,
     specs,
   };
 }
@@ -144,6 +217,7 @@ function ProductFormBody({ initial, onClose, onSaved, onRequestClose }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState([]);
+  const suggestedKeywords = useMemo(() => buildSuggestedKeywords(form), [form]);
 
   // Tell the parent if the form is dirty so it can intercept close.
   useEffect(() => {
@@ -208,8 +282,32 @@ function ProductFormBody({ initial, onClose, onSaved, onRequestClose }) {
     });
   };
 
+  const autofillKeywords = () => {
+    setFieldErrors([]);
+    setForm((prev) => {
+      const existing = parseKeywordInput(prev.searchKeywords);
+      const merged = [...existing];
+      const mergedSet = new Set(existing);
+      for (const kw of buildSuggestedKeywords(prev)) {
+        if (mergedSet.has(kw)) continue;
+        merged.push(kw);
+        mergedSet.add(kw);
+      }
+      return { ...prev, searchKeywords: merged.join(", ") };
+    });
+  };
+
+  const canSubmitForm =
+    form.title.trim().length >= 2 &&
+    form.category.trim().length > 0 &&
+    Number.isFinite(Number(form.price)) &&
+    Number(form.price) > 0 &&
+    form.images.length > 0 &&
+    !busy;
+
   async function handleSubmit(e) {
     e.preventDefault();
+    if (!canSubmitForm) return;
     setError("");
     setFieldErrors([]);
     const errs = [];
@@ -405,6 +503,49 @@ function ProductFormBody({ initial, onClose, onSaved, onRequestClose }) {
                 placeholder="What makes this product special?"
               />
             </label>
+            <label className="ai-field ai-field--wide">
+              <span>Search keywords (comma-separated)</span>
+              <input
+                type="text"
+                value={form.searchKeywords}
+                onChange={(e) => update({ searchKeywords: e.target.value })}
+                placeholder="badminton racket, shuttle, lightweight"
+              />
+              <div className="ai-keyword-tools">
+                <button
+                  type="button"
+                  className="adm-btn adm-btn-ghost ai-keyword-btn"
+                  onClick={autofillKeywords}
+                  disabled={busy || suggestedKeywords.length === 0}
+                >
+                  Auto-suggest keywords
+                </button>
+                <p className="ai-keyword-hint">
+                  Suggested:{" "}
+                  {suggestedKeywords.length > 0
+                    ? suggestedKeywords.slice(0, 8).join(", ")
+                    : "Add title/category/specs to generate suggestions"}
+                </p>
+              </div>
+            </label>
+            <label className="ai-field">
+              <span>Warranty (shown on product page)</span>
+              <input
+                type="text"
+                value={form.warranty}
+                onChange={(e) => update({ warranty: e.target.value })}
+                placeholder="1 year manufacturer warranty"
+              />
+            </label>
+            <label className="ai-field">
+              <span>Return policy (shown on product page)</span>
+              <input
+                type="text"
+                value={form.returns}
+                onChange={(e) => update({ returns: e.target.value })}
+                placeholder="7 day easy return"
+              />
+            </label>
 
             <div className="ai-field ai-field--wide">
               <span>Catalog segments</span>
@@ -493,7 +634,7 @@ function ProductFormBody({ initial, onClose, onSaved, onRequestClose }) {
             type="submit"
             form="ai-product-form"
             className="adm-btn adm-btn-primary"
-            disabled={busy}
+            disabled={!canSubmitForm}
           >
             {busy ? (
               <>
@@ -716,9 +857,7 @@ function SortHeader({ field, label, sort, onToggle }) {
   );
 }
 
-/* CSV export logic now lives in `./csvExport.js` so AdminOrders can share
- * the same helpers and a future "shared exports" surface can grow there
- * without bloating every admin page. */
+/* Export helpers now live in `utils/pdfExports.js` for shared PDF downloads. */
 
 /* ---- Skeleton row used while products are loading ---------------------*/
 function ProductSkeletonRow({ showEdited }) {
@@ -1185,14 +1324,20 @@ export default function AdminInventory() {
 
   const clearSelection = useCallback(() => setSelected(new Set()), []);
 
-  const exportCsv = () => {
+  const exportPdf = async () => {
     if (filtered.length === 0) {
       toast.info?.("Nothing to export.") ||
         toast.success("Nothing to export.");
       return;
     }
-    exportProductsCsv(filtered);
-    toast.success(`Exported ${filtered.length} product${filtered.length === 1 ? "" : "s"} to CSV`);
+    try {
+      await downloadProductsPdf(filtered);
+      toast.success(
+        `Downloaded ${filtered.length} product${filtered.length === 1 ? "" : "s"} as PDF`
+      );
+    } catch (err) {
+      toast.error(err?.message || "Couldn't generate products PDF.");
+    }
   };
 
   return (
@@ -1213,11 +1358,11 @@ export default function AdminInventory() {
           <button
             type="button"
             className="adm-btn"
-            onClick={exportCsv}
-            title="Download a CSV of the current view"
+            onClick={exportPdf}
+            title="Download a PDF of the current view"
           >
             <Download size={14} aria-hidden="true" />
-            Export CSV
+            Export PDF
           </button>
           <button
             type="button"

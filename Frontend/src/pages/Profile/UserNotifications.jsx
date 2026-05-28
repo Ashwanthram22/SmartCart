@@ -1,11 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Bell } from "lucide-react";
-import {
-  getNotifications,
-  markAllNotificationsRead,
-  markNotificationRead,
-} from "../../api/client";
+import { markAllNotificationsRead, markNotificationRead } from "../../api/client";
+import { loadNotifications } from "../../utils/notificationsStore";
 import { CATALOG_LIST_BASE, productDetailUrl } from "../../constants/shopRoutes";
 import { useToast } from "../../hooks/useToast";
 import {
@@ -55,9 +52,9 @@ export default function UserNotifications() {
 
   const load = useCallback(async () => {
     try {
-      const data = await getNotifications();
-      setItems(Array.isArray(data?.notifications) ? data.notifications : []);
-      setUnread(Number(data?.unread) || 0);
+      const data = await loadNotifications();
+      setItems(data.notifications);
+      setUnread(data.unread);
     } catch {
       setItems([]);
       setUnread(0);

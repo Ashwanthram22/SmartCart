@@ -91,6 +91,11 @@ function ResetPassword() {
       : tokenState === "used"
         ? "This reset link has already been used."
         : "This reset link is invalid.";
+  const canSubmit =
+    newPassword.trim().length >= 6 &&
+    confirmPassword.trim().length > 0 &&
+    newPassword === confirmPassword &&
+    !submitting;
 
   return (
     <div className="forgot-page">
@@ -136,7 +141,7 @@ function ResetPassword() {
 
                 {error ? <p className="forgot-feedback" role="alert">{error}</p> : null}
 
-                <AuthPrimaryButton type="submit" disabled={submitting}>
+                <AuthPrimaryButton type="submit" disabled={!canSubmit}>
                   {submitting ? "Saving…" : "Reset Password"}
                 </AuthPrimaryButton>
               </form>

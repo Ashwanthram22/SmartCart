@@ -9,7 +9,6 @@ import {
   Filter,
   Inbox,
   PackageCheck,
-  Printer,
   Search,
   Truck,
   X,
@@ -22,7 +21,7 @@ import {
   adminListOrders,
   adminUpdateOrderStatus,
 } from "../../api/client";
-import { exportOrdersCsv } from "./csvExport";
+import { downloadOrdersPdf } from "../../utils/pdfExports";
 import { useToast } from "../../hooks/useToast";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
 import usePageMeta from "../../hooks/usePageMeta";
@@ -816,11 +815,10 @@ export default function AdminOrders() {
     }
   }
 
-  /* Export to CSV. If any rows are checked we export only those; otherwise
+  /* Export to PDF. If any rows are checked we export only those; otherwise
    * we export the entire current filtered view so admins can grab "all
-   * orders this month" by combining the date dropdown + Export CSV. The
-   * resulting file is named `smartcart-orders-<YYYY-MM-DD>.csv`. */
-  const handleExportCsv = () => {
+   * orders this month" by combining the date dropdown + Export. */
+  const handleExportPdf = async () => {
     const rows = selected.size > 0
       ? orders.filter((o) => selected.has(o.id))
       : visible;
@@ -828,10 +826,14 @@ export default function AdminOrders() {
       toast.info("Nothing to export yet — try widening the filter.");
       return;
     }
-    exportOrdersCsv(rows);
-    toast.success(
-      `Exported ${rows.length} order${rows.length === 1 ? "" : "s"} to CSV`
-    );
+    try {
+      await downloadOrdersPdf(rows);
+      toast.success(
+        `Downloaded ${rows.length} order${rows.length === 1 ? "" : "s"} as PDF`
+      );
+    } catch (err) {
+      toast.error(err?.message || "Couldn't generate orders PDF.");
+    }
   };
 
   async function bulkChangeStatus(status) {
@@ -947,12 +949,12 @@ export default function AdminOrders() {
           <button
             type="button"
             className="adm-btn"
-            onClick={handleExportCsv}
-            title="Download the current view as CSV"
+            onClick={handleExportPdf}
+            title="Download the current view as PDF"
             disabled={loading}
           >
             <Download size={14} aria-hidden="true" />
-            Export CSV
+            Export PDF
           </button>
           {/* <button
             type="button"
@@ -1054,9 +1056,9 @@ export default function AdminOrders() {
             <button
               type="button"
               className="adm-btn"
-              onClick={handleExportCsv}
+              onClick={handleExportPdf}
               disabled={bulkBusy}
-              title="Download the selected orders as CSV"
+              title="Download the selected orders as PDF"
             >
               <Download size={14} aria-hidden="true" />
               Export selected
@@ -1130,10 +1132,10 @@ export default function AdminOrders() {
                             <button
                               type="button"
                               className="adm-btn"
-                              onClick={handleExportCsv}
+                              onClick={handleExportPdf}
                             >
                               <Download size={16} aria-hidden="true" />
-                              Export CSV
+                              Export PDF
                             </button>
                           </>
                         )}

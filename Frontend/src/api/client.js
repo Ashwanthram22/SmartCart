@@ -60,6 +60,16 @@ export async function changePassword({ currentPassword, newPassword }) {
   return data;
 }
 
+export async function userGetUploadConfig() {
+  const { data } = await api.get("/auth/uploads/config");
+  return data;
+}
+
+export async function userGetUploadSignature() {
+  const { data } = await api.post("/auth/uploads/signature");
+  return data;
+}
+
 /**
  * Normalise `POST /api/products` responses. Same endpoint for Home and Catalog;
  * only JSON body fields differ (segment, filters, page, limit).
@@ -363,6 +373,11 @@ export async function chatWithAssistant({ message, history = [], context }) {
   const payload = { message, history };
   if (context && typeof context === "object") payload.context = context;
   const { data } = await api.post("/assistant/chat", payload);
+  return data;
+}
+
+export async function getAssistantInfo() {
+  const { data } = await api.get("/assistant/info");
   return data;
 }
 

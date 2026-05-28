@@ -26,7 +26,7 @@
   padding: 20px 24px 40px;
   display: flex;
   gap: 24px;
-  margin-top: 112px;
+  margin-top: 32px;
 }
 
 .catalog-sidebar {
@@ -47,6 +47,23 @@
 .catalog-sidebar input[type="range"] {
   width: 100%;
   accent-color: var(--sc-accent);
+  cursor: grab;
+}
+
+.catalog-sidebar input[type="range"]:active {
+  cursor: grabbing;
+}
+
+.catalog-sidebar input[type="range"]:disabled {
+  cursor: not-allowed;
+}
+
+.catalog-sidebar input[type="range"]::-webkit-slider-thumb {
+  cursor: grab;
+}
+
+.catalog-sidebar input[type="range"]::-moz-range-thumb {
+  cursor: grab;
 }
 
 .range-labels {
@@ -63,10 +80,16 @@
   margin: 8px 0;
   color: var(--sc-text-secondary);
   font-size: 14px;
+  cursor: pointer;
 }
 
 .filter-check input {
   accent-color: var(--sc-accent);
+  cursor: pointer;
+}
+
+.filter-check span {
+  cursor: pointer;
 }
 
 /* ~5 brand rows visible; scroll for the rest */
@@ -207,6 +230,7 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   align-items: stretch;
+  position: relative;
 }
 
 .catalog-empty-state {
@@ -355,7 +379,14 @@
 }
 
 .wishlist-btn--saved:hover {
-  color: var(--sc-badge-text);
+  color: var(--sc-fav-saved);
+  background: var(--sc-danger-soft);
+}
+
+.wishlist-btn:hover:not(.wishlist-btn--saved) {
+  color: var(--sc-accent);
+  background: var(--sc-accent-soft);
+  border-color: var(--sc-accent-soft-border);
 }
 
 .catalog-card-details {
@@ -541,6 +572,47 @@
   color: var(--sc-text-faint);
   font-size: 0.88rem;
   font-style: italic;
+}
+
+.catalog-grid-loader {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--sc-page-bg) 78%, transparent);
+  border-radius: 14px;
+}
+
+.catalog-grid-loader-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--sc-border-strong);
+  background: var(--sc-surface);
+  color: var(--sc-text);
+  box-shadow: var(--sc-shadow-sm);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.catalog-grid-spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--sc-accent-soft-border);
+  border-top-color: var(--sc-accent);
+  animation: catalog-grid-spin 0.9s linear infinite;
+}
+
+@keyframes catalog-grid-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .catalog-floating-ai {

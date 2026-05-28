@@ -99,7 +99,9 @@ function applySearch(products, qNorm) {
   return products.filter((p) => {
     const hay = `${p.title || ""} ${p.category || ""} ${p.brand || ""} ${(
       p.catalogSegments || []
-    ).join(" ")}`.toLowerCase();
+    ).join(" ")} ${p.description || ""} ${JSON.stringify(p.specs || {})} ${(
+      Array.isArray(p.searchKeywords) ? p.searchKeywords.join(" ") : ""
+    )}`.toLowerCase();
     return hay.includes(qNorm);
   });
 }

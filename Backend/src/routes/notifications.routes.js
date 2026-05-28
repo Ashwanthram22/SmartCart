@@ -12,6 +12,14 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
+// Inbox is per-user and changes often — avoid browser revalidation (304) loops
+// that make DevTools look like repeated failed loads.
+router.use((_req, res, next) => {
+  res.set("Cache-Control", "private, no-cache, no-store, must-revalidate");
+  res.set("Pragma", "no-cache");
+  next();
+});
+
 router.get("/", async (req, res) => {
   const list = await withDb(async (db) => {
     const user = withUserProfile(db, req.user.sub);

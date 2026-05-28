@@ -28,6 +28,7 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailFieldError, setEmailFieldError] = useState("");
   const [legalModal, setLegalModal] = useState(null);
 
@@ -43,6 +44,7 @@ function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (isSubmitting) return;
 
     const email = form.email.trim();
     if (!email) {
@@ -68,6 +70,7 @@ function Register() {
     }
 
     setMessage("Creating account...");
+    setIsSubmitting(true);
 
     try {
       const data = await register({
@@ -80,8 +83,19 @@ function Register() {
       navigate("/home", { replace: true });
     } catch (error) {
       setMessage(error.response?.data?.message || "Unable to create account.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  const canSubmit =
+    form.name.trim().length >= 2 &&
+    isWellFormedEmail(form.email.trim()) &&
+    form.password.trim().length > 0 &&
+    form.confirmPassword.trim().length > 0 &&
+    form.password === form.confirmPassword &&
+    form.acceptedTerms &&
+    !isSubmitting;
 
   if (isAuthenticated()) {
     return <Navigate to="/home" replace />;
@@ -241,7 +255,9 @@ function Register() {
                 </span>
               </label>
 
-              <AuthPrimaryButton type="submit">Create Account</AuthPrimaryButton>
+              <AuthPrimaryButton type="submit" disabled={!canSubmit}>
+                {isSubmitting ? "Creating account…" : "Create Account"}
+              </AuthPrimaryButton>
             </form>
 
             <div className="register-login-link">

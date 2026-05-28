@@ -607,6 +607,26 @@ label.ai-field > textarea:focus {
   box-shadow: 0 0 0 3px rgba(107, 56, 212, 0.15);
 }
 
+.ai-keyword-tools {
+  margin-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+}
+
+.ai-keyword-btn {
+  min-height: 30px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.ai-keyword-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--sc-text-muted);
+}
+
 .ai-segments {
   display: flex;
   flex-wrap: wrap;

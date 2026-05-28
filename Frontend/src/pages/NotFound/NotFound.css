@@ -1,6 +1,11 @@
 .nf-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f3ff 0%, #fafafa 50%, #eef2ff 100%);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--sc-accent) 10%, var(--sc-page-bg)) 0%,
+    var(--sc-page-bg) 55%,
+    color-mix(in srgb, var(--sc-accent) 8%, var(--sc-page-bg)) 100%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,7 +50,7 @@
   font-size: 4.5rem;
   font-weight: 800;
   letter-spacing: -0.05em;
-  background: linear-gradient(135deg, #7c3aed, var(--sc-accent));
+  background: linear-gradient(135deg, var(--sc-accent-strong), var(--sc-accent));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -81,7 +86,7 @@
   align-items: center;
   gap: 8px;
   background: var(--sc-surface-high);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--sc-border-strong);
   border-radius: 12px;
   padding: 6px 6px 6px 14px;
   margin-bottom: 18px;
@@ -147,7 +152,7 @@
 .nf-btn--ghost {
   background: transparent;
   color: var(--sc-text-faint);
-  border-color: #e2e8f0;
+  border-color: var(--sc-border-strong);
 }
 .nf-btn--ghost:hover {
   background: var(--sc-border-subtle);
@@ -155,14 +160,14 @@
 }
 
 .nf-btn--primary {
-  background: linear-gradient(135deg, #7c3aed, var(--sc-accent));
+  background: linear-gradient(135deg, var(--sc-accent-strong), var(--sc-accent));
   color: var(--sc-text-on-accent);
 }
 .nf-btn--primary:hover { filter: brightness(1.05); }
 
 /* ---------- Popular categories ---------- */
 .nf-popular {
-  background: rgba(255, 255, 255, 0.7);
+  background: color-mix(in srgb, var(--sc-surface) 75%, transparent);
   border: 1px solid var(--sc-border);
   border-radius: 22px;
   padding: 22px 24px 24px;
@@ -212,7 +217,7 @@
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: rgba(124, 58, 237, 0.08);
+  background: var(--sc-accent-soft);
   color: var(--sc-accent);
   flex-shrink: 0;
 }

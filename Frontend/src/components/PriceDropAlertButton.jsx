@@ -58,8 +58,16 @@ function PriceTargetDialog({ open, productTitle, currentPrice, onClose, onSubmit
 
   if (!open) return null;
 
+  const numericValue = Number(value);
+  const canSubmit =
+    Number.isFinite(numericValue) &&
+    numericValue > 0 &&
+    (!Number.isFinite(currentPrice) || numericValue < currentPrice) &&
+    !busy;
+
   const submit = (e) => {
     e.preventDefault();
+    if (!canSubmit) return;
     const num = Number(value);
     if (!Number.isFinite(num) || num <= 0) {
       setErr(`Enter a target price greater than ${CURRENCY_SYMBOL}0.`);
@@ -128,7 +136,7 @@ function PriceTargetDialog({ open, productTitle, currentPrice, onClose, onSubmit
             <button type="button" className="pda-secondary" onClick={onClose} disabled={busy}>
               Cancel
             </button>
-            <button type="submit" className="pda-primary" disabled={busy}>
+            <button type="submit" className="pda-primary" disabled={!canSubmit}>
               {busy ? "Saving…" : "Set price alert"}
             </button>
           </div>

@@ -14,6 +14,10 @@ const {
   GOOGLE_REDIRECT_URI,
   FRONTEND_URL,
   IS_PROD,
+  CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET,
+  CLOUDINARY_UPLOAD_FOLDER,
 } = require("../config/env");
 
 const router = express.Router();
@@ -31,6 +35,7 @@ function publicUser(user) {
     id: user.id,
     name: user.name,
     email: user.email,
+    avatar: typeof user.avatar === "string" ? user.avatar : "",
     role: user.role,
     isAdmin: user.role === "admin" || Boolean(user.isAdmin),
   };
@@ -405,21 +410,38 @@ router.get("/me", authMiddleware, async (req, res) => {
  * standard `apiLimiter` mounted at the app level.
  */
 router.patch("/me", authMiddleware, async (req, res) => {
-  const { name } = req.body || {};
+  const { name, avatar } = req.body || {};
+  const hasName = Object.prototype.hasOwnProperty.call(req.body || {}, "name");
+  const hasAvatar = Object.prototype.hasOwnProperty.call(req.body || {}, "avatar");
 
-  if (typeof name !== "string" || name.trim().length < 2) {
-    return res
-      .status(400)
-      .json({ message: "Name must be at least 2 characters" });
+  if (!hasName && !hasAvatar) {
+    return res.status(400).json({ message: "Nothing to update" });
   }
-  if (name.trim().length > 80) {
-    return res.status(400).json({ message: "Name is too long" });
+  if (hasName) {
+    if (typeof name !== "string" || name.trim().length < 2) {
+      return res
+        .status(400)
+        .json({ message: "Name must be at least 2 characters" });
+    }
+    if (name.trim().length > 80) {
+      return res.status(400).json({ message: "Name is too long" });
+    }
+  }
+  if (hasAvatar) {
+    const nextAvatar = String(avatar || "").trim();
+    if (nextAvatar.length > 1000) {
+      return res.status(400).json({ message: "Avatar URL is too long" });
+    }
+    if (nextAvatar && !/^https?:\/\//i.test(nextAvatar)) {
+      return res.status(400).json({ message: "Avatar URL must start with http:// or https://" });
+    }
   }
 
   const result = await withDb(async (db) => {
     const user = db.users.find((u) => u.id === req.user.sub);
     if (!user) return { notFound: true };
-    user.name = name.trim();
+    if (hasName) user.name = name.trim();
+    if (hasAvatar) user.avatar = String(avatar || "").trim();
     return { user };
   });
 
@@ -427,6 +449,42 @@ router.patch("/me", authMiddleware, async (req, res) => {
   return res.json({
     message: "Profile updated",
     user: publicUser(result.user),
+  });
+});
+
+router.get("/uploads/config", authMiddleware, (req, res) => {
+  return res.json({
+    configured: Boolean(
+      CLOUDINARY_CLOUD_NAME && CLOUDINARY_API_KEY && CLOUDINARY_API_SECRET
+    ),
+    cloudName: CLOUDINARY_CLOUD_NAME || null,
+    folder: `${CLOUDINARY_UPLOAD_FOLDER}/avatars`,
+  });
+});
+
+router.post("/uploads/signature", authMiddleware, (req, res) => {
+  if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
+    return res.status(503).json({
+      message:
+        "Cloudinary is not configured on the server. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET (or CLOUDINARY_URL) in Backend/.env to enable uploads.",
+    });
+  }
+
+  const timestamp = Math.round(Date.now() / 1000);
+  const folder = `${CLOUDINARY_UPLOAD_FOLDER}/avatars`;
+  const paramsToSign = `folder=${folder}&timestamp=${timestamp}`;
+  const signature = crypto
+    .createHash("sha1")
+    .update(paramsToSign + CLOUDINARY_API_SECRET)
+    .digest("hex");
+
+  return res.json({
+    cloudName: CLOUDINARY_CLOUD_NAME,
+    apiKey: CLOUDINARY_API_KEY,
+    timestamp,
+    signature,
+    folder,
+    uploadUrl: `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
   });
 });
 

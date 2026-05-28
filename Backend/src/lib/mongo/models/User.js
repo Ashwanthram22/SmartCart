@@ -45,6 +45,7 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
     password: { type: String, default: null },
+    avatar: { type: String, default: "" },
     role: { type: String, enum: ["customer", "admin"], default: "customer" },
     isAdmin: { type: Boolean, default: false },
     provider: { type: String, default: null },

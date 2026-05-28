@@ -265,7 +265,7 @@
 }
 
 [data-theme="dark"] .auth-primary-button {
-  color: var(--sc-text-on-accent);
+  color: var(--sc-text-on-accent-container);
 }
 
 [data-theme="dark"] .auth-divider div {

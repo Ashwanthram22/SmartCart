@@ -458,7 +458,7 @@
     var(--sc-accent-strong) 100%
   );
   color: var(--sc-on-media);
-  box-shadow: 0 10px 40px rgba(91, 33, 182, 0.35);
+  box-shadow: var(--sc-shadow-lg);
 }
 
 [data-theme="dark"] .settings-ai-banner {
@@ -529,10 +529,10 @@
 .settings-ai-banner-btn {
   flex-shrink: 0;
   padding: 10px 22px;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.34);
   border-radius: 10px;
-  background: var(--sc-on-media);
-  color: var(--sc-accent-strong);
+  background: rgba(11, 19, 38, 0.28);
+  color: var(--sc-on-media);
   font-size: 14px;
   font-weight: 700;
   font-family: inherit;
@@ -542,16 +542,18 @@
 }
 
 .settings-ai-banner-btn:hover {
-  background: var(--sc-surface);
-  box-shadow: var(--sc-shadow-md);
+  background: rgba(11, 19, 38, 0.4);
+  box-shadow: var(--sc-shadow-sm);
 }
 
 [data-theme="dark"] .settings-ai-banner-btn {
-  color: var(--sc-accent-strong);
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(11, 19, 38, 0.34);
+  color: var(--sc-on-media);
 }
 
 [data-theme="dark"] .settings-ai-banner-btn:hover {
-  background: var(--sc-surface-high);
+  background: rgba(11, 19, 38, 0.52);
 }
 
 .settings-ai-banner-btn:active {

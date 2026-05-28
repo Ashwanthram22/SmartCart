@@ -1,6 +1,6 @@
 .dashboard-page {
   min-height: 100vh;
-  background: #f8f8ff;
+  background: var(--sc-page-bg);
 }
 
 .dashboard-header {
@@ -38,7 +38,7 @@
 
 .dashboard-icon-btn:hover {
   color: var(--sc-accent);
-  background: rgba(107, 56, 212, 0.06);
+  background: var(--sc-accent-soft);
 }
 
 .dashboard-main {
@@ -53,13 +53,13 @@
 }
 
 .dashboard-main > p {
-  color: #5c5f60;
+  color: var(--sc-text-muted);
 }
 
 .dashboard-message {
   margin: 14px 0;
-  background: #ece4ff;
-  color: #3f1d8f;
+  background: var(--sc-accent-soft);
+  color: var(--sc-accent);
   padding: 10px 12px;
   border-radius: 10px;
 }

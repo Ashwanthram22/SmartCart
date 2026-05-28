@@ -15,10 +15,8 @@
  * be wired to an LLM provider that emits the same envelope (see provider.js).
  */
 
-const INR_TO_USD = 2.8;
-
-function toUsd(n) {
-  return Math.round((Number(n) || 0) / INR_TO_USD);
+function toInr(n) {
+  return Math.round(Number(n) || 0);
 }
 
 function summariseProduct(p) {
@@ -26,7 +24,7 @@ function summariseProduct(p) {
     id: p.id,
     title: p.title,
     image: p.image,
-    price: toUsd(p.price),
+    price: toInr(p.price),
     rating: p.rating,
     category: p.category,
     brand: p.brand || null,
@@ -47,6 +45,7 @@ const STOPWORDS = new Set([
   "want", "need", "please", "give", "any", "some", "do", "have", "can", "would",
   "could", "should", "are", "this", "that", "those", "these", "tell", "about",
   "from", "under", "over", "less", "more", "than", "best", "good", "great",
+  "only", "alone", "just",
   "recommend", "recommendation", "suggestions", "products", "product", "items",
   "item", "thing", "things", "stuff",
 ]);
@@ -56,10 +55,23 @@ function meaningfulTokens(text) {
 }
 
 function priceCeilingFromText(text) {
-  const m = String(text).match(/(?:under|below|less than|<=?|cheaper than)\s*\$?\s*(\d{2,5})/i);
-  if (m) return Number(m[1]);
-  const m2 = String(text).match(/\$\s*(\d{2,5})/);
-  if (m2) return Number(m2[1]);
+  const toNumber = (raw) => {
+    const cleaned = String(raw || "").replace(/,/g, "").trim();
+    const n = Number(cleaned);
+    return Number.isFinite(n) ? n : null;
+  };
+  const m = String(text).match(
+    /(?:under|below|less than|<=?|cheaper than|within)\s*(?:rs\.?|inr|₹|\$)?\s*([\d,]{2,12})/i
+  );
+  if (m) {
+    const n = toNumber(m[1]);
+    if (n != null) return n;
+  }
+  const m2 = String(text).match(/(?:rs\.?|inr|₹|\$)\s*([\d,]{2,12})/i);
+  if (m2) {
+    const n = toNumber(m2[1]);
+    if (n != null) return n;
+  }
   return null;
 }
 
@@ -71,28 +83,100 @@ function ratingFloorFromText(text) {
   return null;
 }
 
+function normaliseText(text) {
+  return String(text || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function phraseInText(phrase, normalizedText) {
+  if (!phrase || !normalizedText) return false;
+  const needle = normaliseText(phrase);
+  if (!needle) return false;
+  return (` ${normalizedText} `).includes(` ${needle} `);
+}
+
+function extractEntityFilters(db, message) {
+  const normalizedMessage = normaliseText(message);
+  const categories = new Set();
+  const brands = new Set();
+  for (const product of db.products || []) {
+    if (product?.category && phraseInText(product.category, normalizedMessage)) {
+      categories.add(String(product.category));
+    }
+    if (product?.brand && phraseInText(product.brand, normalizedMessage)) {
+      brands.add(String(product.brand));
+    }
+  }
+  return {
+    categories,
+    brands,
+  };
+}
+
+function searchCorpusForProduct(product) {
+  const keywordList = Array.isArray(product?.searchKeywords)
+    ? product.searchKeywords.join(" ")
+    : "";
+  return normaliseText(
+    `${product?.title || ""} ${product?.category || ""} ${product?.brand || ""} ${(
+      product?.catalogSegments || []
+    ).join(" ")} ${product?.description || ""} ${JSON.stringify(product?.specs || {})} ${keywordList}`
+  );
+}
+
 function searchProducts(db, message, { limit = 4 } = {}) {
   const tokens = meaningfulTokens(message);
   const priceMax = priceCeilingFromText(message);
   const ratingMin = ratingFloorFromText(message);
+  const strictOnly = /\b(only|alone|just)\b/i.test(String(message || ""));
+  const hasGenericRankingIntent = /\b(trending|top|best|popular|recommend|suggest)\b/i.test(
+    String(message || "")
+  );
+  const { categories, brands } = extractEntityFilters(db, message);
+  const requiresTokenMatch =
+    tokens.length > 0 &&
+    !hasGenericRankingIntent &&
+    priceMax == null &&
+    ratingMin == null;
 
   const scored = db.products
     .map((p) => {
-      const hay = `${p.title || ""} ${p.category || ""} ${p.brand || ""} ${(
-        p.catalogSegments || []
-      ).join(" ")}`.toLowerCase();
+      const hay = searchCorpusForProduct(p);
+      const hayTokenSet = new Set(tokenize(hay));
       let score = 0;
+      let tokenMatches = 0;
       for (const t of tokens) {
-        if (!hay.includes(t)) continue;
+        const matched = hayTokenSet.has(t);
+        if (!matched) continue;
+        tokenMatches += 1;
         score += t.length >= 4 ? 2 : 1;
       }
-      if (priceMax != null && toUsd(p.price) > priceMax) score -= 100;
+      if (requiresTokenMatch && tokenMatches === 0) score -= 1000;
+      if (categories.size > 0 && !categories.has(String(p.category || ""))) score -= 200;
+      if (brands.size > 0 && !brands.has(String(p.brand || ""))) score -= 160;
+      if (priceMax != null && toInr(p.price) > priceMax) score -= 100;
       if (ratingMin != null && (Number(p.rating) || 0) < ratingMin) score -= 100;
-      // mild popularity boost so generic queries still surface good picks
-      score += (Number(p.rating) || 0) * 0.4;
-      return { product: p, score };
+      // Popularity boost is useful for broad prompts, but should not inject
+      // unrelated items when the user asked for a specific keyword.
+      if (!requiresTokenMatch || tokenMatches > 0) {
+        score += (Number(p.rating) || 0) * 0.4;
+      }
+      return { product: p, score, tokenMatches };
     })
-    .filter((entry) => entry.score > 0)
+    .filter((entry) => {
+      if (entry.score <= 0) return false;
+      if (requiresTokenMatch && entry.tokenMatches === 0) return false;
+      if (strictOnly && categories.size > 0 && !categories.has(String(entry.product.category || ""))) {
+        return false;
+      }
+      if (strictOnly && brands.size > 0 && !brands.has(String(entry.product.brand || ""))) {
+        return false;
+      }
+      return true;
+    })
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
     .map((entry) => entry.product);
@@ -152,7 +236,7 @@ function intentOf(message) {
 
   if (
     /\b(find|show|recommend|suggest|looking|search|need|want|browse)\b/.test(t) ||
-    /\bunder\b\s*\$?\d/.test(t) ||
+    /\bunder\b\s*(?:rs\.?|inr|₹|\$)?\d/.test(t) ||
     /\bbest\b/.test(t) ||
     meaningfulTokens(t).length > 0
   ) {
@@ -261,7 +345,7 @@ function buildOrderStatusReply(db, userId) {
   const lines = orders.map((o) => {
     const headline = o.items?.[0]?.title || "Order";
     const when = new Date(o.createdAt).toLocaleDateString();
-    return `• #${o.id} — ${headline} • ${o.status} • $${(o.total || 0).toFixed(2)} • ${when}`;
+    return `• #${o.id} — ${headline} • ${o.status} • ₹${(o.total || 0).toFixed(2)} • ${when}`;
   });
   return {
     reply: `Your most recent ${orders.length === 1 ? "order" : "orders"}:\n${lines.join("\n")}`,
@@ -301,7 +385,7 @@ function buildPageContextReply(_db, message, pageContext) {
     ? `It's currently rated ${pageContext.rating}★.`
     : "";
   const priceLine = pageContext.priceUsd
-    ? `Listed at $${pageContext.priceUsd}.`
+    ? `Listed at ₹${pageContext.priceUsd}.`
     : "";
   const specsLine =
     pageContext.specs && Object.keys(pageContext.specs).length
@@ -310,15 +394,23 @@ function buildPageContextReply(_db, message, pageContext) {
           .map(([k, v]) => `${k} ${v}`)
           .join(", ")}.`
       : "";
+  const warrantyLine = pageContext.warranty
+    ? `Warranty: ${String(pageContext.warranty).slice(0, 90)}.`
+    : "";
+  const returnsLine = pageContext.returns
+    ? `Returns: ${String(pageContext.returns).slice(0, 90)}.`
+    : "";
 
   const intro = `You're asking about the ${pageContext.title}.`;
-  const body = [priceLine, ratingLine, stockLine, specsLine].filter(Boolean).join(" ");
+  const body = [priceLine, ratingLine, stockLine, specsLine, warrantyLine, returnsLine]
+    .filter(Boolean)
+    .join(" ");
   const reply = body
     ? `${intro} ${body} What would you like to know — specs, comparisons or alternatives?`
     : `${intro} I can compare it with similar products, walk through specs, or check if it's worth it for what you do.`;
 
   const actions = [];
-  if (pageContext.stock !== 0) {
+  if (pageContext.inCatalog && pageContext.stock !== 0) {
     actions.push({
       type: "addToCart",
       productId: pageContext.productId,

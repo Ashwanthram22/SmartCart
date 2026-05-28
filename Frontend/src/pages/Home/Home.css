@@ -294,6 +294,8 @@ a.home-btn {
 
 .home-product-fav:hover {
   color: var(--sc-accent);
+  background: var(--sc-accent-soft);
+  border-color: var(--sc-accent-soft-border);
 }
 
 .home-product-fav--saved {
@@ -301,7 +303,8 @@ a.home-btn {
 }
 
 .home-product-fav--saved:hover {
-  color: var(--sc-badge-text);
+  color: var(--sc-fav-saved);
+  background: var(--sc-danger-soft);
 }
 
 .home-product-ask-ai {

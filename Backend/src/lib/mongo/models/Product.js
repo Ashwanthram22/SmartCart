@@ -17,6 +17,7 @@ const productSchema = new mongoose.Schema(
     badge: { type: String, default: null },
     image: { type: String, default: "" },
     images: { type: [String], default: [] },
+    searchKeywords: { type: [String], default: [] },
     specs: { type: mongoose.Schema.Types.Mixed, default: {} },
     similarProductIds: { type: [String], default: [] },
     warranty: { type: mongoose.Schema.Types.Mixed, default: null },

@@ -100,6 +100,15 @@ function buildProductPayload(body, existing = null) {
   if ("images" in body) merged.images = normaliseStringList(body.images);
   if ("catalogSegments" in body) merged.catalogSegments = normaliseStringList(body.catalogSegments);
   if ("specs" in body) merged.specs = normaliseSpecs(body.specs);
+  if ("searchKeywords" in body) merged.searchKeywords = normaliseStringList(body.searchKeywords);
+  if ("warranty" in body) {
+    merged.warranty =
+      body.warranty == null ? null : String(body.warranty || "").trim() || null;
+  }
+  if ("returns" in body) {
+    merged.returns =
+      body.returns == null ? null : String(body.returns || "").trim() || null;
+  }
   if ("similarProductIds" in body) {
     merged.similarProductIds = normaliseStringList(body.similarProductIds);
   }
@@ -133,6 +142,12 @@ function validateProduct(p, { partial = false } = {}) {
     }
   }
   if (p.image && p.image.length > 1000) errors.push("Image URL is too long");
+  if (Array.isArray(p.searchKeywords)) {
+    if (p.searchKeywords.length > 25) errors.push("Search keywords can contain at most 25 terms");
+    if (p.searchKeywords.some((kw) => String(kw).length > 40)) {
+      errors.push("Each search keyword must be 40 characters or less");
+    }
+  }
   return errors;
 }
 
@@ -284,7 +299,9 @@ router.get("/products", async (req, res) => {
 
   if (q) {
     products = products.filter((p) => {
-      const hay = `${p.title || ""} ${p.brand || ""} ${p.category || ""} ${p.id || ""}`.toLowerCase();
+      const hay = `${p.title || ""} ${p.brand || ""} ${p.category || ""} ${p.id || ""} ${(
+        Array.isArray(p.searchKeywords) ? p.searchKeywords.join(" ") : ""
+      )}`.toLowerCase();
       return hay.includes(q);
     });
   }

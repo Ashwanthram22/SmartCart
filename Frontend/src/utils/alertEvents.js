@@ -1,9 +1,12 @@
 /** Cross-page sync when inbox or product alert subscriptions change. */
 
+import { invalidateNotificationsCache } from "./notificationsStore";
+
 export const NOTIFICATIONS_CHANGED = "smartcart:notifications-changed";
 export const ALERTS_CHANGED = "smartcart:alerts-changed";
 
 export function emitNotificationsChanged() {
+  invalidateNotificationsCache();
   window.dispatchEvent(new CustomEvent(NOTIFICATIONS_CHANGED));
 }
 

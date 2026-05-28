@@ -7,6 +7,7 @@ import { AssistantProvider } from "./context/AssistantProvider";
 import { ToastProvider } from "./context/ToastProvider";
 import { onAuthChange } from "./utils/authToken";
 import { clearRecentlyViewed } from "./utils/recentlyViewed";
+import { invalidateNotificationsCache } from "./utils/notificationsStore";
 import ErrorBoundary from "./components/ErrorBoundary";
 import "./styles/theme.css";
 import "./styles/theme-surfaces.css";
@@ -23,6 +24,7 @@ import App from "./App.jsx";
 onAuthChange(({ authenticated }) => {
   if (!authenticated) {
     clearRecentlyViewed();
+    invalidateNotificationsCache();
   }
 });
 

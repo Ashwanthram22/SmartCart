@@ -2,11 +2,8 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { createPortal } from "react-dom";
 import { Bell } from "lucide-react";
 import { Link } from "react-router-dom";
-import {
-  getNotifications,
-  markAllNotificationsRead,
-  markNotificationRead,
-} from "../api/client";
+import { markAllNotificationsRead, markNotificationRead } from "../api/client";
+import { loadNotifications } from "../utils/notificationsStore";
 import { productDetailUrl } from "../constants/shopRoutes";
 import { useToast } from "../hooks/useToast";
 import {
@@ -47,7 +44,7 @@ export function ShopNotificationBell({ classPrefix = "shop" }) {
   const panelRef = useRef(null);
   const [panelStyle, setPanelStyle] = useState(null);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async ({ force = false } = {}) => {
     if (!isAuthenticated()) {
       setItems([]);
       setUnread(0);
@@ -55,9 +52,9 @@ export function ShopNotificationBell({ classPrefix = "shop" }) {
     }
     setLoading(true);
     try {
-      const data = await getNotifications();
-      setItems(Array.isArray(data?.notifications) ? data.notifications : []);
-      setUnread(Number(data?.unread) || 0);
+      const data = await loadNotifications({ force });
+      setItems(data.notifications);
+      setUnread(data.unread);
     } catch {
       setItems([]);
       setUnread(0);
@@ -81,13 +78,8 @@ export function ShopNotificationBell({ classPrefix = "shop" }) {
   useEffect(() => {
     if (!authed) return undefined;
     load();
-    const onFocus = () => load();
-    window.addEventListener("focus", onFocus);
-    const off = onNotificationsChanged(load);
-    return () => {
-      window.removeEventListener("focus", onFocus);
-      off();
-    };
+    const off = onNotificationsChanged(() => load({ force: true }));
+    return off;
   }, [authed, load]);
 
   useLayoutEffect(() => {

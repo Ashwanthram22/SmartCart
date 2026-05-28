@@ -87,6 +87,7 @@ function Login() {
     ? googleErrorMap[googleError] || "Google login failed."
     : "";
   const formErrorText = loginError || oauthErrorText;
+  const canSubmit = form.email.trim().length > 0 && form.password.trim().length > 0;
 
   if (isAuthenticated()) {
     return <Navigate to={isAdmin() ? "/admin" : "/home"} replace />;
@@ -144,7 +145,7 @@ function Login() {
               </p>
             ) : null}
 
-            <AuthPrimaryButton type="submit" disabled={isSubmitting}>
+            <AuthPrimaryButton type="submit" disabled={isSubmitting || !canSubmit}>
               {isSubmitting ? "Signing in…" : "Sign In"}
             </AuthPrimaryButton>
           </form>

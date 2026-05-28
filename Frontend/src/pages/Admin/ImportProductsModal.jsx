@@ -26,6 +26,7 @@ const SAMPLE_HEADERS = [
   "brand",
   "category",
   "description",
+  "searchKeywords",
   "price",
   "originalPrice",
   "stock",
@@ -64,6 +65,13 @@ function recordToProductPayload(record) {
         .filter(Boolean);
       continue;
     }
+    if (key === "searchkeywords") {
+      out.searchKeywords = String(value)
+        .split(/[,|]/)
+        .map((s) => s.trim())
+        .filter(Boolean);
+      continue;
+    }
     out[key] = value;
   }
   return out;
@@ -76,6 +84,7 @@ function downloadTemplate() {
       "Nebula",
       "Audio",
       "Premium over-ear wireless headphones with ANC.",
+      "headphones|wireless|anc|audio",
       "199.99",
       "249.99",
       "25",

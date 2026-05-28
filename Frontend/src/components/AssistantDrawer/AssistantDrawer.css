@@ -86,6 +86,21 @@
   color: var(--assist-muted);
 }
 
+.assist-provider-badge {
+  margin: 8px 0 0;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--assist-accent) 32%, transparent);
+  background: color-mix(in srgb, var(--assist-accent-fill) 26%, transparent);
+  color: var(--assist-fg);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
 .assist-close {
   appearance: none;
   background: var(--assist-surface-high);

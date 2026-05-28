@@ -46,9 +46,15 @@ function FulfillDialog({ row, onClose, onDone }) {
   const [newPrice, setNewPrice] = useState(
     String(row.targetPrice ?? row.currentPrice ?? "")
   );
+  const parsedStock = Number(newStock);
+  const parsedPrice = Number(newPrice);
+  const canSubmit = isStock
+    ? Number.isFinite(parsedStock) && parsedStock >= 1
+    : Number.isFinite(parsedPrice) && parsedPrice > 0;
 
   const submit = async (e) => {
     e.preventDefault();
+    if (!canSubmit || busy) return;
     setBusy(true);
     try {
       await adminFulfillCustomerAlert({
@@ -122,7 +128,7 @@ function FulfillDialog({ row, onClose, onDone }) {
             <button type="button" className="adm-btn adm-btn-ghost" onClick={onClose} disabled={busy}>
               Cancel
             </button>
-            <button type="submit" className="adm-btn adm-btn-primary" disabled={busy}>
+            <button type="submit" className="adm-btn adm-btn-primary" disabled={busy || !canSubmit}>
               {busy ? "Sending…" : "Update & notify customer"}
             </button>
           </div>

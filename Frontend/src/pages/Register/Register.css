@@ -222,13 +222,13 @@
 .register-terms input[type="checkbox"]:checked::after {
   content: "";
   position: absolute;
-  left: 5px;
-  top: 1px;
+  left: 50%;
+  top: 50%;
   width: 5px;
   height: 10px;
   border: solid var(--sc-text-on-accent);
   border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
+  transform: translate(-50%, -56%) rotate(45deg);
 }
 
 .register-terms input[type="checkbox"]:focus-visible {

@@ -74,6 +74,14 @@ export default function SettingsSecurity() {
     }
   };
 
+  const canSubmitPassword =
+    pwForm.currentPassword.trim().length > 0 &&
+    pwForm.newPassword.trim().length >= 6 &&
+    pwForm.confirmPassword.trim().length > 0 &&
+    pwForm.newPassword === pwForm.confirmPassword &&
+    pwForm.currentPassword !== pwForm.newPassword &&
+    !pwSubmitting;
+
   return (
     <ProfileLayout>
       <div className="settings-security">
@@ -145,7 +153,7 @@ export default function SettingsSecurity() {
                 <button
                   type="submit"
                   className="settings-btn-primary"
-                  disabled={pwSubmitting}
+                  disabled={!canSubmitPassword}
                 >
                   {pwSubmitting ? "Updating…" : "Update Password"}
                 </button>
@@ -153,7 +161,7 @@ export default function SettingsSecurity() {
             </form>
           </section>
 
-          <section className="settings-card" aria-labelledby="settings-2fa-heading">
+          {/* <section className="settings-card" aria-labelledby="settings-2fa-heading">
             <div className="settings-2fa-row">
               <div className="settings-card-head settings-card-head--inline">
                 <div className="settings-card-icon" aria-hidden="true">
@@ -191,7 +199,7 @@ export default function SettingsSecurity() {
             <p className="settings-activity-empty">
               Session history is not available yet. Only this browser session is active.
             </p>
-          </section>
+          </section> */}
 
           <section className="settings-ai-banner" aria-labelledby="settings-ai-heading">
             <div className="settings-ai-banner-watermark" aria-hidden="true">
@@ -206,8 +214,9 @@ export default function SettingsSecurity() {
                   AI Protection Active
                 </h3>
                 <p className="settings-ai-banner-text">
-                  Our SmartCart AI is continuously monitoring your account for unusual purchase patterns or
-                  suspicious login attempts. Your data is encrypted with enterprise-grade standards.
+                  Our SmartCart AI is continuously monitoring your account for unusual purchase
+                  patterns or suspicious login attempts. Your data is encrypted with enterprise-grade
+                  standards.
                 </p>
               </div>
               <button

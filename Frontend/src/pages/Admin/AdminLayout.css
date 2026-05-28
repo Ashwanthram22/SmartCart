@@ -51,13 +51,18 @@
   overflow-y: auto;
 }
 
+.adm-sidebar-head {
+  flex-shrink: 0;
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--adm-border);
+}
+
 .adm-brand {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 0 6px 18px;
-  margin-bottom: 18px;
-  border-bottom: 1px solid var(--adm-border);
+  padding: 0 6px;
   text-decoration: none;
   color: inherit;
 }
@@ -526,6 +531,15 @@
   font-size: 12px;
   font-weight: 600;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Must beat `.adm-icon-btn { display: inline-flex }` on the same element. */
+.adm-icon-btn.adm-nav-toggle {
+  display: none !important;
+}
+
+.adm-nav-backdrop {
+  display: none;
 }
 
 .adm-topbar-right {
@@ -2284,40 +2298,73 @@
 
 /* ----- Responsive ----------------------------------------------------------*/
 
-@media (max-width: 960px) {
-  .adm-sidebar {
-    /* On mobile we stack the sidebar above the main content rather than
-     * overlap it via `position: fixed`. */
-    position: static;
-    width: auto;
-    height: auto;
-    inset: auto;
-    flex-direction: column;
-    border-right: 0;
-    border-bottom: 1px solid var(--adm-border);
-    overflow: visible;
+/* Tablet + phone: sidebar becomes an off-canvas drawer opened from the top bar. */
+@media (max-width: 1024px) {
+  .adm-icon-btn.adm-nav-toggle {
+    display: inline-flex !important;
   }
+
+  .adm-nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgba(10, 12, 24, 0.52);
+    backdrop-filter: blur(2px);
+    cursor: pointer;
+  }
+
+  .adm-sidebar {
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.24s ease;
+    box-shadow: none;
+  }
+
+  .adm-sidebar--open {
+    transform: translateX(0);
+    box-shadow: 16px 0 48px rgba(0, 0, 0, 0.28);
+  }
+
   .adm-main-wrap {
-    /* Drop the desktop margin so the main column stacks under the sidebar. */
     margin-left: 0;
   }
-  .adm-sidebar-foot {
-    margin-top: 16px;
-  }
+
   .adm-topbar {
     flex-wrap: wrap;
   }
+
+  .adm-topbar-left {
+    flex-wrap: wrap;
+  }
+
+  .adm-topbar-title {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
   .adm-search {
     max-width: none;
   }
+
   .adm-main {
     padding: 22px 18px 90px;
   }
+
   .adm-settings-overlay,
   .adm-alerts-overlay {
     align-items: center;
     justify-content: center;
     padding: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adm-sidebar {
+    transition: none;
   }
 }
 
@@ -2362,6 +2409,19 @@
 [data-theme="dark"] .adm-btn-primary:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .adm-btn-danger {
+  color: #ffffff;
+  background: linear-gradient(135deg, #cc5f67 0%, #b84f56 100%);
+  border-color: #cc5f67;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] .adm-btn-danger:hover:not(:disabled) {
+  color: #ffffff;
+  background: linear-gradient(135deg, #d76b73 0%, #c35b62 100%);
+  border-color: #d76b73;
 }
 
 [data-theme="dark"] .adm-card {

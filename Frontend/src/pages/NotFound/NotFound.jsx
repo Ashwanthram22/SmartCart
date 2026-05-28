@@ -47,6 +47,7 @@ export default function NotFound() {
   const authed = isAuthenticated();
   const homeHref = authed ? "/home" : "/login";
   const homeLabel = authed ? "Back to home" : "Back to login";
+  const canSearch = search.trim().length > 0;
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -85,7 +86,7 @@ export default function NotFound() {
               aria-label="Search products"
               autoFocus
             />
-            <button type="submit" className="nf-search-submit">
+            <button type="submit" className="nf-search-submit" disabled={!canSearch}>
               Search
             </button>
           </form>

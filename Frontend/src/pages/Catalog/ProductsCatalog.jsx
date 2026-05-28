@@ -302,6 +302,7 @@ function ProductsCatalog() {
    */
   const showProductLoading =
     (loading && products.length === 0) || (filtersLoading && !filtersReady);
+  const showGridLoaderOverlay = loading && products.length > 0 && !showProductLoading;
 
   const toggleBrand = (brand) => {
     setSelectedBrands((prev) =>
@@ -605,6 +606,14 @@ function ProductsCatalog() {
                     </div>
                   </>
                 )}
+              </div>
+            ) : null}
+            {showGridLoaderOverlay ? (
+              <div className="catalog-grid-loader" aria-live="polite" aria-label="Updating products">
+                <div className="catalog-grid-loader-box">
+                  <span className="catalog-grid-spinner" aria-hidden="true" />
+                  <span>Updating products…</span>
+                </div>
               </div>
             ) : null}
           </div>

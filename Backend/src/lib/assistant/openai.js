@@ -17,9 +17,11 @@ function isAvailable() {
 
 const SYSTEM_PROMPT =
   "You are SmartCart's friendly shopping assistant. Keep replies under 80 words. " +
+  "Always use INR (Rs or ₹), never USD. " +
   "If the user asks for a product recommendation, mention 1-3 specific items by name " +
   "from the catalog you were given. If they ask about an order, say you'll route them " +
-  "to their order history. Never invent SKUs or prices.";
+  "to their order history. Never invent SKUs, prices, warranty terms, or return windows. " +
+  "Do not provide legal, medical, or financial advice.";
 
 async function rewriteReply({ message, history, draft, catalogContext, pageContext }) {
   if (!OPENAI_API_KEY) {
@@ -72,6 +74,7 @@ async function rewriteReply({ message, history, draft, catalogContext, pageConte
 
 module.exports = {
   name: "openai",
+  model: OPENAI_MODEL,
   isAvailable,
   rewriteReply,
 };

@@ -1,6 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Printer } from "lucide-react";
 import { useFocusTrap } from "../../hooks/useFocusTrap";
+import { useToast } from "../../hooks/useToast";
+import { downloadOrderReceiptPdf } from "../../utils/pdfExports";
 import { formatMoney } from "../../utils/money";
 import "./OrderActionDialog.css";
 
@@ -49,6 +51,8 @@ const STATUS_LABEL = {
 export default function OrderActionDialog({ order, mode, onClose }) {
   const dialogRef = useRef(null);
   useFocusTrap(dialogRef, Boolean(order));
+  const toast = useToast();
+  const [pdfBusy, setPdfBusy] = useState(false);
 
   useEffect(() => {
     if (!order) return undefined;
@@ -68,6 +72,19 @@ export default function OrderActionDialog({ order, mode, onClose }) {
   const title = mode === "track" ? "Track Package" : "Order Details";
   const subtitle = `Order #${order.id} • ${STATUS_LABEL[order.status] || "Processing"}`;
   const isDetails = mode !== "track";
+
+  const handlePrint = async () => {
+    if (!isDetails || pdfBusy) return;
+    setPdfBusy(true);
+    try {
+      await downloadOrderReceiptPdf(order);
+      toast.success(`Receipt for ${order.id} downloaded.`);
+    } catch (err) {
+      toast.error(err?.message || "Couldn't generate receipt PDF.");
+    } finally {
+      setPdfBusy(false);
+    }
+  };
 
   return (
     <div className="oad-overlay" role="presentation" onClick={onClose}>
@@ -89,11 +106,12 @@ export default function OrderActionDialog({ order, mode, onClose }) {
               <button
                 type="button"
                 className="oad-print"
-                onClick={() => window.print()}
+                onClick={handlePrint}
                 aria-label="Print this receipt"
+                disabled={pdfBusy}
               >
                 <Printer size={16} aria-hidden="true" />
-                <span>Print</span>
+                <span>{pdfBusy ? "Preparing…" : "Print"}</span>
               </button>
             ) : null}
             <button

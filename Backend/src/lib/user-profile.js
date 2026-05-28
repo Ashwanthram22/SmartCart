@@ -36,6 +36,8 @@ function findUser(db, userId) {
 
 /** Initialise nested profile fields on a user row (idempotent). */
 function ensureUserProfile(user) {
+  if (typeof user.avatar !== "string") user.avatar = "";
+
   if (!user.cart || typeof user.cart !== "object") {
     user.cart = { items: [], updatedAt: nowIso() };
   } else if (!Array.isArray(user.cart.items)) {

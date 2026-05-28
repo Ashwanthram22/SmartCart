@@ -85,8 +85,8 @@ export default function ImageUpload({ value, onChange, label = "Product images" 
         if (!file.type.startsWith("image/")) {
           throw new Error(`"${file.name}" is not an image.`);
         }
-        if (file.size > 10 * 1024 * 1024) {
-          throw new Error(`"${file.name}" is larger than 10 MB.`);
+        if (file.size > 5 * 1024 * 1024) {
+          throw new Error(`"${file.name}" is larger than 5 MB.`);
         }
         const url = await uploadToCloudinary(file);
         uploaded.push(url);
@@ -152,6 +152,14 @@ export default function ImageUpload({ value, onChange, label = "Product images" 
             >
               <img src={src} alt="" loading="lazy" />
               {idx === 0 ? <span className="iu-tag">Primary</span> : null}
+              <button
+                type="button"
+                className="iu-mini iu-mini--danger iu-mini--floating"
+                onClick={() => removeAt(idx)}
+                aria-label={`Remove image ${idx + 1}`}
+              >
+                <X size={14} aria-hidden="true" />
+              </button>
               <div className="iu-item-actions">
                 {idx !== 0 ? (
                   <button
@@ -163,14 +171,6 @@ export default function ImageUpload({ value, onChange, label = "Product images" 
                     Make primary
                   </button>
                 ) : null}
-                <button
-                  type="button"
-                  className="iu-mini iu-mini--danger"
-                  onClick={() => removeAt(idx)}
-                  aria-label={`Remove image ${idx + 1}`}
-                >
-                  <X size={14} aria-hidden="true" />
-                </button>
               </div>
             </li>
           ))}
@@ -203,7 +203,7 @@ export default function ImageUpload({ value, onChange, label = "Product images" 
               <span className="iu-dropzone-title">
                 {busy ? "Uploading…" : "Upload from device"}
               </span>
-              <span className="iu-dropzone-hint">JPG, PNG, WebP · up to 10 MB each</span>
+              <span className="iu-dropzone-hint">JPG, PNG, WebP · up to 5 MB each</span>
             </button>
 
             <div className="iu-divider" aria-hidden="true">
