@@ -342,25 +342,12 @@ export default function Checkout() {
                   </ul>
                 ) : null}
 
-                {mode === "picker" && savedAddresses.length > 0 ? (
-                  <button
-                    type="button"
-                    className="checkout-link-btn"
-                    onClick={() => {
-                      setForm(EMPTY_FORM);
-                      setMode("form");
-                    }}
-                  >
-                    + Use a new address
-                  </button>
-                ) : null}
-
                 {mode === "form" ? (
                   <>
                     {savedAddresses.length > 0 ? (
                       <button
                         type="button"
-                        className="checkout-link-btn"
+                        className="checkout-secondary-btn"
                         onClick={() => setMode("picker")}
                       >
                         ← Pick a saved address instead
@@ -425,14 +412,29 @@ export default function Checkout() {
 
                 {addrError ? <p className="checkout-error">{addrError}</p> : null}
 
-                <button
-                  type="button"
-                  className="checkout-btn-primary"
-                  disabled={!canContinue}
-                  onClick={handleContinue}
-                >
-                  Continue to payment
-                </button>
+                <div className="checkout-addr-actions">
+                  {mode === "picker" && savedAddresses.length > 0 ? (
+                    <button
+                      type="button"
+                      className="checkout-secondary-btn"
+                      onClick={() => {
+                        setForm(EMPTY_FORM);
+                        setMode("form");
+                      }}
+                    >
+                      + Use a new address
+                    </button>
+                  ) : null}
+
+                  <button
+                    type="button"
+                    className="checkout-btn-primary"
+                    disabled={!canContinue}
+                    onClick={handleContinue}
+                  >
+                    Continue to payment
+                  </button>
+                </div>
               </section>
             ) : null}
 

@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { CartProvider } from "./context/CartProvider";
+import { UserProfileProvider } from "./context/UserProfileProvider";
 import { SavedProvider } from "./context/SavedProvider";
 import { AssistantProvider } from "./context/AssistantProvider";
 import { ToastProvider } from "./context/ToastProvider";
@@ -35,11 +36,13 @@ createRoot(document.getElementById("root")).render(
         <ToastProvider>
           <ThemeProvider>
             <CartProvider>
-              <SavedProvider>
-                <AssistantProvider>
-                  <App />
-                </AssistantProvider>
-              </SavedProvider>
+              <UserProfileProvider>
+                <SavedProvider>
+                  <AssistantProvider>
+                    <App />
+                  </AssistantProvider>
+                </SavedProvider>
+              </UserProfileProvider>
             </CartProvider>
           </ThemeProvider>
         </ToastProvider>

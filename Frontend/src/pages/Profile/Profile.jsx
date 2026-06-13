@@ -11,6 +11,7 @@ import {
 } from "../../api/client";
 import { DEFAULT_PROFILE_AVATAR } from "../../data/profileDisplay";
 import { useToast } from "../../hooks/useToast";
+import { useUserProfile } from "../../hooks/useUserProfile";
 import usePageMeta from "../../hooks/usePageMeta";
 import Skeleton from "../../components/Skeleton";
 import EditProfileDialog from "./EditProfileDialog";
@@ -69,13 +70,17 @@ function Profile() {
   const [avatarUploading, setAvatarUploading] = useState(false);
   const avatarInputRef = useRef(null);
   const toast = useToast();
+  const { patchUser } = useUserProfile();
 
   useEffect(() => {
     let cancelled = false;
     async function loadUser() {
       try {
         const data = await getCurrentUser();
-        if (!cancelled) setUser(data.user);
+        if (!cancelled && data?.user) {
+          setUser(data.user);
+          patchUser(data.user);
+        }
       } catch {
         if (!cancelled) setUser(null);
       } finally {
@@ -137,7 +142,10 @@ function Profile() {
 
   const handleProfileSave = async ({ name }) => {
     const res = await updateCurrentUser({ name });
-    if (res?.user) setUser(res.user);
+    if (res?.user) {
+      setUser(res.user);
+      patchUser(res.user);
+    }
     toast.success("Profile updated.");
   };
 
@@ -183,7 +191,10 @@ function Profile() {
       if (!nextAvatar) throw new Error("Cloudinary did not return an image URL.");
 
       const updated = await updateCurrentUser({ avatar: nextAvatar });
-      if (updated?.user) setUser(updated.user);
+      if (updated?.user) {
+        setUser(updated.user);
+        patchUser(updated.user);
+      }
       toast.success("Profile photo updated.");
     } catch (err) {
       toast.error(err?.message || "Could not upload profile photo.");

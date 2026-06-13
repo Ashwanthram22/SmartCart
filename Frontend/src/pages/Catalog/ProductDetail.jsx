@@ -11,7 +11,7 @@ import {
   productDetailUrl,
   segmentFromProductDetailSlug,
 } from "../../constants/shopRoutes";
-import { DEFAULT_PROFILE_AVATAR } from "../../data/profileDisplay";
+import { ProfileNavAvatar } from "../../components/ProfileNavAvatar";
 import { createProductReview, getProductById } from "../../api/client";
 import { trackViewedProduct } from "../../utils/recentlyViewed";
 import HomeFooter from "../Home/HomeFooter";
@@ -388,7 +388,7 @@ function ProductDetail() {
               </span>
             </Link>
             <Link to="/profile" className="product-icon-btn product-profile-thumb" aria-label="Profile">
-              <img src={DEFAULT_PROFILE_AVATAR} alt="" width={28} height={28} />
+              <ProfileNavAvatar />
             </Link>
           </div>
         </div>

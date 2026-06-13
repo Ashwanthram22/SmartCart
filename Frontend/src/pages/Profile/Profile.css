@@ -837,8 +837,9 @@
   gap: 12px;
   padding: 20px;
   border-radius: 16px;
-  background: rgba(139, 92, 246, 0.06);
-  color: #4b5563;
+  background: var(--sc-accent-soft);
+  border: 1px solid var(--sc-accent-soft-border);
+  color: var(--sc-text-muted);
 }
 
 .profile-orders-empty-cta {
@@ -846,15 +847,16 @@
   align-items: center;
   padding: 10px 18px;
   border-radius: 999px;
-  background: #7c3aed;
-  color: var(--sc-text-on-accent);
+  background: var(--sc-accent-container);
+  color: var(--sc-text-on-accent-container);
   text-decoration: none;
   font-weight: 600;
   font-size: 14px;
+  transition: background 0.15s ease;
 }
 
 .profile-orders-empty-cta:hover {
-  background: #6d28d9;
+  background: var(--sc-accent-container-hover);
 }
 
 a.profile-track-btn {

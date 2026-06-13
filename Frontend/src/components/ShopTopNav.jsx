@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CATALOG_LIST_BASE, catalogListUrl } from "../constants/shopRoutes";
-import { DEFAULT_PROFILE_AVATAR } from "../data/profileDisplay";
 import { useCart } from "../hooks/useCart";
+import { ProfileNavAvatar } from "./ProfileNavAvatar";
 import { CartIcon } from "./CartIcon";
 import { ShopNotificationBell } from "./ShopNotificationBell";
 import { ShopThemeToggle } from "./ShopThemeToggle";
@@ -92,7 +92,7 @@ export function ShopTopNav({
           </span>
         </Link>
         <Link to="/profile" className="shop-icon-btn shop-profile-thumb" aria-label="Profile">
-          <img src={DEFAULT_PROFILE_AVATAR} alt="" width={28} height={28} />
+          <ProfileNavAvatar />
         </Link>
       </div>
     </div>
